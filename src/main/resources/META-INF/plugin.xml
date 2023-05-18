@@ -7,5 +7,13 @@
     <vendor></vendor>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
+        <fileType name="ClientScript" language="RuneScript" implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" extensions="cs2"/>
+        <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
     </extensions>
+    <actions>
+        <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction"
+                icon="io.runescript.plugin.ide.RsIcons.FileTypes.ClientScript">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewGroup"/>
+        </action>
+    </actions>
 </idea-plugin>
