@@ -7,7 +7,8 @@
     <vendor></vendor>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="ClientScript" language="RuneScript" implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" extensions="cs2"/>
+        <lang.parserDefinition language="RuneScript" implementationClass="io.runescript.plugin.lang.parser.RuneScriptParserDefinition"/>
+        <fileType name="ClientScript" language="RuneScript" implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE" extensions="cs2"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
         <internalFileTemplate name="ClientScript"/>
     </extensions>

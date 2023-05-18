@@ -1,0 +1,21 @@
+{
+  parserClass="io.runescript.plugin.lang.parser.RuneScriptParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="RuneScript"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.runescript.plugin.lang.psi"
+  psiImplPackage="io.runescript.plugin.lang.psi.impl"
+
+  elementTypeHolderClass="io.runescript.plugin.lang.psi.RuneScriptTypes"
+  elementTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
+  tokenTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
+}
+
+script_file ::= script*
+script ::= script_header
+script_header ::= LBRACE IDENTIFIER COMMA IDENTIFIER RBRACE parameter_list? return_list?
+parameter ::= TYPE_NAME DOLLAR IDENTIFIER
+parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
+return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN

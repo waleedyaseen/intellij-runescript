@@ -6,7 +6,7 @@ import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.lang.RuneScript
 import javax.swing.Icon
 
-class Cs2FileType : LanguageFileType(RuneScript) {
+object Cs2FileType : LanguageFileType(RuneScript) {
 
     override fun getName() = "ClientScript"
 
