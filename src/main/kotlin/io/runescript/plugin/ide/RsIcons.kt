@@ -1,10 +1,8 @@
 package io.runescript.plugin.ide
 
 import com.intellij.icons.AllIcons
+import javax.swing.Icon
 
 object RsIcons {
-
-    object FileTypes {
-        val ClientScript = AllIcons.FileTypes.Java
-    }
+    val ClientScript: Icon = AllIcons.FileTypes.Java
 }
