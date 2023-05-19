@@ -22,6 +22,7 @@
         <colorSettingsPage implementation="io.runescript.plugin.ide.highlight.RsColorSettingsPage"/>
         <annotator language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
         <internalFileTemplate name="ClientScript"/>
+        <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
