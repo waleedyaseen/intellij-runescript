@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.BAD_CHARACTER;
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.SEMICOLON;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 
 
@@ -73,11 +72,13 @@ class _RuneScriptLexer implements FlexLexer {
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
     "\11\0\2\1\2\0\1\1\22\0\1\1\3\0\1\2"+
-    "\3\0\1\3\1\4\1\0\1\5\1\6\3\0\12\5"+
-    "\1\0\1\7\5\0\32\5\1\10\1\0\1\11\1\0"+
-    "\1\5\1\0\4\5\1\12\1\13\1\5\1\14\1\15"+
-    "\2\5\1\16\12\5\1\17\3\5\1\20\1\0\1\21"+
-    "\u0182\0";
+    "\3\0\1\3\1\4\1\0\1\5\1\6\3\0\1\7"+
+    "\11\10\1\11\1\12\1\0\1\13\3\0\6\14\21\5"+
+    "\1\15\2\5\1\16\1\0\1\17\1\0\1\5\1\0"+
+    "\1\20\1\14\1\21\1\14\1\22\1\23\1\5\1\24"+
+    "\1\25\2\5\1\26\1\5\1\27\3\5\1\30\1\31"+
+    "\1\32\1\33\1\5\1\34\1\15\2\5\1\35\1\0"+
+    "\1\36\1\37\u0181\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[512];
@@ -105,11 +106,12 @@ class _RuneScriptLexer implements FlexLexer {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\11\1\12\2\6\1\13\1\14\1\15\3\6"+
-    "\1\16";
+    "\2\10\1\11\1\12\1\13\1\14\1\15\6\6\1\16"+
+    "\1\17\1\20\3\6\1\21\3\6\1\10\5\6\1\22"+
+    "\1\6\1\23\1\24\1\6\1\25\1\26";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[20];
+    int [] result = new int[44];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -134,12 +136,15 @@ class _RuneScriptLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\22\0\22\0\22\0\22\0\22\0\44\0\22"+
-    "\0\22\0\22\0\22\0\66\0\110\0\22\0\22\0\44"+
-    "\0\132\0\154\0\176\0\44";
+    "\0\0\0\40\0\40\0\40\0\40\0\40\0\100\0\40"+
+    "\0\140\0\200\0\40\0\40\0\40\0\40\0\40\0\240"+
+    "\0\300\0\340\0\u0100\0\u0120\0\u0140\0\40\0\40\0\40"+
+    "\0\u0160\0\u0180\0\u01a0\0\100\0\u01c0\0\u01e0\0\u0200\0\u0160"+
+    "\0\u0220\0\u0240\0\u0260\0\u0280\0\u02a0\0\100\0\u02c0\0\100"+
+    "\0\100\0\u02e0\0\100\0\100";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[20];
+    int [] result = new int[44];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -163,15 +168,39 @@ class _RuneScriptLexer implements FlexLexer {
 
   private static final String ZZ_TRANS_PACKED_0 =
     "\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11"+
-    "\1\12\1\13\3\7\1\14\1\7\1\15\1\16\1\17"+
-    "\27\0\1\7\4\0\6\7\7\0\1\7\4\0\1\7"+
-    "\1\20\4\7\7\0\1\7\4\0\2\7\1\21\3\7"+
-    "\7\0\1\7\4\0\3\7\1\22\2\7\7\0\1\7"+
-    "\4\0\4\7\1\23\1\7\7\0\1\7\4\0\1\24"+
-    "\5\7\2\0";
+    "\1\12\1\13\1\14\1\15\2\7\1\16\1\17\1\7"+
+    "\1\20\1\7\1\21\1\7\1\22\1\7\1\23\2\7"+
+    "\1\24\1\7\1\25\1\26\1\27\1\30\45\0\1\7"+
+    "\1\0\2\7\3\0\2\7\2\0\15\7\10\0\1\7"+
+    "\1\0\2\12\3\0\1\7\1\31\2\0\15\7\10\0"+
+    "\1\7\1\0\2\12\3\0\2\7\2\0\15\7\10\0"+
+    "\1\7\1\0\2\7\3\0\2\7\2\0\1\32\14\7"+
+    "\10\0\1\7\1\0\2\7\3\0\2\7\2\0\1\33"+
+    "\14\7\10\0\1\7\1\0\2\7\3\0\2\7\2\0"+
+    "\3\7\1\34\11\7\10\0\1\7\1\0\2\7\3\0"+
+    "\2\7\2\0\13\7\1\35\1\7\10\0\1\7\1\0"+
+    "\2\7\3\0\2\7\2\0\10\7\1\36\4\7\10\0"+
+    "\1\7\1\0\2\7\3\0\2\7\2\0\4\7\1\37"+
+    "\10\7\10\0\1\7\1\0\2\40\3\0\1\40\1\7"+
+    "\2\0\4\40\11\7\10\0\1\7\1\0\2\7\3\0"+
+    "\2\7\2\0\11\7\1\41\3\7\10\0\1\7\1\0"+
+    "\2\7\3\0\2\7\2\0\6\7\1\42\6\7\10\0"+
+    "\1\7\1\0\2\7\3\0\2\7\2\0\6\7\1\43"+
+    "\6\7\10\0\1\7\1\0\2\7\3\0\2\7\2\0"+
+    "\13\7\1\44\1\7\10\0\1\7\1\0\2\7\3\0"+
+    "\2\7\2\0\5\7\1\45\7\7\10\0\1\7\1\0"+
+    "\2\7\3\0\2\7\2\0\2\7\1\46\12\7\10\0"+
+    "\1\7\1\0\2\7\3\0\2\7\2\0\11\7\1\47"+
+    "\3\7\10\0\1\7\1\0\2\7\3\0\2\7\2\0"+
+    "\6\7\1\50\6\7\10\0\1\7\1\0\2\7\3\0"+
+    "\2\7\2\0\2\7\1\51\12\7\10\0\1\7\1\0"+
+    "\2\7\3\0\2\7\2\0\6\7\1\52\6\7\10\0"+
+    "\1\7\1\0\2\7\3\0\2\7\2\0\2\7\1\53"+
+    "\12\7\10\0\1\7\1\0\2\7\3\0\2\7\2\0"+
+    "\2\7\1\54\12\7\3\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[144];
+    int [] result = new int[768];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -209,10 +238,11 @@ class _RuneScriptLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\5\11\1\1\4\11\2\1\2\11\5\1";
+    "\1\0\5\11\1\1\1\11\2\1\5\11\6\1\3\11"+
+    "\24\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[20];
+    int [] result = new int[44];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -538,78 +568,137 @@ public List<String> getTypeNames() {
             { return BAD_CHARACTER;
             }
           // fall through
-          case 15: break;
+          case 23: break;
           case 2:
             { return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 16: break;
+          case 24: break;
           case 3:
             { return DOLLAR;
             }
           // fall through
-          case 17: break;
+          case 25: break;
           case 4:
             { return LPAREN;
             }
           // fall through
-          case 18: break;
+          case 26: break;
           case 5:
             { return RPAREN;
             }
           // fall through
-          case 19: break;
+          case 27: break;
           case 6:
             { CharSequence lexeme = yytext();
   for (String typeName: getTypeNames()) {
       if (typeName.contentEquals(lexeme)) {
           return TYPE_NAME;
       }
+       if (lexeme.length() > 4
+              && lexeme.charAt(0) == 'd'
+              && lexeme.charAt(1) == 'e'
+              && lexeme.charAt(2) == 'f'
+              && lexeme.charAt(3) == '_'
+              && typeName.contentEquals(lexeme.subSequence(4, lexeme.length()))) {
+          return DEFINE_TYPE;
+      }
+       if (lexeme.length() > 7
+              && lexeme.charAt(0) == 's'
+              && lexeme.charAt(1) == 'w'
+              && lexeme.charAt(2) == 'i'
+              && lexeme.charAt(3) == 't'
+              && lexeme.charAt(4) == 'c'
+              && lexeme.charAt(5) == 'h'
+              && lexeme.charAt(6) == '_'
+              && typeName.contentEquals(lexeme.subSequence(7, lexeme.length()))) {
+          return SWITCH;
+      }
   }
   return IDENTIFIER;
             }
           // fall through
-          case 20: break;
+          case 28: break;
           case 7:
             { return COMMA;
             }
           // fall through
-          case 21: break;
+          case 29: break;
           case 8:
+            { return INTEGER;
+            }
+          // fall through
+          case 30: break;
+          case 9:
+            { return COLON;
+            }
+          // fall through
+          case 31: break;
+          case 10:
             { return SEMICOLON;
             }
           // fall through
-          case 22: break;
-          case 9:
+          case 32: break;
+          case 11:
+            { return EQUAL;
+            }
+          // fall through
+          case 33: break;
+          case 12:
             { return LBRACKET;
             }
           // fall through
-          case 23: break;
-          case 10:
+          case 34: break;
+          case 13:
             { return RBRACKET;
             }
           // fall through
-          case 24: break;
-          case 11:
+          case 35: break;
+          case 14:
             { return LBRACE;
             }
           // fall through
-          case 25: break;
-          case 12:
+          case 36: break;
+          case 15:
             { return RBRACE;
             }
           // fall through
-          case 26: break;
-          case 13:
+          case 37: break;
+          case 16:
+            { return TILDE;
+            }
+          // fall through
+          case 38: break;
+          case 17:
             { return IF;
             }
           // fall through
-          case 27: break;
-          case 14:
+          case 39: break;
+          case 18:
+            { return CASE;
+            }
+          // fall through
+          case 40: break;
+          case 19:
+            { return NULL;
+            }
+          // fall through
+          case 41: break;
+          case 20:
+            { return TRUE;
+            }
+          // fall through
+          case 42: break;
+          case 21:
+            { return FALSE;
+            }
+          // fall through
+          case 43: break;
+          case 22:
             { return WHILE;
             }
           // fall through
-          case 28: break;
+          case 44: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

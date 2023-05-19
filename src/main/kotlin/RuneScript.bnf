@@ -19,19 +19,48 @@
 
 script_file ::= script*
 script ::= script_header statement_list
-script_header ::= LBRACKET IDENTIFIER COMMA IDENTIFIER RBRACKET parameter_list? return_list?
-parameter ::= TYPE_NAME DOLLAR IDENTIFIER
+script_header ::= LBRACKET escaped_name COMMA escaped_name RBRACKET parameter_list? return_list?
+parameter ::= TYPE_NAME DOLLAR escaped_name
 parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
 return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
 statement_list ::= statement*
-statement ::= while_statement | if_statement
-while_statement ::= WHILE LPAREN expression RPAREN braced_block_statement
-if_statement ::= IF LPAREN expression RPAREN braced_block_statement
-braced_block_statement ::= LBRACE statement_list RBRACE
+statement ::= block_statement
+            | if_statement
+            | while_statement
+            | switch_statement
+            | return_statement
+            | local_variable_declaration_statement
+            | local_variable_assignment_statement
+            | array_variable_declaration_statement
+            | array_variable_assignment_statement
+            | expression_statement
+block_statement ::= LBRACE statement_list RBRACE
+if_statement ::= IF LPAREN expression RPAREN statement
+while_statement ::= WHILE LPAREN expression RPAREN statement
+switch_statement ::= SWITCH LPAREN expression RPAREN LBRACE switch_case* RBRACE
+switch_case ::= CASE expression_list COLON statement_list
+return_statement ::= RETURN LPAREN expression_list? RPAREN SEMICOLON
+local_variable_declaration_statement ::= DEFINE_TYPE local_variable_expression (EQUAL expression)? SEMICOLON
+local_variable_assignment_statement ::= local_variable_expression EQUAL expression SEMICOLON
+array_variable_declaration_statement ::= DEFINE_TYPE local_variable_expression par_expression SEMICOLON
+array_variable_assignment_statement ::= local_variable_expression par_expression EQUAL expression SEMICOLON
+expression_statement ::= expression SEMICOLON
 expression ::= par_expression
              | local_variable_expression
+             | literal_expression
+             | command_expression
+             | gosub_expression
              | dynamic_expression
+private expression_list ::= expression (COMMA expression)*
 par_expression ::= LPAREN expression RPAREN
-local_variable_expression ::= DOLLAR name_expression
-dynamic_expression ::= name_expression
-private name_expression ::= IDENTIFIER | WHILE | IF
+local_variable_expression ::= DOLLAR escaped_name
+private literal_expression ::= integer_literal_expression
+                             | boolean_literal_expression
+                             | null_literal_expression
+integer_literal_expression ::= INTEGER
+boolean_literal_expression ::= TRUE | FALSE
+null_literal_expression ::= NULL
+command_expression ::= escaped_name (LPAREN expression_list? RPAREN)?
+gosub_expression ::= TILDE escaped_name (LPAREN expression_list? RPAREN)?
+dynamic_expression ::= escaped_name
+private escaped_name ::= IDENTIFIER | DEFINE_TYPE | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

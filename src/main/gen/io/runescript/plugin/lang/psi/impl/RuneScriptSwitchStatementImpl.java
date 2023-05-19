@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptWhileStatementImpl extends RuneScriptStatementImpl implements RuneScriptWhileStatement {
+public class RuneScriptSwitchStatementImpl extends RuneScriptStatementImpl implements RuneScriptSwitchStatement {
 
-  public RuneScriptWhileStatementImpl(@NotNull ASTNode node) {
+  public RuneScriptSwitchStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitWhileStatement(this);
+    visitor.visitSwitchStatement(this);
   }
 
   @Override
@@ -35,8 +35,8 @@ public class RuneScriptWhileStatementImpl extends RuneScriptStatementImpl implem
 
   @Override
   @NotNull
-  public RuneScriptStatement getStatement() {
-    return findNotNullChildByClass(RuneScriptStatement.class);
+  public List<RuneScriptSwitchCase> getSwitchCaseList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptSwitchCase.class);
   }
 
 }

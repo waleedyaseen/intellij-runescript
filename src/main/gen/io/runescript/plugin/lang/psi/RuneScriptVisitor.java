@@ -7,8 +7,24 @@ import com.intellij.psi.PsiElement;
 
 public class RuneScriptVisitor extends PsiElementVisitor {
 
-  public void visitBracedBlockStatement(@NotNull RuneScriptBracedBlockStatement o) {
+  public void visitArrayVariableAssignmentStatement(@NotNull RuneScriptArrayVariableAssignmentStatement o) {
     visitStatement(o);
+  }
+
+  public void visitArrayVariableDeclarationStatement(@NotNull RuneScriptArrayVariableDeclarationStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitBlockStatement(@NotNull RuneScriptBlockStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitBooleanLiteralExpression(@NotNull RuneScriptBooleanLiteralExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitCommandExpression(@NotNull RuneScriptCommandExpression o) {
+    visitExpression(o);
   }
 
   public void visitDynamicExpression(@NotNull RuneScriptDynamicExpression o) {
@@ -19,11 +35,35 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitExpressionStatement(@NotNull RuneScriptExpressionStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitGosubExpression(@NotNull RuneScriptGosubExpression o) {
+    visitExpression(o);
+  }
+
   public void visitIfStatement(@NotNull RuneScriptIfStatement o) {
     visitStatement(o);
   }
 
+  public void visitIntegerLiteralExpression(@NotNull RuneScriptIntegerLiteralExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitLocalVariableAssignmentStatement(@NotNull RuneScriptLocalVariableAssignmentStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitLocalVariableDeclarationStatement(@NotNull RuneScriptLocalVariableDeclarationStatement o) {
+    visitStatement(o);
+  }
+
   public void visitLocalVariableExpression(@NotNull RuneScriptLocalVariableExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitNullLiteralExpression(@NotNull RuneScriptNullLiteralExpression o) {
     visitExpression(o);
   }
 
@@ -43,6 +83,10 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitReturnStatement(@NotNull RuneScriptReturnStatement o) {
+    visitStatement(o);
+  }
+
   public void visitScript(@NotNull RuneScriptScript o) {
     visitPsiElement(o);
   }
@@ -57,6 +101,14 @@ public class RuneScriptVisitor extends PsiElementVisitor {
 
   public void visitStatementList(@NotNull RuneScriptStatementList o) {
     visitPsiElement(o);
+  }
+
+  public void visitSwitchCase(@NotNull RuneScriptSwitchCase o) {
+    visitPsiElement(o);
+  }
+
+  public void visitSwitchStatement(@NotNull RuneScriptSwitchStatement o) {
+    visitStatement(o);
   }
 
   public void visitWhileStatement(@NotNull RuneScriptWhileStatement o) {

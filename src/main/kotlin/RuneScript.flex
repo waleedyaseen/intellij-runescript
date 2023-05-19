@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.BAD_CHARACTER;
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.SEMICOLON;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 
 %%
@@ -40,7 +39,12 @@ this.project =  project;
 %type IElementType
 
 IDENTIFIER_PART = [a-zA-Z0-9_+]
-IDENTIFIER = {IDENTIFIER_PART}+
+IDENTIFIER = ({IDENTIFIER_PART})+
+DECIMAL_DIGIT = [0-9]
+HEX_DIGIT = [0-9a-fA-F]
+HEX_INTEGER = 0[xX]({HEX_DIGIT})+
+DECIMAL_INTEGER = ({DECIMAL_DIGIT})+
+INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
 
 %%
 <YYINITIAL> {
@@ -48,6 +52,11 @@ IDENTIFIER = {IDENTIFIER_PART}+
 // Keywords
 "if" { return IF; }
 "while" { return WHILE; }
+"true" { return TRUE; }
+"false" { return FALSE; }
+"null" { return NULL; }
+"case" { return CASE; }
+{INTEGER} { return INTEGER; }
 
 // General
 {IDENTIFIER} {
@@ -56,11 +65,34 @@ IDENTIFIER = {IDENTIFIER_PART}+
       if (typeName.contentEquals(lexeme)) {
           return TYPE_NAME;
       }
+       if (lexeme.length() > 4
+              && lexeme.charAt(0) == 'd'
+              && lexeme.charAt(1) == 'e'
+              && lexeme.charAt(2) == 'f'
+              && lexeme.charAt(3) == '_'
+              && typeName.contentEquals(lexeme.subSequence(4, lexeme.length()))) {
+          return DEFINE_TYPE;
+      }
+       if (lexeme.length() > 7
+              && lexeme.charAt(0) == 's'
+              && lexeme.charAt(1) == 'w'
+              && lexeme.charAt(2) == 'i'
+              && lexeme.charAt(3) == 't'
+              && lexeme.charAt(4) == 'c'
+              && lexeme.charAt(5) == 'h'
+              && lexeme.charAt(6) == '_'
+              && typeName.contentEquals(lexeme.subSequence(7, lexeme.length()))) {
+          return SWITCH;
+      }
   }
   return IDENTIFIER;
 }
 
 "$" { return DOLLAR; }
+
+// Operators
+"=" { return EQUAL; }
+"~" { return TILDE; }
 
 // Separators
 "{" { return LBRACE; }
@@ -70,6 +102,7 @@ IDENTIFIER = {IDENTIFIER_PART}+
 "(" { return LPAREN; }
 ")" { return RPAREN; }
 "," { return COMMA; }
+":" { return COLON; }
 ";" { return SEMICOLON; }
 
 // Ignored

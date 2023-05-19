@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptBracedBlockStatementImpl extends RuneScriptStatementImpl implements RuneScriptBracedBlockStatement {
+public class RuneScriptGosubExpressionImpl extends RuneScriptExpressionImpl implements RuneScriptGosubExpression {
 
-  public RuneScriptBracedBlockStatementImpl(@NotNull ASTNode node) {
+  public RuneScriptGosubExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitBracedBlockStatement(this);
+    visitor.visitGosubExpression(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class RuneScriptBracedBlockStatementImpl extends RuneScriptStatementImpl 
 
   @Override
   @NotNull
-  public RuneScriptStatementList getStatementList() {
-    return findNotNullChildByClass(RuneScriptStatementList.class);
+  public List<RuneScriptExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptExpression.class);
   }
 
 }

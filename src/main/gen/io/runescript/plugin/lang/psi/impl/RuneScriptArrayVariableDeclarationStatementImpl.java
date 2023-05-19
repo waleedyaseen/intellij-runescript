@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptWhileStatementImpl extends RuneScriptStatementImpl implements RuneScriptWhileStatement {
+public class RuneScriptArrayVariableDeclarationStatementImpl extends RuneScriptStatementImpl implements RuneScriptArrayVariableDeclarationStatement {
 
-  public RuneScriptWhileStatementImpl(@NotNull ASTNode node) {
+  public RuneScriptArrayVariableDeclarationStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitWhileStatement(this);
+    visitor.visitArrayVariableDeclarationStatement(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class RuneScriptWhileStatementImpl extends RuneScriptStatementImpl implem
 
   @Override
   @NotNull
-  public RuneScriptExpression getExpression() {
-    return findNotNullChildByClass(RuneScriptExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptStatement getStatement() {
-    return findNotNullChildByClass(RuneScriptStatement.class);
+  public List<RuneScriptExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptExpression.class);
   }
 
 }

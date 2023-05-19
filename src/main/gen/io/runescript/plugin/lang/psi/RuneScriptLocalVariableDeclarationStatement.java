@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RuneScriptWhileStatement extends RuneScriptStatement {
+public interface RuneScriptLocalVariableDeclarationStatement extends RuneScriptStatement {
 
   @NotNull
-  RuneScriptExpression getExpression();
-
-  @NotNull
-  RuneScriptStatement getStatement();
+  List<RuneScriptExpression> getExpressionList();
 
 }

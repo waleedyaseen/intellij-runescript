@@ -29,14 +29,14 @@ public class RuneScriptIfStatementImpl extends RuneScriptStatementImpl implement
 
   @Override
   @NotNull
-  public RuneScriptBracedBlockStatement getBracedBlockStatement() {
-    return findNotNullChildByClass(RuneScriptBracedBlockStatement.class);
+  public RuneScriptExpression getExpression() {
+    return findNotNullChildByClass(RuneScriptExpression.class);
   }
 
   @Override
   @NotNull
-  public RuneScriptExpression getExpression() {
-    return findNotNullChildByClass(RuneScriptExpression.class);
+  public RuneScriptStatement getStatement() {
+    return findNotNullChildByClass(RuneScriptStatement.class);
   }
 
 }

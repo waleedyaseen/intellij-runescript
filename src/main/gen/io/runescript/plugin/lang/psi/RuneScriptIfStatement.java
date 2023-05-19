@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface RuneScriptIfStatement extends RuneScriptStatement {
 
   @NotNull
-  RuneScriptBracedBlockStatement getBracedBlockStatement();
+  RuneScriptExpression getExpression();
 
   @NotNull
-  RuneScriptExpression getExpression();
+  RuneScriptStatement getStatement();
 
 }

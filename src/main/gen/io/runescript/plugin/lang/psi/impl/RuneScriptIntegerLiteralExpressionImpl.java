@@ -10,33 +10,21 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptWhileStatementImpl extends RuneScriptStatementImpl implements RuneScriptWhileStatement {
+public class RuneScriptIntegerLiteralExpressionImpl extends RuneScriptExpressionImpl implements RuneScriptIntegerLiteralExpression {
 
-  public RuneScriptWhileStatementImpl(@NotNull ASTNode node) {
+  public RuneScriptIntegerLiteralExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitWhileStatement(this);
+    visitor.visitIntegerLiteralExpression(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof RuneScriptVisitor) accept((RuneScriptVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptExpression getExpression() {
-    return findNotNullChildByClass(RuneScriptExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptStatement getStatement() {
-    return findNotNullChildByClass(RuneScriptStatement.class);
   }
 
 }
