@@ -57,9 +57,13 @@ local_variable_expression ::= DOLLAR escaped_name
 private literal_expression ::= integer_literal_expression
                              | boolean_literal_expression
                              | null_literal_expression
+                             | string_literal_expression
 integer_literal_expression ::= INTEGER
 boolean_literal_expression ::= TRUE | FALSE
 null_literal_expression ::= NULL
+string_literal_expression ::= STRING_START (STRING_PART | STRING_TAG | string_interpolation_expression)* STRING_END
+string_interpolation_expression ::= STRING_INTERPOLATION_START | expression | STRING_INTERPOLATION_END
+
 command_expression ::= escaped_name (LPAREN expression_list? RPAREN)?
 gosub_expression ::= TILDE escaped_name (LPAREN expression_list? RPAREN)?
 dynamic_expression ::= escaped_name

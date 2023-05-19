@@ -32,6 +32,8 @@ public interface RuneScriptTypes {
   IElementType SCRIPT_HEADER = new RuneScriptElementType("SCRIPT_HEADER");
   IElementType STATEMENT = new RuneScriptElementType("STATEMENT");
   IElementType STATEMENT_LIST = new RuneScriptElementType("STATEMENT_LIST");
+  IElementType STRING_INTERPOLATION_EXPRESSION = new RuneScriptElementType("STRING_INTERPOLATION_EXPRESSION");
+  IElementType STRING_LITERAL_EXPRESSION = new RuneScriptElementType("STRING_LITERAL_EXPRESSION");
   IElementType SWITCH_CASE = new RuneScriptElementType("SWITCH_CASE");
   IElementType SWITCH_STATEMENT = new RuneScriptElementType("SWITCH_STATEMENT");
   IElementType WHILE_STATEMENT = new RuneScriptElementType("WHILE_STATEMENT");
@@ -55,6 +57,12 @@ public interface RuneScriptTypes {
   IElementType RETURN = new RuneScriptElementType("RETURN");
   IElementType RPAREN = new RuneScriptElementType("RPAREN");
   IElementType SEMICOLON = new RuneScriptElementType("SEMICOLON");
+  IElementType STRING_END = new RuneScriptElementType("STRING_END");
+  IElementType STRING_INTERPOLATION_END = new RuneScriptElementType("STRING_INTERPOLATION_END");
+  IElementType STRING_INTERPOLATION_START = new RuneScriptElementType("STRING_INTERPOLATION_START");
+  IElementType STRING_PART = new RuneScriptElementType("STRING_PART");
+  IElementType STRING_START = new RuneScriptElementType("STRING_START");
+  IElementType STRING_TAG = new RuneScriptElementType("STRING_TAG");
   IElementType SWITCH = new RuneScriptElementType("SWITCH");
   IElementType TILDE = new RuneScriptElementType("TILDE");
   IElementType TRUE = new RuneScriptElementType("TRUE");
@@ -129,6 +137,12 @@ public interface RuneScriptTypes {
       }
       else if (type == STATEMENT_LIST) {
         return new RuneScriptStatementListImpl(node);
+      }
+      else if (type == STRING_INTERPOLATION_EXPRESSION) {
+        return new RuneScriptStringInterpolationExpressionImpl(node);
+      }
+      else if (type == STRING_LITERAL_EXPRESSION) {
+        return new RuneScriptStringLiteralExpressionImpl(node);
       }
       else if (type == SWITCH_CASE) {
         return new RuneScriptSwitchCaseImpl(node);

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.BAD_CHARACTER;
+import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.STRING_LITERAL;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 
 %%
@@ -45,9 +46,13 @@ HEX_DIGIT = [0-9a-fA-F]
 HEX_INTEGER = 0[xX]({HEX_DIGIT})+
 DECIMAL_INTEGER = ({DECIMAL_DIGIT})+
 INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
+STRING_PART = [^\"\r\n<]+
+COLOR_TAG = "<col="([0-9a-fA-F]+)">"
+
+%x STRING, STRING_INTERPOLATION
 
 %%
-<YYINITIAL> {
+<YYINITIAL,STRING_INTERPOLATION> {
 
 // Keywords
 "if" { return IF; }
@@ -56,6 +61,8 @@ INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
 "false" { return FALSE; }
 "null" { return NULL; }
 "case" { return CASE; }
+\" { yybegin(STRING); return STRING_START; }
+
 {INTEGER} { return INTEGER; }
 
 // General
@@ -87,7 +94,14 @@ INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
   }
   return IDENTIFIER;
 }
-
+">" {
+    if (yystate() == STRING_INTERPOLATION) {
+        yybegin(STRING);
+        return STRING_INTERPOLATION_END;
+    } else {
+        throw new RuntimeException();
+    }
+}
 "$" { return DOLLAR; }
 
 // Operators
@@ -107,5 +121,15 @@ INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
 
 // Ignored
 [\ \t\r\n] { return TokenType.WHITE_SPACE; }
+[^] { return BAD_CHARACTER; }
+}
+<STRING> {
+\" { yybegin(YYINITIAL); return STRING_END; }
+"<br>" { return STRING_TAG; }
+"</col>" { return STRING_TAG; }
+{COLOR_TAG} { return STRING_TAG; }
+"<col=" { return STRING_PART; }
+"<" { yybegin(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
+{STRING_PART} { return STRING_PART; }
 [^] { return BAD_CHARACTER; }
 }

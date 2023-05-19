@@ -103,6 +103,14 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitStringInterpolationExpression(@NotNull RuneScriptStringInterpolationExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitStringLiteralExpression(@NotNull RuneScriptStringLiteralExpression o) {
+    visitExpression(o);
+  }
+
   public void visitSwitchCase(@NotNull RuneScriptSwitchCase o) {
     visitPsiElement(o);
   }

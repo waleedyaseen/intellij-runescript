@@ -36,12 +36,12 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(BOOLEAN_LITERAL_EXPRESSION, COMMAND_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION,
-      GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION,
-      PAR_EXPRESSION),
     create_token_set_(ARRAY_VARIABLE_ASSIGNMENT_STATEMENT, ARRAY_VARIABLE_DECLARATION_STATEMENT, BLOCK_STATEMENT, EXPRESSION_STATEMENT,
       IF_STATEMENT, LOCAL_VARIABLE_ASSIGNMENT_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT,
       STATEMENT, SWITCH_STATEMENT, WHILE_STATEMENT),
+    create_token_set_(BOOLEAN_LITERAL_EXPRESSION, COMMAND_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION,
+      GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION,
+      PAR_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -306,6 +306,7 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   // integer_literal_expression
   //                              | boolean_literal_expression
   //                              | null_literal_expression
+  //                              | string_literal_expression
   static boolean literal_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "literal_expression")) return false;
     boolean r;
@@ -313,6 +314,7 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
     r = integer_literal_expression(b, l + 1);
     if (!r) r = boolean_literal_expression(b, l + 1);
     if (!r) r = null_literal_expression(b, l + 1);
+    if (!r) r = string_literal_expression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -643,6 +645,54 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
     }
     exit_section_(b, l, m, true, false, null);
     return true;
+  }
+
+  /* ********************************************************** */
+  // STRING_INTERPOLATION_START | expression | STRING_INTERPOLATION_END
+  public static boolean string_interpolation_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "string_interpolation_expression")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _COLLAPSE_, STRING_INTERPOLATION_EXPRESSION, "<expression>");
+    r = consumeToken(b, STRING_INTERPOLATION_START);
+    if (!r) r = expression(b, l + 1);
+    if (!r) r = consumeToken(b, STRING_INTERPOLATION_END);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // STRING_START (STRING_PART | STRING_TAG | string_interpolation_expression)* STRING_END
+  public static boolean string_literal_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "string_literal_expression")) return false;
+    if (!nextTokenIs(b, "<expression>", STRING_START)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, STRING_LITERAL_EXPRESSION, "<expression>");
+    r = consumeToken(b, STRING_START);
+    r = r && string_literal_expression_1(b, l + 1);
+    r = r && consumeToken(b, STRING_END);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (STRING_PART | STRING_TAG | string_interpolation_expression)*
+  private static boolean string_literal_expression_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "string_literal_expression_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!string_literal_expression_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "string_literal_expression_1", c)) break;
+    }
+    return true;
+  }
+
+  // STRING_PART | STRING_TAG | string_interpolation_expression
+  private static boolean string_literal_expression_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "string_literal_expression_1_0")) return false;
+    boolean r;
+    r = consumeToken(b, STRING_PART);
+    if (!r) r = consumeToken(b, STRING_TAG);
+    if (!r) r = string_interpolation_expression(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
