@@ -11,14 +11,14 @@ import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptScriptImpl extends ASTWrapperPsiElement implements RuneScriptScript {
+public class RuneScriptStatementListImpl extends ASTWrapperPsiElement implements RuneScriptStatementList {
 
-  public RuneScriptScriptImpl(@NotNull ASTNode node) {
+  public RuneScriptStatementListImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitScript(this);
+    visitor.visitStatementList(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class RuneScriptScriptImpl extends ASTWrapperPsiElement implements RuneSc
 
   @Override
   @NotNull
-  public RuneScriptScriptHeader getScriptHeader() {
-    return findNotNullChildByClass(RuneScriptScriptHeader.class);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptStatementList getStatementList() {
-    return findNotNullChildByClass(RuneScriptStatementList.class);
+  public List<RuneScriptStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptStatement.class);
   }
 
 }

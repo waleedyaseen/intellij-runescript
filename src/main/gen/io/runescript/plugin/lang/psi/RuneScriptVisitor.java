@@ -7,6 +7,30 @@ import com.intellij.psi.PsiElement;
 
 public class RuneScriptVisitor extends PsiElementVisitor {
 
+  public void visitBracedBlockStatement(@NotNull RuneScriptBracedBlockStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitDynamicExpression(@NotNull RuneScriptDynamicExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitExpression(@NotNull RuneScriptExpression o) {
+    visitPsiElement(o);
+  }
+
+  public void visitIfStatement(@NotNull RuneScriptIfStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitLocalVariableExpression(@NotNull RuneScriptLocalVariableExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitParExpression(@NotNull RuneScriptParExpression o) {
+    visitExpression(o);
+  }
+
   public void visitParameter(@NotNull RuneScriptParameter o) {
     visitPsiElement(o);
   }
@@ -25,6 +49,18 @@ public class RuneScriptVisitor extends PsiElementVisitor {
 
   public void visitScriptHeader(@NotNull RuneScriptScriptHeader o) {
     visitPsiElement(o);
+  }
+
+  public void visitStatement(@NotNull RuneScriptStatement o) {
+    visitPsiElement(o);
+  }
+
+  public void visitStatementList(@NotNull RuneScriptStatementList o) {
+    visitPsiElement(o);
+  }
+
+  public void visitWhileStatement(@NotNull RuneScriptWhileStatement o) {
+    visitStatement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {

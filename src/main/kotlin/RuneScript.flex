@@ -2,6 +2,7 @@ package io.runescript.plugin.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import io.runescript.plugin.ide.config.RsConfig;
 
@@ -28,7 +29,6 @@ public List<String> getTypeNames() {
 %}
 
 %ctorarg Project project
-
 %init{
 this.project =  project;
 %init}
@@ -44,6 +44,12 @@ IDENTIFIER = {IDENTIFIER_PART}+
 
 %%
 <YYINITIAL> {
+
+// Keywords
+"if" { return IF; }
+"while" { return WHILE; }
+
+// General
 {IDENTIFIER} {
   CharSequence lexeme = yytext();
   for (String typeName: getTypeNames()) {
@@ -53,12 +59,20 @@ IDENTIFIER = {IDENTIFIER_PART}+
   }
   return IDENTIFIER;
 }
-"[" { return LBRACE; }
-"]" { return RBRACE; }
+
+"$" { return DOLLAR; }
+
+// Separators
+"{" { return LBRACE; }
+"}" { return RBRACE; }
+"[" { return LBRACKET; }
+"]" { return RBRACKET; }
 "(" { return LPAREN; }
 ")" { return RPAREN; }
 "," { return COMMA; }
 ";" { return SEMICOLON; }
-"$" { return DOLLAR; }
+
+// Ignored
+[\ \t\r\n] { return TokenType.WHITE_SPACE; }
 [^] { return BAD_CHARACTER; }
 }

@@ -11,11 +11,27 @@
   elementTypeHolderClass="io.runescript.plugin.lang.psi.RuneScriptTypes"
   elementTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
   tokenTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
+  name(".*expression")='expression'
+  extends(".*expression")=expression
+  name(".*statement")='statement'
+  extends(".*statement")=statement
 }
 
 script_file ::= script*
-script ::= script_header
-script_header ::= LBRACE IDENTIFIER COMMA IDENTIFIER RBRACE parameter_list? return_list?
+script ::= script_header statement_list
+script_header ::= LBRACKET IDENTIFIER COMMA IDENTIFIER RBRACKET parameter_list? return_list?
 parameter ::= TYPE_NAME DOLLAR IDENTIFIER
 parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
 return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
+statement_list ::= statement*
+statement ::= while_statement | if_statement
+while_statement ::= WHILE LPAREN expression RPAREN braced_block_statement
+if_statement ::= IF LPAREN expression RPAREN braced_block_statement
+braced_block_statement ::= LBRACE statement_list RBRACE
+expression ::= par_expression
+             | local_variable_expression
+             | dynamic_expression
+par_expression ::= LPAREN expression RPAREN
+local_variable_expression ::= DOLLAR name_expression
+dynamic_expression ::= name_expression
+private name_expression ::= IDENTIFIER | WHILE | IF

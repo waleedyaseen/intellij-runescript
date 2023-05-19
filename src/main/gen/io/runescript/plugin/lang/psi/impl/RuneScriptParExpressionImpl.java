@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptScriptImpl extends ASTWrapperPsiElement implements RuneScriptScript {
+public class RuneScriptParExpressionImpl extends RuneScriptExpressionImpl implements RuneScriptParExpression {
 
-  public RuneScriptScriptImpl(@NotNull ASTNode node) {
+  public RuneScriptParExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitScript(this);
+    visitor.visitParExpression(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class RuneScriptScriptImpl extends ASTWrapperPsiElement implements RuneSc
 
   @Override
   @NotNull
-  public RuneScriptScriptHeader getScriptHeader() {
-    return findNotNullChildByClass(RuneScriptScriptHeader.class);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptStatementList getStatementList() {
-    return findNotNullChildByClass(RuneScriptStatementList.class);
+  public RuneScriptExpression getExpression() {
+    return findNotNullChildByClass(RuneScriptExpression.class);
   }
 
 }

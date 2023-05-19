@@ -5,12 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RuneScriptScript extends PsiElement {
+public interface RuneScriptWhileStatement extends RuneScriptStatement {
 
   @NotNull
-  RuneScriptScriptHeader getScriptHeader();
+  RuneScriptBracedBlockStatement getBracedBlockStatement();
 
   @NotNull
-  RuneScriptStatementList getStatementList();
+  RuneScriptExpression getExpression();
 
 }
