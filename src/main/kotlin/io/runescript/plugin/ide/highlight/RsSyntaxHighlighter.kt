@@ -3,9 +3,13 @@ package io.runescript.plugin.ide.highlight
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
-import com.intellij.openapi.project.Project
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.lexer.RuneScriptLexerAdapter
+import io.runescript.plugin.lang.lexer.RuneScriptLexerInfo
+import io.runescript.plugin.lang.psi.RuneScriptTokenTypes
+import io.runescript.plugin.lang.psi.RuneScriptTokenTypes.MULTI_LINE_COMMENT
+import io.runescript.plugin.lang.psi.RuneScriptTokenTypes.SINGLE_LINE_COMMENT
 import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.BRACES
 import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.BRACKETS
 import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.KEYWORDS
@@ -13,10 +17,10 @@ import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.OPERATORS
 import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.PARENS
 import io.runescript.plugin.lang.psi.RuneScriptTypes.*
 
-class RsSyntaxHighlighter(private val project: Project) : SyntaxHighlighterBase() {
+class RsSyntaxHighlighter(private val lexerInfo: RuneScriptLexerInfo) : SyntaxHighlighterBase() {
 
     override fun getHighlightingLexer(): Lexer {
-        return RuneScriptLexerAdapter(project)
+        return RuneScriptLexerAdapter(lexerInfo)
     }
 
     override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> {
@@ -30,10 +34,12 @@ class RsSyntaxHighlighter(private val project: Project) : SyntaxHighlighterBase(
             attributes[IDENTIFIER] = RsSyntaxHighlighterColors.IDENTIFIER
             attributes[INTEGER] = RsSyntaxHighlighterColors.NUMBER
             fillMap(attributes, KEYWORDS, RsSyntaxHighlighterColors.KEYWORD)
-            attributes[STRING_PART] = RsSyntaxHighlighterColors.STRING
-            attributes[STRING_TAG] = RsSyntaxHighlighterColors.STRING // TODO(walied): different color?
-            // TODO(walied): block comment
-            // TODO(walied): line comment
+            attributes[TYPE_NAME] = RsSyntaxHighlighterColors.TYPE_NAME
+            attributes[ARRAY_TYPE_NAME] = RsSyntaxHighlighterColors.ARRAY_TYPE_NAME
+            fillMap(attributes, TokenSet.create(STRING_START, STRING_PART, STRING_END), RsSyntaxHighlighterColors.STRING)
+            attributes[STRING_TAG] = RsSyntaxHighlighterColors.STRING_TAG
+            attributes[MULTI_LINE_COMMENT] = RsSyntaxHighlighterColors.BLOCK_COMMENT
+            attributes[SINGLE_LINE_COMMENT] = RsSyntaxHighlighterColors.LINE_COMMENT
             fillMap(attributes, OPERATORS, RsSyntaxHighlighterColors.OPERATION_SIGN)
             fillMap(attributes, BRACES, RsSyntaxHighlighterColors.BRACES)
             attributes[SEMICOLON] = RsSyntaxHighlighterColors.SEMICOLON

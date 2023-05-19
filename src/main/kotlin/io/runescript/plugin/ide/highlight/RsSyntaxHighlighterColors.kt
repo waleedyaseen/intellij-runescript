@@ -6,18 +6,21 @@ import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributes
 
 object RsSyntaxHighlighterColors {
     // Lexer based attribute keys
-    private const val RUNESCRIPT_IDENTIFIER = "RUNESCRIPT_IDENTIFIER"
-    private const val RUNESCRIPT_NUMBER = "RUNESCRIPT_NUMBER"
-    private const val RUNESCRIPT_KEYWORD = "RUNESCRIPT_KEYWORD"
-    private const val RUNESCRIPT_STRING = "RUNESCRIPT_STRING"
-    private const val RUNESCRIPT_BLOCK_COMMENT = "RUNESCRIPT_BLOCK_COMMENT"
-    private const val RUNESCRIPT_LINE_COMMENT = "RUNESCRIPT_LINE_COMMENT"
-    private const val RUNESCRIPT_OPERATION_SIGN = "RUNESCRIPT_OPERATION_SIGN"
-    private const val RUNESCRIPT_BRACES = "RUNESCRIPT_BRACES"
-    private const val RUNESCRIPT_SEMICOLON = "RUNESCRIPT_SEMICOLON"
-    private const val RUNESCRIPT_COMMA = "RUNESCRIPT_COMMA"
-    private const val RUNESCRIPT_PARENTHESIS = "RUNESCRIPT_PARENTHESIS"
-    private const val RUNESCRIPT_BRACKETS = "RUNESCRIPT_BRACKETS"
+    const val RUNESCRIPT_IDENTIFIER = "RUNESCRIPT_IDENTIFIER"
+    const val RUNESCRIPT_NUMBER = "RUNESCRIPT_NUMBER"
+    const val RUNESCRIPT_KEYWORD = "RUNESCRIPT_KEYWORD"
+    const val RUNESCRIPT_TYPE_NAME = "RUNESCRIPT_TYPE_NAME"
+    const val RUNESCRIPT_ARRAY_TYPE_NAME = "RUNESCRIPT_ARRAY_TYPE_NAME"
+    const val RUNESCRIPT_STRING = "RUNESCRIPT_STRING"
+    const val RUNESCRIPT_STRING_TAG = "RUNESCRIPT_STRING_TAG"
+    const val RUNESCRIPT_BLOCK_COMMENT = "RUNESCRIPT_BLOCK_COMMENT"
+    const val RUNESCRIPT_LINE_COMMENT = "RUNESCRIPT_LINE_COMMENT"
+    const val RUNESCRIPT_OPERATION_SIGN = "RUNESCRIPT_OPERATION_SIGN"
+    const val RUNESCRIPT_BRACES = "RUNESCRIPT_BRACES"
+    const val RUNESCRIPT_SEMICOLON = "RUNESCRIPT_SEMICOLON"
+    const val RUNESCRIPT_COMMA = "RUNESCRIPT_COMMA"
+    const val RUNESCRIPT_PARENTHESIS = "RUNESCRIPT_PARENTHESIS"
+    const val RUNESCRIPT_BRACKETS = "RUNESCRIPT_BRACKETS"
 
     // Parser based attribute keys
     private const val RUNESCRIPT_LOCAL_VARIABLE = "RUNESCRIPT_LOCAL_VARIABLE"
@@ -28,7 +31,10 @@ object RsSyntaxHighlighterColors {
     val IDENTIFIER = createTextAttributesKey(RUNESCRIPT_IDENTIFIER, DefaultLanguageHighlighterColors.IDENTIFIER)
     val NUMBER = createTextAttributesKey(RUNESCRIPT_NUMBER, DefaultLanguageHighlighterColors.NUMBER)
     val KEYWORD = createTextAttributesKey(RUNESCRIPT_KEYWORD, DefaultLanguageHighlighterColors.KEYWORD)
+    val TYPE_NAME = createTextAttributesKey(RUNESCRIPT_TYPE_NAME, DefaultLanguageHighlighterColors.CLASS_NAME)
+    val ARRAY_TYPE_NAME = createTextAttributesKey(RUNESCRIPT_ARRAY_TYPE_NAME, DefaultLanguageHighlighterColors.CLASS_NAME)
     val STRING = createTextAttributesKey(RUNESCRIPT_STRING, DefaultLanguageHighlighterColors.STRING)
+    val STRING_TAG = createTextAttributesKey(RUNESCRIPT_STRING_TAG, DefaultLanguageHighlighterColors.STRING)
     val BLOCK_COMMENT = createTextAttributesKey(RUNESCRIPT_BLOCK_COMMENT, DefaultLanguageHighlighterColors.BLOCK_COMMENT)
     val LINE_COMMENT = createTextAttributesKey(RUNESCRIPT_LINE_COMMENT, DefaultLanguageHighlighterColors.LINE_COMMENT)
     val OPERATION_SIGN = createTextAttributesKey(RUNESCRIPT_OPERATION_SIGN, DefaultLanguageHighlighterColors.OPERATION_SIGN)

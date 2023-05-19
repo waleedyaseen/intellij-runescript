@@ -19,6 +19,7 @@
                 displayName="RuneScript"
                 instance="io.runescript.plugin.ide.configurable.RsLanguageSettings"/>
         <lang.syntaxHighlighterFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="io.runescript.plugin.ide.highlight.RsColorSettingsPage"/>
         <internalFileTemplate name="ClientScript"/>
     </extensions>
     <actions>
