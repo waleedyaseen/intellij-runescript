@@ -20,8 +20,8 @@
 script_file ::= script*
 script ::= script_header statement_list
 script_header ::= LBRACKET escaped_name COMMA escaped_name RBRACKET parameter_list? return_list?
-parameter ::= TYPE_NAME DOLLAR escaped_name
 parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
+parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) DOLLAR escaped_name
 return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
 statement_list ::= statement*
 statement ::= block_statement
@@ -33,10 +33,12 @@ statement ::= block_statement
             | local_variable_assignment_statement
             | array_variable_declaration_statement
             | array_variable_assignment_statement
+            | scoped_variable_assignment_statement
             | expression_statement
+
 block_statement ::= LBRACE statement_list RBRACE
-if_statement ::= IF LPAREN expression RPAREN statement
-while_statement ::= WHILE LPAREN expression RPAREN statement
+if_statement ::= IF LPAREN relational_expression RPAREN statement
+while_statement ::= WHILE LPAREN relational_expression RPAREN statement
 switch_statement ::= SWITCH LPAREN expression RPAREN LBRACE switch_case* RBRACE
 switch_case ::= CASE expression_list COLON statement_list
 return_statement ::= RETURN LPAREN expression_list? RPAREN SEMICOLON
@@ -44,16 +46,60 @@ local_variable_declaration_statement ::= DEFINE_TYPE local_variable_expression (
 local_variable_assignment_statement ::= local_variable_expression EQUAL expression SEMICOLON
 array_variable_declaration_statement ::= DEFINE_TYPE local_variable_expression par_expression SEMICOLON
 array_variable_assignment_statement ::= local_variable_expression par_expression EQUAL expression SEMICOLON
+scoped_variable_assignment_statement ::= scoped_variable_expression EQUAL expression SEMICOLON
 expression_statement ::= expression SEMICOLON
+
+// Relational expressions
+
+private relational_expression ::= logical_or_wrapper
+
+private logical_or_wrapper ::= logical_and_wrapper logical_or_expression*
+left logical_or_expression ::= BAR logical_and_wrapper
+
+private logical_and_wrapper ::= compare_expression_wrapper logical_and_expression*
+left logical_and_expression ::= AMPERSAND compare_expression_wrapper
+
+private compare_expression_wrapper ::= relational_value_expression compare_expression?
+left compare_expression ::= (EXCEL | GT | LT | GTE | LTE | EQUAL) relational_value_expression
+
+relational_value_expression ::= (LPAREN relational_expression RPAREN) | expression
+
+// Arithmetic & Bitwise Expressions
+
+arithmetic_expression ::= arithmetic_bitwise_or_wrapper
+
+private arithmetic_bitwise_or_wrapper ::= arithmetic_bitwise_and_wrapper arithmetic_bitwise_or_expression*
+left arithmetic_bitwise_or_expression ::= BAR arithmetic_bitwise_and_wrapper
+
+private arithmetic_bitwise_and_wrapper ::= arithmetic_additive_wrapper arithmetic_bitwise_and_expression*
+left arithmetic_bitwise_and_expression ::= AMPERSAND arithmetic_additive_wrapper
+
+private arithmetic_additive_wrapper ::= arithmetic_multiplicative_wrapper arithmetic_additive_expression*
+left arithmetic_additive_expression ::= (PLUS | MINUS) arithmetic_multiplicative_wrapper
+
+private arithmetic_multiplicative_wrapper ::= arithmetic_value_expression arithmetic_multiplicative_expression*
+left arithmetic_multiplicative_expression ::= (STAR | SLASH | PERCENT) arithmetic_value_expression
+
+arithmetic_value_expression ::= (LPAREN arithmetic_expression RPAREN) | expression
+
+// General expressions
 expression ::= par_expression
+             | array_variable_expression
              | local_variable_expression
+             | scoped_variable_expression
              | literal_expression
              | command_expression
              | gosub_expression
+             | constant_expression
              | dynamic_expression
+             | calc_expression
+
+calc_expression ::= CALC LPAREN arithmetic_expression RPAREN
 private expression_list ::= expression (COMMA expression)*
 par_expression ::= LPAREN expression RPAREN
 local_variable_expression ::= DOLLAR escaped_name
+array_variable_expression ::= DOLLAR escaped_name LPAREN expression RPAREN
+scoped_variable_expression ::= MOD escaped_name
 private literal_expression ::= integer_literal_expression
                              | boolean_literal_expression
                              | null_literal_expression
@@ -63,8 +109,8 @@ boolean_literal_expression ::= TRUE | FALSE
 null_literal_expression ::= NULL
 string_literal_expression ::= STRING_START (STRING_PART | STRING_TAG | string_interpolation_expression)* STRING_END
 string_interpolation_expression ::= STRING_INTERPOLATION_START | expression | STRING_INTERPOLATION_END
-
+constant_expression ::= CARET escaped_name
 command_expression ::= escaped_name (LPAREN expression_list? RPAREN)?
 gosub_expression ::= TILDE escaped_name (LPAREN expression_list? RPAREN)?
 dynamic_expression ::= escaped_name
-private escaped_name ::= IDENTIFIER | DEFINE_TYPE | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+private escaped_name ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

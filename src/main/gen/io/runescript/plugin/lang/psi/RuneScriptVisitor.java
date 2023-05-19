@@ -7,12 +7,40 @@ import com.intellij.psi.PsiElement;
 
 public class RuneScriptVisitor extends PsiElementVisitor {
 
+  public void visitArithmeticAdditiveExpression(@NotNull RuneScriptArithmeticAdditiveExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitArithmeticBitwiseAndExpression(@NotNull RuneScriptArithmeticBitwiseAndExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitArithmeticBitwiseOrExpression(@NotNull RuneScriptArithmeticBitwiseOrExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitArithmeticExpression(@NotNull RuneScriptArithmeticExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitArithmeticMultiplicativeExpression(@NotNull RuneScriptArithmeticMultiplicativeExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitArithmeticValueExpression(@NotNull RuneScriptArithmeticValueExpression o) {
+    visitExpression(o);
+  }
+
   public void visitArrayVariableAssignmentStatement(@NotNull RuneScriptArrayVariableAssignmentStatement o) {
     visitStatement(o);
   }
 
   public void visitArrayVariableDeclarationStatement(@NotNull RuneScriptArrayVariableDeclarationStatement o) {
     visitStatement(o);
+  }
+
+  public void visitArrayVariableExpression(@NotNull RuneScriptArrayVariableExpression o) {
+    visitExpression(o);
   }
 
   public void visitBlockStatement(@NotNull RuneScriptBlockStatement o) {
@@ -23,7 +51,19 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitCalcExpression(@NotNull RuneScriptCalcExpression o) {
+    visitExpression(o);
+  }
+
   public void visitCommandExpression(@NotNull RuneScriptCommandExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitCompareExpression(@NotNull RuneScriptCompareExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitConstantExpression(@NotNull RuneScriptConstantExpression o) {
     visitExpression(o);
   }
 
@@ -63,6 +103,14 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitLogicalAndExpression(@NotNull RuneScriptLogicalAndExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitLogicalOrExpression(@NotNull RuneScriptLogicalOrExpression o) {
+    visitExpression(o);
+  }
+
   public void visitNullLiteralExpression(@NotNull RuneScriptNullLiteralExpression o) {
     visitExpression(o);
   }
@@ -79,12 +127,24 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitRelationalValueExpression(@NotNull RuneScriptRelationalValueExpression o) {
+    visitExpression(o);
+  }
+
   public void visitReturnList(@NotNull RuneScriptReturnList o) {
     visitPsiElement(o);
   }
 
   public void visitReturnStatement(@NotNull RuneScriptReturnStatement o) {
     visitStatement(o);
+  }
+
+  public void visitScopedVariableAssignmentStatement(@NotNull RuneScriptScopedVariableAssignmentStatement o) {
+    visitStatement(o);
+  }
+
+  public void visitScopedVariableExpression(@NotNull RuneScriptScopedVariableExpression o) {
+    visitExpression(o);
   }
 
   public void visitScript(@NotNull RuneScriptScript o) {

@@ -39,7 +39,7 @@ this.project =  project;
 %function advance
 %type IElementType
 
-IDENTIFIER_PART = [a-zA-Z0-9_+]
+IDENTIFIER_PART = [a-zA-Z0-9_+\.]
 IDENTIFIER = ({IDENTIFIER_PART})+
 DECIMAL_DIGIT = [0-9]
 HEX_DIGIT = [0-9a-fA-F]
@@ -61,9 +61,36 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 "false" { return FALSE; }
 "null" { return NULL; }
 "case" { return CASE; }
+"calc" { return CALC; }
+
 \" { yybegin(STRING); return STRING_START; }
 
 {INTEGER} { return INTEGER; }
+
+
+// Operators
+"~" { return TILDE; }
+"=" { return EQUAL; }
+"<" { return LT; }
+">" {
+    if (yystate() == STRING_INTERPOLATION) {
+        yybegin(STRING);
+        return STRING_INTERPOLATION_END;
+    } else {
+        return GT;
+    }
+}
+">=" { return GTE; }
+"<=" { return LTE; }
+"!" { return EXCEL;}
+"+" { return PLUS; }
+"-" { return MINUS; }
+"*" { return STAR; }
+"/" { return SLASH; }
+"%" { return PERCENT; }
+"&" { return AMPERSAND; }
+"|" { return BAR; }
+"$" { return DOLLAR; }
 
 // General
 {IDENTIFIER} {
@@ -91,24 +118,22 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
               && typeName.contentEquals(lexeme.subSequence(7, lexeme.length()))) {
           return SWITCH;
       }
+       int length = typeName.length();
+       if (lexeme.length() == length + 5
+              && lexeme.charAt(length) == 'a'
+              && lexeme.charAt(length + 1) == 'r'
+              && lexeme.charAt(length + 2) == 'r'
+              && lexeme.charAt(length + 3) == 'a'
+              && lexeme.charAt(length + 4) == 'y'
+              && typeName.contentEquals(lexeme.subSequence(0, length))) {
+          return ARRAY_TYPE_NAME;
+      }
   }
   return IDENTIFIER;
 }
-">" {
-    if (yystate() == STRING_INTERPOLATION) {
-        yybegin(STRING);
-        return STRING_INTERPOLATION_END;
-    } else {
-        throw new RuntimeException();
-    }
-}
-"$" { return DOLLAR; }
-
-// Operators
-"=" { return EQUAL; }
-"~" { return TILDE; }
 
 // Separators
+"^" { return CARET; }
 "{" { return LBRACE; }
 "}" { return RBRACE; }
 "[" { return LBRACKET; }
