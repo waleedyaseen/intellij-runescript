@@ -4,8 +4,11 @@
 package io.runescript.plugin.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
+import io.runescript.plugin.ide.config.RsConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.BAD_CHARACTER;
@@ -266,7 +269,16 @@ class _RuneScriptLexer implements FlexLexer {
   private boolean zzEOFDone;
 
   /* user code: */
-List<String> typeNames = List.of("int","string");
+private Project project;
+private List<String> _cachedPrimitiveTypeNames;
+
+public List<String> getTypeNames() {
+    if (_cachedPrimitiveTypeNames == null) {
+        List<String> typeNames = RsConfig.INSTANCE.getPrimitiveTypes(project);
+        _cachedPrimitiveTypeNames = new ArrayList<>(typeNames);
+    }
+    return _cachedPrimitiveTypeNames;
+}
 
 
   /**
@@ -274,7 +286,8 @@ List<String> typeNames = List.of("int","string");
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  _RuneScriptLexer(java.io.Reader in) {
+  _RuneScriptLexer(java.io.Reader in, Project project) {
+  this.project =  project;
     this.zzReader = in;
   }
 
@@ -531,11 +544,13 @@ List<String> typeNames = List.of("int","string");
           // fall through
           case 13: break;
           case 5:
-            { if (typeNames.contains(yytext())) {
-    return TYPE_NAME;
-  } else {
-    return IDENTIFIER;
+            { CharSequence lexeme = yytext();
+  for (String typeName: getTypeNames()) {
+      if (typeName.contentEquals(lexeme)) {
+          return TYPE_NAME;
+      }
   }
+  return IDENTIFIER;
             }
           // fall through
           case 14: break;

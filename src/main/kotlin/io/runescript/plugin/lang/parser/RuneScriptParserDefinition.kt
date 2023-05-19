@@ -20,7 +20,7 @@ class RuneScriptParserDefinition : ParserDefinition {
     private val FILE = IFileElementType(RuneScript)
 
     override fun createLexer(project: Project): Lexer {
-        return RuneScriptLexerAdapter()
+        return RuneScriptLexerAdapter(project)
     }
 
     override fun createParser(project: Project): PsiParser {

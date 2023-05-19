@@ -7,14 +7,22 @@
     <vendor></vendor>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <lang.parserDefinition language="RuneScript" implementationClass="io.runescript.plugin.lang.parser.RuneScriptParserDefinition"/>
-        <fileType name="ClientScript" language="RuneScript" implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE" extensions="cs2"/>
+        <lang.parserDefinition language="RuneScript"
+                               implementationClass="io.runescript.plugin.lang.parser.RuneScriptParserDefinition"/>
+        <fileType name="ClientScript" language="RuneScript"
+                  implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE"
+                  extensions="cs2"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
+        <projectConfigurable
+                groupId="language"
+                id="runescript.languageSettings"
+                displayName="RuneScript"
+                instance="io.runescript.plugin.ide.configurable.RsLanguageSettings"/>
         <internalFileTemplate name="ClientScript"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
-            <add-to-group group-id="NewGroup" anchor="first" />
+            <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
     </actions>
 </idea-plugin>
