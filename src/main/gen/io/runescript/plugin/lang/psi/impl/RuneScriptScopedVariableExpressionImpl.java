@@ -27,4 +27,10 @@ public class RuneScriptScopedVariableExpressionImpl extends RuneScriptExpression
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public RuneScriptNameLiteral getNameLiteral() {
+    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  }
+
 }

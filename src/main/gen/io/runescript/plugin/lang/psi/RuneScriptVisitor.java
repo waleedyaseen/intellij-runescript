@@ -111,6 +111,10 @@ public class RuneScriptVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitNameLiteral(@NotNull RuneScriptNameLiteral o) {
+    visitPsiElement(o);
+  }
+
   public void visitNullLiteralExpression(@NotNull RuneScriptNullLiteralExpression o) {
     visitExpression(o);
   }
@@ -152,6 +156,10 @@ public class RuneScriptVisitor extends PsiElementVisitor {
   }
 
   public void visitScriptHeader(@NotNull RuneScriptScriptHeader o) {
+    visitPsiElement(o);
+  }
+
+  public void visitScriptName(@NotNull RuneScriptScriptName o) {
     visitPsiElement(o);
   }
 

@@ -39,4 +39,10 @@ public class RuneScriptScriptHeaderImpl extends ASTWrapperPsiElement implements 
     return findChildByClass(RuneScriptReturnList.class);
   }
 
+  @Override
+  @NotNull
+  public RuneScriptScriptName getScriptName() {
+    return findNotNullChildByClass(RuneScriptScriptName.class);
+  }
+
 }

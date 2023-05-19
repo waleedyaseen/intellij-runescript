@@ -10,4 +10,7 @@ public interface RuneScriptGosubExpression extends RuneScriptExpression {
   @NotNull
   List<RuneScriptExpression> getExpressionList();
 
+  @NotNull
+  RuneScriptNameLiteral getNameLiteral();
+
 }

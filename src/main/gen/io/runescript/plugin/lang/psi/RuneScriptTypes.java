@@ -34,6 +34,7 @@ public interface RuneScriptTypes {
   IElementType LOCAL_VARIABLE_EXPRESSION = new RuneScriptElementType("LOCAL_VARIABLE_EXPRESSION");
   IElementType LOGICAL_AND_EXPRESSION = new RuneScriptElementType("LOGICAL_AND_EXPRESSION");
   IElementType LOGICAL_OR_EXPRESSION = new RuneScriptElementType("LOGICAL_OR_EXPRESSION");
+  IElementType NAME_LITERAL = new RuneScriptElementType("NAME_LITERAL");
   IElementType NULL_LITERAL_EXPRESSION = new RuneScriptElementType("NULL_LITERAL_EXPRESSION");
   IElementType PARAMETER = new RuneScriptElementType("PARAMETER");
   IElementType PARAMETER_LIST = new RuneScriptElementType("PARAMETER_LIST");
@@ -45,6 +46,7 @@ public interface RuneScriptTypes {
   IElementType SCOPED_VARIABLE_EXPRESSION = new RuneScriptElementType("SCOPED_VARIABLE_EXPRESSION");
   IElementType SCRIPT = new RuneScriptElementType("SCRIPT");
   IElementType SCRIPT_HEADER = new RuneScriptElementType("SCRIPT_HEADER");
+  IElementType SCRIPT_NAME = new RuneScriptElementType("SCRIPT_NAME");
   IElementType STATEMENT = new RuneScriptElementType("STATEMENT");
   IElementType STATEMENT_LIST = new RuneScriptElementType("STATEMENT_LIST");
   IElementType STRING_INTERPOLATION_EXPRESSION = new RuneScriptElementType("STRING_INTERPOLATION_EXPRESSION");
@@ -176,6 +178,9 @@ public interface RuneScriptTypes {
       else if (type == LOGICAL_OR_EXPRESSION) {
         return new RuneScriptLogicalOrExpressionImpl(node);
       }
+      else if (type == NAME_LITERAL) {
+        return new RuneScriptNameLiteralImpl(node);
+      }
       else if (type == NULL_LITERAL_EXPRESSION) {
         return new RuneScriptNullLiteralExpressionImpl(node);
       }
@@ -208,6 +213,9 @@ public interface RuneScriptTypes {
       }
       else if (type == SCRIPT_HEADER) {
         return new RuneScriptScriptHeaderImpl(node);
+      }
+      else if (type == SCRIPT_NAME) {
+        return new RuneScriptScriptNameImpl(node);
       }
       else if (type == STATEMENT_LIST) {
         return new RuneScriptStatementListImpl(node);

@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.runescript.plugin.lang.psi.*;
 
-public class RuneScriptArrayVariableExpressionImpl extends RuneScriptExpressionImpl implements RuneScriptArrayVariableExpression {
+public class RuneScriptScriptNameImpl extends ASTWrapperPsiElement implements RuneScriptScriptName {
 
-  public RuneScriptArrayVariableExpressionImpl(@NotNull ASTNode node) {
+  public RuneScriptScriptNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull RuneScriptVisitor visitor) {
-    visitor.visitArrayVariableExpression(this);
+    visitor.visitScriptName(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class RuneScriptArrayVariableExpressionImpl extends RuneScriptExpressionI
 
   @Override
   @NotNull
-  public RuneScriptExpression getExpression() {
-    return findNotNullChildByClass(RuneScriptExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptNameLiteral getNameLiteral() {
-    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  public List<RuneScriptNameLiteral> getNameLiteralList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptNameLiteral.class);
   }
 
 }

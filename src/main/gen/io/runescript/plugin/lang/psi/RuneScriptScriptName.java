@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RuneScriptCommandExpression extends RuneScriptExpression {
+public interface RuneScriptScriptName extends PsiElement {
 
   @NotNull
-  List<RuneScriptExpression> getExpressionList();
-
-  @NotNull
-  RuneScriptNameLiteral getNameLiteral();
+  List<RuneScriptNameLiteral> getNameLiteralList();
 
 }

@@ -33,4 +33,10 @@ public class RuneScriptCommandExpressionImpl extends RuneScriptExpressionImpl im
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptExpression.class);
   }
 
+  @Override
+  @NotNull
+  public RuneScriptNameLiteral getNameLiteral() {
+    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  }
+
 }

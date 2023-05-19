@@ -7,7 +7,7 @@
   psiImplClassSuffix="Impl"
   psiPackage="io.runescript.plugin.lang.psi"
   psiImplPackage="io.runescript.plugin.lang.psi.impl"
-
+  psiImplUtilClass="io.runescript.plugin.lang.psi.impl.RuneScriptPsiImplUtil"
   elementTypeHolderClass="io.runescript.plugin.lang.psi.RuneScriptTypes"
   elementTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
   tokenTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
@@ -19,10 +19,11 @@
 
 script_file ::= script*
 script ::= script_header statement_list
-script_header ::= LBRACKET escaped_name COMMA escaped_name RBRACKET parameter_list? return_list?
+script_header ::= script_name parameter_list? return_list?
+script_name ::= LBRACKET name_literal COMMA name_literal RBRACKET
 
 parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
-parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) DOLLAR escaped_name
+parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) DOLLAR name_literal
 return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
 statement_list ::= statement*
 statement ::= block_statement
@@ -100,9 +101,9 @@ expression ::= par_expression
 calc_expression ::= CALC LPAREN arithmetic_expression RPAREN
 private expression_list ::= expression (COMMA expression)*
 par_expression ::= LPAREN expression RPAREN
-local_variable_expression ::= DOLLAR escaped_name
-array_variable_expression ::= DOLLAR escaped_name LPAREN expression RPAREN
-scoped_variable_expression ::= MOD escaped_name
+local_variable_expression ::= DOLLAR name_literal
+array_variable_expression ::= DOLLAR name_literal LPAREN expression RPAREN
+scoped_variable_expression ::= MOD name_literal
 private literal_expression ::= integer_literal_expression
                              | boolean_literal_expression
                              | null_literal_expression
@@ -112,8 +113,8 @@ boolean_literal_expression ::= TRUE | FALSE
 null_literal_expression ::= NULL
 string_literal_expression ::= STRING_START (STRING_PART | STRING_TAG | string_interpolation_expression)* STRING_END
 string_interpolation_expression ::= STRING_INTERPOLATION_START | expression | STRING_INTERPOLATION_END
-constant_expression ::= CARET escaped_name
-command_expression ::= escaped_name (LPAREN expression_list? RPAREN)?
-gosub_expression ::= TILDE escaped_name (LPAREN expression_list? RPAREN)?
-dynamic_expression ::= escaped_name
-private escaped_name ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+constant_expression ::= CARET name_literal
+command_expression ::= name_literal (LPAREN expression_list? RPAREN)?
+gosub_expression ::= TILDE name_literal (LPAREN expression_list? RPAREN)?
+dynamic_expression ::= name_literal
+name_literal ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

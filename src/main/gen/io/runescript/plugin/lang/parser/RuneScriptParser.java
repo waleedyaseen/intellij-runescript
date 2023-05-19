@@ -277,14 +277,14 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DOLLAR escaped_name LPAREN expression RPAREN
+  // DOLLAR name_literal LPAREN expression RPAREN
   public static boolean array_variable_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_variable_expression")) return false;
     if (!nextTokenIs(b, "<expression>", DOLLAR)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ARRAY_VARIABLE_EXPRESSION, "<expression>");
     r = consumeToken(b, DOLLAR);
-    r = r && escaped_name(b, l + 1);
+    r = r && name_literal(b, l + 1);
     r = r && consumeToken(b, LPAREN);
     r = r && expression(b, l + 1);
     r = r && consumeToken(b, RPAREN);
@@ -334,12 +334,12 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // escaped_name (LPAREN expression_list? RPAREN)?
+  // name_literal (LPAREN expression_list? RPAREN)?
   public static boolean command_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "command_expression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, COMMAND_EXPRESSION, "<expression>");
-    r = escaped_name(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, COMMAND_EXPRESSION, "<expression>");
+    r = name_literal(b, l + 1);
     r = r && command_expression_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -416,44 +416,26 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CARET escaped_name
+  // CARET name_literal
   public static boolean constant_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "constant_expression")) return false;
     if (!nextTokenIs(b, "<expression>", CARET)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, CONSTANT_EXPRESSION, "<expression>");
     r = consumeToken(b, CARET);
-    r = r && escaped_name(b, l + 1);
+    r = r && name_literal(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // escaped_name
+  // name_literal
   public static boolean dynamic_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dynamic_expression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, DYNAMIC_EXPRESSION, "<expression>");
-    r = escaped_name(b, l + 1);
+    r = name_literal(b, l + 1);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
-  static boolean escaped_name(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "escaped_name")) return false;
-    boolean r;
-    r = consumeToken(b, IDENTIFIER);
-    if (!r) r = consumeToken(b, DEFINE_TYPE);
-    if (!r) r = consumeToken(b, ARRAY_TYPE_NAME);
-    if (!r) r = consumeToken(b, WHILE);
-    if (!r) r = consumeToken(b, IF);
-    if (!r) r = consumeToken(b, TRUE);
-    if (!r) r = consumeToken(b, FALSE);
-    if (!r) r = consumeToken(b, NULL);
-    if (!r) r = consumeToken(b, SWITCH);
-    if (!r) r = consumeToken(b, CASE);
     return r;
   }
 
@@ -533,14 +515,14 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TILDE escaped_name (LPAREN expression_list? RPAREN)?
+  // TILDE name_literal (LPAREN expression_list? RPAREN)?
   public static boolean gosub_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "gosub_expression")) return false;
     if (!nextTokenIs(b, "<expression>", TILDE)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, GOSUB_EXPRESSION, "<expression>");
     r = consumeToken(b, TILDE);
-    r = r && escaped_name(b, l + 1);
+    r = r && name_literal(b, l + 1);
     r = r && gosub_expression_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -665,14 +647,14 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DOLLAR escaped_name
+  // DOLLAR name_literal
   public static boolean local_variable_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "local_variable_expression")) return false;
     if (!nextTokenIs(b, "<expression>", DOLLAR)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, LOCAL_VARIABLE_EXPRESSION, "<expression>");
     r = consumeToken(b, DOLLAR);
-    r = r && escaped_name(b, l + 1);
+    r = r && name_literal(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -750,6 +732,26 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+  public static boolean name_literal(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "name_literal")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, NAME_LITERAL, "<name literal>");
+    r = consumeToken(b, IDENTIFIER);
+    if (!r) r = consumeToken(b, DEFINE_TYPE);
+    if (!r) r = consumeToken(b, ARRAY_TYPE_NAME);
+    if (!r) r = consumeToken(b, WHILE);
+    if (!r) r = consumeToken(b, IF);
+    if (!r) r = consumeToken(b, TRUE);
+    if (!r) r = consumeToken(b, FALSE);
+    if (!r) r = consumeToken(b, NULL);
+    if (!r) r = consumeToken(b, SWITCH);
+    if (!r) r = consumeToken(b, CASE);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // NULL
   public static boolean null_literal_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "null_literal_expression")) return false;
@@ -776,7 +778,7 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (TYPE_NAME | ARRAY_TYPE_NAME) DOLLAR escaped_name
+  // (TYPE_NAME | ARRAY_TYPE_NAME) DOLLAR name_literal
   public static boolean parameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "parameter")) return false;
     if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_NAME, TYPE_NAME)) return false;
@@ -784,7 +786,7 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
     r = parameter_0(b, l + 1);
     r = r && consumeToken(b, DOLLAR);
-    r = r && escaped_name(b, l + 1);
+    r = r && name_literal(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -996,14 +998,14 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // MOD escaped_name
+  // MOD name_literal
   public static boolean scoped_variable_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "scoped_variable_expression")) return false;
     if (!nextTokenIs(b, "<expression>", MOD)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SCOPED_VARIABLE_EXPRESSION, "<expression>");
     r = consumeToken(b, MOD);
-    r = r && escaped_name(b, l + 1);
+    r = r && name_literal(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1034,35 +1036,47 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LBRACKET escaped_name COMMA escaped_name RBRACKET parameter_list? return_list?
+  // script_name parameter_list? return_list?
   public static boolean script_header(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "script_header")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, LBRACKET);
-    r = r && escaped_name(b, l + 1);
-    r = r && consumeToken(b, COMMA);
-    r = r && escaped_name(b, l + 1);
-    r = r && consumeToken(b, RBRACKET);
-    r = r && script_header_5(b, l + 1);
-    r = r && script_header_6(b, l + 1);
+    r = script_name(b, l + 1);
+    r = r && script_header_1(b, l + 1);
+    r = r && script_header_2(b, l + 1);
     exit_section_(b, m, SCRIPT_HEADER, r);
     return r;
   }
 
   // parameter_list?
-  private static boolean script_header_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "script_header_5")) return false;
+  private static boolean script_header_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "script_header_1")) return false;
     parameter_list(b, l + 1);
     return true;
   }
 
   // return_list?
-  private static boolean script_header_6(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "script_header_6")) return false;
+  private static boolean script_header_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "script_header_2")) return false;
     return_list(b, l + 1);
     return true;
+  }
+
+  /* ********************************************************** */
+  // LBRACKET name_literal COMMA name_literal RBRACKET
+  public static boolean script_name(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "script_name")) return false;
+    if (!nextTokenIs(b, LBRACKET)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LBRACKET);
+    r = r && name_literal(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && name_literal(b, l + 1);
+    r = r && consumeToken(b, RBRACKET);
+    exit_section_(b, m, SCRIPT_NAME, r);
+    return r;
   }
 
   /* ********************************************************** */

@@ -10,4 +10,7 @@ public interface RuneScriptArrayVariableExpression extends RuneScriptExpression 
   @NotNull
   RuneScriptExpression getExpression();
 
+  @NotNull
+  RuneScriptNameLiteral getNameLiteral();
+
 }

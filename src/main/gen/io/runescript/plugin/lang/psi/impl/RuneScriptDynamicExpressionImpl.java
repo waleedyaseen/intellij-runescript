@@ -27,4 +27,10 @@ public class RuneScriptDynamicExpressionImpl extends RuneScriptExpressionImpl im
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public RuneScriptNameLiteral getNameLiteral() {
+    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  }
+
 }

@@ -13,4 +13,7 @@ public interface RuneScriptScriptHeader extends PsiElement {
   @Nullable
   RuneScriptReturnList getReturnList();
 
+  @NotNull
+  RuneScriptScriptName getScriptName();
+
 }

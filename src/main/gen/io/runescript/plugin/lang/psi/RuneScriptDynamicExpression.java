@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface RuneScriptDynamicExpression extends RuneScriptExpression {
 
+  @NotNull
+  RuneScriptNameLiteral getNameLiteral();
+
 }

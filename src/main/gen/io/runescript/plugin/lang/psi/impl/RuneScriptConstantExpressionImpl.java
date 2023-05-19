@@ -27,4 +27,10 @@ public class RuneScriptConstantExpressionImpl extends RuneScriptExpressionImpl i
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public RuneScriptNameLiteral getNameLiteral() {
+    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  }
+
 }

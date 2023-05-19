@@ -1,6 +1,5 @@
 package io.runescript.plugin.ide.highlight
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.AttributesDescriptor
@@ -43,29 +42,29 @@ class RsColorSettingsPage : ColorSettingsPage {
 
     companion object {
         private val DEMO_TEXT = """
-            [proc,countodd](int ${'$'}count, intarray ${'$'}array)(int)
-            def_int ${'$'}index = 0;
-            def_int ${'$'}oddcount = 0;
-            while (${'$'}index < ${'$'}count) {
-                if (testbit(${'$'}array(${'$'}index), 0) = 1) {
-                    ${'$'}oddcount = add(${'$'}oddcount, 1);
+            <RUNESCRIPT_SCRIPT_DECLARATION>[proc,countodd]</RUNESCRIPT_SCRIPT_DECLARATION>(int ${'$'}count, intarray ${'$'}array)(int)
+            def_int <RUNESCRIPT_LOCAL_VARIABLE>${'$'}index</RUNESCRIPT_LOCAL_VARIABLE> = 0;
+            def_int <RUNESCRIPT_LOCAL_VARIABLE>${'$'}oddcount</RUNESCRIPT_LOCAL_VARIABLE> = 0;
+            while (<RUNESCRIPT_LOCAL_VARIABLE>${'$'}index</RUNESCRIPT_LOCAL_VARIABLE> < <RUNESCRIPT_LOCAL_VARIABLE>${'$'}count</RUNESCRIPT_LOCAL_VARIABLE>) {
+                if (<RUNESCRIPT_COMMAND_CALL>testbit</RUNESCRIPT_COMMAND_CALL>(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}array</RUNESCRIPT_LOCAL_VARIABLE>(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}index</RUNESCRIPT_LOCAL_VARIABLE>), 0) = 1) {
+                    <RUNESCRIPT_LOCAL_VARIABLE>${'$'}oddcount</RUNESCRIPT_LOCAL_VARIABLE> = <RUNESCRIPT_COMMAND_CALL>add</RUNESCRIPT_COMMAND_CALL>>(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}oddcount</RUNESCRIPT_LOCAL_VARIABLE>, 1);
                 }
-                ${'$'}index = calc(${'$'}index + 1);
+                <RUNESCRIPT_LOCAL_VARIABLE>${'$'}index</RUNESCRIPT_LOCAL_VARIABLE> = calc(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}index</RUNESCRIPT_LOCAL_VARIABLE> + 1);
             }
             /*
              * First line of multi line comment.
              * Second line of multi line comment.
              */
-            switch_int (${'$'}odd_count) {
+            switch_int (<RUNESCRIPT_LOCAL_VARIABLE>${'$'}odd_count</RUNESCRIPT_LOCAL_VARIABLE>) {
                 case 0 :
-                    ~debug_mes("<col=ff0000>No odd numbers were found.</col>");
+                    <RUNESCRIPT_PROC_CALL>~debug_mes</RUNESCRIPT_PROC_CALL>("<col=ff0000>No odd numbers were found.</col>");
                 case 1 :
-                    ~debug_mes("Only one odd number was found.");
+                    <RUNESCRIPT_PROC_CALL>~debug_mes</RUNESCRIPT_PROC_CALL>("Only one odd number was found.");
                 case default :
-                    ~debug_mes("Many odd numbers were found (<tostring(${'$'}odd_count)>).");
+                    <RUNESCRIPT_PROC_CALL>~debug_mes</RUNESCRIPT_PROC_CALL>("Many odd numbers were found (<RUNESCRIPT_COMMAND_CALL>tostring</RUNESCRIPT_COMMAND_CALL>>(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}odd_count</RUNESCRIPT_LOCAL_VARIABLE>)>).");
             }
             // Single line comment.
-            return(${'$'}odd_count);
+            return(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}odd_count</RUNESCRIPT_LOCAL_VARIABLE>);
          """.trimIndent()
         private val DESCRIPTORS = arrayOf(
             AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.identifier"), RsSyntaxHighlighterColors.IDENTIFIER),
@@ -83,6 +82,10 @@ class RsColorSettingsPage : ColorSettingsPage {
             AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.comma"), RsSyntaxHighlighterColors.COMMA),
             AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.parenthesis"), RsSyntaxHighlighterColors.PARENTHESIS),
             AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.brackets"), RsSyntaxHighlighterColors.BRACKETS),
+            AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.local_variable"), RsSyntaxHighlighterColors.LOCAL_VARIABLE),
+            AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.script_declaration"), RsSyntaxHighlighterColors.SCRIPT_DECLARATION),
+            AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.command_call"), RsSyntaxHighlighterColors.COMMAND_CALL),
+            AttributesDescriptor(RuneScriptBundle.message("runescript.color.settings.description.proc_call"), RsSyntaxHighlighterColors.PROC_CALL),
         )
         private val TAG_TO_DESCRIPTOR_MAP = mutableMapOf(
             "RUNESCRIPT_IDENTIFIER" to RsSyntaxHighlighterColors.IDENTIFIER,
@@ -100,6 +103,10 @@ class RsColorSettingsPage : ColorSettingsPage {
             "RUNESCRIPT_COMMA" to RsSyntaxHighlighterColors.COMMA,
             "RUNESCRIPT_PARENTHESIS" to RsSyntaxHighlighterColors.PARENTHESIS,
             "RUNESCRIPT_BRACKETS" to RsSyntaxHighlighterColors.BRACKETS,
+            "RUNESCRIPT_LOCAL_VARIABLE" to RsSyntaxHighlighterColors.LOCAL_VARIABLE,
+            "RUNESCRIPT_SCRIPT_DECLARATION" to RsSyntaxHighlighterColors.SCRIPT_DECLARATION,
+            "RUNESCRIPT_COMMAND_CALL" to RsSyntaxHighlighterColors.COMMAND_CALL,
+            "RUNESCRIPT_PROC_CALL" to RsSyntaxHighlighterColors.PROC_CALL,
         )
 
         private val LEXER_INFO = RuneScriptLexerInfo(mutableListOf("int", "component", "string"))
