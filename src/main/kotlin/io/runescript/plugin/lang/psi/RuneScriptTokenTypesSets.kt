@@ -1,22 +1,21 @@
 package io.runescript.plugin.lang.psi
 
-import com.intellij.psi.TokenType
 import com.intellij.psi.tree.TokenSet
+import io.runescript.plugin.lang.psi.RuneScriptTokenTypes.MULTI_LINE_COMMENT
+import io.runescript.plugin.lang.psi.RuneScriptTokenTypes.SINGLE_LINE_COMMENT
 import io.runescript.plugin.lang.psi.RuneScriptTypes.*
 
 object RuneScriptTokenTypesSets {
-    val WHITE_SPACE = TokenType.WHITE_SPACE
-    val BAD_CHARACTER = TokenType.BAD_CHARACTER
     val KEYWORDS = TokenSet.create(
         IF,
         WHILE,
         SWITCH,
-        SWITCH_CASE,
+        CASE,
+        DEFAULT,
         RETURN,
         DEFINE_TYPE,
-        TYPE_NAME,
-        ARRAY_TYPE_NAME,
         CALC,
+        RETURN,
     )
     val OPERATORS = TokenSet.create(
         PLUS,
@@ -45,4 +44,10 @@ object RuneScriptTokenTypesSets {
         LPAREN,
         RPAREN,
     )
+    val COMMENTS = TokenSet.create(
+        SINGLE_LINE_COMMENT,
+        MULTI_LINE_COMMENT,
+    )
+
+    val STRING_ELEMENTS = TokenSet.create(STRING_START, STRING_PART, STRING_TAG, STRING_END)
 }

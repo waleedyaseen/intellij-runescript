@@ -9,27 +9,22 @@ import io.runescript.plugin.ide.config.RsConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.STRING_LITERAL;
+import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.*;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
-
+import io.runescript.plugin.lang.lexer.RuneScriptLexerInfo;
 %%
 
 %{
-private Project project;
-private List<String> _cachedPrimitiveTypeNames;
+private RuneScriptLexerInfo lexerInfo;
 
 public List<String> getTypeNames() {
-    if (_cachedPrimitiveTypeNames == null) {
-        List<String> typeNames = RsConfig.INSTANCE.getPrimitiveTypes(project);
-        _cachedPrimitiveTypeNames = new ArrayList<>(typeNames);
-    }
-    return _cachedPrimitiveTypeNames;
+    return lexerInfo.getTypeNames();
 }
 %}
 
-%ctorarg Project project
+%ctorarg RuneScriptLexerInfo lexerInfo
 %init{
-this.project =  project;
+this.lexerInfo =  lexerInfo;
 %init}
 
 %class _RuneScriptLexer
@@ -37,7 +32,8 @@ this.project =  project;
 %unicode
 %function advance
 %type IElementType
-
+SINGLE_LINE_COMMENT = "//"([^\r\n]*)(\r|\n|\r\n)
+MULTI_LINE_COMMENT = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 IDENTIFIER_PART = [a-zA-Z0-9_+\.]
 IDENTIFIER = ({IDENTIFIER_PART})+
 DECIMAL_DIGIT = [0-9]
@@ -52,7 +48,8 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 
 %%
 <YYINITIAL,STRING_INTERPOLATION> {
-
+{MULTI_LINE_COMMENT} { return MULTI_LINE_COMMENT; }
+{SINGLE_LINE_COMMENT} { return SINGLE_LINE_COMMENT; }
 // Keywords
 "if" { return IF; }
 "while" { return WHILE; }
@@ -60,8 +57,9 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 "false" { return FALSE; }
 "null" { return NULL; }
 "case" { return CASE; }
+"default" { return DEFAULT; }
 "calc" { return CALC; }
-
+"return" { return RETURN; }
 \" { yybegin(STRING); return STRING_START; }
 
 {INTEGER} { return INTEGER; }
@@ -145,7 +143,7 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 
 // Ignored
 [\ \t\r\n] { return TokenType.WHITE_SPACE; }
-[^] { return BAD_CHARACTER; }
+[^] { return TokenType.BAD_CHARACTER; }
 }
 <STRING> {
 \" { yybegin(YYINITIAL); return STRING_END; }

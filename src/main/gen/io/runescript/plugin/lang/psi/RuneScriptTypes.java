@@ -61,6 +61,7 @@ public interface RuneScriptTypes {
   IElementType CASE = new RuneScriptElementType("CASE");
   IElementType COLON = new RuneScriptElementType("COLON");
   IElementType COMMA = new RuneScriptElementType("COMMA");
+  IElementType DEFAULT = new RuneScriptElementType("DEFAULT");
   IElementType DEFINE_TYPE = new RuneScriptElementType("DEFINE_TYPE");
   IElementType DOLLAR = new RuneScriptElementType("DOLLAR");
   IElementType EQUAL = new RuneScriptElementType("EQUAL");

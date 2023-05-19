@@ -941,22 +941,41 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // RETURN LPAREN expression_list? RPAREN SEMICOLON
+  // RETURN (LPAREN expression_list? RPAREN)? SEMICOLON
   public static boolean return_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "return_statement")) return false;
     if (!nextTokenIs(b, "<statement>", RETURN)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, RETURN_STATEMENT, "<statement>");
-    r = consumeTokens(b, 0, RETURN, LPAREN);
-    r = r && return_statement_2(b, l + 1);
-    r = r && consumeTokens(b, 0, RPAREN, SEMICOLON);
+    r = consumeToken(b, RETURN);
+    r = r && return_statement_1(b, l + 1);
+    r = r && consumeToken(b, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
+  // (LPAREN expression_list? RPAREN)?
+  private static boolean return_statement_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "return_statement_1")) return false;
+    return_statement_1_0(b, l + 1);
+    return true;
+  }
+
+  // LPAREN expression_list? RPAREN
+  private static boolean return_statement_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "return_statement_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LPAREN);
+    r = r && return_statement_1_0_1(b, l + 1);
+    r = r && consumeToken(b, RPAREN);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   // expression_list?
-  private static boolean return_statement_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "return_statement_2")) return false;
+  private static boolean return_statement_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "return_statement_1_0_1")) return false;
     expression_list(b, l + 1);
     return true;
   }
@@ -1140,17 +1159,63 @@ public class RuneScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CASE expression_list COLON statement_list
+  // CASE switch_case_expression_list COLON statement_list
   public static boolean switch_case(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "switch_case")) return false;
     if (!nextTokenIs(b, CASE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, CASE);
-    r = r && expression_list(b, l + 1);
+    r = r && switch_case_expression_list(b, l + 1);
     r = r && consumeToken(b, COLON);
     r = r && statement_list(b, l + 1);
     exit_section_(b, m, SWITCH_CASE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // expression | DEFAULT
+  static boolean switch_case_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "switch_case_expression")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, null, "<expression>");
+    r = expression(b, l + 1);
+    if (!r) r = consumeToken(b, DEFAULT);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // switch_case_expression (COMMA switch_case_expression)*
+  static boolean switch_case_expression_list(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "switch_case_expression_list")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = switch_case_expression(b, l + 1);
+    r = r && switch_case_expression_list_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (COMMA switch_case_expression)*
+  private static boolean switch_case_expression_list_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "switch_case_expression_list_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!switch_case_expression_list_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "switch_case_expression_list_1", c)) break;
+    }
+    return true;
+  }
+
+  // COMMA switch_case_expression
+  private static boolean switch_case_expression_list_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "switch_case_expression_list_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && switch_case_expression(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
