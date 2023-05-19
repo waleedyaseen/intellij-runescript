@@ -12,8 +12,6 @@ import io.runescript.plugin.ide.config.RsConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.BAD_CHARACTER;
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.STRING_LITERAL;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 
 
@@ -593,7 +591,7 @@ public List<String> getTypeNames() {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { return BAD_CHARACTER;
+            { return TokenType.BAD_CHARACTER;
             }
           // fall through
           case 42: break;

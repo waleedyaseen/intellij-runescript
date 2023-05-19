@@ -9,7 +9,6 @@ import io.runescript.plugin.ide.config.RsConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.BAD_CHARACTER;
 import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.STRING_LITERAL;
 import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
 
@@ -156,5 +155,5 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 "<col=" { return STRING_PART; }
 "<" { yybegin(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
 {STRING_PART} { return STRING_PART; }
-[^] { return BAD_CHARACTER; }
+[^] { return TokenType.BAD_CHARACTER; }
 }

@@ -20,6 +20,7 @@
 script_file ::= script*
 script ::= script_header statement_list
 script_header ::= LBRACKET escaped_name COMMA escaped_name RBRACKET parameter_list? return_list?
+
 parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
 parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) DOLLAR escaped_name
 return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
