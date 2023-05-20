@@ -39,4 +39,22 @@ public class RsWhileStatementImpl extends RsStatementImpl implements RsWhileStat
     return findNotNullChildByClass(RsStatement.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getWhile() {
+    return findNotNullChildByType(WHILE);
+  }
+
 }

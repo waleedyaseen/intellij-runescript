@@ -33,4 +33,10 @@ public class RsScopedVariableExpressionImpl extends RsExpressionImpl implements 
     return findNotNullChildByClass(RsNameLiteral.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getMod() {
+    return findNotNullChildByType(MOD);
+  }
+
 }

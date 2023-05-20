@@ -33,4 +33,16 @@ public class RsParameterImpl extends ASTWrapperPsiElement implements RsParameter
     return findNotNullChildByClass(RsLocalVariableExpression.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getArrayTypeName() {
+    return findChildByType(ARRAY_TYPE_NAME);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTypeName() {
+    return findChildByType(TYPE_NAME);
+  }
+
 }

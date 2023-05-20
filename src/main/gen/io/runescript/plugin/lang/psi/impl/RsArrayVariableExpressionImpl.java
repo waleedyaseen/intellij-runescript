@@ -33,4 +33,16 @@ public class RsArrayVariableExpressionImpl extends RsExpressionImpl implements R
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
 }

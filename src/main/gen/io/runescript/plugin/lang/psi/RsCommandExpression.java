@@ -13,4 +13,10 @@ public interface RsCommandExpression extends RsExpression {
   @NotNull
   RsNameLiteral getNameLiteral();
 
+  @Nullable
+  PsiElement getLparen();
+
+  @Nullable
+  PsiElement getRparen();
+
 }

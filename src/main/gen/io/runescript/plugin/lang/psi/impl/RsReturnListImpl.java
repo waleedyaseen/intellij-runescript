@@ -27,4 +27,16 @@ public class RsReturnListImpl extends ASTWrapperPsiElement implements RsReturnLi
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
 }

@@ -13,4 +13,13 @@ public interface RsGosubExpression extends RsExpression {
   @NotNull
   RsNameLiteral getNameLiteral();
 
+  @Nullable
+  PsiElement getLparen();
+
+  @Nullable
+  PsiElement getRparen();
+
+  @NotNull
+  PsiElement getTilde();
+
 }

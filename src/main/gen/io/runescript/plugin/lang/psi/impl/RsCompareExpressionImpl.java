@@ -33,4 +33,40 @@ public class RsCompareExpressionImpl extends RsExpressionImpl implements RsCompa
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getEqual() {
+    return findChildByType(EQUAL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getExcel() {
+    return findChildByType(EXCEL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getGt() {
+    return findChildByType(GT);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getGte() {
+    return findChildByType(GTE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getLt() {
+    return findChildByType(LT);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getLte() {
+    return findChildByType(LTE);
+  }
+
 }

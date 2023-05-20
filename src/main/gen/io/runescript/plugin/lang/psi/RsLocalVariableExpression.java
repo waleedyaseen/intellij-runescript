@@ -12,6 +12,9 @@ public interface RsLocalVariableExpression extends RsExpression, RsNamedElement 
   RsNameLiteral getNameLiteral();
 
   @NotNull
+  PsiElement getDollar();
+
+  @NotNull
   String getName();
 
   @NotNull

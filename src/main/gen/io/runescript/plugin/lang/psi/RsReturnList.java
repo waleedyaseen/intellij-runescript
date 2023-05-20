@@ -7,4 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface RsReturnList extends PsiElement {
 
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
 }

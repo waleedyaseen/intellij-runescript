@@ -10,4 +10,10 @@ public interface RsArrayVariableExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
 }

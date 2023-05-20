@@ -11,6 +11,15 @@ public interface RsLocalVariableDeclarationStatement extends RsStatement {
   List<RsExpression> getExpressionList();
 
   @NotNull
+  PsiElement getDefineType();
+
+  @Nullable
+  PsiElement getEqual();
+
+  @NotNull
+  PsiElement getSemicolon();
+
+  @NotNull
   RsLocalVariableExpression getNameExpression();
 
 }

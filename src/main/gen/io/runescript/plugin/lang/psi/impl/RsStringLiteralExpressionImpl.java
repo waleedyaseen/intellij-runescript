@@ -33,4 +33,16 @@ public class RsStringLiteralExpressionImpl extends RsExpressionImpl implements R
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getStringEnd() {
+    return findNotNullChildByType(STRING_END);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getStringStart() {
+    return findNotNullChildByType(STRING_START);
+  }
+
 }

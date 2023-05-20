@@ -27,4 +27,16 @@ public class RsBooleanLiteralExpressionImpl extends RsExpressionImpl implements 
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getFalse() {
+    return findChildByType(FALSE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTrue() {
+    return findChildByType(TRUE);
+  }
+
 }

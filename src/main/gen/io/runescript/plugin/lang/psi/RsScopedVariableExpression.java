@@ -10,4 +10,7 @@ public interface RsScopedVariableExpression extends RsExpression {
   @NotNull
   RsNameLiteral getNameLiteral();
 
+  @NotNull
+  PsiElement getMod();
+
 }

@@ -10,4 +10,13 @@ public interface RsArithmeticMultiplicativeExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @Nullable
+  PsiElement getPercent();
+
+  @Nullable
+  PsiElement getSlash();
+
+  @Nullable
+  PsiElement getStar();
+
 }

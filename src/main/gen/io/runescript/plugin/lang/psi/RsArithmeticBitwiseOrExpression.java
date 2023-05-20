@@ -10,4 +10,7 @@ public interface RsArithmeticBitwiseOrExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getBar();
+
 }

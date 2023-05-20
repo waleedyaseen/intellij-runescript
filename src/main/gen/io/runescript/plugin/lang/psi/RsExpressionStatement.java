@@ -10,4 +10,7 @@ public interface RsExpressionStatement extends RsStatement {
   @NotNull
   RsExpression getExpression();
 
+  @NotNull
+  PsiElement getSemicolon();
+
 }

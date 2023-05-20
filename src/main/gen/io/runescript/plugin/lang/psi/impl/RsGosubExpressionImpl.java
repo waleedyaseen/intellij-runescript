@@ -39,4 +39,22 @@ public class RsGosubExpressionImpl extends RsExpressionImpl implements RsGosubEx
     return findNotNullChildByClass(RsNameLiteral.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getLparen() {
+    return findChildByType(LPAREN);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getRparen() {
+    return findChildByType(RPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getTilde() {
+    return findNotNullChildByType(TILDE);
+  }
+
 }

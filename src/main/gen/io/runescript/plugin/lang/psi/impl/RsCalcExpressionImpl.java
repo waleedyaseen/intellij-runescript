@@ -33,4 +33,22 @@ public class RsCalcExpressionImpl extends RsExpressionImpl implements RsCalcExpr
     return findNotNullChildByClass(RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getCalc() {
+    return findNotNullChildByType(CALC);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
 }

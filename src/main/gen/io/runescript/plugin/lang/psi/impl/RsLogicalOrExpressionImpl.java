@@ -33,4 +33,10 @@ public class RsLogicalOrExpressionImpl extends RsExpressionImpl implements RsLog
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getBar() {
+    return findNotNullChildByType(BAR);
+  }
+
 }

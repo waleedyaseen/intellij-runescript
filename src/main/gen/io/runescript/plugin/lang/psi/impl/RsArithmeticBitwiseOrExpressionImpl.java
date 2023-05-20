@@ -33,4 +33,10 @@ public class RsArithmeticBitwiseOrExpressionImpl extends RsExpressionImpl implem
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getBar() {
+    return findNotNullChildByType(BAR);
+  }
+
 }

@@ -33,4 +33,16 @@ public class RsLocalVariableAssignmentStatementImpl extends RsStatementImpl impl
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getEqual() {
+    return findNotNullChildByType(EQUAL);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getSemicolon() {
+    return findNotNullChildByType(SEMICOLON);
+  }
+
 }

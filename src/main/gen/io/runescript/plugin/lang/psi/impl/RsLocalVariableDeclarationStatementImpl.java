@@ -35,6 +35,24 @@ public class RsLocalVariableDeclarationStatementImpl extends RsStatementImpl imp
 
   @Override
   @NotNull
+  public PsiElement getDefineType() {
+    return findNotNullChildByType(DEFINE_TYPE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getEqual() {
+    return findChildByType(EQUAL);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getSemicolon() {
+    return findNotNullChildByType(SEMICOLON);
+  }
+
+  @Override
+  @NotNull
   public RsLocalVariableExpression getNameExpression() {
     return RsPsiImplUtil.getNameExpression(this);
   }

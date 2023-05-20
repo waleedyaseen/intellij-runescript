@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface RsNullLiteralExpression extends RsExpression {
 
+  @NotNull
+  PsiElement getNull();
+
 }

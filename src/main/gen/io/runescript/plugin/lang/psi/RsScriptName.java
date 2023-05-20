@@ -10,4 +10,13 @@ public interface RsScriptName extends PsiElement {
   @NotNull
   List<RsNameLiteral> getNameLiteralList();
 
+  @NotNull
+  PsiElement getComma();
+
+  @NotNull
+  PsiElement getLbracket();
+
+  @NotNull
+  PsiElement getRbracket();
+
 }

@@ -10,4 +10,7 @@ public interface RsLogicalAndExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getAmpersand();
+
 }

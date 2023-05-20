@@ -7,4 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface RsBooleanLiteralExpression extends RsExpression {
 
+  @Nullable
+  PsiElement getFalse();
+
+  @Nullable
+  PsiElement getTrue();
+
 }

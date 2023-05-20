@@ -39,4 +39,34 @@ public class RsSwitchStatementImpl extends RsStatementImpl implements RsSwitchSt
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsSwitchCase.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLbrace() {
+    return findNotNullChildByType(LBRACE);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRbrace() {
+    return findNotNullChildByType(RBRACE);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getSwitch() {
+    return findNotNullChildByType(SWITCH);
+  }
+
 }

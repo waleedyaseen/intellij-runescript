@@ -10,4 +10,10 @@ public interface RsParameterList extends PsiElement {
   @NotNull
   List<RsParameter> getParameterList();
 
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
 }

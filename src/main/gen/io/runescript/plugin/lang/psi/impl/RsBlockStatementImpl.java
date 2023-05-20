@@ -33,4 +33,16 @@ public class RsBlockStatementImpl extends RsStatementImpl implements RsBlockStat
     return findNotNullChildByClass(RsStatementList.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLbrace() {
+    return findNotNullChildByType(LBRACE);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRbrace() {
+    return findNotNullChildByType(RBRACE);
+  }
+
 }

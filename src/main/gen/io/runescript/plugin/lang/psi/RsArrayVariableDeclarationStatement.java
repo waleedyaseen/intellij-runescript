@@ -10,4 +10,10 @@ public interface RsArrayVariableDeclarationStatement extends RsStatement {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getDefineType();
+
+  @NotNull
+  PsiElement getSemicolon();
+
 }

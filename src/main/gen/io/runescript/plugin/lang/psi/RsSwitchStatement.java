@@ -13,4 +13,19 @@ public interface RsSwitchStatement extends RsStatement {
   @NotNull
   List<RsSwitchCase> getSwitchCaseList();
 
+  @NotNull
+  PsiElement getLbrace();
+
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRbrace();
+
+  @NotNull
+  PsiElement getRparen();
+
+  @NotNull
+  PsiElement getSwitch();
+
 }

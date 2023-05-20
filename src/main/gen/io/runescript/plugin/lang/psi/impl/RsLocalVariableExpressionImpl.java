@@ -35,6 +35,12 @@ public class RsLocalVariableExpressionImpl extends RsNamedElementImpl implements
 
   @Override
   @NotNull
+  public PsiElement getDollar() {
+    return findNotNullChildByType(DOLLAR);
+  }
+
+  @Override
+  @NotNull
   public String getName() {
     return RsPsiImplUtil.getName(this);
   }

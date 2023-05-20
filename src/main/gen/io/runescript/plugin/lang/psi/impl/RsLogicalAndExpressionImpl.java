@@ -33,4 +33,10 @@ public class RsLogicalAndExpressionImpl extends RsExpressionImpl implements RsLo
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getAmpersand() {
+    return findNotNullChildByType(AMPERSAND);
+  }
+
 }

@@ -13,4 +13,10 @@ public interface RsSwitchCase extends PsiElement {
   @NotNull
   RsStatementList getStatementList();
 
+  @NotNull
+  PsiElement getCase();
+
+  @NotNull
+  PsiElement getColon();
+
 }

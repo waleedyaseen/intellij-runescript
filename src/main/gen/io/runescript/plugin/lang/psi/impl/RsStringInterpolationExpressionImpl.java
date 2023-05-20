@@ -27,4 +27,16 @@ public class RsStringInterpolationExpressionImpl extends RsExpressionImpl implem
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getStringInterpolationEnd() {
+    return findChildByType(STRING_INTERPOLATION_END);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringInterpolationStart() {
+    return findChildByType(STRING_INTERPOLATION_START);
+  }
+
 }

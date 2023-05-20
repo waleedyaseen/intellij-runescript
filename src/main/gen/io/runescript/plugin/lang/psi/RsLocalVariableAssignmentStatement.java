@@ -10,4 +10,10 @@ public interface RsLocalVariableAssignmentStatement extends RsStatement {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getEqual();
+
+  @NotNull
+  PsiElement getSemicolon();
+
 }

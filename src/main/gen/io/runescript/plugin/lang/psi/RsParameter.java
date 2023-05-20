@@ -10,4 +10,10 @@ public interface RsParameter extends PsiElement {
   @NotNull
   RsLocalVariableExpression getLocalVariableExpression();
 
+  @Nullable
+  PsiElement getArrayTypeName();
+
+  @Nullable
+  PsiElement getTypeName();
+
 }

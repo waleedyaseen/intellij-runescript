@@ -33,4 +33,16 @@ public class RsArrayVariableDeclarationStatementImpl extends RsStatementImpl imp
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getDefineType() {
+    return findNotNullChildByType(DEFINE_TYPE);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getSemicolon() {
+    return findNotNullChildByType(SEMICOLON);
+  }
+
 }

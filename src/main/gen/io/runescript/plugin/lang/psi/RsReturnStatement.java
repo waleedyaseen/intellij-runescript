@@ -10,4 +10,16 @@ public interface RsReturnStatement extends RsStatement {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @Nullable
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getReturn();
+
+  @Nullable
+  PsiElement getRparen();
+
+  @NotNull
+  PsiElement getSemicolon();
+
 }

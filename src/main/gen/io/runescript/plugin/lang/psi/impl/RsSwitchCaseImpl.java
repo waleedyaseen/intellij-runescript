@@ -39,4 +39,16 @@ public class RsSwitchCaseImpl extends ASTWrapperPsiElement implements RsSwitchCa
     return findNotNullChildByClass(RsStatementList.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getCase() {
+    return findNotNullChildByType(CASE);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getColon() {
+    return findNotNullChildByType(COLON);
+  }
+
 }

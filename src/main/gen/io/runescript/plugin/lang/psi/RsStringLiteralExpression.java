@@ -10,4 +10,10 @@ public interface RsStringLiteralExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getStringEnd();
+
+  @NotNull
+  PsiElement getStringStart();
+
 }

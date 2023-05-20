@@ -33,4 +33,22 @@ public class RsArithmeticMultiplicativeExpressionImpl extends RsExpressionImpl i
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getPercent() {
+    return findChildByType(PERCENT);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getSlash() {
+    return findChildByType(SLASH);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStar() {
+    return findChildByType(STAR);
+  }
+
 }

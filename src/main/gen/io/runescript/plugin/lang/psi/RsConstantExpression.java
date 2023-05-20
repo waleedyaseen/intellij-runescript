@@ -10,4 +10,7 @@ public interface RsConstantExpression extends RsExpression {
   @NotNull
   RsNameLiteral getNameLiteral();
 
+  @NotNull
+  PsiElement getCaret();
+
 }

@@ -11,7 +11,7 @@
   elementTypeHolderClass="io.runescript.plugin.lang.psi.RsTypes"
   elementTypeClass="io.runescript.plugin.lang.psi.RsElementType"
   tokenTypeClass="io.runescript.plugin.lang.psi.RsElementType"
-
+  generateTokenAccessors=true
   name(".*Expression")='Expression'
   extends(".*Expression")=Expression
   name(".*Statement")='Statement'

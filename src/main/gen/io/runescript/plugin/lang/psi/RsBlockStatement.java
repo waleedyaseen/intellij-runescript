@@ -10,4 +10,10 @@ public interface RsBlockStatement extends RsStatement {
   @NotNull
   RsStatementList getStatementList();
 
+  @NotNull
+  PsiElement getLbrace();
+
+  @NotNull
+  PsiElement getRbrace();
+
 }

@@ -33,4 +33,10 @@ public class RsConstantExpressionImpl extends RsExpressionImpl implements RsCons
     return findNotNullChildByClass(RsNameLiteral.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getCaret() {
+    return findNotNullChildByType(CARET);
+  }
+
 }

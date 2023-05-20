@@ -33,4 +33,16 @@ public class RsArithmeticAdditiveExpressionImpl extends RsExpressionImpl impleme
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getMinus() {
+    return findChildByType(MINUS);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getPlus() {
+    return findChildByType(PLUS);
+  }
+
 }

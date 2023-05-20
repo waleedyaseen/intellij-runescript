@@ -10,4 +10,22 @@ public interface RsCompareExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @Nullable
+  PsiElement getEqual();
+
+  @Nullable
+  PsiElement getExcel();
+
+  @Nullable
+  PsiElement getGt();
+
+  @Nullable
+  PsiElement getGte();
+
+  @Nullable
+  PsiElement getLt();
+
+  @Nullable
+  PsiElement getLte();
+
 }

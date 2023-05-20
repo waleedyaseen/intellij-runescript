@@ -39,4 +39,22 @@ public class RsIfStatementImpl extends RsStatementImpl implements RsIfStatement 
     return findNotNullChildByClass(RsStatement.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getIf() {
+    return findNotNullChildByType(IF);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
 }

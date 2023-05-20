@@ -10,4 +10,10 @@ public interface RsRelationalValueExpression extends RsExpression {
   @Nullable
   RsExpression getExpression();
 
+  @Nullable
+  PsiElement getLparen();
+
+  @Nullable
+  PsiElement getRparen();
+
 }

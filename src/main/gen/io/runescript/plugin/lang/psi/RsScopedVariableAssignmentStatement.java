@@ -10,4 +10,10 @@ public interface RsScopedVariableAssignmentStatement extends RsStatement {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @NotNull
+  PsiElement getEqual();
+
+  @NotNull
+  PsiElement getSemicolon();
+
 }

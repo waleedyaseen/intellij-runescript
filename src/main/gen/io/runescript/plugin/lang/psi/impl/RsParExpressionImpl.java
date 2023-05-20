@@ -33,4 +33,16 @@ public class RsParExpressionImpl extends RsExpressionImpl implements RsParExpres
     return findNotNullChildByClass(RsExpression.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
 }

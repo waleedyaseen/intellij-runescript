@@ -33,4 +33,16 @@ public class RsParameterListImpl extends ASTWrapperPsiElement implements RsParam
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsParameter.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getLparen() {
+    return findNotNullChildByType(LPAREN);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return findNotNullChildByType(RPAREN);
+  }
+
 }

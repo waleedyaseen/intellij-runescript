@@ -10,4 +10,10 @@ public interface RsParExpression extends RsExpression {
   @NotNull
   RsExpression getExpression();
 
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
 }

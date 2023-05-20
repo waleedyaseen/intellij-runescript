@@ -13,4 +13,13 @@ public interface RsWhileStatement extends RsStatement {
   @NotNull
   RsStatement getStatement();
 
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
+  @NotNull
+  PsiElement getWhile();
+
 }

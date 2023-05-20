@@ -10,4 +10,10 @@ public interface RsArithmeticAdditiveExpression extends RsExpression {
   @NotNull
   List<RsExpression> getExpressionList();
 
+  @Nullable
+  PsiElement getMinus();
+
+  @Nullable
+  PsiElement getPlus();
+
 }

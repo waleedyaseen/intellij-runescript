@@ -27,4 +27,64 @@ public class RsNameLiteralImpl extends ASTWrapperPsiElement implements RsNameLit
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getArrayTypeName() {
+    return findChildByType(ARRAY_TYPE_NAME);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getCase() {
+    return findChildByType(CASE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getDefineType() {
+    return findChildByType(DEFINE_TYPE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getFalse() {
+    return findChildByType(FALSE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getIdentifier() {
+    return findChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getIf() {
+    return findChildByType(IF);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getNull() {
+    return findChildByType(NULL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getSwitch() {
+    return findChildByType(SWITCH);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTrue() {
+    return findChildByType(TRUE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getWhile() {
+    return findChildByType(WHILE);
+  }
+
 }

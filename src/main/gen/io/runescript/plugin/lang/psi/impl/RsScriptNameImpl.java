@@ -33,4 +33,22 @@ public class RsScriptNameImpl extends ASTWrapperPsiElement implements RsScriptNa
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsNameLiteral.class);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getComma() {
+    return findNotNullChildByType(COMMA);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getLbracket() {
+    return findNotNullChildByType(LBRACKET);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRbracket() {
+    return findNotNullChildByType(RBRACKET);
+  }
+
 }

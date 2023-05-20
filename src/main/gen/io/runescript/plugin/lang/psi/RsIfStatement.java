@@ -13,4 +13,13 @@ public interface RsIfStatement extends RsStatement {
   @NotNull
   RsStatement getStatement();
 
+  @NotNull
+  PsiElement getIf();
+
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
 }

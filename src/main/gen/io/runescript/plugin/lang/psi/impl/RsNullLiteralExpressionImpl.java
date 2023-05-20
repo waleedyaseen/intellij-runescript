@@ -27,4 +27,10 @@ public class RsNullLiteralExpressionImpl extends RsExpressionImpl implements RsN
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getNull() {
+    return findNotNullChildByType(NULL);
+  }
+
 }
