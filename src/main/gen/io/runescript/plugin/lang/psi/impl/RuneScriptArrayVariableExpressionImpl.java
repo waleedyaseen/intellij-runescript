@@ -29,14 +29,8 @@ public class RuneScriptArrayVariableExpressionImpl extends RuneScriptExpressionI
 
   @Override
   @NotNull
-  public RuneScriptExpression getExpression() {
-    return findNotNullChildByClass(RuneScriptExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public RuneScriptNameLiteral getNameLiteral() {
-    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  public List<RuneScriptExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptExpression.class);
   }
 
 }

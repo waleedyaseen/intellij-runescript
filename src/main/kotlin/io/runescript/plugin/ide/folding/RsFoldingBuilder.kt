@@ -25,15 +25,19 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
         elements.forEach { element ->
             when (element) {
                 is RuneScriptScript -> {
-                    descriptors.add(FoldingDescriptor(element.node, element.statementList.textRange))
+                    if (!element.statementList.textRange.isEmpty) {
+                        descriptors.add(FoldingDescriptor(element.node, element.statementList.textRange))
+                    }
                 }
 
                 is RuneScriptBlockStatement -> {
-                    descriptors.add(FoldingDescriptor(element.node, element.textRange))
+                    if (!element.textRange.isEmpty) {
+                        descriptors.add(FoldingDescriptor(element.node, element.textRange))
+                    }
                 }
 
                 is PsiComment -> {
-                    if (element.tokenType == RuneScriptTokenTypes.MULTI_LINE_COMMENT) {
+                    if (element.tokenType == RuneScriptTokenTypes.MULTI_LINE_COMMENT && !element.textRange.isEmpty) {
                         descriptors.add(FoldingDescriptor(element.node, element.textRange))
                     }
                 }

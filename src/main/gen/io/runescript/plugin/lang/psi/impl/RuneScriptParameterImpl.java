@@ -29,8 +29,8 @@ public class RuneScriptParameterImpl extends ASTWrapperPsiElement implements Run
 
   @Override
   @NotNull
-  public RuneScriptNameLiteral getNameLiteral() {
-    return findNotNullChildByClass(RuneScriptNameLiteral.class);
+  public RuneScriptLocalVariableExpression getLocalVariableExpression() {
+    return findNotNullChildByClass(RuneScriptLocalVariableExpression.class);
   }
 
 }

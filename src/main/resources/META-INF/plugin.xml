@@ -23,6 +23,8 @@
         <annotator language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
         <internalFileTemplate name="ClientScript"/>
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
+        <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RuneScriptReferenceContributor"/>
+        <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.lang.psi.refs.RuneScriptFindUsagesProvider"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">

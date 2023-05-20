@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface RuneScriptArrayVariableExpression extends RuneScriptExpression {
 
   @NotNull
-  RuneScriptExpression getExpression();
-
-  @NotNull
-  RuneScriptNameLiteral getNameLiteral();
+  List<RuneScriptExpression> getExpressionList();
 
 }

@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface RuneScriptParameter extends PsiElement {
 
   @NotNull
-  RuneScriptNameLiteral getNameLiteral();
+  RuneScriptLocalVariableExpression getLocalVariableExpression();
 
 }
