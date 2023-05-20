@@ -3,16 +3,13 @@ package io.runescript.plugin.lang.psi.refs
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner
 import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
-import com.intellij.lexer.Lexer
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.*
+import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
-import com.intellij.psi.util.childrenOfType
-import com.intellij.psi.util.findParentOfType
 import io.runescript.plugin.lang.lexer.RuneScriptLexerAdapter
 import io.runescript.plugin.lang.lexer.RuneScriptLexerInfo
-import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.lang.psi.named.RuneScriptNamedElement
+import io.runescript.plugin.lang.psi.RuneScriptLocalVariableExpression
+import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets
+import io.runescript.plugin.lang.psi.RuneScriptTypes
 
 class RuneScriptFindUsagesProvider : FindUsagesProvider {
 

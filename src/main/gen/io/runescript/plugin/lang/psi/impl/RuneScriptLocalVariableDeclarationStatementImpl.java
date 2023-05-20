@@ -33,4 +33,10 @@ public class RuneScriptLocalVariableDeclarationStatementImpl extends RuneScriptS
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RuneScriptExpression.class);
   }
 
+  @Override
+  @NotNull
+  public RuneScriptLocalVariableExpression getNameExpression() {
+    return RuneScriptPsiImplUtil.getNameExpression(this);
+  }
+
 }

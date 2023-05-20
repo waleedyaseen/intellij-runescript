@@ -1,10 +1,8 @@
 package io.runescript.plugin.lang.psi.refs
 
-import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
-import io.runescript.plugin.lang.psi.RuneScriptTypes
 import io.runescript.plugin.lang.psi.named.RuneScriptNamedElement
 
 class RuneScriptReferenceContributor : PsiReferenceContributor() {
@@ -21,8 +19,7 @@ class RuneScriptReferenceProvider : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
         if (element is RuneScriptNamedElement) {
             val namedIdentifier = element.nameIdentifier!!
-            val nameRange = TextRange(namedIdentifier.startOffsetInParent, namedIdentifier.startOffsetInParent + namedIdentifier.textLength)
-            return arrayOf(RuneScriptReference(element, nameRange))
+            return arrayOf(RuneScriptReference(element, namedIdentifier.textRangeInParent))
         }
         return PsiReference.EMPTY_ARRAY
     }

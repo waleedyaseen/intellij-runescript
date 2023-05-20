@@ -10,4 +10,7 @@ public interface RuneScriptLocalVariableDeclarationStatement extends RuneScriptS
   @NotNull
   List<RuneScriptExpression> getExpressionList();
 
+  @NotNull
+  RuneScriptLocalVariableExpression getNameExpression();
+
 }
