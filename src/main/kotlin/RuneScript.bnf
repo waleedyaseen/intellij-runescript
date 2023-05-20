@@ -11,118 +11,119 @@
   elementTypeHolderClass="io.runescript.plugin.lang.psi.RsTypes"
   elementTypeClass="io.runescript.plugin.lang.psi.RsElementType"
   tokenTypeClass="io.runescript.plugin.lang.psi.RsElementType"
-  name(".*expression")='expression'
-  extends(".*expression")=expression
-  name(".*statement")='statement'
-  extends(".*statement")=statement
+
+  name(".*Expression")='Expression'
+  extends(".*Expression")=Expression
+  name(".*Statement")='Statement'
+  extends(".*Statement")=Statement
 }
 
-script_file ::= script*
-script ::= script_header statement_list
-script_header ::= script_name parameter_list? return_list?
-script_name ::= LBRACKET name_literal COMMA name_literal RBRACKET
+File ::= Script*
+Script ::= ScriptHeader StatementList
+ScriptHeader ::= ScriptName ParameterList? ReturnList?
+ScriptName ::= LBRACKET NameLiteral COMMA NameLiteral RBRACKET
 
-parameter_list ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
-parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) local_variable_expression
-return_list ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
-statement_list ::= statement*
-statement ::= block_statement
-            | if_statement
-            | while_statement
-            | switch_statement
-            | return_statement
-            | local_variable_declaration_statement
-            | local_variable_assignment_statement
-            | array_variable_declaration_statement
-            | array_variable_assignment_statement
-            | scoped_variable_assignment_statement
-            | expression_statement
+ParameterList ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
+parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
+ReturnList ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
+StatementList ::= Statement*
+Statement ::= BlockStatement
+            | IfStatement
+            | WhileStatement
+            | SwitchStatement
+            | ReturnStatement
+            | LocalVariableDeclarationStatement
+            | LocalVariableAssignmentStatement
+            | ArrayVariableDeclarationStatement
+            | ArrayVariableAssignmentStatement
+            | ScopedVariableAssignmentStatement
+            | ExpressionStatement
 
-block_statement ::= LBRACE statement_list RBRACE
-if_statement ::= IF LPAREN relational_expression RPAREN statement
-while_statement ::= WHILE LPAREN relational_expression RPAREN statement
-switch_statement ::= SWITCH LPAREN expression RPAREN LBRACE switch_case* RBRACE
-switch_case ::= CASE switch_case_expression_list COLON statement_list
-private switch_case_expression_list ::= switch_case_expression (COMMA switch_case_expression)*
-private switch_case_expression ::= expression | DEFAULT
-return_statement ::= RETURN (LPAREN expression_list? RPAREN)? SEMICOLON
-local_variable_declaration_statement ::= DEFINE_TYPE local_variable_expression (EQUAL expression)? SEMICOLON {
+BlockStatement ::= LBRACE StatementList RBRACE
+IfStatement ::= IF LPAREN RelationalExpression RPAREN Statement
+WhileStatement ::= WHILE LPAREN RelationalExpression RPAREN Statement
+SwitchStatement ::= SWITCH LPAREN Expression RPAREN LBRACE SwitchCase* RBRACE
+SwitchCase ::= CASE SwitchCaseExpressionList COLON StatementList
+private SwitchCaseExpressionList ::= SwitchCaseExpression (COMMA SwitchCaseExpression)*
+private SwitchCaseExpression ::= Expression | DEFAULT
+ReturnStatement ::= RETURN (LPAREN ExpressionList? RPAREN)? SEMICOLON
+LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression (EQUAL Expression)? SEMICOLON {
     methods=[getNameExpression]
 }
-local_variable_assignment_statement ::= local_variable_expression EQUAL expression SEMICOLON
-array_variable_declaration_statement ::= DEFINE_TYPE local_variable_expression par_expression SEMICOLON
-array_variable_assignment_statement ::= local_variable_expression par_expression EQUAL expression SEMICOLON
-scoped_variable_assignment_statement ::= scoped_variable_expression EQUAL expression SEMICOLON
-expression_statement ::= expression SEMICOLON
+LocalVariableAssignmentStatement ::= LocalVariableExpression EQUAL Expression SEMICOLON
+ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ParExpression SEMICOLON
+ArrayVariableAssignmentStatement ::= LocalVariableExpression ParExpression EQUAL Expression SEMICOLON
+ScopedVariableAssignmentStatement ::= ScopedVariableExpression EQUAL Expression SEMICOLON
+ExpressionStatement ::= Expression SEMICOLON
 
-// Relational expressions
+// Relational Expressions
 
-private relational_expression ::= logical_or_wrapper
+private RelationalExpression ::= LogicalOrWrapper
 
-private logical_or_wrapper ::= logical_and_wrapper logical_or_expression*
-left logical_or_expression ::= BAR logical_and_wrapper
+private LogicalOrWrapper ::= LogicalAndWrapper LogicalOrExpression*
+left LogicalOrExpression ::= BAR LogicalAndWrapper
 
-private logical_and_wrapper ::= compare_expression_wrapper logical_and_expression*
-left logical_and_expression ::= AMPERSAND compare_expression_wrapper
+private LogicalAndWrapper ::= CompareExpressionWrapper LogicalAndExpression*
+left LogicalAndExpression ::= AMPERSAND CompareExpressionWrapper
 
-private compare_expression_wrapper ::= relational_value_expression compare_expression?
-left compare_expression ::= (EXCEL | GT | LT | GTE | LTE | EQUAL) relational_value_expression
+private CompareExpressionWrapper ::= RelationalValueExpression CompareExpression?
+left CompareExpression ::= (EXCEL | GT | LT | GTE | LTE | EQUAL) RelationalValueExpression
 
-relational_value_expression ::= (LPAREN relational_expression RPAREN) | expression
+RelationalValueExpression ::= (LPAREN RelationalExpression RPAREN) | Expression
 
 // Arithmetic & Bitwise Expressions
 
-arithmetic_expression ::= arithmetic_bitwise_or_wrapper
+ArithmeticExpression ::= ArithmeticBitwiseOrWrapper
 
-private arithmetic_bitwise_or_wrapper ::= arithmetic_bitwise_and_wrapper arithmetic_bitwise_or_expression*
-left arithmetic_bitwise_or_expression ::= BAR arithmetic_bitwise_and_wrapper
+private ArithmeticBitwiseOrWrapper ::= ArithmeticBitwiseAndWrapper ArithmeticBitwiseOrExpression*
+left ArithmeticBitwiseOrExpression ::= BAR ArithmeticBitwiseAndWrapper
 
-private arithmetic_bitwise_and_wrapper ::= arithmetic_additive_wrapper arithmetic_bitwise_and_expression*
-left arithmetic_bitwise_and_expression ::= AMPERSAND arithmetic_additive_wrapper
+private ArithmeticBitwiseAndWrapper ::= ArithmeticAdditiveWrapper ArithmeticBitwiseAndExpression*
+left ArithmeticBitwiseAndExpression ::= AMPERSAND ArithmeticAdditiveWrapper
 
-private arithmetic_additive_wrapper ::= arithmetic_multiplicative_wrapper arithmetic_additive_expression*
-left arithmetic_additive_expression ::= (PLUS | MINUS) arithmetic_multiplicative_wrapper
+private ArithmeticAdditiveWrapper ::= ArithmeticMultiplicativeWrapper ArithmeticAdditiveExpression*
+left ArithmeticAdditiveExpression ::= (PLUS | MINUS) ArithmeticMultiplicativeWrapper
 
-private arithmetic_multiplicative_wrapper ::= arithmetic_value_expression arithmetic_multiplicative_expression*
-left arithmetic_multiplicative_expression ::= (STAR | SLASH | PERCENT) arithmetic_value_expression
+private ArithmeticMultiplicativeWrapper ::= ArithmeticValueExpression ArithmeticMultiplicativeExpression*
+left ArithmeticMultiplicativeExpression ::= (STAR | SLASH | PERCENT) ArithmeticValueExpression
 
-arithmetic_value_expression ::= (LPAREN arithmetic_expression RPAREN) | expression
+ArithmeticValueExpression ::= (LPAREN ArithmeticExpression RPAREN) | Expression
 
-// General expressions
-expression ::= par_expression
-             | array_variable_expression
-             | local_variable_expression
-             | scoped_variable_expression
-             | literal_expression
-             | command_expression
-             | gosub_expression
-             | constant_expression
-             | dynamic_expression
-             | calc_expression
+// General Expressions
+Expression ::= ParExpression
+             | ArrayVariableExpression
+             | LocalVariableExpression
+             | ScopedVariableExpression
+             | LiteralExpression
+             | CommandExpression
+             | GosubExpression
+             | ConstantExpression
+             | DynamicExpression
+             | CalcExpression
 
-calc_expression ::= CALC LPAREN arithmetic_expression RPAREN
-private expression_list ::= expression (COMMA expression)*
-par_expression ::= LPAREN expression RPAREN
+CalcExpression ::= CALC LPAREN ArithmeticExpression RPAREN
+private ExpressionList ::= Expression (COMMA Expression)*
+ParExpression ::= LPAREN Expression RPAREN
 
-local_variable_expression ::= DOLLAR name_literal {
+LocalVariableExpression ::= DOLLAR NameLiteral {
     mixin="io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl"
     implements="io.runescript.plugin.lang.psi.named.RsNamedElement"
     methods=[getName setName getNameIdentifier]
 }
 
-array_variable_expression ::= local_variable_expression LPAREN expression RPAREN
-scoped_variable_expression ::= MOD name_literal
-private literal_expression ::= integer_literal_expression
-                             | boolean_literal_expression
-                             | null_literal_expression
-                             | string_literal_expression
-integer_literal_expression ::= INTEGER
-boolean_literal_expression ::= TRUE | FALSE
-null_literal_expression ::= NULL
-string_literal_expression ::= STRING_START (STRING_PART | STRING_TAG | string_interpolation_expression)* STRING_END
-string_interpolation_expression ::= STRING_INTERPOLATION_START | expression | STRING_INTERPOLATION_END
-constant_expression ::= CARET name_literal
-command_expression ::= name_literal (LPAREN expression_list? RPAREN)?
-gosub_expression ::= TILDE name_literal (LPAREN expression_list? RPAREN)?
-dynamic_expression ::= name_literal
-name_literal ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+ArrayVariableExpression ::= LocalVariableExpression LPAREN Expression RPAREN
+ScopedVariableExpression ::= MOD NameLiteral
+private LiteralExpression ::= IntegerLiteralExpression
+                             | BooleanLiteralExpression
+                             | NullLiteralExpression
+                             | StringLiteralExpression
+IntegerLiteralExpression ::= INTEGER
+BooleanLiteralExpression ::= TRUE | FALSE
+NullLiteralExpression ::= NULL
+StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
+StringInterpolationExpression ::= STRING_INTERPOLATION_START | Expression | STRING_INTERPOLATION_END
+ConstantExpression ::= CARET NameLiteral
+CommandExpression ::= NameLiteral (LPAREN ExpressionList? RPAREN)?
+GosubExpression ::= TILDE NameLiteral (LPAREN ExpressionList? RPAREN)?
+DynamicExpression ::= NameLiteral
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

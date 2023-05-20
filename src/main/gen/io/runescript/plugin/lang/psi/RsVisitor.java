@@ -4,6 +4,7 @@ package io.runescript.plugin.lang.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import io.runescript.plugin.lang.psi.named.RsNamedElement;
 
 public class RsVisitor extends PsiElementVisitor {
 
@@ -101,7 +102,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitLocalVariableExpression(@NotNull RsLocalVariableExpression o) {
     visitExpression(o);
-    // visitRuneScriptNamedElement(o);
+    // visitNamedElement(o);
   }
 
   public void visitLogicalAndExpression(@NotNull RsLogicalAndExpression o) {
@@ -122,10 +123,6 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitParExpression(@NotNull RsParExpression o) {
     visitExpression(o);
-  }
-
-  public void visitParameter(@NotNull RsParameter o) {
-    visitPsiElement(o);
   }
 
   public void visitParameterList(@NotNull RsParameterList o) {
@@ -190,6 +187,10 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitWhileStatement(@NotNull RsWhileStatement o) {
     visitStatement(o);
+  }
+
+  public void visitParameter(@NotNull RsParameter o) {
+    visitPsiElement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {
