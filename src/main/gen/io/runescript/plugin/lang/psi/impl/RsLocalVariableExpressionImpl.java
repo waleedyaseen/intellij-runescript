@@ -39,22 +39,4 @@ public class RsLocalVariableExpressionImpl extends RsNamedElementImpl implements
     return findNotNullChildByType(DOLLAR);
   }
 
-  @Override
-  @NotNull
-  public String getName() {
-    return RsPsiImplUtil.getName(this);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return RsPsiImplUtil.setName(this, newName);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getNameIdentifier() {
-    return RsPsiImplUtil.getNameIdentifier(this);
-  }
-
 }

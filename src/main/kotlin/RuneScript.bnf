@@ -16,6 +16,11 @@
   extends(".*Expression")=Expression
   name(".*Statement")='Statement'
   extends(".*Statement")=Statement
+  elementType("Arithmetic(BitwiseOr|BitwiseAnd|Additive|Multiplicative)Expression")=ArithmeticExpression
+  elementType("Arithmetic(BitwiseOr|BitwiseAnd|Additive|Multiplicative)Operator")=ArithmeticOp
+  elementType("(LogicalAnd|LogicalOr|Compare)Expression")=ConditionExpression
+  elementType("(LogicalAnd|LogicalOr|Compare)Operator")=ConditionOp
+
   classHeader="// This class is automatically generated. Do not edit."
 
   tokens=[
@@ -43,6 +48,7 @@
     PERCENT='%'
     CARET='^'
     TILDE='~'
+    DOLLAR='$'
   ]
 }
 
@@ -51,8 +57,8 @@ Script ::= ScriptHeader StatementList
 ScriptHeader ::= ScriptName ParameterList? ReturnList?
 ScriptName ::= '[' NameLiteral ',' NameLiteral ']'
 
-ParameterList ::= '(' (parameter (',' parameter)*)? ')'
-parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
+ParameterList ::= '(' (Parameter (',' Parameter)*)? ')'
+Parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
 ReturnList ::= '(' (TYPE_NAME (',' TYPE_NAME)*)? ')'
 StatementList ::= Statement*
 Statement ::= BlockStatement
@@ -68,8 +74,8 @@ Statement ::= BlockStatement
             | ExpressionStatement
 
 BlockStatement ::= '{' StatementList '}'
-IfStatement ::= IF '(' RelationalExpression ')' Statement
-WhileStatement ::= WHILE '(' RelationalExpression ')' Statement
+IfStatement ::= IF '(' LogicalOrWrapper ')' Statement
+WhileStatement ::= WHILE '(' LogicalOrWrapper ')' Statement
 SwitchStatement ::= SWITCH '(' Expression ')' '{' SwitchCase* '}'
 SwitchCase ::= CASE SwitchCaseExpressionList ':' StatementList
 private SwitchCaseExpressionList ::= SwitchCaseExpression (',' SwitchCaseExpression)*
@@ -84,40 +90,65 @@ ArrayVariableAssignmentStatement ::= LocalVariableExpression ParExpression '=' E
 ScopedVariableAssignmentStatement ::= ScopedVariableExpression '=' Expression ';'
 ExpressionStatement ::= Expression ';'
 
-// Relational Expressions
-
-private RelationalExpression ::= LogicalOrWrapper
-
-private LogicalOrWrapper ::= LogicalAndWrapper LogicalOrExpression*
-left LogicalOrExpression ::= '|' LogicalAndWrapper
-
-private LogicalAndWrapper ::= CompareExpressionWrapper LogicalAndExpression*
-left LogicalAndExpression ::= '&' CompareExpressionWrapper
-
-private CompareExpressionWrapper ::= RelationalValueExpression CompareExpression?
-left CompareExpression ::= ('!' | '>' | '<' | '>=' | '<=' | '=') RelationalValueExpression
-
-RelationalValueExpression ::= ('(' RelationalExpression ')') | Expression
-
 // Arithmetic & Bitwise Expressions
 
-ArithmeticExpression ::= ArithmeticBitwiseOrWrapper
+fake ArithmeticExpression ::= Expression ArithmeticOp Expression {
+    methods=[
+        left="/Expression[0]"
+        right="/Expression[1]"
+    ]
+    implements="RsBinaryExpression"
+}
+
+//noinspection BnfUnusedRule
+fake ArithmeticOp ::= '+' | '-' | '*' | '/' | '%' | '|' | '&'
 
 private ArithmeticBitwiseOrWrapper ::= ArithmeticBitwiseAndWrapper ArithmeticBitwiseOrExpression*
-left ArithmeticBitwiseOrExpression ::= '|' ArithmeticBitwiseAndWrapper
+left ArithmeticBitwiseOrExpression ::= ArithmeticBitwiseOrOperator ArithmeticBitwiseAndWrapper
+ArithmeticBitwiseOrOperator ::= '|'
 
 private ArithmeticBitwiseAndWrapper ::= ArithmeticAdditiveWrapper ArithmeticBitwiseAndExpression*
-left ArithmeticBitwiseAndExpression ::= '&' ArithmeticAdditiveWrapper
+left ArithmeticBitwiseAndExpression ::= ArithmeticBitwiseAndOperator ArithmeticAdditiveWrapper
+ArithmeticBitwiseAndOperator ::= '&'
 
 private ArithmeticAdditiveWrapper ::= ArithmeticMultiplicativeWrapper ArithmeticAdditiveExpression*
-left ArithmeticAdditiveExpression ::= ('+' | '-') ArithmeticMultiplicativeWrapper
+left ArithmeticAdditiveExpression ::= ArithmeticAdditiveOperator ArithmeticMultiplicativeWrapper
+ArithmeticAdditiveOperator ::= '+' | '-'
 
 private ArithmeticMultiplicativeWrapper ::= ArithmeticValueExpression ArithmeticMultiplicativeExpression*
-left ArithmeticMultiplicativeExpression ::= ('*' | '/' | '%') ArithmeticValueExpression
+left ArithmeticMultiplicativeExpression ::= ArithmeticMultiplicativeOperator ArithmeticValueExpression
+ArithmeticMultiplicativeOperator ::= '*' | '/' | '%'
 
-ArithmeticValueExpression ::= ('(' ArithmeticExpression ')') | Expression
+ArithmeticValueExpression ::= ('(' ArithmeticBitwiseOrWrapper ')') | Expression
 
+// Condition Expressions
+
+fake ConditionExpression ::= Expression ConditionOp Expression {
+    methods=[
+        left="/Expression[0]"
+        right="/Expression[1]"
+    ]
+    implements="RsBinaryExpression"
+}
+
+//noinspection BnfUnusedRule
+fake ConditionOp ::= '|' | '&' | '!' | '>' | '<' | '>=' | '<=' | '='
+
+private LogicalOrWrapper ::= LogicalAndWrapper LogicalOrExpression*
+left LogicalOrExpression ::= LogicalOrOperator LogicalAndWrapper
+LogicalOrOperator ::= '|'
+
+private LogicalAndWrapper ::= CompareExpressionWrapper LogicalAndExpression*
+left LogicalAndExpression ::= LogicalAndOperator CompareExpressionWrapper
+LogicalAndOperator ::= '&'
+
+private CompareExpressionWrapper ::= RelationalValueExpression CompareExpression?
+left CompareExpression ::= CompareOperator RelationalValueExpression
+CompareOperator ::= '!' | '>' | '<' | '>=' | '<=' | '='
+
+RelationalValueExpression ::= ('(' LogicalOrWrapper ')') | Expression
 // General Expressions
+
 Expression ::= ParExpression
              | ArrayVariableExpression
              | LocalVariableExpression
@@ -129,11 +160,10 @@ Expression ::= ParExpression
              | DynamicExpression
              | CalcExpression
 
-CalcExpression ::= CALC '(' ArithmeticExpression ')'
 private ExpressionList ::= Expression (',' Expression)*
 ParExpression ::= '(' Expression ')'
 
-LocalVariableExpression ::= DOLLAR NameLiteral {
+LocalVariableExpression ::= '$' NameLiteral {
     mixin="io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl"
     implements="io.runescript.plugin.lang.psi.named.RsNamedElement"
     methods=[getName setName getNameIdentifier]
@@ -150,8 +180,9 @@ BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
 StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
 StringInterpolationExpression ::= STRING_INTERPOLATION_START | Expression | STRING_INTERPOLATION_END
-ConstantExpression ::= '^' NameLiteral
 CommandExpression ::= NameLiteral ('(' ExpressionList? ')')?
 GosubExpression ::= '~' NameLiteral ('(' ExpressionList? ')')?
+ConstantExpression ::= '^' NameLiteral
 DynamicExpression ::= NameLiteral
+CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
 NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

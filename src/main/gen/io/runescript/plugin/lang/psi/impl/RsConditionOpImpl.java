@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsCompareExpressionImpl extends RsExpressionImpl implements RsCompareExpression {
+public class RsConditionOpImpl extends ASTWrapperPsiElement implements RsConditionOp {
 
-  public RsCompareExpressionImpl(@NotNull ASTNode node) {
+  public RsConditionOpImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull RsVisitor visitor) {
-    visitor.visitCompareExpression(this);
+    visitor.visitConditionOp(this);
   }
 
   @Override
@@ -28,9 +28,15 @@ public class RsCompareExpressionImpl extends RsExpressionImpl implements RsCompa
   }
 
   @Override
-  @NotNull
-  public List<RsExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
+  @Nullable
+  public PsiElement getAmpersand() {
+    return findChildByType(AMPERSAND);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getBar() {
+    return findChildByType(BAR);
   }
 
   @Override

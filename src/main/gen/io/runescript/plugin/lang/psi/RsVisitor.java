@@ -8,24 +8,13 @@ import io.runescript.plugin.lang.psi.named.RsNamedElement;
 
 public class RsVisitor extends PsiElementVisitor {
 
-  public void visitArithmeticAdditiveExpression(@NotNull RsArithmeticAdditiveExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitArithmeticBitwiseAndExpression(@NotNull RsArithmeticBitwiseAndExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitArithmeticBitwiseOrExpression(@NotNull RsArithmeticBitwiseOrExpression o) {
-    visitExpression(o);
-  }
-
   public void visitArithmeticExpression(@NotNull RsArithmeticExpression o) {
     visitExpression(o);
+    // visitBinaryExpression(o);
   }
 
-  public void visitArithmeticMultiplicativeExpression(@NotNull RsArithmeticMultiplicativeExpression o) {
-    visitExpression(o);
+  public void visitArithmeticOp(@NotNull RsArithmeticOp o) {
+    visitPsiElement(o);
   }
 
   public void visitArithmeticValueExpression(@NotNull RsArithmeticValueExpression o) {
@@ -60,8 +49,13 @@ public class RsVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitCompareExpression(@NotNull RsCompareExpression o) {
+  public void visitConditionExpression(@NotNull RsConditionExpression o) {
     visitExpression(o);
+    // visitBinaryExpression(o);
+  }
+
+  public void visitConditionOp(@NotNull RsConditionOp o) {
+    visitPsiElement(o);
   }
 
   public void visitConstantExpression(@NotNull RsConstantExpression o) {
@@ -105,14 +99,6 @@ public class RsVisitor extends PsiElementVisitor {
     // visitNamedElement(o);
   }
 
-  public void visitLogicalAndExpression(@NotNull RsLogicalAndExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitLogicalOrExpression(@NotNull RsLogicalOrExpression o) {
-    visitExpression(o);
-  }
-
   public void visitNameLiteral(@NotNull RsNameLiteral o) {
     visitPsiElement(o);
   }
@@ -123,6 +109,10 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitParExpression(@NotNull RsParExpression o) {
     visitExpression(o);
+  }
+
+  public void visitParameter(@NotNull RsParameter o) {
+    visitPsiElement(o);
   }
 
   public void visitParameterList(@NotNull RsParameterList o) {
@@ -187,10 +177,6 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitWhileStatement(@NotNull RsWhileStatement o) {
     visitStatement(o);
-  }
-
-  public void visitParameter(@NotNull RsParameter o) {
-    visitPsiElement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {

@@ -8,11 +8,8 @@ import io.runescript.plugin.lang.psi.impl.*;
 
 public interface RsTypes {
 
-  IElementType ARITHMETIC_ADDITIVE_EXPRESSION = new RsElementType("ARITHMETIC_ADDITIVE_EXPRESSION");
-  IElementType ARITHMETIC_BITWISE_AND_EXPRESSION = new RsElementType("ARITHMETIC_BITWISE_AND_EXPRESSION");
-  IElementType ARITHMETIC_BITWISE_OR_EXPRESSION = new RsElementType("ARITHMETIC_BITWISE_OR_EXPRESSION");
   IElementType ARITHMETIC_EXPRESSION = new RsElementType("ARITHMETIC_EXPRESSION");
-  IElementType ARITHMETIC_MULTIPLICATIVE_EXPRESSION = new RsElementType("ARITHMETIC_MULTIPLICATIVE_EXPRESSION");
+  IElementType ARITHMETIC_OP = new RsElementType("ARITHMETIC_OP");
   IElementType ARITHMETIC_VALUE_EXPRESSION = new RsElementType("ARITHMETIC_VALUE_EXPRESSION");
   IElementType ARRAY_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("ARRAY_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType ARRAY_VARIABLE_DECLARATION_STATEMENT = new RsElementType("ARRAY_VARIABLE_DECLARATION_STATEMENT");
@@ -21,7 +18,8 @@ public interface RsTypes {
   IElementType BOOLEAN_LITERAL_EXPRESSION = new RsElementType("BOOLEAN_LITERAL_EXPRESSION");
   IElementType CALC_EXPRESSION = new RsElementType("CALC_EXPRESSION");
   IElementType COMMAND_EXPRESSION = new RsElementType("COMMAND_EXPRESSION");
-  IElementType COMPARE_EXPRESSION = new RsElementType("COMPARE_EXPRESSION");
+  IElementType CONDITION_EXPRESSION = new RsElementType("CONDITION_EXPRESSION");
+  IElementType CONDITION_OP = new RsElementType("CONDITION_OP");
   IElementType CONSTANT_EXPRESSION = new RsElementType("CONSTANT_EXPRESSION");
   IElementType DYNAMIC_EXPRESSION = new RsElementType("DYNAMIC_EXPRESSION");
   IElementType EXPRESSION = new RsElementType("EXPRESSION");
@@ -32,8 +30,6 @@ public interface RsTypes {
   IElementType LOCAL_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("LOCAL_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new RsElementType("LOCAL_VARIABLE_DECLARATION_STATEMENT");
   IElementType LOCAL_VARIABLE_EXPRESSION = new RsElementType("LOCAL_VARIABLE_EXPRESSION");
-  IElementType LOGICAL_AND_EXPRESSION = new RsElementType("LOGICAL_AND_EXPRESSION");
-  IElementType LOGICAL_OR_EXPRESSION = new RsElementType("LOGICAL_OR_EXPRESSION");
   IElementType NAME_LITERAL = new RsElementType("NAME_LITERAL");
   IElementType NULL_LITERAL_EXPRESSION = new RsElementType("NULL_LITERAL_EXPRESSION");
   IElementType PARAMETER = new RsElementType("PARAMETER");
@@ -65,7 +61,7 @@ public interface RsTypes {
   IElementType COMMA = new RsElementType(",");
   IElementType DEFAULT = new RsElementType("DEFAULT");
   IElementType DEFINE_TYPE = new RsElementType("DEFINE_TYPE");
-  IElementType DOLLAR = new RsElementType("DOLLAR");
+  IElementType DOLLAR = new RsElementType("$");
   IElementType EQUAL = new RsElementType("=");
   IElementType EXCEL = new RsElementType("!");
   IElementType FALSE = new RsElementType("FALSE");
@@ -105,17 +101,11 @@ public interface RsTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == ARITHMETIC_ADDITIVE_EXPRESSION) {
-        return new RsArithmeticAdditiveExpressionImpl(node);
+      if (type == ARITHMETIC_EXPRESSION) {
+        return new RsArithmeticExpressionImpl(node);
       }
-      else if (type == ARITHMETIC_BITWISE_AND_EXPRESSION) {
-        return new RsArithmeticBitwiseAndExpressionImpl(node);
-      }
-      else if (type == ARITHMETIC_BITWISE_OR_EXPRESSION) {
-        return new RsArithmeticBitwiseOrExpressionImpl(node);
-      }
-      else if (type == ARITHMETIC_MULTIPLICATIVE_EXPRESSION) {
-        return new RsArithmeticMultiplicativeExpressionImpl(node);
+      else if (type == ARITHMETIC_OP) {
+        return new RsArithmeticOpImpl(node);
       }
       else if (type == ARITHMETIC_VALUE_EXPRESSION) {
         return new RsArithmeticValueExpressionImpl(node);
@@ -141,8 +131,11 @@ public interface RsTypes {
       else if (type == COMMAND_EXPRESSION) {
         return new RsCommandExpressionImpl(node);
       }
-      else if (type == COMPARE_EXPRESSION) {
-        return new RsCompareExpressionImpl(node);
+      else if (type == CONDITION_EXPRESSION) {
+        return new RsConditionExpressionImpl(node);
+      }
+      else if (type == CONDITION_OP) {
+        return new RsConditionOpImpl(node);
       }
       else if (type == CONSTANT_EXPRESSION) {
         return new RsConstantExpressionImpl(node);
@@ -170,12 +163,6 @@ public interface RsTypes {
       }
       else if (type == LOCAL_VARIABLE_EXPRESSION) {
         return new RsLocalVariableExpressionImpl(node);
-      }
-      else if (type == LOGICAL_AND_EXPRESSION) {
-        return new RsLogicalAndExpressionImpl(node);
-      }
-      else if (type == LOGICAL_OR_EXPRESSION) {
-        return new RsLogicalOrExpressionImpl(node);
       }
       else if (type == NAME_LITERAL) {
         return new RsNameLiteralImpl(node);

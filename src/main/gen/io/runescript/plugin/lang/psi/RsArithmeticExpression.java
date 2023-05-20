@@ -5,6 +5,18 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsArithmeticExpression extends RsExpression {
+public interface RsArithmeticExpression extends RsExpression, RsBinaryExpression {
+
+  @NotNull
+  RsArithmeticOp getArithmeticOp();
+
+  @NotNull
+  List<RsExpression> getExpressionList();
+
+  @NotNull
+  RsExpression getLeft();
+
+  @Nullable
+  RsExpression getRight();
 
 }

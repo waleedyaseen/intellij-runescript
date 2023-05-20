@@ -5,10 +5,13 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsCompareExpression extends RsExpression {
+public interface RsConditionOp extends PsiElement {
 
-  @NotNull
-  List<RsExpression> getExpressionList();
+  @Nullable
+  PsiElement getAmpersand();
+
+  @Nullable
+  PsiElement getBar();
 
   @Nullable
   PsiElement getEqual();

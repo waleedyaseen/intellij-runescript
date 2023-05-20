@@ -51,10 +51,4 @@ public class RsLocalVariableDeclarationStatementImpl extends RsStatementImpl imp
     return findNotNullChildByType(SEMICOLON);
   }
 
-  @Override
-  @NotNull
-  public RsLocalVariableExpression getNameExpression() {
-    return RsPsiImplUtil.getNameExpression(this);
-  }
-
 }

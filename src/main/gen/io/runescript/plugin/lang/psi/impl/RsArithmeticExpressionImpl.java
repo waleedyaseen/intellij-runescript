@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public abstract class RsArithmeticExpressionImpl extends RsExpressionImpl implements RsArithmeticExpression {
+public class RsArithmeticExpressionImpl extends RsExpressionImpl implements RsArithmeticExpression {
 
   public RsArithmeticExpressionImpl(@NotNull ASTNode node) {
     super(node);
@@ -25,6 +25,32 @@ public abstract class RsArithmeticExpressionImpl extends RsExpressionImpl implem
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof RsVisitor) accept((RsVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public RsArithmeticOp getArithmeticOp() {
+    return findNotNullChildByClass(RsArithmeticOp.class);
+  }
+
+  @Override
+  @NotNull
+  public List<RsExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
+  }
+
+  @Override
+  @NotNull
+  public RsExpression getLeft() {
+    List<RsExpression> p1 = getExpressionList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public RsExpression getRight() {
+    List<RsExpression> p1 = getExpressionList();
+    return p1.size() < 2 ? null : p1.get(1);
   }
 
 }

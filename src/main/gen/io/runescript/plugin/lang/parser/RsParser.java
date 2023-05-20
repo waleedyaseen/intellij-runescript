@@ -39,34 +39,36 @@ public class RsParser implements PsiParser, LightPsiParser {
     create_token_set_(ARRAY_VARIABLE_ASSIGNMENT_STATEMENT, ARRAY_VARIABLE_DECLARATION_STATEMENT, BLOCK_STATEMENT, EXPRESSION_STATEMENT,
       IF_STATEMENT, LOCAL_VARIABLE_ASSIGNMENT_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT,
       SCOPED_VARIABLE_ASSIGNMENT_STATEMENT, STATEMENT, SWITCH_STATEMENT, WHILE_STATEMENT),
-    create_token_set_(ARITHMETIC_ADDITIVE_EXPRESSION, ARITHMETIC_BITWISE_AND_EXPRESSION, ARITHMETIC_BITWISE_OR_EXPRESSION, ARITHMETIC_EXPRESSION,
-      ARITHMETIC_MULTIPLICATIVE_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_VARIABLE_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
-      CALC_EXPRESSION, COMMAND_EXPRESSION, COMPARE_EXPRESSION, CONSTANT_EXPRESSION,
+    create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_VARIABLE_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
+      CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
       DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION,
-      LOCAL_VARIABLE_EXPRESSION, LOGICAL_AND_EXPRESSION, LOGICAL_OR_EXPRESSION, NULL_LITERAL_EXPRESSION,
-      PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION, SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION,
-      STRING_LITERAL_EXPRESSION),
+      LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION,
+      SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION),
   };
 
   /* ********************************************************** */
-  // ('+' | '-') ArithmeticMultiplicativeWrapper
+  // ArithmeticAdditiveOperator ArithmeticMultiplicativeWrapper
   public static boolean ArithmeticAdditiveExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticAdditiveExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", MINUS, PLUS)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_ADDITIVE_EXPRESSION, "<Expression>");
-    r = ArithmeticAdditiveExpression_0(b, l + 1);
+    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_EXPRESSION, "<Expression>");
+    r = ArithmeticAdditiveOperator(b, l + 1);
     r = r && ArithmeticMultiplicativeWrapper(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
+  /* ********************************************************** */
   // '+' | '-'
-  private static boolean ArithmeticAdditiveExpression_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ArithmeticAdditiveExpression_0")) return false;
+  public static boolean ArithmeticAdditiveOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArithmeticAdditiveOperator")) return false;
+    if (!nextTokenIs(b, "<arithmetic additive operator>", MINUS, PLUS)) return false;
     boolean r;
+    Marker m = enter_section_(b, l, _NONE_, ARITHMETIC_OP, "<arithmetic additive operator>");
     r = consumeToken(b, PLUS);
     if (!r) r = consumeToken(b, MINUS);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -94,15 +96,27 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '&' ArithmeticAdditiveWrapper
+  // ArithmeticBitwiseAndOperator ArithmeticAdditiveWrapper
   public static boolean ArithmeticBitwiseAndExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticBitwiseAndExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", AMPERSAND)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_BITWISE_AND_EXPRESSION, "<Expression>");
-    r = consumeToken(b, AMPERSAND);
+    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_EXPRESSION, "<Expression>");
+    r = ArithmeticBitwiseAndOperator(b, l + 1);
     r = r && ArithmeticAdditiveWrapper(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '&'
+  public static boolean ArithmeticBitwiseAndOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArithmeticBitwiseAndOperator")) return false;
+    if (!nextTokenIs(b, AMPERSAND)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, AMPERSAND);
+    exit_section_(b, m, ARITHMETIC_OP, r);
     return r;
   }
 
@@ -130,15 +144,27 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '|' ArithmeticBitwiseAndWrapper
+  // ArithmeticBitwiseOrOperator ArithmeticBitwiseAndWrapper
   public static boolean ArithmeticBitwiseOrExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticBitwiseOrExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", BAR)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_BITWISE_OR_EXPRESSION, "<Expression>");
-    r = consumeToken(b, BAR);
+    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_EXPRESSION, "<Expression>");
+    r = ArithmeticBitwiseOrOperator(b, l + 1);
     r = r && ArithmeticBitwiseAndWrapper(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '|'
+  public static boolean ArithmeticBitwiseOrOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArithmeticBitwiseOrOperator")) return false;
+    if (!nextTokenIs(b, BAR)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, BAR);
+    exit_section_(b, m, ARITHMETIC_OP, r);
     return r;
   }
 
@@ -166,35 +192,27 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ArithmeticBitwiseOrWrapper
-  public static boolean ArithmeticExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ArithmeticExpression")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, ARITHMETIC_EXPRESSION, "<Expression>");
-    r = ArithmeticBitwiseOrWrapper(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // ('*' | '/' | '%') ArithmeticValueExpression
+  // ArithmeticMultiplicativeOperator ArithmeticValueExpression
   public static boolean ArithmeticMultiplicativeExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticMultiplicativeExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_MULTIPLICATIVE_EXPRESSION, "<Expression>");
-    r = ArithmeticMultiplicativeExpression_0(b, l + 1);
+    Marker m = enter_section_(b, l, _LEFT_, ARITHMETIC_EXPRESSION, "<Expression>");
+    r = ArithmeticMultiplicativeOperator(b, l + 1);
     r = r && ArithmeticValueExpression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
+  /* ********************************************************** */
   // '*' | '/' | '%'
-  private static boolean ArithmeticMultiplicativeExpression_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ArithmeticMultiplicativeExpression_0")) return false;
+  public static boolean ArithmeticMultiplicativeOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArithmeticMultiplicativeOperator")) return false;
     boolean r;
+    Marker m = enter_section_(b, l, _NONE_, ARITHMETIC_OP, "<arithmetic multiplicative operator>");
     r = consumeToken(b, STAR);
     if (!r) r = consumeToken(b, SLASH);
     if (!r) r = consumeToken(b, PERCENT);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -222,7 +240,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ('(' ArithmeticExpression ')') | Expression
+  // ('(' ArithmeticBitwiseOrWrapper ')') | Expression
   public static boolean ArithmeticValueExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticValueExpression")) return false;
     boolean r;
@@ -233,13 +251,13 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '(' ArithmeticExpression ')'
+  // '(' ArithmeticBitwiseOrWrapper ')'
   private static boolean ArithmeticValueExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticValueExpression_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, LPAREN);
-    r = r && ArithmeticExpression(b, l + 1);
+    r = r && ArithmeticBitwiseOrWrapper(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     exit_section_(b, m, null, r);
     return r;
@@ -319,14 +337,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CALC '(' ArithmeticExpression ')'
+  // CALC '(' ArithmeticBitwiseOrWrapper ')'
   public static boolean CalcExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CalcExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", CALC)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, CALC_EXPRESSION, "<Expression>");
     r = consumeTokens(b, 0, CALC, LPAREN);
-    r = r && ArithmeticExpression(b, l + 1);
+    r = r && ArithmeticBitwiseOrWrapper(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -371,27 +389,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ('!' | '>' | '<' | '>=' | '<=' | '=') RelationalValueExpression
+  // CompareOperator RelationalValueExpression
   public static boolean CompareExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CompareExpression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, COMPARE_EXPRESSION, "<Expression>");
-    r = CompareExpression_0(b, l + 1);
+    Marker m = enter_section_(b, l, _LEFT_, CONDITION_EXPRESSION, "<Expression>");
+    r = CompareOperator(b, l + 1);
     r = r && RelationalValueExpression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // '!' | '>' | '<' | '>=' | '<=' | '='
-  private static boolean CompareExpression_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CompareExpression_0")) return false;
-    boolean r;
-    r = consumeToken(b, EXCEL);
-    if (!r) r = consumeToken(b, GT);
-    if (!r) r = consumeToken(b, LT);
-    if (!r) r = consumeToken(b, GTE);
-    if (!r) r = consumeToken(b, LTE);
-    if (!r) r = consumeToken(b, EQUAL);
     return r;
   }
 
@@ -412,6 +417,22 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "CompareExpressionWrapper_1")) return false;
     CompareExpression(b, l + 1);
     return true;
+  }
+
+  /* ********************************************************** */
+  // '!' | '>' | '<' | '>=' | '<=' | '='
+  public static boolean CompareOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "CompareOperator")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, CONDITION_OP, "<compare operator>");
+    r = consumeToken(b, EXCEL);
+    if (!r) r = consumeToken(b, GT);
+    if (!r) r = consumeToken(b, LT);
+    if (!r) r = consumeToken(b, GTE);
+    if (!r) r = consumeToken(b, LTE);
+    if (!r) r = consumeToken(b, EQUAL);
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -566,14 +587,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF '(' RelationalExpression ')' Statement
+  // IF '(' LogicalOrWrapper ')' Statement
   public static boolean IfStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IfStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", IF)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, IF_STATEMENT, "<Statement>");
     r = consumeTokens(b, 0, IF, LPAREN);
-    r = r && RelationalExpression(b, l + 1);
+    r = r && LogicalOrWrapper(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     r = r && Statement(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -658,7 +679,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DOLLAR NameLiteral
+  // '$' NameLiteral
   public static boolean LocalVariableExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LocalVariableExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", DOLLAR)) return false;
@@ -671,15 +692,27 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '&' CompareExpressionWrapper
+  // LogicalAndOperator CompareExpressionWrapper
   public static boolean LogicalAndExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LogicalAndExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", AMPERSAND)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, LOGICAL_AND_EXPRESSION, "<Expression>");
-    r = consumeToken(b, AMPERSAND);
+    Marker m = enter_section_(b, l, _LEFT_, CONDITION_EXPRESSION, "<Expression>");
+    r = LogicalAndOperator(b, l + 1);
     r = r && CompareExpressionWrapper(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '&'
+  public static boolean LogicalAndOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "LogicalAndOperator")) return false;
+    if (!nextTokenIs(b, AMPERSAND)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, AMPERSAND);
+    exit_section_(b, m, CONDITION_OP, r);
     return r;
   }
 
@@ -707,15 +740,27 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '|' LogicalAndWrapper
+  // LogicalOrOperator LogicalAndWrapper
   public static boolean LogicalOrExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LogicalOrExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", BAR)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _LEFT_, LOGICAL_OR_EXPRESSION, "<Expression>");
-    r = consumeToken(b, BAR);
+    Marker m = enter_section_(b, l, _LEFT_, CONDITION_EXPRESSION, "<Expression>");
+    r = LogicalOrOperator(b, l + 1);
     r = r && LogicalAndWrapper(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '|'
+  public static boolean LogicalOrOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "LogicalOrOperator")) return false;
+    if (!nextTokenIs(b, BAR)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, BAR);
+    exit_section_(b, m, CONDITION_OP, r);
     return r;
   }
 
@@ -789,7 +834,29 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '(' (parameter (',' parameter)*)? ')'
+  // (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
+  public static boolean Parameter(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Parameter")) return false;
+    if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_NAME, TYPE_NAME)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
+    r = Parameter_0(b, l + 1);
+    r = r && LocalVariableExpression(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // TYPE_NAME | ARRAY_TYPE_NAME
+  private static boolean Parameter_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Parameter_0")) return false;
+    boolean r;
+    r = consumeToken(b, TYPE_NAME);
+    if (!r) r = consumeToken(b, ARRAY_TYPE_NAME);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '(' (Parameter (',' Parameter)*)? ')'
   public static boolean ParameterList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList")) return false;
     if (!nextTokenIs(b, LPAREN)) return false;
@@ -802,25 +869,25 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (parameter (',' parameter)*)?
+  // (Parameter (',' Parameter)*)?
   private static boolean ParameterList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1")) return false;
     ParameterList_1_0(b, l + 1);
     return true;
   }
 
-  // parameter (',' parameter)*
+  // Parameter (',' Parameter)*
   private static boolean ParameterList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = parameter(b, l + 1);
+    r = Parameter(b, l + 1);
     r = r && ParameterList_1_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // (',' parameter)*
+  // (',' Parameter)*
   private static boolean ParameterList_1_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0_1")) return false;
     while (true) {
@@ -831,30 +898,19 @@ public class RsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // ',' parameter
+  // ',' Parameter
   private static boolean ParameterList_1_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
-    r = r && parameter(b, l + 1);
+    r = r && Parameter(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // LogicalOrWrapper
-  static boolean RelationalExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "RelationalExpression")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, null, "<Expression>");
-    r = LogicalOrWrapper(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // ('(' RelationalExpression ')') | Expression
+  // ('(' LogicalOrWrapper ')') | Expression
   public static boolean RelationalValueExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RelationalValueExpression")) return false;
     boolean r;
@@ -865,13 +921,13 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '(' RelationalExpression ')'
+  // '(' LogicalOrWrapper ')'
   private static boolean RelationalValueExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RelationalValueExpression_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, LPAREN);
-    r = r && RelationalExpression(b, l + 1);
+    r = r && LogicalOrWrapper(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     exit_section_(b, m, null, r);
     return r;
@@ -1237,39 +1293,17 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // WHILE '(' RelationalExpression ')' Statement
+  // WHILE '(' LogicalOrWrapper ')' Statement
   public static boolean WhileStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "WhileStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", WHILE)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, WHILE_STATEMENT, "<Statement>");
     r = consumeTokens(b, 0, WHILE, LPAREN);
-    r = r && RelationalExpression(b, l + 1);
+    r = r && LogicalOrWrapper(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     r = r && Statement(b, l + 1);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
-  public static boolean parameter(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "parameter")) return false;
-    if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_NAME, TYPE_NAME)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
-    r = parameter_0(b, l + 1);
-    r = r && LocalVariableExpression(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // TYPE_NAME | ARRAY_TYPE_NAME
-  private static boolean parameter_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "parameter_0")) return false;
-    boolean r;
-    r = consumeToken(b, TYPE_NAME);
-    if (!r) r = consumeToken(b, ARRAY_TYPE_NAME);
     return r;
   }
 

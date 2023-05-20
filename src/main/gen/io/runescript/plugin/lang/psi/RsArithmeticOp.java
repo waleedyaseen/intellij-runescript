@@ -5,13 +5,22 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsArithmeticMultiplicativeExpression extends RsExpression {
+public interface RsArithmeticOp extends PsiElement {
 
-  @NotNull
-  List<RsExpression> getExpressionList();
+  @Nullable
+  PsiElement getAmpersand();
+
+  @Nullable
+  PsiElement getBar();
+
+  @Nullable
+  PsiElement getMinus();
 
   @Nullable
   PsiElement getPercent();
+
+  @Nullable
+  PsiElement getPlus();
 
   @Nullable
   PsiElement getSlash();

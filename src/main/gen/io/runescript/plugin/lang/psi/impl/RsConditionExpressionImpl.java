@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsArithmeticBitwiseOrExpressionImpl extends RsExpressionImpl implements RsArithmeticBitwiseOrExpression {
+public class RsConditionExpressionImpl extends RsExpressionImpl implements RsConditionExpression {
 
-  public RsArithmeticBitwiseOrExpressionImpl(@NotNull ASTNode node) {
+  public RsConditionExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull RsVisitor visitor) {
-    visitor.visitArithmeticBitwiseOrExpression(this);
+    visitor.visitConditionExpression(this);
   }
 
   @Override
@@ -29,14 +29,28 @@ public class RsArithmeticBitwiseOrExpressionImpl extends RsExpressionImpl implem
 
   @Override
   @NotNull
+  public RsConditionOp getConditionOp() {
+    return findNotNullChildByClass(RsConditionOp.class);
+  }
+
+  @Override
+  @NotNull
   public List<RsExpression> getExpressionList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
   @Override
   @NotNull
-  public PsiElement getBar() {
-    return findNotNullChildByType(BAR);
+  public RsExpression getLeft() {
+    List<RsExpression> p1 = getExpressionList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public RsExpression getRight() {
+    List<RsExpression> p1 = getExpressionList();
+    return p1.size() < 2 ? null : p1.get(1);
   }
 
 }
