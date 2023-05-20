@@ -25,6 +25,8 @@
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
         <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RuneScriptReferenceContributor"/>
         <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.lang.psi.refs.RuneScriptFindUsagesProvider"/>
+        <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
+        <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
