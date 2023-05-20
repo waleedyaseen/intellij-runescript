@@ -5,22 +5,21 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.lang.lexer.RuneScriptLexerAdapter
-import io.runescript.plugin.lang.lexer.RuneScriptLexerInfo
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypes
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypes.MULTI_LINE_COMMENT
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypes.SINGLE_LINE_COMMENT
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.BRACES
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.BRACKETS
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.KEYWORDS
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.OPERATORS
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets.PARENS
-import io.runescript.plugin.lang.psi.RuneScriptTypes.*
+import io.runescript.plugin.lang.lexer.RsLexerAdapter
+import io.runescript.plugin.lang.lexer.RsLexerInfo
+import io.runescript.plugin.lang.psi.RsTokenTypes.MULTI_LINE_COMMENT
+import io.runescript.plugin.lang.psi.RsTokenTypes.SINGLE_LINE_COMMENT
+import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACES
+import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACKETS
+import io.runescript.plugin.lang.psi.RsTokenTypesSets.KEYWORDS
+import io.runescript.plugin.lang.psi.RsTokenTypesSets.OPERATORS
+import io.runescript.plugin.lang.psi.RsTokenTypesSets.PARENS
+import io.runescript.plugin.lang.psi.RsTypes.*
 
-class RsSyntaxHighlighter(private val lexerInfo: RuneScriptLexerInfo) : SyntaxHighlighterBase() {
+class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighterBase() {
 
     override fun getHighlightingLexer(): Lexer {
-        return RuneScriptLexerAdapter(lexerInfo)
+        return RsLexerAdapter(lexerInfo)
     }
 
     override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> {

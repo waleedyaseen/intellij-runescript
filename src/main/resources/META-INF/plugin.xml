@@ -8,7 +8,7 @@
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
         <lang.parserDefinition language="RuneScript"
-                               implementationClass="io.runescript.plugin.lang.parser.RuneScriptParserDefinition"/>
+                               implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
         <fileType name="ClientScript" language="RuneScript"
                   implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE"
                   extensions="cs2"/>
@@ -23,8 +23,8 @@
         <annotator language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
         <internalFileTemplate name="ClientScript"/>
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
-        <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RuneScriptReferenceContributor"/>
-        <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.lang.psi.refs.RuneScriptFindUsagesProvider"/>
+        <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RsReferenceContributor"/>
+        <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.lang.psi.refs.RsFindUsagesProvider"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>

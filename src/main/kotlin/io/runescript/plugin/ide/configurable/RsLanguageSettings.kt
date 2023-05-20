@@ -10,7 +10,7 @@ import com.intellij.ui.components.JBList
 import com.intellij.ui.dsl.builder.LabelPosition
 import com.intellij.ui.dsl.builder.Panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
-import io.runescript.plugin.ide.RuneScriptBundle
+import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.config.RsConfig
 import javax.swing.DefaultListModel
 
@@ -29,8 +29,8 @@ class RsLanguageSettings(private val project: Project) : SearchableConfigurable,
                     .setAddAction {
                         val literal = Messages.showInputDialog(
                             project,
-                            RuneScriptBundle.message("settings.primitivetype.dialog.message"),
-                            RuneScriptBundle.message("settings.primitivetype.dialog.title"),
+                            RsBundle.message("settings.primitivetype.dialog.message"),
+                            RsBundle.message("settings.primitivetype.dialog.title"),
                             Messages.getQuestionIcon(),
                             "",
                             LiteralInputValidator()
@@ -39,8 +39,8 @@ class RsLanguageSettings(private val project: Project) : SearchableConfigurable,
                             if (itemListModel.contains(literal)) {
                                 Messages.showMessageDialog(
                                     project,
-                                    RuneScriptBundle.message("settings.primitivetype.dialog.error.exists"),
-                                    RuneScriptBundle.message("settings.primitivetype.dialog.title"),
+                                    RsBundle.message("settings.primitivetype.dialog.error.exists"),
+                                    RsBundle.message("settings.primitivetype.dialog.title"),
                                     Messages.getErrorIcon()
                                 )
                             } else {

@@ -1,16 +1,16 @@
 {
-  parserClass="io.runescript.plugin.lang.parser.RuneScriptParser"
+  parserClass="io.runescript.plugin.lang.parser.RsParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-  psiClassPrefix="RuneScript"
+  psiClassPrefix="Rs"
   psiImplClassSuffix="Impl"
   psiPackage="io.runescript.plugin.lang.psi"
   psiImplPackage="io.runescript.plugin.lang.psi.impl"
-  psiImplUtilClass="io.runescript.plugin.lang.psi.RuneScriptPsiImplUtil"
-  elementTypeHolderClass="io.runescript.plugin.lang.psi.RuneScriptTypes"
-  elementTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
-  tokenTypeClass="io.runescript.plugin.lang.psi.RuneScriptElementType"
+  psiImplUtilClass="io.runescript.plugin.lang.psi.RsPsiImplUtil"
+  elementTypeHolderClass="io.runescript.plugin.lang.psi.RsTypes"
+  elementTypeClass="io.runescript.plugin.lang.psi.RsElementType"
+  tokenTypeClass="io.runescript.plugin.lang.psi.RsElementType"
   name(".*expression")='expression'
   extends(".*expression")=expression
   name(".*statement")='statement'
@@ -105,8 +105,8 @@ private expression_list ::= expression (COMMA expression)*
 par_expression ::= LPAREN expression RPAREN
 
 local_variable_expression ::= DOLLAR name_literal {
-    mixin="io.runescript.plugin.lang.psi.impl.naned.RuneScriptNamedElementImpl"
-    implements="io.runescript.plugin.lang.psi.named.RuneScriptNamedElement"
+    mixin="io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl"
+    implements="io.runescript.plugin.lang.psi.named.RsNamedElement"
     methods=[getName setName getNameIdentifier]
 }
 

@@ -1,11 +1,10 @@
 package io.runescript.plugin.ide
 
-import com.intellij.codeInsight.highlighting.BraceMatcher
 import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import io.runescript.plugin.lang.psi.RuneScriptTypes
+import io.runescript.plugin.lang.psi.RsTypes
 
 class RsBraceMatcher : PairedBraceMatcher {
 
@@ -24,9 +23,9 @@ class RsBraceMatcher : PairedBraceMatcher {
 
     companion object {
         private val PAIRS = arrayOf(
-            BracePair(RuneScriptTypes.LBRACE, RuneScriptTypes.RBRACE, true),
-            BracePair(RuneScriptTypes.LPAREN, RuneScriptTypes.RPAREN, false),
-            BracePair(RuneScriptTypes.LBRACKET, RuneScriptTypes.RBRACKET, false)
+            BracePair(RsTypes.LBRACE, RsTypes.RBRACE, true),
+            BracePair(RsTypes.LPAREN, RsTypes.RPAREN, false),
+            BracePair(RsTypes.LBRACKET, RsTypes.RBRACKET, false)
         )
     }
 }

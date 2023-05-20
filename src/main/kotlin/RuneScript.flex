@@ -1,33 +1,29 @@
 package io.runescript.plugin.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import io.runescript.plugin.ide.config.RsConfig;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static io.runescript.plugin.lang.psi.RuneScriptTokenTypes.*;
-import static io.runescript.plugin.lang.psi.RuneScriptTypes.*;
-import io.runescript.plugin.lang.lexer.RuneScriptLexerInfo;
+import static io.runescript.plugin.lang.psi.RsTokenTypes.*;
+import static io.runescript.plugin.lang.psi.RsTypes.*;
 %%
 
 %{
-private RuneScriptLexerInfo lexerInfo;
+private RsLexerInfo lexerInfo;
 
 public List<String> getTypeNames() {
     return lexerInfo.getTypeNames();
 }
 %}
 
-%ctorarg RuneScriptLexerInfo lexerInfo
+%ctorarg RsLexerInfo lexerInfo
 %init{
 this.lexerInfo =  lexerInfo;
 %init}
 
-%class _RuneScriptLexer
+%class _RsLexer
 %implements FlexLexer
 %unicode
 %function advance

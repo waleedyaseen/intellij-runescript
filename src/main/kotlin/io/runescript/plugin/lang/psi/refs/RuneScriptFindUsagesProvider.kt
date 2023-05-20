@@ -5,20 +5,20 @@ import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.lang.lexer.RuneScriptLexerAdapter
-import io.runescript.plugin.lang.lexer.RuneScriptLexerInfo
-import io.runescript.plugin.lang.psi.RuneScriptLocalVariableExpression
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypesSets
-import io.runescript.plugin.lang.psi.RuneScriptTypes
+import io.runescript.plugin.lang.lexer.RsLexerAdapter
+import io.runescript.plugin.lang.lexer.RsLexerInfo
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsTokenTypesSets
+import io.runescript.plugin.lang.psi.RsTypes
 
-class RuneScriptFindUsagesProvider : FindUsagesProvider {
+class RsFindUsagesProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner? {
         return DefaultWordsScanner(
-            RuneScriptLexerAdapter(RuneScriptLexerInfo(emptyList())),
-            TokenSet.create(RuneScriptTypes.IDENTIFIER),
-            RuneScriptTokenTypesSets.COMMENTS,
-            TokenSet.create(RuneScriptTypes.TYPE_NAME, RuneScriptTypes.ARRAY_TYPE_NAME),
+            RsLexerAdapter(RsLexerInfo(emptyList())),
+            TokenSet.create(RsTypes.IDENTIFIER),
+            RsTokenTypesSets.COMMENTS,
+            TokenSet.create(RsTypes.TYPE_NAME, RsTypes.ARRAY_TYPE_NAME),
         )
     }
 
@@ -31,21 +31,21 @@ class RuneScriptFindUsagesProvider : FindUsagesProvider {
     }
 
     override fun getType(element: PsiElement): String {
-        if (element is RuneScriptLocalVariableExpression) {
+        if (element is RsLocalVariableExpression) {
             return "Local Variable"
         }
         return ""
     }
 
     override fun getDescriptiveName(element: PsiElement): String {
-        if (element is RuneScriptLocalVariableExpression) {
+        if (element is RsLocalVariableExpression) {
             return element.nameLiteral.text
         }
         return ""
     }
 
     override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
-        if (element is RuneScriptLocalVariableExpression) {
+        if (element is RsLocalVariableExpression) {
             return "GRGRGRGR ${element.nameLiteral.text}"
         }
         return ""

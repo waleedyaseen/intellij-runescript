@@ -3,7 +3,7 @@ package io.runescript.plugin.ide
 import com.intellij.lang.CodeDocumentationAwareCommenter
 import com.intellij.psi.PsiComment
 import com.intellij.psi.tree.IElementType
-import io.runescript.plugin.lang.psi.RuneScriptTokenTypes
+import io.runescript.plugin.lang.psi.RsTokenTypes
 
 class RsCommenter : CodeDocumentationAwareCommenter {
 
@@ -28,11 +28,11 @@ class RsCommenter : CodeDocumentationAwareCommenter {
     }
 
     override fun getLineCommentTokenType(): IElementType {
-        return RuneScriptTokenTypes.SINGLE_LINE_COMMENT
+        return RsTokenTypes.SINGLE_LINE_COMMENT
     }
 
     override fun getBlockCommentTokenType(): IElementType {
-        return RuneScriptTokenTypes.MULTI_LINE_COMMENT
+        return RsTokenTypes.MULTI_LINE_COMMENT
     }
 
     override fun getDocumentationCommentTokenType(): IElementType? {

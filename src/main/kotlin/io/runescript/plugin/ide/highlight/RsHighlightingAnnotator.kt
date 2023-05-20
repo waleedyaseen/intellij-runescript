@@ -9,29 +9,29 @@ import io.runescript.plugin.lang.psi.*
 
 class RsHighlightingAnnotator : Annotator{
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        element.accept(object: RuneScriptVisitor() {
+        element.accept(object: RsVisitor() {
 
-            override fun visitScriptName(o: RuneScriptScriptName) {
+            override fun visitScriptName(o: RsScriptName) {
                 super.visitScriptName(o)
                 element.highlight(holder, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
             }
 
-            override fun visitLocalVariableExpression(o: RuneScriptLocalVariableExpression) {
+            override fun visitLocalVariableExpression(o: RsLocalVariableExpression) {
                 super.visitLocalVariableExpression(o)
                 element.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
             }
 
-            override fun visitArrayVariableExpression(o: RuneScriptArrayVariableExpression) {
+            override fun visitArrayVariableExpression(o: RsArrayVariableExpression) {
                 super.visitArrayVariableExpression(o)
                 element.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
             }
 
-            override fun visitCommandExpression(o: RuneScriptCommandExpression) {
+            override fun visitCommandExpression(o: RsCommandExpression) {
                 super.visitCommandExpression(o)
                 o.nameLiteral.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
             }
 
-            override fun visitGosubExpression(o: RuneScriptGosubExpression) {
+            override fun visitGosubExpression(o: RsGosubExpression) {
                 super.visitGosubExpression(o)
                 o.nameLiteral.highlight(holder, RsSyntaxHighlighterColors.PROC_CALL)
             }

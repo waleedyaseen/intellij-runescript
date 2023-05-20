@@ -2,19 +2,14 @@ package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
-import com.intellij.psi.search.LocalSearchScope
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.childrenOfType
-import com.intellij.psi.util.findParentOfType
 import com.intellij.psi.util.parentsOfType
-import io.runescript.plugin.lang.psi.RuneScriptBlockStatement
-import io.runescript.plugin.lang.psi.RuneScriptLocalVariableDeclarationStatement
-import io.runescript.plugin.lang.psi.RuneScriptLocalVariableExpression
-import io.runescript.plugin.lang.psi.RuneScriptPsiImplUtil
-import io.runescript.plugin.lang.psi.RuneScriptScript
-import io.runescript.plugin.lang.psi.RuneScriptStatementList
+import io.runescript.plugin.lang.psi.RsBlockStatement
+import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsStatementList
 
-class RuneScriptReference(element: PsiElement, textRange: TextRange) :
+class RsReference(element: PsiElement, textRange: TextRange) :
         PsiReferenceBase<PsiElement>(element, textRange), PsiPolyVariantReference {
 
     override fun resolve(): PsiElement? {
@@ -24,15 +19,15 @@ class RuneScriptReference(element: PsiElement, textRange: TextRange) :
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val parentBlocks = findParentScopeBlocks(element)
-        val targetName = (element as RuneScriptLocalVariableExpression).name
+        val targetName = (element as RsLocalVariableExpression).name
         return parentBlocks
-                .flatMap { it.childrenOfType<RuneScriptLocalVariableDeclarationStatement>() + it.childrenOfType<RuneScriptLocalVariableExpression>() }
+                .flatMap { it.childrenOfType<RsLocalVariableDeclarationStatement>() + it.childrenOfType<RsLocalVariableExpression>() }
                 .map {
-                    if (it is RuneScriptLocalVariableDeclarationStatement) {
+                    if (it is RsLocalVariableDeclarationStatement) {
                         it.nameExpression
                     } else {
                         it
-                    } as RuneScriptLocalVariableExpression
+                    } as RsLocalVariableExpression
                 }
                 .distinct()
                 .filter { it.name == targetName }
@@ -42,10 +37,10 @@ class RuneScriptReference(element: PsiElement, textRange: TextRange) :
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        return (element as RuneScriptLocalVariableExpression).setName(newElementName)
+        return (element as RsLocalVariableExpression).setName(newElementName)
     }
 
     private fun findParentScopeBlocks(element: PsiElement): Sequence<PsiElement> {
-        return element.parentsOfType(RuneScriptStatementList::class.java) + element.parentsOfType(RuneScriptBlockStatement::class.java)
+        return element.parentsOfType(RsStatementList::class.java) + element.parentsOfType(RsBlockStatement::class.java)
     }
 }
