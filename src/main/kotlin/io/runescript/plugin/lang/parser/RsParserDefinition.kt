@@ -11,16 +11,14 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.ide.config.RsConfig
-import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsFile
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
-import io.runescript.plugin.lang.psi.RsTypes
+import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
 class RsParserDefinition : ParserDefinition {
-
-    private val FILE = IFileElementType(RuneScript)
 
     override fun createLexer(project: Project): Lexer {
         return RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes(project)))
@@ -31,7 +29,7 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun getFileNodeType(): IFileElementType {
-        return FILE
+        return RsFileStubType
     }
 
     override fun getCommentTokens(): TokenSet {
@@ -43,7 +41,7 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun createElement(node: ASTNode?): PsiElement {
-        return RsTypes.Factory.createElement(node)
+        return RsElementTypes.Factory.createElement(node)
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {

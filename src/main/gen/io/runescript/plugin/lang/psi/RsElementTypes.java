@@ -4,9 +4,10 @@ package io.runescript.plugin.lang.psi;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiElement;
 import com.intellij.lang.ASTNode;
+import io.runescript.plugin.lang.stubs.StubElementTypeFactory;
 import io.runescript.plugin.lang.psi.impl.*;
 
-public interface RsTypes {
+public interface RsElementTypes {
 
   IElementType ARITHMETIC_EXPRESSION = new RsElementType("ARITHMETIC_EXPRESSION");
   IElementType ARITHMETIC_OP = new RsElementType("ARITHMETIC_OP");
@@ -40,9 +41,9 @@ public interface RsTypes {
   IElementType RETURN_STATEMENT = new RsElementType("RETURN_STATEMENT");
   IElementType SCOPED_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("SCOPED_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType SCOPED_VARIABLE_EXPRESSION = new RsElementType("SCOPED_VARIABLE_EXPRESSION");
-  IElementType SCRIPT = new RsElementType("SCRIPT");
-  IElementType SCRIPT_HEADER = new RsElementType("SCRIPT_HEADER");
-  IElementType SCRIPT_NAME = new RsElementType("SCRIPT_NAME");
+  IElementType SCRIPT = StubElementTypeFactory.create("SCRIPT");
+  IElementType SCRIPT_HEADER = StubElementTypeFactory.create("SCRIPT_HEADER");
+  IElementType SCRIPT_NAME = StubElementTypeFactory.create("SCRIPT_NAME");
   IElementType STATEMENT = new RsElementType("STATEMENT");
   IElementType STATEMENT_LIST = new RsElementType("STATEMENT_LIST");
   IElementType STRING_INTERPOLATION_EXPRESSION = new RsElementType("STRING_INTERPOLATION_EXPRESSION");

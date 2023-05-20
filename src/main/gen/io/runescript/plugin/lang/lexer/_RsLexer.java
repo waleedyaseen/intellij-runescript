@@ -10,7 +10,7 @@ import com.intellij.psi.tree.IElementType;
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RsTokenTypes.*;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 
 class _RsLexer implements FlexLexer {
 

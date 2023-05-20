@@ -14,7 +14,7 @@ import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACKETS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.KEYWORDS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.OPERATORS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.PARENS
-import io.runescript.plugin.lang.psi.RsTypes.*
+import io.runescript.plugin.lang.psi.RsElementTypes.*
 
 class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighterBase() {
 

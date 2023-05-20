@@ -8,7 +8,7 @@
   psiPackage="io.runescript.plugin.lang.psi"
   psiImplPackage="io.runescript.plugin.lang.psi.impl"
   psiImplUtilClass="io.runescript.plugin.lang.psi.RsPsiImplUtil"
-  elementTypeHolderClass="io.runescript.plugin.lang.psi.RsTypes"
+  elementTypeHolderClass="io.runescript.plugin.lang.psi.RsElementTypes"
   elementTypeClass="io.runescript.plugin.lang.psi.RsElementType"
   tokenTypeClass="io.runescript.plugin.lang.psi.RsElementType"
   generateTokenAccessors=true
@@ -53,9 +53,26 @@
 }
 
 File ::= Script*
-Script ::= ScriptHeader StatementList
-ScriptHeader ::= ScriptName ParameterList? ReturnList?
-ScriptName ::= '[' NameLiteral ',' NameLiteral ']'
+
+Script ::= ScriptHeader StatementList {
+    stubClass="io.runescript.plugin.lang.stubs.RsScriptStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}
+ScriptHeader ::= ScriptName ParameterList? ReturnList? {
+    stubClass="io.runescript.plugin.lang.stubs.RsScriptHeaderStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}
+
+ScriptName ::= '[' NameLiteral ',' NameLiteral ']' {
+    methods=[
+        triggerExpression="/NameLiteral[0]"
+        nameExpression="/NameLiteral[1]"
+    ]
+    stubClass="io.runescript.plugin.lang.stubs.RsScriptNameStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+    implements="com.intellij.psi.NavigatablePsiElement"
+    mixin="io.runescript.plugin.lang.psi.mixin.RsScriptNameMixin"
+}
 
 ParameterList ::= '(' (Parameter (',' Parameter)*)? ')'
 Parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression

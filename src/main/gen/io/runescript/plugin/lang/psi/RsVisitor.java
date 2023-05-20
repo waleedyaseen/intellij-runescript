@@ -5,6 +5,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import io.runescript.plugin.lang.psi.named.RsNamedElement;
+import com.intellij.psi.NavigatablePsiElement;
 
 public class RsVisitor extends PsiElementVisitor {
 
@@ -148,7 +149,7 @@ public class RsVisitor extends PsiElementVisitor {
   }
 
   public void visitScriptName(@NotNull RsScriptName o) {
-    visitPsiElement(o);
+    visitNavigatablePsiElement(o);
   }
 
   public void visitStatement(@NotNull RsStatement o) {
@@ -177,6 +178,10 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitWhileStatement(@NotNull RsWhileStatement o) {
     visitStatement(o);
+  }
+
+  public void visitNavigatablePsiElement(@NotNull NavigatablePsiElement o) {
+    visitElement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {

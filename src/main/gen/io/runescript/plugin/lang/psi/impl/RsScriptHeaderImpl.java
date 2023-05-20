@@ -7,14 +7,25 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import io.runescript.plugin.lang.stubs.RsScriptHeaderStub;
 import io.runescript.plugin.lang.psi.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
-public class RsScriptHeaderImpl extends ASTWrapperPsiElement implements RsScriptHeader {
+public class RsScriptHeaderImpl extends StubBasedPsiElementBase<RsScriptHeaderStub> implements RsScriptHeader {
+
+  public RsScriptHeaderImpl(@NotNull RsScriptHeaderStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
 
   public RsScriptHeaderImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public RsScriptHeaderImpl(RsScriptHeaderStub stub, IElementType type, ASTNode node) {
+    super(stub, type, node);
   }
 
   public void accept(@NotNull RsVisitor visitor) {
@@ -30,19 +41,19 @@ public class RsScriptHeaderImpl extends ASTWrapperPsiElement implements RsScript
   @Override
   @Nullable
   public RsParameterList getParameterList() {
-    return findChildByClass(RsParameterList.class);
+    return PsiTreeUtil.getChildOfType(this, RsParameterList.class);
   }
 
   @Override
   @Nullable
   public RsReturnList getReturnList() {
-    return findChildByClass(RsReturnList.class);
+    return PsiTreeUtil.getChildOfType(this, RsReturnList.class);
   }
 
   @Override
   @NotNull
   public RsScriptName getScriptName() {
-    return findNotNullChildByClass(RsScriptName.class);
+    return notNullChild(PsiTreeUtil.getStubChildOfType(this, RsScriptName.class));
   }
 
 }

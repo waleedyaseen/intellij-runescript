@@ -7,7 +7,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl;
 import io.runescript.plugin.lang.psi.*;
 
@@ -30,13 +30,31 @@ public class RsLocalVariableExpressionImpl extends RsNamedElementImpl implements
   @Override
   @NotNull
   public RsNameLiteral getNameLiteral() {
-    return findNotNullChildByClass(RsNameLiteral.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, RsNameLiteral.class));
   }
 
   @Override
   @NotNull
   public PsiElement getDollar() {
-    return findNotNullChildByType(DOLLAR);
+    return notNullChild(findChildByType(DOLLAR));
+  }
+
+  @Override
+  @NotNull
+  public String getName() {
+    return RsPsiImplUtil.getName(this);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement setName(@NotNull String newName) {
+    return RsPsiImplUtil.setName(this, newName);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getNameIdentifier() {
+    return RsPsiImplUtil.getNameIdentifier(this);
   }
 
 }

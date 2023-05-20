@@ -9,16 +9,16 @@ import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
-import io.runescript.plugin.lang.psi.RsTypes
+import io.runescript.plugin.lang.psi.RsElementTypes
 
 class RsFindUsagesProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner? {
         return DefaultWordsScanner(
             RsLexerAdapter(RsLexerInfo(emptyList())),
-            TokenSet.create(RsTypes.IDENTIFIER),
+            TokenSet.create(RsElementTypes.IDENTIFIER),
             RsTokenTypesSets.COMMENTS,
-            TokenSet.create(RsTypes.TYPE_NAME, RsTypes.ARRAY_TYPE_NAME),
+            TokenSet.create(RsElementTypes.TYPE_NAME, RsElementTypes.ARRAY_TYPE_NAME),
         )
     }
 

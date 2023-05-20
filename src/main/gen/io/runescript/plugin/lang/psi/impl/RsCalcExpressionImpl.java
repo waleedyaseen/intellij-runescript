@@ -7,7 +7,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
 public class RsCalcExpressionImpl extends RsExpressionImpl implements RsCalcExpression {
@@ -30,25 +30,25 @@ public class RsCalcExpressionImpl extends RsExpressionImpl implements RsCalcExpr
   @Override
   @NotNull
   public RsExpression getExpression() {
-    return findNotNullChildByClass(RsExpression.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, RsExpression.class));
   }
 
   @Override
   @NotNull
   public PsiElement getCalc() {
-    return findNotNullChildByType(CALC);
+    return notNullChild(findChildByType(CALC));
   }
 
   @Override
   @NotNull
   public PsiElement getLparen() {
-    return findNotNullChildByType(LPAREN);
+    return notNullChild(findChildByType(LPAREN));
   }
 
   @Override
   @NotNull
   public PsiElement getRparen() {
-    return findNotNullChildByType(RPAREN);
+    return notNullChild(findChildByType(RPAREN));
   }
 
 }

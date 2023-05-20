@@ -7,7 +7,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
 public class RsLocalVariableDeclarationStatementImpl extends RsStatementImpl implements RsLocalVariableDeclarationStatement {
@@ -36,7 +36,7 @@ public class RsLocalVariableDeclarationStatementImpl extends RsStatementImpl imp
   @Override
   @NotNull
   public PsiElement getDefineType() {
-    return findNotNullChildByType(DEFINE_TYPE);
+    return notNullChild(findChildByType(DEFINE_TYPE));
   }
 
   @Override
@@ -48,7 +48,13 @@ public class RsLocalVariableDeclarationStatementImpl extends RsStatementImpl imp
   @Override
   @NotNull
   public PsiElement getSemicolon() {
-    return findNotNullChildByType(SEMICOLON);
+    return notNullChild(findChildByType(SEMICOLON));
+  }
+
+  @Override
+  @NotNull
+  public RsLocalVariableExpression getNameExpression() {
+    return RsPsiImplUtil.getNameExpression(this);
   }
 
 }

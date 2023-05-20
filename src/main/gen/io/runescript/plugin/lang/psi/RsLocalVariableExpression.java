@@ -14,16 +14,13 @@ public interface RsLocalVariableExpression extends RsExpression, RsNamedElement 
   @NotNull
   PsiElement getDollar();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(RsLocalVariableExpression, ...)
-  //methods are not found in RsPsiImplUtil
+  @NotNull
+  String getName();
 
-  //WARNING: setName(...) is skipped
-  //matching setName(RsLocalVariableExpression, ...)
-  //methods are not found in RsPsiImplUtil
+  @NotNull
+  PsiElement setName(@NotNull String newName);
 
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(RsLocalVariableExpression, ...)
-  //methods are not found in RsPsiImplUtil
+  @NotNull
+  PsiElement getNameIdentifier();
 
 }

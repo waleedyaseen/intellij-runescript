@@ -1,13 +1,12 @@
 package io.runescript.plugin.lang.lexer;
 
-import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RsTokenTypes.*;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 %%
 
 %{

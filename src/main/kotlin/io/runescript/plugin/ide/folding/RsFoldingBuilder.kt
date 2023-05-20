@@ -11,7 +11,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.lang.psi.RsBlockStatement
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsTokenTypes
-import io.runescript.plugin.lang.psi.RsTypes
+import io.runescript.plugin.lang.psi.RsElementTypes
 
 class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
     override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
@@ -48,11 +48,11 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
 
     override fun getPlaceholderText(node: ASTNode): String {
         when (node.elementType) {
-            RsTypes.SCRIPT -> {
+            RsElementTypes.SCRIPT -> {
                 return "{...}\n"
             }
 
-            RsTypes.BLOCK_STATEMENT -> {
+            RsElementTypes.BLOCK_STATEMENT -> {
                 return "{...}\n"
             }
 

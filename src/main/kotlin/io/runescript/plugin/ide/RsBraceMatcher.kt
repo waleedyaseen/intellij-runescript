@@ -4,7 +4,7 @@ import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import io.runescript.plugin.lang.psi.RsTypes
+import io.runescript.plugin.lang.psi.RsElementTypes
 
 class RsBraceMatcher : PairedBraceMatcher {
 
@@ -23,9 +23,9 @@ class RsBraceMatcher : PairedBraceMatcher {
 
     companion object {
         private val PAIRS = arrayOf(
-            BracePair(RsTypes.LBRACE, RsTypes.RBRACE, true),
-            BracePair(RsTypes.LPAREN, RsTypes.RPAREN, false),
-            BracePair(RsTypes.LBRACKET, RsTypes.RBRACKET, false)
+            BracePair(RsElementTypes.LBRACE, RsElementTypes.RBRACE, true),
+            BracePair(RsElementTypes.LPAREN, RsElementTypes.RPAREN, false),
+            BracePair(RsElementTypes.LBRACKET, RsElementTypes.RBRACKET, false)
         )
     }
 }

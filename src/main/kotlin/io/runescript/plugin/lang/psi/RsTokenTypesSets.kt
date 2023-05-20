@@ -3,7 +3,7 @@ package io.runescript.plugin.lang.psi
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.psi.RsTokenTypes.MULTI_LINE_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypes.SINGLE_LINE_COMMENT
-import io.runescript.plugin.lang.psi.RsTypes.*
+import io.runescript.plugin.lang.psi.RsElementTypes.*
 
 object RsTokenTypesSets {
     val KEYWORDS = TokenSet.create(

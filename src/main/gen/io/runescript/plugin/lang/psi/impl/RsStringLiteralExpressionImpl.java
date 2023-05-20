@@ -7,7 +7,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static io.runescript.plugin.lang.psi.RsTypes.*;
+import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
 public class RsStringLiteralExpressionImpl extends RsExpressionImpl implements RsStringLiteralExpression {
@@ -36,13 +36,13 @@ public class RsStringLiteralExpressionImpl extends RsExpressionImpl implements R
   @Override
   @NotNull
   public PsiElement getStringEnd() {
-    return findNotNullChildByType(STRING_END);
+    return notNullChild(findChildByType(STRING_END));
   }
 
   @Override
   @NotNull
   public PsiElement getStringStart() {
-    return findNotNullChildByType(STRING_START);
+    return notNullChild(findChildByType(STRING_START));
   }
 
 }

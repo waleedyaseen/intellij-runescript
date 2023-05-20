@@ -4,8 +4,11 @@ package io.runescript.plugin.lang.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.NavigatablePsiElement;
+import com.intellij.psi.StubBasedPsiElement;
+import io.runescript.plugin.lang.stubs.RsScriptNameStub;
 
-public interface RsScriptName extends PsiElement {
+public interface RsScriptName extends NavigatablePsiElement, StubBasedPsiElement<RsScriptNameStub> {
 
   @NotNull
   List<RsNameLiteral> getNameLiteralList();
@@ -18,5 +21,11 @@ public interface RsScriptName extends PsiElement {
 
   @NotNull
   PsiElement getRbracket();
+
+  @NotNull
+  RsNameLiteral getTriggerExpression();
+
+  @Nullable
+  RsNameLiteral getNameExpression();
 
 }
