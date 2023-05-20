@@ -16,16 +16,44 @@
   extends(".*Expression")=Expression
   name(".*Statement")='Statement'
   extends(".*Statement")=Statement
+  classHeader="// This class is automatically generated. Do not edit."
+
+  tokens=[
+    LBRACKET='['
+    RBRACKET=']'
+    LPAREN='('
+    RPAREN=')'
+    LBRACE='{'
+    RBRACE='}'
+    COMMA=','
+    COLON=':'
+    SEMICOLON=';'
+    EQUAL='='
+    EXCEL='!'
+    GT='>'
+    LT='<'
+    GTE='>='
+    LTE='<='
+    BAR='|'
+    AMPERSAND='&'
+    PLUS='+'
+    MINUS='-'
+    STAR='*'
+    SLASH='/'
+    PERCENT='%'
+    CARET='^'
+    TILDE='~'
+  ]
 }
 
 File ::= Script*
 Script ::= ScriptHeader StatementList
 ScriptHeader ::= ScriptName ParameterList? ReturnList?
-ScriptName ::= LBRACKET NameLiteral COMMA NameLiteral RBRACKET
+ScriptName ::= '[' NameLiteral ',' NameLiteral ']'
 
-ParameterList ::= LPAREN (parameter (COMMA parameter)*)? RPAREN
+ParameterList ::= '(' (parameter (',' parameter)*)? ')'
 parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
-ReturnList ::= LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
+ReturnList ::= '(' (TYPE_NAME (',' TYPE_NAME)*)? ')'
 StatementList ::= Statement*
 Statement ::= BlockStatement
             | IfStatement
@@ -39,55 +67,55 @@ Statement ::= BlockStatement
             | ScopedVariableAssignmentStatement
             | ExpressionStatement
 
-BlockStatement ::= LBRACE StatementList RBRACE
-IfStatement ::= IF LPAREN RelationalExpression RPAREN Statement
-WhileStatement ::= WHILE LPAREN RelationalExpression RPAREN Statement
-SwitchStatement ::= SWITCH LPAREN Expression RPAREN LBRACE SwitchCase* RBRACE
-SwitchCase ::= CASE SwitchCaseExpressionList COLON StatementList
-private SwitchCaseExpressionList ::= SwitchCaseExpression (COMMA SwitchCaseExpression)*
+BlockStatement ::= '{' StatementList '}'
+IfStatement ::= IF '(' RelationalExpression ')' Statement
+WhileStatement ::= WHILE '(' RelationalExpression ')' Statement
+SwitchStatement ::= SWITCH '(' Expression ')' '{' SwitchCase* '}'
+SwitchCase ::= CASE SwitchCaseExpressionList ':' StatementList
+private SwitchCaseExpressionList ::= SwitchCaseExpression (',' SwitchCaseExpression)*
 private SwitchCaseExpression ::= Expression | DEFAULT
-ReturnStatement ::= RETURN (LPAREN ExpressionList? RPAREN)? SEMICOLON
-LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression (EQUAL Expression)? SEMICOLON {
+ReturnStatement ::= RETURN ('(' ExpressionList? ')')? ';'
+LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' Expression)? ';' {
     methods=[getNameExpression]
 }
-LocalVariableAssignmentStatement ::= LocalVariableExpression EQUAL Expression SEMICOLON
-ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ParExpression SEMICOLON
-ArrayVariableAssignmentStatement ::= LocalVariableExpression ParExpression EQUAL Expression SEMICOLON
-ScopedVariableAssignmentStatement ::= ScopedVariableExpression EQUAL Expression SEMICOLON
-ExpressionStatement ::= Expression SEMICOLON
+LocalVariableAssignmentStatement ::= LocalVariableExpression '=' Expression ';'
+ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ParExpression ';'
+ArrayVariableAssignmentStatement ::= LocalVariableExpression ParExpression '=' Expression ';'
+ScopedVariableAssignmentStatement ::= ScopedVariableExpression '=' Expression ';'
+ExpressionStatement ::= Expression ';'
 
 // Relational Expressions
 
 private RelationalExpression ::= LogicalOrWrapper
 
 private LogicalOrWrapper ::= LogicalAndWrapper LogicalOrExpression*
-left LogicalOrExpression ::= BAR LogicalAndWrapper
+left LogicalOrExpression ::= '|' LogicalAndWrapper
 
 private LogicalAndWrapper ::= CompareExpressionWrapper LogicalAndExpression*
-left LogicalAndExpression ::= AMPERSAND CompareExpressionWrapper
+left LogicalAndExpression ::= '&' CompareExpressionWrapper
 
 private CompareExpressionWrapper ::= RelationalValueExpression CompareExpression?
-left CompareExpression ::= (EXCEL | GT | LT | GTE | LTE | EQUAL) RelationalValueExpression
+left CompareExpression ::= ('!' | '>' | '<' | '>=' | '<=' | '=') RelationalValueExpression
 
-RelationalValueExpression ::= (LPAREN RelationalExpression RPAREN) | Expression
+RelationalValueExpression ::= ('(' RelationalExpression ')') | Expression
 
 // Arithmetic & Bitwise Expressions
 
 ArithmeticExpression ::= ArithmeticBitwiseOrWrapper
 
 private ArithmeticBitwiseOrWrapper ::= ArithmeticBitwiseAndWrapper ArithmeticBitwiseOrExpression*
-left ArithmeticBitwiseOrExpression ::= BAR ArithmeticBitwiseAndWrapper
+left ArithmeticBitwiseOrExpression ::= '|' ArithmeticBitwiseAndWrapper
 
 private ArithmeticBitwiseAndWrapper ::= ArithmeticAdditiveWrapper ArithmeticBitwiseAndExpression*
-left ArithmeticBitwiseAndExpression ::= AMPERSAND ArithmeticAdditiveWrapper
+left ArithmeticBitwiseAndExpression ::= '&' ArithmeticAdditiveWrapper
 
 private ArithmeticAdditiveWrapper ::= ArithmeticMultiplicativeWrapper ArithmeticAdditiveExpression*
-left ArithmeticAdditiveExpression ::= (PLUS | MINUS) ArithmeticMultiplicativeWrapper
+left ArithmeticAdditiveExpression ::= ('+' | '-') ArithmeticMultiplicativeWrapper
 
 private ArithmeticMultiplicativeWrapper ::= ArithmeticValueExpression ArithmeticMultiplicativeExpression*
-left ArithmeticMultiplicativeExpression ::= (STAR | SLASH | PERCENT) ArithmeticValueExpression
+left ArithmeticMultiplicativeExpression ::= ('*' | '/' | '%') ArithmeticValueExpression
 
-ArithmeticValueExpression ::= (LPAREN ArithmeticExpression RPAREN) | Expression
+ArithmeticValueExpression ::= ('(' ArithmeticExpression ')') | Expression
 
 // General Expressions
 Expression ::= ParExpression
@@ -101,9 +129,9 @@ Expression ::= ParExpression
              | DynamicExpression
              | CalcExpression
 
-CalcExpression ::= CALC LPAREN ArithmeticExpression RPAREN
-private ExpressionList ::= Expression (COMMA Expression)*
-ParExpression ::= LPAREN Expression RPAREN
+CalcExpression ::= CALC '(' ArithmeticExpression ')'
+private ExpressionList ::= Expression (',' Expression)*
+ParExpression ::= '(' Expression ')'
 
 LocalVariableExpression ::= DOLLAR NameLiteral {
     mixin="io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl"
@@ -111,8 +139,8 @@ LocalVariableExpression ::= DOLLAR NameLiteral {
     methods=[getName setName getNameIdentifier]
 }
 
-ArrayVariableExpression ::= LocalVariableExpression LPAREN Expression RPAREN
-ScopedVariableExpression ::= MOD NameLiteral
+ArrayVariableExpression ::= LocalVariableExpression '(' Expression ')'
+ScopedVariableExpression ::= '%' NameLiteral
 private LiteralExpression ::= IntegerLiteralExpression
                              | BooleanLiteralExpression
                              | NullLiteralExpression
@@ -122,8 +150,8 @@ BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
 StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
 StringInterpolationExpression ::= STRING_INTERPOLATION_START | Expression | STRING_INTERPOLATION_END
-ConstantExpression ::= CARET NameLiteral
-CommandExpression ::= NameLiteral (LPAREN ExpressionList? RPAREN)?
-GosubExpression ::= TILDE NameLiteral (LPAREN ExpressionList? RPAREN)?
+ConstantExpression ::= '^' NameLiteral
+CommandExpression ::= NameLiteral ('(' ExpressionList? ')')?
+GosubExpression ::= '~' NameLiteral ('(' ExpressionList? ')')?
 DynamicExpression ::= NameLiteral
 NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

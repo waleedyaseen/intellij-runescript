@@ -1,4 +1,4 @@
-// This is a generated file. Not intended for manual editing.
+// This class is automatically generated. Do not edit.
 package io.runescript.plugin.lang.psi;
 
 import org.jetbrains.annotations.*;

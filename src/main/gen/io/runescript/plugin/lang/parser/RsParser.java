@@ -1,4 +1,4 @@
-// This is a generated file. Not intended for manual editing.
+// This class is automatically generated. Do not edit.
 package io.runescript.plugin.lang.parser;
 
 import com.intellij.lang.PsiBuilder;
@@ -49,7 +49,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   };
 
   /* ********************************************************** */
-  // (PLUS | MINUS) ArithmeticMultiplicativeWrapper
+  // ('+' | '-') ArithmeticMultiplicativeWrapper
   public static boolean ArithmeticAdditiveExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticAdditiveExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", MINUS, PLUS)) return false;
@@ -61,7 +61,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // PLUS | MINUS
+  // '+' | '-'
   private static boolean ArithmeticAdditiveExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticAdditiveExpression_0")) return false;
     boolean r;
@@ -94,7 +94,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // AMPERSAND ArithmeticAdditiveWrapper
+  // '&' ArithmeticAdditiveWrapper
   public static boolean ArithmeticBitwiseAndExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticBitwiseAndExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", AMPERSAND)) return false;
@@ -130,7 +130,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // BAR ArithmeticBitwiseAndWrapper
+  // '|' ArithmeticBitwiseAndWrapper
   public static boolean ArithmeticBitwiseOrExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticBitwiseOrExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", BAR)) return false;
@@ -177,7 +177,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (STAR | SLASH | PERCENT) ArithmeticValueExpression
+  // ('*' | '/' | '%') ArithmeticValueExpression
   public static boolean ArithmeticMultiplicativeExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticMultiplicativeExpression")) return false;
     boolean r;
@@ -188,7 +188,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // STAR | SLASH | PERCENT
+  // '*' | '/' | '%'
   private static boolean ArithmeticMultiplicativeExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticMultiplicativeExpression_0")) return false;
     boolean r;
@@ -222,7 +222,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (LPAREN ArithmeticExpression RPAREN) | Expression
+  // ('(' ArithmeticExpression ')') | Expression
   public static boolean ArithmeticValueExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticValueExpression")) return false;
     boolean r;
@@ -233,7 +233,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // LPAREN ArithmeticExpression RPAREN
+  // '(' ArithmeticExpression ')'
   private static boolean ArithmeticValueExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticValueExpression_0")) return false;
     boolean r;
@@ -246,7 +246,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression ParExpression EQUAL Expression SEMICOLON
+  // LocalVariableExpression ParExpression '=' Expression ';'
   public static boolean ArrayVariableAssignmentStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayVariableAssignmentStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DOLLAR)) return false;
@@ -262,7 +262,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DEFINE_TYPE LocalVariableExpression ParExpression SEMICOLON
+  // DEFINE_TYPE LocalVariableExpression ParExpression ';'
   public static boolean ArrayVariableDeclarationStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayVariableDeclarationStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DEFINE_TYPE)) return false;
@@ -277,7 +277,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression LPAREN Expression RPAREN
+  // LocalVariableExpression '(' Expression ')'
   public static boolean ArrayVariableExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayVariableExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", DOLLAR)) return false;
@@ -292,7 +292,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LBRACE StatementList RBRACE
+  // '{' StatementList '}'
   public static boolean BlockStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BlockStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", LBRACE)) return false;
@@ -319,7 +319,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CALC LPAREN ArithmeticExpression RPAREN
+  // CALC '(' ArithmeticExpression ')'
   public static boolean CalcExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CalcExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", CALC)) return false;
@@ -333,7 +333,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NameLiteral (LPAREN ExpressionList? RPAREN)?
+  // NameLiteral ('(' ExpressionList? ')')?
   public static boolean CommandExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression")) return false;
     boolean r;
@@ -344,14 +344,14 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (LPAREN ExpressionList? RPAREN)?
+  // ('(' ExpressionList? ')')?
   private static boolean CommandExpression_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression_1")) return false;
     CommandExpression_1_0(b, l + 1);
     return true;
   }
 
-  // LPAREN ExpressionList? RPAREN
+  // '(' ExpressionList? ')'
   private static boolean CommandExpression_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression_1_0")) return false;
     boolean r;
@@ -371,7 +371,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (EXCEL | GT | LT | GTE | LTE | EQUAL) RelationalValueExpression
+  // ('!' | '>' | '<' | '>=' | '<=' | '=') RelationalValueExpression
   public static boolean CompareExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CompareExpression")) return false;
     boolean r;
@@ -382,7 +382,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // EXCEL | GT | LT | GTE | LTE | EQUAL
+  // '!' | '>' | '<' | '>=' | '<=' | '='
   private static boolean CompareExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CompareExpression_0")) return false;
     boolean r;
@@ -415,7 +415,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CARET NameLiteral
+  // '^' NameLiteral
   public static boolean ConstantExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ConstantExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", CARET)) return false;
@@ -468,7 +468,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Expression (COMMA Expression)*
+  // Expression (',' Expression)*
   static boolean ExpressionList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExpressionList")) return false;
     boolean r;
@@ -479,7 +479,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (COMMA Expression)*
+  // (',' Expression)*
   private static boolean ExpressionList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExpressionList_1")) return false;
     while (true) {
@@ -490,7 +490,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // COMMA Expression
+  // ',' Expression
   private static boolean ExpressionList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExpressionList_1_0")) return false;
     boolean r;
@@ -502,7 +502,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Expression SEMICOLON
+  // Expression ';'
   public static boolean ExpressionStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExpressionStatement")) return false;
     boolean r;
@@ -526,7 +526,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TILDE NameLiteral (LPAREN ExpressionList? RPAREN)?
+  // '~' NameLiteral ('(' ExpressionList? ')')?
   public static boolean GosubExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "GosubExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", TILDE)) return false;
@@ -539,14 +539,14 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (LPAREN ExpressionList? RPAREN)?
+  // ('(' ExpressionList? ')')?
   private static boolean GosubExpression_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "GosubExpression_2")) return false;
     GosubExpression_2_0(b, l + 1);
     return true;
   }
 
-  // LPAREN ExpressionList? RPAREN
+  // '(' ExpressionList? ')'
   private static boolean GosubExpression_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "GosubExpression_2_0")) return false;
     boolean r;
@@ -566,7 +566,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF LPAREN RelationalExpression RPAREN Statement
+  // IF '(' RelationalExpression ')' Statement
   public static boolean IfStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IfStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", IF)) return false;
@@ -610,7 +610,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression EQUAL Expression SEMICOLON
+  // LocalVariableExpression '=' Expression ';'
   public static boolean LocalVariableAssignmentStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LocalVariableAssignmentStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DOLLAR)) return false;
@@ -625,7 +625,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DEFINE_TYPE LocalVariableExpression (EQUAL Expression)? SEMICOLON
+  // DEFINE_TYPE LocalVariableExpression ('=' Expression)? ';'
   public static boolean LocalVariableDeclarationStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LocalVariableDeclarationStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DEFINE_TYPE)) return false;
@@ -639,14 +639,14 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (EQUAL Expression)?
+  // ('=' Expression)?
   private static boolean LocalVariableDeclarationStatement_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LocalVariableDeclarationStatement_2")) return false;
     LocalVariableDeclarationStatement_2_0(b, l + 1);
     return true;
   }
 
-  // EQUAL Expression
+  // '=' Expression
   private static boolean LocalVariableDeclarationStatement_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LocalVariableDeclarationStatement_2_0")) return false;
     boolean r;
@@ -671,7 +671,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // AMPERSAND CompareExpressionWrapper
+  // '&' CompareExpressionWrapper
   public static boolean LogicalAndExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LogicalAndExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", AMPERSAND)) return false;
@@ -707,7 +707,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // BAR LogicalAndWrapper
+  // '|' LogicalAndWrapper
   public static boolean LogicalOrExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LogicalOrExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", BAR)) return false;
@@ -775,7 +775,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LPAREN Expression RPAREN
+  // '(' Expression ')'
   public static boolean ParExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", LPAREN)) return false;
@@ -789,7 +789,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LPAREN (parameter (COMMA parameter)*)? RPAREN
+  // '(' (parameter (',' parameter)*)? ')'
   public static boolean ParameterList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList")) return false;
     if (!nextTokenIs(b, LPAREN)) return false;
@@ -802,14 +802,14 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (parameter (COMMA parameter)*)?
+  // (parameter (',' parameter)*)?
   private static boolean ParameterList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1")) return false;
     ParameterList_1_0(b, l + 1);
     return true;
   }
 
-  // parameter (COMMA parameter)*
+  // parameter (',' parameter)*
   private static boolean ParameterList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0")) return false;
     boolean r;
@@ -820,7 +820,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (COMMA parameter)*
+  // (',' parameter)*
   private static boolean ParameterList_1_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0_1")) return false;
     while (true) {
@@ -831,7 +831,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // COMMA parameter
+  // ',' parameter
   private static boolean ParameterList_1_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0_1_0")) return false;
     boolean r;
@@ -854,7 +854,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (LPAREN RelationalExpression RPAREN) | Expression
+  // ('(' RelationalExpression ')') | Expression
   public static boolean RelationalValueExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RelationalValueExpression")) return false;
     boolean r;
@@ -865,7 +865,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // LPAREN RelationalExpression RPAREN
+  // '(' RelationalExpression ')'
   private static boolean RelationalValueExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RelationalValueExpression_0")) return false;
     boolean r;
@@ -878,7 +878,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LPAREN (TYPE_NAME (COMMA TYPE_NAME)*)? RPAREN
+  // '(' (TYPE_NAME (',' TYPE_NAME)*)? ')'
   public static boolean ReturnList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList")) return false;
     if (!nextTokenIs(b, LPAREN)) return false;
@@ -891,14 +891,14 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (TYPE_NAME (COMMA TYPE_NAME)*)?
+  // (TYPE_NAME (',' TYPE_NAME)*)?
   private static boolean ReturnList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1")) return false;
     ReturnList_1_0(b, l + 1);
     return true;
   }
 
-  // TYPE_NAME (COMMA TYPE_NAME)*
+  // TYPE_NAME (',' TYPE_NAME)*
   private static boolean ReturnList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1_0")) return false;
     boolean r;
@@ -909,7 +909,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (COMMA TYPE_NAME)*
+  // (',' TYPE_NAME)*
   private static boolean ReturnList_1_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1_0_1")) return false;
     while (true) {
@@ -920,7 +920,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // COMMA TYPE_NAME
+  // ',' TYPE_NAME
   private static boolean ReturnList_1_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1_0_1_0")) return false;
     boolean r;
@@ -931,7 +931,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // RETURN (LPAREN ExpressionList? RPAREN)? SEMICOLON
+  // RETURN ('(' ExpressionList? ')')? ';'
   public static boolean ReturnStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", RETURN)) return false;
@@ -944,14 +944,14 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (LPAREN ExpressionList? RPAREN)?
+  // ('(' ExpressionList? ')')?
   private static boolean ReturnStatement_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnStatement_1")) return false;
     ReturnStatement_1_0(b, l + 1);
     return true;
   }
 
-  // LPAREN ExpressionList? RPAREN
+  // '(' ExpressionList? ')'
   private static boolean ReturnStatement_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnStatement_1_0")) return false;
     boolean r;
@@ -971,10 +971,10 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ScopedVariableExpression EQUAL Expression SEMICOLON
+  // ScopedVariableExpression '=' Expression ';'
   public static boolean ScopedVariableAssignmentStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ScopedVariableAssignmentStatement")) return false;
-    if (!nextTokenIs(b, "<Statement>", MOD)) return false;
+    if (!nextTokenIs(b, "<Statement>", PERCENT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SCOPED_VARIABLE_ASSIGNMENT_STATEMENT, "<Statement>");
     r = ScopedVariableExpression(b, l + 1);
@@ -986,13 +986,13 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // MOD NameLiteral
+  // '%' NameLiteral
   public static boolean ScopedVariableExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ScopedVariableExpression")) return false;
-    if (!nextTokenIs(b, "<Expression>", MOD)) return false;
+    if (!nextTokenIs(b, "<Expression>", PERCENT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SCOPED_VARIABLE_EXPRESSION, "<Expression>");
-    r = consumeToken(b, MOD);
+    r = consumeToken(b, PERCENT);
     r = r && NameLiteral(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -1040,7 +1040,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LBRACKET NameLiteral COMMA NameLiteral RBRACKET
+  // '[' NameLiteral ',' NameLiteral ']'
   public static boolean ScriptName(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ScriptName")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
@@ -1149,7 +1149,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CASE SwitchCaseExpressionList COLON StatementList
+  // CASE SwitchCaseExpressionList ':' StatementList
   public static boolean SwitchCase(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchCase")) return false;
     if (!nextTokenIs(b, CASE)) return false;
@@ -1176,7 +1176,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // SwitchCaseExpression (COMMA SwitchCaseExpression)*
+  // SwitchCaseExpression (',' SwitchCaseExpression)*
   static boolean SwitchCaseExpressionList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchCaseExpressionList")) return false;
     boolean r;
@@ -1187,7 +1187,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (COMMA SwitchCaseExpression)*
+  // (',' SwitchCaseExpression)*
   private static boolean SwitchCaseExpressionList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchCaseExpressionList_1")) return false;
     while (true) {
@@ -1198,7 +1198,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // COMMA SwitchCaseExpression
+  // ',' SwitchCaseExpression
   private static boolean SwitchCaseExpressionList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchCaseExpressionList_1_0")) return false;
     boolean r;
@@ -1210,7 +1210,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // SWITCH LPAREN Expression RPAREN LBRACE SwitchCase* RBRACE
+  // SWITCH '(' Expression ')' '{' SwitchCase* '}'
   public static boolean SwitchStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", SWITCH)) return false;
@@ -1237,7 +1237,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // WHILE LPAREN RelationalExpression RPAREN Statement
+  // WHILE '(' RelationalExpression ')' Statement
   public static boolean WhileStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "WhileStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", WHILE)) return false;

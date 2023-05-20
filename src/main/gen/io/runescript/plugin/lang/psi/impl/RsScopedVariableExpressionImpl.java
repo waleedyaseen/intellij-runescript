@@ -1,4 +1,4 @@
-// This is a generated file. Not intended for manual editing.
+// This class is automatically generated. Do not edit.
 package io.runescript.plugin.lang.psi.impl;
 
 import java.util.List;
@@ -35,8 +35,8 @@ public class RsScopedVariableExpressionImpl extends RsExpressionImpl implements 
 
   @Override
   @NotNull
-  public PsiElement getMod() {
-    return findNotNullChildByType(MOD);
+  public PsiElement getPercent() {
+    return findNotNullChildByType(PERCENT);
   }
 
 }
