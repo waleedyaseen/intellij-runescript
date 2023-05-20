@@ -28,6 +28,7 @@
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
+        <lang.commenter language="RuneScript" implementationClass="io.runescript.plugin.ide.RsCommenter"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
