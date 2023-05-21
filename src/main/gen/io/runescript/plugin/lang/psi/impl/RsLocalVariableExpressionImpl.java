@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
-import io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl;
+import io.runescript.plugin.lang.psi.mixin.RsLocalVariableExpressionMixin;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsLocalVariableExpressionImpl extends RsNamedElementImpl implements RsLocalVariableExpression {
+public class RsLocalVariableExpressionImpl extends RsLocalVariableExpressionMixin implements RsLocalVariableExpression {
 
   public RsLocalVariableExpressionImpl(@NotNull ASTNode node) {
     super(node);
@@ -41,14 +41,14 @@ public class RsLocalVariableExpressionImpl extends RsNamedElementImpl implements
 
   @Override
   @NotNull
-  public String getName() {
-    return RsPsiImplUtil.getName(this);
+  public String getVariableName() {
+    return RsPsiImplUtil.getVariableName(this);
   }
 
   @Override
   @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return RsPsiImplUtil.setName(this, newName);
+  public PsiElement setVariableName(@NotNull String newName) {
+    return RsPsiImplUtil.setVariableName(this, newName);
   }
 
   @Override

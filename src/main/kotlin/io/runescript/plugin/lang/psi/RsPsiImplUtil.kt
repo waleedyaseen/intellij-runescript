@@ -5,12 +5,12 @@ import com.intellij.psi.PsiElement
 object RsPsiImplUtil {
 
     @JvmStatic
-    fun getName(element: RsLocalVariableExpression): String {
+    fun getVariableName(element: RsLocalVariableExpression): String {
         return element.nameLiteral.text
     }
 
     @JvmStatic
-    fun setName(element: RsLocalVariableExpression, newName: String): PsiElement {
+    fun setVariableName(element: RsLocalVariableExpression, newName: String): PsiElement {
         val nameLiteralNode = element.nameLiteral.node
         val newNameLiteral = RsElementGenerator.createNameLiteral(element.project, newName)
         val newNameLiteralNode = newNameLiteral.firstChild.node

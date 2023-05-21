@@ -1,16 +1,17 @@
 package io.runescript.plugin.lang.psi.refs
 
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.util.childrenOfType
+import com.intellij.psi.util.findParentOfType
 import com.intellij.psi.util.parentsOfType
 import io.runescript.plugin.lang.psi.RsBlockStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsStatementList
 
-class RsReference(element: PsiElement, textRange: TextRange) :
-        PsiReferenceBase<PsiElement>(element, textRange), PsiPolyVariantReference {
+class RsLocalVariableReference(element: RsLocalVariableExpression) :
+        PsiReferenceBase<RsLocalVariableExpression>(element, element.nameLiteral.textRangeInParent), PsiPolyVariantReference {
 
     override fun resolve(): PsiElement? {
         val result = multiResolve(false);
@@ -19,8 +20,8 @@ class RsReference(element: PsiElement, textRange: TextRange) :
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val parentBlocks = findParentScopeBlocks(element)
-        val targetName = (element as RsLocalVariableExpression).name
-        return parentBlocks
+        val targetName = element.nameLiteral.text
+        val localVariableExpressions = parentBlocks
                 .flatMap { it.childrenOfType<RsLocalVariableDeclarationStatement>() + it.childrenOfType<RsLocalVariableExpression>() }
                 .map {
                     if (it is RsLocalVariableDeclarationStatement) {
@@ -30,14 +31,18 @@ class RsReference(element: PsiElement, textRange: TextRange) :
                     } as RsLocalVariableExpression
                 }
                 .distinct()
-                .filter { it.name == targetName }
+                .filter { it.variableName == targetName }
+                .toMutableList()
+        val script = element.findParentOfType<RsScript>()!!
+        localVariableExpressions += script.scriptHeader.parameterList?.parameterList?.map { it.localVariableExpression } ?: emptyList()
+        return localVariableExpressions
                 .map { PsiElementResolveResult(it) }
-                .toList()
                 .toTypedArray()
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        return (element as RsLocalVariableExpression).setName(newElementName)
+        element.variableName = newElementName
+        return element
     }
 
     private fun findParentScopeBlocks(element: PsiElement): Sequence<PsiElement> {

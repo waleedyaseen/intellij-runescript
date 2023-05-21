@@ -4,9 +4,8 @@ package io.runescript.plugin.lang.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import io.runescript.plugin.lang.psi.named.RsNamedElement;
 
-public interface RsLocalVariableExpression extends RsExpression, RsNamedElement {
+public interface RsLocalVariableExpression extends RsExpression {
 
   @NotNull
   RsNameLiteral getNameLiteral();
@@ -15,10 +14,10 @@ public interface RsLocalVariableExpression extends RsExpression, RsNamedElement 
   PsiElement getDollar();
 
   @NotNull
-  String getName();
+  String getVariableName();
 
   @NotNull
-  PsiElement setName(@NotNull String newName);
+  PsiElement setVariableName(@NotNull String newName);
 
   @NotNull
   PsiElement getNameIdentifier();

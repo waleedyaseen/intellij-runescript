@@ -10,10 +10,11 @@ import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
 import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 
 class RsFindUsagesProvider : FindUsagesProvider {
 
-    override fun getWordsScanner(): WordsScanner? {
+    override fun getWordsScanner(): WordsScanner {
         return DefaultWordsScanner(
             RsLexerAdapter(RsLexerInfo(emptyList())),
             TokenSet.create(RsElementTypes.IDENTIFIER),
@@ -23,7 +24,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
     }
 
     override fun canFindUsagesFor(psiElement: PsiElement): Boolean {
-        return false
+        return psiElement is RsLocalVariableExpression && psiElement.parent is RsLocalVariableDeclarationStatement
     }
 
     override fun getHelpId(psiElement: PsiElement): String? {

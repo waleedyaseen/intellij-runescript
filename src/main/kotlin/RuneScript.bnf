@@ -181,9 +181,8 @@ private ExpressionList ::= Expression (',' Expression)*
 ParExpression ::= '(' Expression ')'
 
 LocalVariableExpression ::= '$' NameLiteral {
-    mixin="io.runescript.plugin.lang.psi.impl.naned.RsNamedElementImpl"
-    implements="io.runescript.plugin.lang.psi.named.RsNamedElement"
-    methods=[getName setName getNameIdentifier]
+    mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableExpressionMixin"
+    methods=[getVariableName setVariableName getNameIdentifier]
 }
 
 ArrayVariableExpression ::= LocalVariableExpression '(' Expression ')'
