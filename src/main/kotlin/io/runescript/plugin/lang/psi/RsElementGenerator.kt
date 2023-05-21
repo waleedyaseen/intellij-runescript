@@ -12,6 +12,11 @@ import io.runescript.plugin.lang.RuneScript
 
 object RsElementGenerator {
 
+    fun createScript(project: Project, text: String): RsScript {
+        val element = createDummyFile(project, text)
+        return PsiTreeUtil.findChildOfType(element, RsScript::class.java) as RsScript
+    }
+
     fun createNameLiteral(project: Project, text: String): RsNameLiteral {
         val element = createDummyFile(project, "[$text,dummy]")
         return PsiTreeUtil.findChildOfType(element, RsNameLiteral::class.java) as RsNameLiteral

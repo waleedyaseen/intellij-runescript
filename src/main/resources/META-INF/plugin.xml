@@ -32,6 +32,15 @@
         <stubElementTypeHolder externalIdPrefix="RuneScript." class="io.runescript.plugin.lang.psi.RsElementTypes"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex"/>
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
+        <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
+        <!-- Inspections -->
+
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
+                         displayName="Unresolved reference"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedReferenceInspection"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
