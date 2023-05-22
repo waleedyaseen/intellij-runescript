@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface RsStringLiteralExpression extends RsExpression {
 
   @NotNull
-  List<RsExpression> getExpressionList();
+  List<RsStringInterpolationExpression> getStringInterpolationExpressionList();
 
   @NotNull
   PsiElement getStringEnd();

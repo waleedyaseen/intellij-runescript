@@ -1157,14 +1157,15 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // STRING_INTERPOLATION_START | Expression | STRING_INTERPOLATION_END
+  // STRING_INTERPOLATION_START Expression STRING_INTERPOLATION_END
   public static boolean StringInterpolationExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StringInterpolationExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", STRING_INTERPOLATION_START)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, STRING_INTERPOLATION_EXPRESSION, "<Expression>");
+    Marker m = enter_section_(b, l, _NONE_, STRING_INTERPOLATION_EXPRESSION, "<Expression>");
     r = consumeToken(b, STRING_INTERPOLATION_START);
-    if (!r) r = Expression(b, l + 1);
-    if (!r) r = consumeToken(b, STRING_INTERPOLATION_END);
+    r = r && Expression(b, l + 1);
+    r = r && consumeToken(b, STRING_INTERPOLATION_END);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

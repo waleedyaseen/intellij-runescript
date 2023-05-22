@@ -29,8 +29,8 @@ public class RsStringLiteralExpressionImpl extends RsExpressionImpl implements R
 
   @Override
   @NotNull
-  public List<RsExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
+  public List<RsStringInterpolationExpression> getStringInterpolationExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsStringInterpolationExpression.class);
   }
 
   @Override

@@ -28,15 +28,21 @@ public class RsStringInterpolationExpressionImpl extends RsExpressionImpl implem
   }
 
   @Override
-  @Nullable
-  public PsiElement getStringInterpolationEnd() {
-    return findChildByType(STRING_INTERPOLATION_END);
+  @NotNull
+  public RsExpression getExpression() {
+    return notNullChild(PsiTreeUtil.getChildOfType(this, RsExpression.class));
   }
 
   @Override
-  @Nullable
+  @NotNull
+  public PsiElement getStringInterpolationEnd() {
+    return notNullChild(findChildByType(STRING_INTERPOLATION_END));
+  }
+
+  @Override
+  @NotNull
   public PsiElement getStringInterpolationStart() {
-    return findChildByType(STRING_INTERPOLATION_START);
+    return notNullChild(findChildByType(STRING_INTERPOLATION_START));
   }
 
 }

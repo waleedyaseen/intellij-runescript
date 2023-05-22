@@ -7,10 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface RsStringInterpolationExpression extends RsExpression {
 
-  @Nullable
+  @NotNull
+  RsExpression getExpression();
+
+  @NotNull
   PsiElement getStringInterpolationEnd();
 
-  @Nullable
+  @NotNull
   PsiElement getStringInterpolationStart();
 
 }
