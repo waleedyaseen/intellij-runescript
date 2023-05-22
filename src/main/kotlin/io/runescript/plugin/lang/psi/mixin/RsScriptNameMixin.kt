@@ -18,6 +18,11 @@ abstract class RsScriptNameMixin : StubBasedPsiElementBase<RsScriptNameStub>, Rs
     constructor(stub: RsScriptNameStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
     override fun getPresentation(): ItemPresentation? {
-        return PresentationData("[${triggerExpression.text},${nameExpression!!.text}]", containingFile.name, RsIcons.ClientScript, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
+        val icon = when (triggerExpression.text) {
+            "proc" -> RsIcons.Proc
+            "clientscript" -> RsIcons.Cs2
+            else -> null
+        }
+        return PresentationData("[${triggerExpression.text},${nameExpression!!.text}]", containingFile.name, icon, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
     }
 }
