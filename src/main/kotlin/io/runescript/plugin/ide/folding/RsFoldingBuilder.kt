@@ -5,35 +5,36 @@ import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import io.runescript.plugin.lang.psi.RsBlockStatement
-import io.runescript.plugin.lang.psi.RsScript
-import io.runescript.plugin.lang.psi.RsTokenTypes
-import io.runescript.plugin.lang.psi.RsElementTypes
+import com.intellij.refactoring.suggested.endOffset
+import com.intellij.refactoring.suggested.startOffset
+import io.runescript.plugin.lang.psi.*
 
 class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
     override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
         val elements = PsiTreeUtil.findChildrenOfAnyType(
-            root,
-            RsScript::class.java,
-            RsBlockStatement::class.java,
-            PsiComment::class.java
+                root,
+                RsBlockStatement::class.java,
+                RsSwitchStatement::class.java,
+                RsStatementList::class.java,
+                PsiComment::class.java
         )
         val descriptors = ArrayList<FoldingDescriptor>(elements.size)
         elements.forEach { element ->
             when (element) {
-                is RsScript -> {
-                    if (!element.statementList.textRange.isEmpty) {
-                        descriptors.add(FoldingDescriptor(element.node, element.statementList.textRange))
-                    }
-                }
-
-                is RsBlockStatement -> {
+                is RsBlockStatement, is RsStatementList -> {
                     if (!element.textRange.isEmpty) {
                         descriptors.add(FoldingDescriptor(element.node, element.textRange))
                     }
+                }
+
+                is RsSwitchStatement -> {
+                    val startOffset = element.lbrace.startOffset
+                    val endOffset = element.rbrace.endOffset
+                    descriptors.add(FoldingDescriptor(element.node, TextRange.create(startOffset, endOffset)))
                 }
 
                 is PsiComment -> {
@@ -48,12 +49,8 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
 
     override fun getPlaceholderText(node: ASTNode): String {
         when (node.elementType) {
-            RsElementTypes.SCRIPT -> {
-                return "{...}\n"
-            }
-
-            RsElementTypes.BLOCK_STATEMENT -> {
-                return "{...}\n"
+            RsElementTypes.SWITCH_STATEMENT, RsElementTypes.BLOCK_STATEMENT, RsElementTypes.STATEMENT_LIST -> {
+                return "{...}"
             }
 
             RsTokenTypes.MULTI_LINE_COMMENT -> {
