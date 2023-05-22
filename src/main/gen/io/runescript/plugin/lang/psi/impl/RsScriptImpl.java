@@ -8,23 +8,23 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import io.runescript.plugin.lang.stubs.RsScriptStub;
+import io.runescript.plugin.lang.psi.mixin.RsScriptMixin;
 import io.runescript.plugin.lang.psi.*;
+import io.runescript.plugin.lang.stubs.RsScriptStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 
-public class RsScriptImpl extends StubBasedPsiElementBase<RsScriptStub> implements RsScript {
-
-  public RsScriptImpl(@NotNull RsScriptStub stub, @NotNull IStubElementType<?, ?> type) {
-    super(stub, type);
-  }
+public class RsScriptImpl extends RsScriptMixin implements RsScript {
 
   public RsScriptImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  public RsScriptImpl(RsScriptStub stub, IElementType type, ASTNode node) {
+  public RsScriptImpl(@NotNull RsScriptStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
+
+  public RsScriptImpl(@Nullable RsScriptStub stub, @Nullable IElementType type, @Nullable ASTNode node) {
     super(stub, type, node);
   }
 

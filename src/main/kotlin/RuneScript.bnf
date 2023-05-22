@@ -57,6 +57,8 @@ File ::= Script*
 Script ::= ScriptHeader StatementList {
     stubClass="io.runescript.plugin.lang.stubs.RsScriptStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+    implements="com.intellij.psi.NavigatablePsiElement"
+    mixin="io.runescript.plugin.lang.psi.mixin.RsScriptMixin"
 }
 ScriptHeader ::= ScriptName ParameterList? ReturnList? {
     stubClass="io.runescript.plugin.lang.stubs.RsScriptHeaderStub"

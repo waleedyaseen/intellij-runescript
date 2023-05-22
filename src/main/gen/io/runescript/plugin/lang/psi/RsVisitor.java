@@ -139,7 +139,7 @@ public class RsVisitor extends PsiElementVisitor {
   }
 
   public void visitScript(@NotNull RsScript o) {
-    visitPsiElement(o);
+    visitNavigatablePsiElement(o);
   }
 
   public void visitScriptHeader(@NotNull RsScriptHeader o) {
