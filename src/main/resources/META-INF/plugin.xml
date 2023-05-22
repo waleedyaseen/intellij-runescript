@@ -34,8 +34,11 @@
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
-        <!-- Inspections -->
 
+        <!-- Code Insights -->
+        <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
+
+        <!-- Inspections -->
         <localInspection language="RuneScript"
                          groupName="RuneScript"
                          displayName="Unresolved reference"
