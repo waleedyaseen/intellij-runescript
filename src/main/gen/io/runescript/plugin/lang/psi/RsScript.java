@@ -8,7 +8,7 @@ import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 import io.runescript.plugin.lang.stubs.RsScriptStub;
 
-public interface RsScript extends NavigatablePsiElement, StubBasedPsiElement<RsScriptStub> {
+public interface RsScript extends NavigatablePsiElement, RsControlFlowHolder, StubBasedPsiElement<RsScriptStub> {
 
   @NotNull
   RsScriptHeader getScriptHeader();
