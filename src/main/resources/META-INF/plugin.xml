@@ -46,6 +46,12 @@
                          enabledByDefault="true"
                          level="ERROR"
                          implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedReferenceInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
+                         displayName="Unreachable code"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="io.runescript.plugin.ide.inspections.RsUnreachableCodeInspection"/>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
