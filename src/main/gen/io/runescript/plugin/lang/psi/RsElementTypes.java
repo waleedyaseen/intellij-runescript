@@ -9,6 +9,7 @@ import io.runescript.plugin.lang.psi.impl.*;
 
 public interface RsElementTypes {
 
+  IElementType ARGUMENT_LIST = new RsElementType("ARGUMENT_LIST");
   IElementType ARITHMETIC_EXPRESSION = new RsElementType("ARITHMETIC_EXPRESSION");
   IElementType ARITHMETIC_OP = new RsElementType("ARITHMETIC_OP");
   IElementType ARITHMETIC_VALUE_EXPRESSION = new RsElementType("ARITHMETIC_VALUE_EXPRESSION");
@@ -102,7 +103,10 @@ public interface RsElementTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == ARITHMETIC_EXPRESSION) {
+      if (type == ARGUMENT_LIST) {
+        return new RsArgumentListImpl(node);
+      }
+      else if (type == ARITHMETIC_EXPRESSION) {
         return new RsArithmeticExpressionImpl(node);
       }
       else if (type == ARITHMETIC_OP) {

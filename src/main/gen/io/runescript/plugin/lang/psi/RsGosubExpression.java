@@ -7,17 +7,11 @@ import com.intellij.psi.PsiElement;
 
 public interface RsGosubExpression extends RsExpression {
 
-  @NotNull
-  List<RsExpression> getExpressionList();
+  @Nullable
+  RsArgumentList getArgumentList();
 
   @NotNull
   RsNameLiteral getNameLiteral();
-
-  @Nullable
-  PsiElement getLparen();
-
-  @Nullable
-  PsiElement getRparen();
 
   @NotNull
   PsiElement getTilde();

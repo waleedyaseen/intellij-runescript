@@ -60,6 +60,7 @@ Script ::= ScriptHeader StatementList {
     implements="com.intellij.psi.NavigatablePsiElement"
     mixin="io.runescript.plugin.lang.psi.mixin.RsScriptMixin"
 }
+
 ScriptHeader ::= ScriptName ParameterList? ReturnList? {
     stubClass="io.runescript.plugin.lang.stubs.RsScriptHeaderStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
@@ -198,10 +199,11 @@ BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
 StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
 StringInterpolationExpression ::= STRING_INTERPOLATION_START Expression STRING_INTERPOLATION_END
-CommandExpression ::= NameLiteral ('(' ExpressionList? ')')?
-GosubExpression ::= '~' NameLiteral ('(' ExpressionList? ')')? {
+CommandExpression ::= NameLiteral ArgumentList?
+GosubExpression ::= '~' NameLiteral ArgumentList? {
     mixin=" io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin"
 }
+ArgumentList ::= '(' ExpressionList? ')'
 ConstantExpression ::= '^' NameLiteral
 DynamicExpression ::= NameLiteral
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'

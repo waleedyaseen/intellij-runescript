@@ -8,6 +8,10 @@ import com.intellij.psi.NavigatablePsiElement;
 
 public class RsVisitor extends PsiElementVisitor {
 
+  public void visitArgumentList(@NotNull RsArgumentList o) {
+    visitPsiElement(o);
+  }
+
   public void visitArithmeticExpression(@NotNull RsArithmeticExpression o) {
     visitExpression(o);
     // visitBinaryExpression(o);
@@ -140,6 +144,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitScript(@NotNull RsScript o) {
     visitNavigatablePsiElement(o);
+    // visitControlFlowHolder(o);
   }
 
   public void visitScriptHeader(@NotNull RsScriptHeader o) {

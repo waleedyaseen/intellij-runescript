@@ -28,27 +28,15 @@ public class RsCommandExpressionImpl extends RsExpressionImpl implements RsComma
   }
 
   @Override
-  @NotNull
-  public List<RsExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
+  @Nullable
+  public RsArgumentList getArgumentList() {
+    return PsiTreeUtil.getChildOfType(this, RsArgumentList.class);
   }
 
   @Override
   @NotNull
   public RsNameLiteral getNameLiteral() {
     return notNullChild(PsiTreeUtil.getChildOfType(this, RsNameLiteral.class));
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getLparen() {
-    return findChildByType(LPAREN);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getRparen() {
-    return findChildByType(RPAREN);
   }
 
 }

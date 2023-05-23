@@ -5,12 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsCommandExpression extends RsExpression {
-
-  @Nullable
-  RsArgumentList getArgumentList();
+public interface RsArgumentList extends PsiElement {
 
   @NotNull
-  RsNameLiteral getNameLiteral();
+  List<RsExpression> getExpressionList();
+
+  @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
 
 }

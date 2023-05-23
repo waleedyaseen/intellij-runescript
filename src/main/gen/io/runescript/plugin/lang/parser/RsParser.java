@@ -47,6 +47,27 @@ public class RsParser implements PsiParser, LightPsiParser {
   };
 
   /* ********************************************************** */
+  // '(' ExpressionList? ')'
+  public static boolean ArgumentList(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArgumentList")) return false;
+    if (!nextTokenIs(b, LPAREN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LPAREN);
+    r = r && ArgumentList_1(b, l + 1);
+    r = r && consumeToken(b, RPAREN);
+    exit_section_(b, m, ARGUMENT_LIST, r);
+    return r;
+  }
+
+  // ExpressionList?
+  private static boolean ArgumentList_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArgumentList_1")) return false;
+    ExpressionList(b, l + 1);
+    return true;
+  }
+
+  /* ********************************************************** */
   // ArithmeticAdditiveOperator ArithmeticMultiplicativeWrapper
   public static boolean ArithmeticAdditiveExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArithmeticAdditiveExpression")) return false;
@@ -351,7 +372,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NameLiteral ('(' ExpressionList? ')')?
+  // NameLiteral ArgumentList?
   public static boolean CommandExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression")) return false;
     boolean r;
@@ -362,29 +383,10 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ('(' ExpressionList? ')')?
+  // ArgumentList?
   private static boolean CommandExpression_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression_1")) return false;
-    CommandExpression_1_0(b, l + 1);
-    return true;
-  }
-
-  // '(' ExpressionList? ')'
-  private static boolean CommandExpression_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CommandExpression_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, LPAREN);
-    r = r && CommandExpression_1_0_1(b, l + 1);
-    r = r && consumeToken(b, RPAREN);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // ExpressionList?
-  private static boolean CommandExpression_1_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CommandExpression_1_0_1")) return false;
-    ExpressionList(b, l + 1);
+    ArgumentList(b, l + 1);
     return true;
   }
 
@@ -547,7 +549,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '~' NameLiteral ('(' ExpressionList? ')')?
+  // '~' NameLiteral ArgumentList?
   public static boolean GosubExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "GosubExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", TILDE)) return false;
@@ -560,29 +562,10 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ('(' ExpressionList? ')')?
+  // ArgumentList?
   private static boolean GosubExpression_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "GosubExpression_2")) return false;
-    GosubExpression_2_0(b, l + 1);
-    return true;
-  }
-
-  // '(' ExpressionList? ')'
-  private static boolean GosubExpression_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "GosubExpression_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, LPAREN);
-    r = r && GosubExpression_2_0_1(b, l + 1);
-    r = r && consumeToken(b, RPAREN);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // ExpressionList?
-  private static boolean GosubExpression_2_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "GosubExpression_2_0_1")) return false;
-    ExpressionList(b, l + 1);
+    ArgumentList(b, l + 1);
     return true;
   }
 
