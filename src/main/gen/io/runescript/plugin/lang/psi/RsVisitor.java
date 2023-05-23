@@ -179,6 +179,10 @@ public class RsVisitor extends PsiElementVisitor {
     visitStatement(o);
   }
 
+  public void visitTypeName(@NotNull RsTypeName o) {
+    visitPsiElement(o);
+  }
+
   public void visitWhileStatement(@NotNull RsWhileStatement o) {
     visitStatement(o);
   }

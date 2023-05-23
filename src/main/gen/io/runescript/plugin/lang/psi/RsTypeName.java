@@ -5,15 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsParameter extends PsiElement {
+public interface RsTypeName extends PsiElement {
 
   @NotNull
-  RsLocalVariableExpression getLocalVariableExpression();
-
-  @Nullable
-  RsTypeName getTypeName();
-
-  @Nullable
-  PsiElement getArrayTypeLiteral();
+  PsiElement getTypeLiteral();
 
 }

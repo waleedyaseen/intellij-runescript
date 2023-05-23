@@ -771,14 +771,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+  // IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
   public static boolean NameLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NameLiteral")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, NAME_LITERAL, "<name literal>");
     r = consumeToken(b, IDENTIFIER);
     if (!r) r = consumeToken(b, DEFINE_TYPE);
-    if (!r) r = consumeToken(b, ARRAY_TYPE_NAME);
+    if (!r) r = consumeToken(b, ARRAY_TYPE_LITERAL);
     if (!r) r = consumeToken(b, WHILE);
     if (!r) r = consumeToken(b, IF);
     if (!r) r = consumeToken(b, TRUE);
@@ -817,10 +817,10 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
+  // (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression
   public static boolean Parameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Parameter")) return false;
-    if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_NAME, TYPE_NAME)) return false;
+    if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_LITERAL, TYPE_LITERAL)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
     r = Parameter_0(b, l + 1);
@@ -829,12 +829,12 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // TYPE_NAME | ARRAY_TYPE_NAME
+  // TypeName | ARRAY_TYPE_LITERAL
   private static boolean Parameter_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Parameter_0")) return false;
     boolean r;
-    r = consumeToken(b, TYPE_NAME);
-    if (!r) r = consumeToken(b, ARRAY_TYPE_NAME);
+    r = TypeName(b, l + 1);
+    if (!r) r = consumeToken(b, ARRAY_TYPE_LITERAL);
     return r;
   }
 
@@ -917,7 +917,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '(' (TYPE_NAME (',' TYPE_NAME)*)? ')'
+  // '(' (TypeName (',' TypeName)*)? ')'
   public static boolean ReturnList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList")) return false;
     if (!nextTokenIs(b, LPAREN)) return false;
@@ -930,25 +930,25 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (TYPE_NAME (',' TYPE_NAME)*)?
+  // (TypeName (',' TypeName)*)?
   private static boolean ReturnList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1")) return false;
     ReturnList_1_0(b, l + 1);
     return true;
   }
 
-  // TYPE_NAME (',' TYPE_NAME)*
+  // TypeName (',' TypeName)*
   private static boolean ReturnList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, TYPE_NAME);
+    r = TypeName(b, l + 1);
     r = r && ReturnList_1_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // (',' TYPE_NAME)*
+  // (',' TypeName)*
   private static boolean ReturnList_1_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1_0_1")) return false;
     while (true) {
@@ -959,12 +959,13 @@ public class RsParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // ',' TYPE_NAME
+  // ',' TypeName
   private static boolean ReturnList_1_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnList_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, COMMA, TYPE_NAME);
+    r = consumeToken(b, COMMA);
+    r = r && TypeName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -1274,6 +1275,18 @@ public class RsParser implements PsiParser, LightPsiParser {
       if (!empty_element_parsed_guard_(b, "SwitchStatement_5", c)) break;
     }
     return true;
+  }
+
+  /* ********************************************************** */
+  // TYPE_LITERAL
+  public static boolean TypeName(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TypeName")) return false;
+    if (!nextTokenIs(b, TYPE_LITERAL)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, TYPE_LITERAL);
+    exit_section_(b, m, TYPE_NAME, r);
+    return r;
   }
 
   /* ********************************************************** */

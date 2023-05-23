@@ -51,10 +51,11 @@ public interface RsElementTypes {
   IElementType STRING_LITERAL_EXPRESSION = new RsElementType("STRING_LITERAL_EXPRESSION");
   IElementType SWITCH_CASE = new RsElementType("SWITCH_CASE");
   IElementType SWITCH_STATEMENT = new RsElementType("SWITCH_STATEMENT");
+  IElementType TYPE_NAME = new RsElementType("TYPE_NAME");
   IElementType WHILE_STATEMENT = new RsElementType("WHILE_STATEMENT");
 
   IElementType AMPERSAND = new RsElementType("&");
-  IElementType ARRAY_TYPE_NAME = new RsElementType("ARRAY_TYPE_NAME");
+  IElementType ARRAY_TYPE_LITERAL = new RsElementType("ARRAY_TYPE_LITERAL");
   IElementType BAR = new RsElementType("|");
   IElementType CALC = new RsElementType("CALC");
   IElementType CARET = new RsElementType("^");
@@ -97,7 +98,7 @@ public interface RsElementTypes {
   IElementType SWITCH = new RsElementType("SWITCH");
   IElementType TILDE = new RsElementType("~");
   IElementType TRUE = new RsElementType("TRUE");
-  IElementType TYPE_NAME = new RsElementType("TYPE_NAME");
+  IElementType TYPE_LITERAL = new RsElementType("TYPE_LITERAL");
   IElementType WHILE = new RsElementType("WHILE");
 
   class Factory {
@@ -222,6 +223,9 @@ public interface RsElementTypes {
       }
       else if (type == SWITCH_STATEMENT) {
         return new RsSwitchStatementImpl(node);
+      }
+      else if (type == TYPE_NAME) {
+        return new RsTypeNameImpl(node);
       }
       else if (type == WHILE_STATEMENT) {
         return new RsWhileStatementImpl(node);

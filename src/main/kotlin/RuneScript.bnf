@@ -79,8 +79,9 @@ ScriptName ::= '[' NameLiteral ',' NameLiteral ']' {
 }
 
 ParameterList ::= '(' (Parameter (',' Parameter)*)? ')'
-Parameter ::= (TYPE_NAME | ARRAY_TYPE_NAME) LocalVariableExpression
-ReturnList ::= '(' (TYPE_NAME (',' TYPE_NAME)*)? ')'
+Parameter ::= (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression
+ReturnList ::= '(' (TypeName (',' TypeName)*)? ')'
+TypeName ::= TYPE_LITERAL
 StatementList ::= Statement*
 Statement ::= BlockStatement
             | IfStatement
@@ -208,4 +209,4 @@ ArgumentList ::= '(' ExpressionList? ')'
 ConstantExpression ::= '^' NameLiteral
 DynamicExpression ::= NameLiteral
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
-NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_NAME | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE

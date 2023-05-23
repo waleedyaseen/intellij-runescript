@@ -29,6 +29,12 @@ public class RsReturnListImpl extends ASTWrapperPsiElement implements RsReturnLi
 
   @Override
   @NotNull
+  public List<RsTypeName> getTypeNameList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsTypeName.class);
+  }
+
+  @Override
+  @NotNull
   public PsiElement getLparen() {
     return notNullChild(findChildByType(LPAREN));
   }

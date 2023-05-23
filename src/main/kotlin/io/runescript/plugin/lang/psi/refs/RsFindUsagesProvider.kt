@@ -19,7 +19,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
             RsLexerAdapter(RsLexerInfo(emptyList())),
             TokenSet.create(RsElementTypes.IDENTIFIER),
             RsTokenTypesSets.COMMENTS,
-            TokenSet.create(RsElementTypes.TYPE_NAME, RsElementTypes.ARRAY_TYPE_NAME),
+            TokenSet.create(RsElementTypes.TYPE_LITERAL, RsElementTypes.ARRAY_TYPE_LITERAL),
         )
     }
 

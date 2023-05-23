@@ -1,5 +1,6 @@
 package io.runescript.plugin.lang.lexer;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 
@@ -89,7 +90,7 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
   CharSequence lexeme = yytext();
   for (String typeName: getTypeNames()) {
       if (typeName.contentEquals(lexeme)) {
-          return TYPE_NAME;
+          return TYPE_LITERAL;
       }
        if (lexeme.length() > 4
               && lexeme.charAt(0) == 'd'
@@ -118,7 +119,7 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
               && lexeme.charAt(length + 3) == 'a'
               && lexeme.charAt(length + 4) == 'y'
               && typeName.contentEquals(lexeme.subSequence(0, length))) {
-          return ARRAY_TYPE_NAME;
+          return ARRAY_TYPE_LITERAL;
       }
   }
   return IDENTIFIER;

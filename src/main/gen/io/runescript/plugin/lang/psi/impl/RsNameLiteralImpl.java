@@ -29,8 +29,8 @@ public class RsNameLiteralImpl extends ASTWrapperPsiElement implements RsNameLit
 
   @Override
   @Nullable
-  public PsiElement getArrayTypeName() {
-    return findChildByType(ARRAY_TYPE_NAME);
+  public PsiElement getArrayTypeLiteral() {
+    return findChildByType(ARRAY_TYPE_LITERAL);
   }
 
   @Override

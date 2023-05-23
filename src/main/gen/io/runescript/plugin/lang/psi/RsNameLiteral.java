@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface RsNameLiteral extends PsiElement {
 
   @Nullable
-  PsiElement getArrayTypeName();
+  PsiElement getArrayTypeLiteral();
 
   @Nullable
   PsiElement getCase();

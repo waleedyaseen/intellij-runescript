@@ -33,8 +33,8 @@ class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighte
             attributes[IDENTIFIER] = RsSyntaxHighlighterColors.IDENTIFIER
             attributes[INTEGER] = RsSyntaxHighlighterColors.NUMBER
             fillMap(attributes, KEYWORDS, RsSyntaxHighlighterColors.KEYWORD)
-            attributes[TYPE_NAME] = RsSyntaxHighlighterColors.TYPE_NAME
-            attributes[ARRAY_TYPE_NAME] = RsSyntaxHighlighterColors.ARRAY_TYPE_NAME
+            attributes[TYPE_LITERAL] = RsSyntaxHighlighterColors.TYPE_LITERAL
+            attributes[ARRAY_TYPE_LITERAL] = RsSyntaxHighlighterColors.ARRAY_TYPE_LITERAL
             fillMap(attributes, TokenSet.create(STRING_START, STRING_PART, STRING_END), RsSyntaxHighlighterColors.STRING)
             attributes[STRING_TAG] = RsSyntaxHighlighterColors.STRING_TAG
             attributes[MULTI_LINE_COMMENT] = RsSyntaxHighlighterColors.BLOCK_COMMENT

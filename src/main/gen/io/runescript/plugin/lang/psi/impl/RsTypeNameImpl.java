@@ -11,14 +11,14 @@ import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsParameterImpl extends ASTWrapperPsiElement implements RsParameter {
+public class RsTypeNameImpl extends ASTWrapperPsiElement implements RsTypeName {
 
-  public RsParameterImpl(@NotNull ASTNode node) {
+  public RsTypeNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull RsVisitor visitor) {
-    visitor.visitParameter(this);
+    visitor.visitTypeName(this);
   }
 
   @Override
@@ -29,20 +29,8 @@ public class RsParameterImpl extends ASTWrapperPsiElement implements RsParameter
 
   @Override
   @NotNull
-  public RsLocalVariableExpression getLocalVariableExpression() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsLocalVariableExpression.class));
-  }
-
-  @Override
-  @Nullable
-  public RsTypeName getTypeName() {
-    return PsiTreeUtil.getChildOfType(this, RsTypeName.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getArrayTypeLiteral() {
-    return findChildByType(ARRAY_TYPE_LITERAL);
+  public PsiElement getTypeLiteral() {
+    return notNullChild(findChildByType(TYPE_LITERAL));
   }
 
 }

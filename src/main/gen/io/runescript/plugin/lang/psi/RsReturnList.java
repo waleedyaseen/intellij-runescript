@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface RsReturnList extends PsiElement {
 
   @NotNull
+  List<RsTypeName> getTypeNameList();
+
+  @NotNull
   PsiElement getLparen();
 
   @NotNull
