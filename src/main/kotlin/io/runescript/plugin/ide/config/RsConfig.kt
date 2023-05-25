@@ -7,13 +7,17 @@ object RsConfig {
 
     private const val PRIMITIVE_TYPES_KEY = "runescript.settings.primitivetypes"
     private val PRIMITIVE_TYPES_DEFAULT = listOf(
-        "int",
-        "string",
-        "long"
+            "int",
+            "string",
+            "long"
     )
 
-    fun getPrimitiveTypes(project: Project): List<String> {
-        return PropertiesComponent.getInstance(project).getList(PRIMITIVE_TYPES_KEY) ?: PRIMITIVE_TYPES_DEFAULT
+    fun getPrimitiveTypes(project: Project?): List<String> {
+        return if (project == null) {
+            PropertiesComponent.getInstance().getList(PRIMITIVE_TYPES_KEY)
+        } else {
+            PropertiesComponent.getInstance(project).getList(PRIMITIVE_TYPES_KEY)
+        } ?: PRIMITIVE_TYPES_DEFAULT
     }
 
     fun setPrimitiveTypes(project: Project, types: List<String>?) {

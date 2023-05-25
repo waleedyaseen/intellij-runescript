@@ -10,6 +10,6 @@ import io.runescript.plugin.lang.lexer.RsLexerInfo
 class RsSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
 
     override fun getSyntaxHighlighter(project: Project?, virtualFile: VirtualFile?): SyntaxHighlighter {
-        return RsSyntaxHighlighter(RsLexerInfo(RsConfig.getPrimitiveTypes(project!!)))
+        return RsSyntaxHighlighter(RsLexerInfo(RsConfig.getPrimitiveTypes(project)))
     }
 }
