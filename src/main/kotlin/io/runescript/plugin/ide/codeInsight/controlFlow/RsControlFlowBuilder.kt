@@ -156,15 +156,68 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitIfStatement(o: RsIfStatement) {
-            val ifStart = addInstruction(o)
+            // ------------------------
+            // Case 1:false statement is not present
+            //  if (expr) <ifStart> {
+            //    <ifTrue>
+            //  }
+            //  <ifEnd>
+            //  <ifStart> -> <ifEnd>
+            //  <ifTrue> -> <ifEnd>
+            // ------------------------
+            // Case 2: false statement is present
+            //  if (expr) <ifStart> {
+            //    <ifTrue>
+            //  } else {
+            //    <ifFalse>
+            //  }
+            //  <ifEnd>
+            //  <ifTrue> -> <ifEnd>
+            //  <ifFalse> -> <ifEnd>
+            //  <ifStart> -> <ifTrue>
+            //  <ifStart> -> <ifFalse>
+            // ------------------------
+            val trueStatement = o.trueStatement
+            val falseStatement = o.falseStatement
+
             o.expression.accept(this)
-            o.statement.accept(this)
-            val ifEnd = addInstruction(null)
-            // If the flow has been abrupt, there is no need to create an edge.
-            if (builder.prevInstruction != null) {
-                builder.addEdge(builder.prevInstruction, ifEnd)
+            val ifStartBlock = addInstruction(o)
+            builder.flowAbrupted()
+
+            val ifTrueBlockStart = addInstruction(null)
+            trueStatement.accept(this)
+            val ifTrueBlockEnd = builder.prevInstruction
+            builder.flowAbrupted()
+
+            val (ifFalseBlockStart, ifFalseBlockEnd) = if (falseStatement != null) {
+                val blockStart = addInstruction(null)
+                falseStatement.accept(this)
+                val blockEnd = builder.prevInstruction
+                builder.flowAbrupted()
+                blockStart to blockEnd
+            } else {
+                null to null
             }
-            builder.addEdge(ifStart, ifEnd)
+
+            val ifEndBlock = addInstruction(null)
+            builder.prevInstruction = ifEndBlock
+
+            if (falseStatement != null) {
+                builder.addEdge(ifStartBlock, ifTrueBlockStart)
+                builder.addEdge(ifStartBlock, ifFalseBlockStart)
+                if (ifTrueBlockEnd != null) {
+                    builder.addEdge(ifTrueBlockEnd, ifEndBlock)
+                }
+                if (ifFalseBlockEnd != null) {
+                    builder.addEdge(ifFalseBlockEnd, ifEndBlock)
+                }
+            } else {
+                builder.addEdge(ifStartBlock, ifTrueBlockStart)
+                builder.addEdge(ifStartBlock, ifEndBlock)
+                if (ifTrueBlockEnd != null) {
+                    builder.addEdge(ifTrueBlockEnd, ifEndBlock)
+                }
+            }
         }
 
         override fun visitWhileStatement(o: RsWhileStatement) {
