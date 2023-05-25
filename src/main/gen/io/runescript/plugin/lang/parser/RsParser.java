@@ -570,7 +570,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF '(' LogicalOrWrapper ')' Statement
+  // IF '(' LogicalOrWrapper ')' Statement (ELSE Statement)?
   public static boolean IfStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IfStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", IF)) return false;
@@ -580,7 +580,26 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = r && LogicalOrWrapper(b, l + 1);
     r = r && consumeToken(b, RPAREN);
     r = r && Statement(b, l + 1);
+    r = r && IfStatement_5(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (ELSE Statement)?
+  private static boolean IfStatement_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "IfStatement_5")) return false;
+    IfStatement_5_0(b, l + 1);
+    return true;
+  }
+
+  // ELSE Statement
+  private static boolean IfStatement_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "IfStatement_5_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ELSE);
+    r = r && Statement(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 

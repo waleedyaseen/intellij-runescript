@@ -8,6 +8,7 @@ import io.runescript.plugin.lang.psi.RsElementTypes.*
 object RsTokenTypesSets {
     val KEYWORDS = TokenSet.create(
         IF,
+        ELSE,
         WHILE,
         SWITCH,
         CASE,

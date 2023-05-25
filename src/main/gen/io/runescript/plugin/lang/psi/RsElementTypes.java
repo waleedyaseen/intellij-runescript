@@ -65,6 +65,7 @@ public interface RsElementTypes {
   IElementType DEFAULT = new RsElementType("DEFAULT");
   IElementType DEFINE_TYPE = new RsElementType("DEFINE_TYPE");
   IElementType DOLLAR = new RsElementType("$");
+  IElementType ELSE = new RsElementType("ELSE");
   IElementType EQUAL = new RsElementType("=");
   IElementType EXCEL = new RsElementType("!");
   IElementType FALSE = new RsElementType("FALSE");

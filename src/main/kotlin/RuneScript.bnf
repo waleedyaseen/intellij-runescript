@@ -96,7 +96,12 @@ Statement ::= BlockStatement
             | ExpressionStatement
 
 BlockStatement ::= '{' StatementList '}'
-IfStatement ::= IF '(' LogicalOrWrapper ')' Statement
+IfStatement ::= IF '(' LogicalOrWrapper ')' Statement (ELSE Statement)? {
+    methods=[
+        trueStatement="/Statement[0]"
+        falseStatement="/Statement[1]"
+    ]
+}
 WhileStatement ::= WHILE '(' LogicalOrWrapper ')' Statement
 SwitchStatement ::= SWITCH '(' Expression ')' '{' SwitchCase* '}'
 SwitchCase ::= CASE SwitchCaseExpressionList ':' StatementList

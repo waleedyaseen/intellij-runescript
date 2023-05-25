@@ -48,6 +48,7 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 {SINGLE_LINE_COMMENT} { return SINGLE_LINE_COMMENT; }
 // Keywords
 "if" { return IF; }
+"else" { return ELSE; }
 "while" { return WHILE; }
 "true" { return TRUE; }
 "false" { return FALSE; }

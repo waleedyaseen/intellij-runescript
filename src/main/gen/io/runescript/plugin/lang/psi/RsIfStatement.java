@@ -11,7 +11,10 @@ public interface RsIfStatement extends RsStatement {
   RsExpression getExpression();
 
   @NotNull
-  RsStatement getStatement();
+  List<RsStatement> getStatementList();
+
+  @Nullable
+  PsiElement getElse();
 
   @NotNull
   PsiElement getIf();
@@ -21,5 +24,11 @@ public interface RsIfStatement extends RsStatement {
 
   @NotNull
   PsiElement getRparen();
+
+  @NotNull
+  RsStatement getTrueStatement();
+
+  @Nullable
+  RsStatement getFalseStatement();
 
 }

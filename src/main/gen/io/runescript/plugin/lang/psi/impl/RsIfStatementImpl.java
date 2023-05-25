@@ -35,8 +35,14 @@ public class RsIfStatementImpl extends RsStatementImpl implements RsIfStatement 
 
   @Override
   @NotNull
-  public RsStatement getStatement() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsStatement.class));
+  public List<RsStatement> getStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsStatement.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getElse() {
+    return findChildByType(ELSE);
   }
 
   @Override
@@ -55,6 +61,20 @@ public class RsIfStatementImpl extends RsStatementImpl implements RsIfStatement 
   @NotNull
   public PsiElement getRparen() {
     return notNullChild(findChildByType(RPAREN));
+  }
+
+  @Override
+  @NotNull
+  public RsStatement getTrueStatement() {
+    List<RsStatement> p1 = getStatementList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public RsStatement getFalseStatement() {
+    List<RsStatement> p1 = getStatementList();
+    return p1.size() < 2 ? null : p1.get(1);
   }
 
 }
