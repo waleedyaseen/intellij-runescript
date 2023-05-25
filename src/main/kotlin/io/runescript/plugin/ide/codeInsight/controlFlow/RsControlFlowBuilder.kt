@@ -241,10 +241,12 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
                     caseEnds += builder.prevInstruction
                 }
             }
-            builder.prevInstruction = switchStart
-            val switchEnd = addInstruction(null)
-            caseEnds.forEach { caseEnd ->
-                builder.addEdge(caseEnd, switchEnd)
+            if (caseEnds.isNotEmpty()) {
+                builder.prevInstruction = switchStart
+                val switchEnd = addInstruction(null)
+                caseEnds.forEach { caseEnd ->
+                    builder.addEdge(caseEnd, switchEnd)
+                }
             }
         }
 
