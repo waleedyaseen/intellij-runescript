@@ -14,6 +14,12 @@ public interface RsArrayVariableDeclarationStatement extends RsStatement {
   PsiElement getDefineType();
 
   @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
+  @NotNull
   PsiElement getSemicolon();
 
 }

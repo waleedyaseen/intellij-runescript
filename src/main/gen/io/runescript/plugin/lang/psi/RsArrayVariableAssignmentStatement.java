@@ -14,6 +14,12 @@ public interface RsArrayVariableAssignmentStatement extends RsStatement {
   PsiElement getEqual();
 
   @NotNull
+  PsiElement getLparen();
+
+  @NotNull
+  PsiElement getRparen();
+
+  @NotNull
   PsiElement getSemicolon();
 
 }

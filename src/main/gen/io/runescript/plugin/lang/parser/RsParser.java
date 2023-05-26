@@ -285,15 +285,16 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression ParExpression '=' Expression ';'
+  // LocalVariableExpression '(' Expression ')' '=' Expression ';'
   public static boolean ArrayVariableAssignmentStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayVariableAssignmentStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DOLLAR)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ARRAY_VARIABLE_ASSIGNMENT_STATEMENT, "<Statement>");
     r = LocalVariableExpression(b, l + 1);
-    r = r && ParExpression(b, l + 1);
-    r = r && consumeToken(b, EQUAL);
+    r = r && consumeToken(b, LPAREN);
+    r = r && Expression(b, l + 1);
+    r = r && consumeTokens(b, 0, RPAREN, EQUAL);
     r = r && Expression(b, l + 1);
     r = r && consumeToken(b, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
@@ -301,7 +302,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DEFINE_TYPE LocalVariableExpression ParExpression ';'
+  // DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';'
   public static boolean ArrayVariableDeclarationStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayVariableDeclarationStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DEFINE_TYPE)) return false;
@@ -309,8 +310,9 @@ public class RsParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, ARRAY_VARIABLE_DECLARATION_STATEMENT, "<Statement>");
     r = consumeToken(b, DEFINE_TYPE);
     r = r && LocalVariableExpression(b, l + 1);
-    r = r && ParExpression(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
+    r = r && consumeToken(b, LPAREN);
+    r = r && Expression(b, l + 1);
+    r = r && consumeTokens(b, 0, RPAREN, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

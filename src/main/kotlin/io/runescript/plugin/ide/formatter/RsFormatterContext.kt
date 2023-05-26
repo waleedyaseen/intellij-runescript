@@ -1,5 +1,5 @@
 package io.runescript.plugin.ide.formatter
 
-import com.intellij.formatting.SpacingBuilder
+import io.runescript.plugin.ide.formatter.impl.RsSpacingBuilder
 
-class RsFormatterContext(val spacingBuilder: SpacingBuilder)
+class RsFormatterContext(val spacingBuilder: RsSpacingBuilder)

@@ -41,6 +41,18 @@ public class RsArrayVariableDeclarationStatementImpl extends RsStatementImpl imp
 
   @Override
   @NotNull
+  public PsiElement getLparen() {
+    return notNullChild(findChildByType(LPAREN));
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRparen() {
+    return notNullChild(findChildByType(RPAREN));
+  }
+
+  @Override
+  @NotNull
   public PsiElement getSemicolon() {
     return notNullChild(findChildByType(SEMICOLON));
   }

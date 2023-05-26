@@ -112,8 +112,8 @@ LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' E
     methods=[getNameExpression]
 }
 LocalVariableAssignmentStatement ::= LocalVariableExpression '=' Expression ';'
-ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ParExpression ';'
-ArrayVariableAssignmentStatement ::= LocalVariableExpression ParExpression '=' Expression ';'
+ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';'
+ArrayVariableAssignmentStatement ::= LocalVariableExpression '(' Expression ')' '=' Expression ';'
 ScopedVariableAssignmentStatement ::= ScopedVariableExpression '=' Expression ';'
 ExpressionStatement ::= Expression ';'
 
