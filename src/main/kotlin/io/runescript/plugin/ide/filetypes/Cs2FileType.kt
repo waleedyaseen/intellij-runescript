@@ -1,12 +1,12 @@
 package io.runescript.plugin.ide.filetypes
 
-import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileTypes.LanguageFileType
 import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.lang.RuneScript
-import javax.swing.Icon
 
 object Cs2FileType : LanguageFileType(RuneScript) {
+
+    override fun getDisplayName() = "ClientScript"
 
     override fun getName() = "ClientScript"
 
