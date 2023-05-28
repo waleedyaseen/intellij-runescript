@@ -13,9 +13,8 @@ import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.ide.config.RsConfig
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
-import io.runescript.plugin.lang.psi.RsFile
-import io.runescript.plugin.lang.psi.RsTokenTypesSets
-import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.op.RsOpElementTypes
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
 class RsParserDefinition : ParserDefinition {
@@ -25,7 +24,7 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun createParser(project: Project): PsiParser {
-        return RsParser()
+        error("Should not be called")
     }
 
     override fun getFileNodeType(): IFileElementType {
@@ -41,7 +40,11 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun createElement(node: ASTNode?): PsiElement {
-        return RsElementTypes.Factory.createElement(node)
+        println(node!!.elementType::class.java)
+        return when (node!!.elementType) {
+            is RsStubType<*, *>, is RsElementType -> RsElementTypes.Factory.createElement(node)
+            else -> RsOpElementTypes.Factory.createElement(node)
+        }
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {
