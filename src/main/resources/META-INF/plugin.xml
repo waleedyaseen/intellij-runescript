@@ -12,6 +12,9 @@
         <fileType name="ClientScript" language="RuneScript"
                   implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE"
                   extensions="cs2"/>
+        <fileType name="Command" language="RuneScript"
+                  implementationClass="io.runescript.plugin.ide.filetypes.OpFileType" fieldName="INSTANCE"
+                  extensions="op"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
         <projectConfigurable
                 groupId="language"
@@ -43,6 +46,7 @@
 
         <!-- Code Insights -->
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
+        <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
 
         <!-- Inspections -->
         <localInspection language="RuneScript"
