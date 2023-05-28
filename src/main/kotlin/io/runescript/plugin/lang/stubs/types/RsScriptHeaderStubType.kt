@@ -1,20 +1,17 @@
 package io.runescript.plugin.lang.stubs.types
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.stubs.*
-import io.runescript.plugin.lang.RuneScript
-import io.runescript.plugin.lang.psi.RsElementTypes.SCRIPT_NAME
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import io.runescript.plugin.lang.psi.RsScriptHeader
+import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsScriptHeaderImpl
 import io.runescript.plugin.lang.stubs.RsScriptHeaderStub
 import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
-import org.jetbrains.debugger.BreakpointTarget.ScriptName
 
-object RsScriptHeaderStubType : IStubElementType<RsScriptHeaderStub, RsScriptHeader>("SCRIPT_HEADER", RuneScript) {
-
-    override fun getExternalId(): String {
-        return "RuneScript.${super.toString()}"
-    }
+object RsScriptHeaderStubType : RsStubType<RsScriptHeaderStub, RsScriptHeader>("SCRIPT_HEADER") {
 
     override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsScriptHeaderStub {
         return RsScriptHeaderStub(parentStub, this)

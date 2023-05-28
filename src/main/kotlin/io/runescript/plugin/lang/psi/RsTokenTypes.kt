@@ -5,6 +5,4 @@ object RsTokenTypes {
     val SINGLE_LINE_COMMENT = RsElementType("SINGLE_LINE_COMMENT")
     @JvmField
     val MULTI_LINE_COMMENT = RsElementType("MULTI_LINE_COMMENT")
-    @JvmField
-    val STRING_LITERAL = RsElementType("STRING_LITERAL")
 }

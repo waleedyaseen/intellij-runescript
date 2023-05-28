@@ -1,17 +1,16 @@
 package io.runescript.plugin.lang.stubs.types
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.stubs.*
-import io.runescript.plugin.lang.RuneScript
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsLocalVariableExpressionImpl
 import io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub
 
-object RsLocalVariableExpressionStubType : IStubElementType<RsLocalVariableExpressionStub, RsLocalVariableExpression>("LOCAL_VARIABLE_EXPRESSION", RuneScript) {
-
-    override fun getExternalId(): String {
-        return "RuneScript.${super.toString()}"
-    }
+object RsLocalVariableExpressionStubType : RsStubType<RsLocalVariableExpressionStub, RsLocalVariableExpression>("LOCAL_VARIABLE_EXPRESSION") {
 
     override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsLocalVariableExpressionStub {
         return RsLocalVariableExpressionStub(parentStub, this, dataStream.readUTF())

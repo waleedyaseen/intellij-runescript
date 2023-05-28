@@ -1,17 +1,16 @@
 package io.runescript.plugin.lang.stubs.types
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.stubs.*
-import io.runescript.plugin.lang.RuneScript
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import io.runescript.plugin.lang.psi.RsParameterList
+import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsParameterListImpl
 import io.runescript.plugin.lang.stubs.RsParameterListStub
 
-object RsParameterListStubType : IStubElementType<RsParameterListStub, RsParameterList>("PARAMETER_LIST", RuneScript) {
-
-    override fun getExternalId(): String {
-        return "RuneScript.${super.toString()}"
-    }
+object RsParameterListStubType : RsStubType<RsParameterListStub, RsParameterList>("PARAMETER_LIST") {
 
     override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsParameterListStub {
         return RsParameterListStub(parentStub, this)

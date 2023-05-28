@@ -1,18 +1,16 @@
 package io.runescript.plugin.lang.stubs.types
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.stubs.*
-import io.runescript.plugin.lang.RuneScript
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import io.runescript.plugin.lang.psi.RsScriptName
+import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsScriptNameImpl
 import io.runescript.plugin.lang.stubs.RsScriptNameStub
-import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
 
-object RsScriptNameStubType : IStubElementType<RsScriptNameStub, RsScriptName>("SCRIPT_NAME", RuneScript) {
-
-    override fun getExternalId(): String {
-        return "RuneScript.${super.toString()}"
-    }
+object RsScriptNameStubType : RsStubType<RsScriptNameStub, RsScriptName>("SCRIPT_NAME") {
 
     override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsScriptNameStub {
         return RsScriptNameStub(parentStub, this, dataStream.readUTF(), dataStream.readUTF())
