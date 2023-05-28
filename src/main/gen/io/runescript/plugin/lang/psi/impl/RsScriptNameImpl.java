@@ -41,7 +41,7 @@ public class RsScriptNameImpl extends RsScriptNameMixin implements RsScriptName 
   @Override
   @NotNull
   public List<RsNameLiteral> getNameLiteralList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsNameLiteral.class);
+    return PsiTreeUtil.getStubChildrenOfTypeAsList(this, RsNameLiteral.class);
   }
 
   @Override

@@ -41,13 +41,13 @@ public class RsScriptHeaderImpl extends StubBasedPsiElementBase<RsScriptHeaderSt
   @Override
   @Nullable
   public RsParameterList getParameterList() {
-    return PsiTreeUtil.getChildOfType(this, RsParameterList.class);
+    return PsiTreeUtil.getStubChildOfType(this, RsParameterList.class);
   }
 
   @Override
   @Nullable
   public RsReturnList getReturnList() {
-    return PsiTreeUtil.getChildOfType(this, RsReturnList.class);
+    return PsiTreeUtil.getStubChildOfType(this, RsReturnList.class);
   }
 
   @Override

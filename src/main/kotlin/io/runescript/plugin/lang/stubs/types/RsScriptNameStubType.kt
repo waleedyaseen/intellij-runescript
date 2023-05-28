@@ -32,6 +32,5 @@ object RsScriptNameStubType : IStubElementType<RsScriptNameStub, RsScriptName>("
     }
 
     override fun indexStub(stub: RsScriptNameStub, sink: IndexSink) {
-        sink.occurrence(RsGotoScriptIndex.KEY, stub.scriptName)
     }
 }

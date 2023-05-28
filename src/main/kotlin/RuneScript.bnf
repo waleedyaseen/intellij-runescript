@@ -78,10 +78,25 @@ ScriptName ::= '[' NameLiteral ',' NameLiteral ']' {
     mixin="io.runescript.plugin.lang.psi.mixin.RsScriptNameMixin"
 }
 
-ParameterList ::= '(' (Parameter (',' Parameter)*)? ')'
-Parameter ::= (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression
-ReturnList ::= '(' (TypeName (',' TypeName)*)? ')'
-TypeName ::= TYPE_LITERAL
+ParameterList ::= '(' (Parameter (',' Parameter)*)? ')' {
+    stubClass="io.runescript.plugin.lang.stubs.RsParameterListStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}
+
+Parameter ::= (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression {
+    stubClass="io.runescript.plugin.lang.stubs.RsParameterStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}
+
+ReturnList ::= '(' (TypeName (',' TypeName)*)? ')' {
+    stubClass="io.runescript.plugin.lang.stubs.RsReturnListStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}
+
+TypeName ::= TYPE_LITERAL {
+    stubClass="io.runescript.plugin.lang.stubs.RsTypeNameStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}
 StatementList ::= Statement*
 Statement ::= BlockStatement
             | IfStatement
@@ -192,6 +207,8 @@ ParExpression ::= '(' Expression ')'
 
 LocalVariableExpression ::= '$' NameLiteral {
     mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableExpressionMixin"
+    stubClass="io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
     methods=[getVariableName setVariableName getNameIdentifier]
 }
 
@@ -214,4 +231,7 @@ ArgumentList ::= '(' ExpressionList? ')'
 ConstantExpression ::= '^' NameLiteral
 DynamicExpression ::= NameLiteral
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
-NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE {
+    stubClass="io.runescript.plugin.lang.stubs.RsNameLiteralStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+}

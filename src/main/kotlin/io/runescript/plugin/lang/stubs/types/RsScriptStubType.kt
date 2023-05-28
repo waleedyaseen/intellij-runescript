@@ -2,11 +2,9 @@ package io.runescript.plugin.lang.stubs.types
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.*
-import com.intellij.psi.tree.IStubFileElementType
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.impl.RsScriptImpl
-import io.runescript.plugin.lang.stubs.RsFileStub
 import io.runescript.plugin.lang.stubs.RsScriptStub
 
 object RsScriptStubType : IStubElementType<RsScriptStub, RsScript>("SCRIPT", RuneScript) {

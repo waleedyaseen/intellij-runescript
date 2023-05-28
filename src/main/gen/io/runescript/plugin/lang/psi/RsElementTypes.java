@@ -31,14 +31,14 @@ public interface RsElementTypes {
   IElementType INTEGER_LITERAL_EXPRESSION = new RsElementType("INTEGER_LITERAL_EXPRESSION");
   IElementType LOCAL_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("LOCAL_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new RsElementType("LOCAL_VARIABLE_DECLARATION_STATEMENT");
-  IElementType LOCAL_VARIABLE_EXPRESSION = new RsElementType("LOCAL_VARIABLE_EXPRESSION");
-  IElementType NAME_LITERAL = new RsElementType("NAME_LITERAL");
+  IElementType LOCAL_VARIABLE_EXPRESSION = StubElementTypeFactory.create("LOCAL_VARIABLE_EXPRESSION");
+  IElementType NAME_LITERAL = StubElementTypeFactory.create("NAME_LITERAL");
   IElementType NULL_LITERAL_EXPRESSION = new RsElementType("NULL_LITERAL_EXPRESSION");
-  IElementType PARAMETER = new RsElementType("PARAMETER");
-  IElementType PARAMETER_LIST = new RsElementType("PARAMETER_LIST");
+  IElementType PARAMETER = StubElementTypeFactory.create("PARAMETER");
+  IElementType PARAMETER_LIST = StubElementTypeFactory.create("PARAMETER_LIST");
   IElementType PAR_EXPRESSION = new RsElementType("PAR_EXPRESSION");
   IElementType RELATIONAL_VALUE_EXPRESSION = new RsElementType("RELATIONAL_VALUE_EXPRESSION");
-  IElementType RETURN_LIST = new RsElementType("RETURN_LIST");
+  IElementType RETURN_LIST = StubElementTypeFactory.create("RETURN_LIST");
   IElementType RETURN_STATEMENT = new RsElementType("RETURN_STATEMENT");
   IElementType SCOPED_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("SCOPED_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType SCOPED_VARIABLE_EXPRESSION = new RsElementType("SCOPED_VARIABLE_EXPRESSION");
@@ -51,7 +51,7 @@ public interface RsElementTypes {
   IElementType STRING_LITERAL_EXPRESSION = new RsElementType("STRING_LITERAL_EXPRESSION");
   IElementType SWITCH_CASE = new RsElementType("SWITCH_CASE");
   IElementType SWITCH_STATEMENT = new RsElementType("SWITCH_STATEMENT");
-  IElementType TYPE_NAME = new RsElementType("TYPE_NAME");
+  IElementType TYPE_NAME = StubElementTypeFactory.create("TYPE_NAME");
   IElementType WHILE_STATEMENT = new RsElementType("WHILE_STATEMENT");
 
   IElementType AMPERSAND = new RsElementType("&");

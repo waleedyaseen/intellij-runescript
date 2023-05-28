@@ -3,9 +3,12 @@ package io.runescript.plugin.lang.stubs.types
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.*
 import io.runescript.plugin.lang.RuneScript
+import io.runescript.plugin.lang.psi.RsElementTypes.SCRIPT_NAME
 import io.runescript.plugin.lang.psi.RsScriptHeader
 import io.runescript.plugin.lang.psi.impl.RsScriptHeaderImpl
 import io.runescript.plugin.lang.stubs.RsScriptHeaderStub
+import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
+import org.jetbrains.debugger.BreakpointTarget.ScriptName
 
 object RsScriptHeaderStubType : IStubElementType<RsScriptHeaderStub, RsScriptHeader>("SCRIPT_HEADER", RuneScript) {
 
@@ -29,6 +32,7 @@ object RsScriptHeaderStubType : IStubElementType<RsScriptHeaderStub, RsScriptHea
     }
 
     override fun indexStub(stub: RsScriptHeaderStub, sink: IndexSink) {
-        // TODO
+        val name = stub.findChildStubByType(RsScriptNameStubType)
+        sink.occurrence(RsGotoScriptIndex.KEY, name!!.scriptName)
     }
 }

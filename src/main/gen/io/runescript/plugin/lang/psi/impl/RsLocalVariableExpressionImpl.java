@@ -10,11 +10,22 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.mixin.RsLocalVariableExpressionMixin;
 import io.runescript.plugin.lang.psi.*;
+import io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
 public class RsLocalVariableExpressionImpl extends RsLocalVariableExpressionMixin implements RsLocalVariableExpression {
 
   public RsLocalVariableExpressionImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public RsLocalVariableExpressionImpl(@NotNull RsLocalVariableExpressionStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
+
+  public RsLocalVariableExpressionImpl(@Nullable RsLocalVariableExpressionStub stub, @Nullable IElementType type, @Nullable ASTNode node) {
+    super(stub, type, node);
   }
 
   public void accept(@NotNull RsVisitor visitor) {
@@ -30,7 +41,7 @@ public class RsLocalVariableExpressionImpl extends RsLocalVariableExpressionMixi
   @Override
   @NotNull
   public RsNameLiteral getNameLiteral() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsNameLiteral.class));
+    return notNullChild(PsiTreeUtil.getStubChildOfType(this, RsNameLiteral.class));
   }
 
   @Override

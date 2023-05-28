@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.util.Processor
 import com.intellij.util.indexing.FindSymbolParameters
 import com.intellij.util.indexing.IdFilter
+import io.runescript.plugin.lang.psi.RsScriptHeader
 import io.runescript.plugin.lang.psi.RsScriptName
 import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
 
@@ -29,9 +30,9 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
                 parameters.project,
                 originScope,
                 null,
-                RsScriptName::class.java
+                RsScriptHeader::class.java
         ) { element ->
-            processor.process(element)
+            processor.process(element.scriptName)
         }
     }
 
