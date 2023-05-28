@@ -20,7 +20,6 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         val elementType = parent.node.elementType
         val type1 = child1.node.elementType
         val type2 = child2.node.elementType
-        println("parent=$elementType type1=$type1 type2=$type2")
         // Space around operators
         if (child1.isLogicalOperator() || child2.isLogicalOperator()) {
             return spaceIf(settings.SPACE_AROUND_LOGICAL_OPERATORS)
