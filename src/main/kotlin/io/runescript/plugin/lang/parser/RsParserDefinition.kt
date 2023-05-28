@@ -11,6 +11,8 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.ide.config.RsConfig
+import io.runescript.plugin.ide.filetypes.Cs2FileType
+import io.runescript.plugin.ide.filetypes.OpFileType
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.*
@@ -20,7 +22,7 @@ import io.runescript.plugin.lang.stubs.types.RsFileStubType
 class RsParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project): Lexer {
-        return RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes(project)))
+        error("Should not be called")
     }
 
     override fun createParser(project: Project): PsiParser {
@@ -40,7 +42,6 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun createElement(node: ASTNode?): PsiElement {
-        println(node!!.elementType::class.java)
         return when (node!!.elementType) {
             is RsStubType<*, *>, is RsElementType -> RsElementTypes.Factory.createElement(node)
             else -> RsOpElementTypes.Factory.createElement(node)
@@ -48,6 +49,10 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return RsFile(viewProvider)
+        return when (val extension = viewProvider.virtualFile.extension) {
+            OpFileType.defaultExtension -> RsOpFile(viewProvider)
+            Cs2FileType.defaultExtension -> RsFile(viewProvider)
+            else -> error("Unrecognized extension: $extension")
+        }
     }
 }

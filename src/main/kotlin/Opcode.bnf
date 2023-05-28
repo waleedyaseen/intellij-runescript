@@ -19,19 +19,45 @@
     RPAREN=')'
     COMMA=','
     HASH='#'
+    DOLLAR='$'
   ]
 }
 
 File ::= Command*
 
-Command ::= AttributeList CommandHeader ParameterList ReturnList
+Command ::= AttributeList CommandHeader ParameterList ReturnList {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpCommandStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
 
-AttributeList ::= Attribute*
+AttributeList ::= Attribute* {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpAttributeListStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
 Attribute ::= '#' '[' NameLiteral '(' (AttributeValue (',' AttributeValue)*)? ')' ']'
 AttributeValue ::= NameLiteral | IntegerValue
 IntegerValue ::= INTEGER
-CommandHeader ::= '[' NameLiteral ',' NameLiteral ']'
-ParameterList ::= '(' (TypeName (',' TypeName)*)? ')'
-ReturnList ::= '(' (TypeName (',' TypeName)*)? ')'
-TypeName ::= TYPE_LITERAL
-NameLiteral ::= IDENTIFIER
+CommandHeader ::= '[' NameLiteral ',' NameLiteral ']' {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpCommandHeaderStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
+ParameterList ::= '(' (Parameter (',' Parameter)*)? ')' {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpParameterListStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
+Parameter ::= TypeName '$' NameLiteral {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpParameterStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
+ReturnList ::= '(' (TypeName (',' TypeName)*)? ')' {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpReturnListStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
+TypeName ::= TYPE_LITERAL {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpTypeNameStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}
+NameLiteral ::= IDENTIFIER {
+    stubClass="io.runescript.plugin.lang.stubs.RsOpNameLiteralStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
+}

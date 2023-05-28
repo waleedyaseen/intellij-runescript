@@ -51,6 +51,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitCommandExpression(@NotNull RsCommandExpression o) {
     visitExpression(o);
+    // visitNavigatablePsiElement(o);
   }
 
   public void visitConditionExpression(@NotNull RsConditionExpression o) {

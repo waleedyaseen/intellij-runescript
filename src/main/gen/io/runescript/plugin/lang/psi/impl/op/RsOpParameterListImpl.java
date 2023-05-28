@@ -8,13 +8,24 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.op.RsOpElementTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import io.runescript.plugin.lang.stubs.RsOpParameterListStub;
 import io.runescript.plugin.lang.psi.op.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
-public class RsOpParameterListImpl extends ASTWrapperPsiElement implements RsOpParameterList {
+public class RsOpParameterListImpl extends StubBasedPsiElementBase<RsOpParameterListStub> implements RsOpParameterList {
+
+  public RsOpParameterListImpl(@NotNull RsOpParameterListStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
 
   public RsOpParameterListImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public RsOpParameterListImpl(RsOpParameterListStub stub, IElementType type, ASTNode node) {
+    super(stub, type, node);
   }
 
   public void accept(@NotNull RsOpVisitor visitor) {
@@ -29,20 +40,20 @@ public class RsOpParameterListImpl extends ASTWrapperPsiElement implements RsOpP
 
   @Override
   @NotNull
-  public List<RsOpTypeName> getTypeNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsOpTypeName.class);
+  public List<RsOpParameter> getParameterList() {
+    return PsiTreeUtil.getStubChildrenOfTypeAsList(this, RsOpParameter.class);
   }
 
   @Override
   @NotNull
   public PsiElement getLparen() {
-    return findNotNullChildByType(LPAREN);
+    return notNullChild(findChildByType(LPAREN));
   }
 
   @Override
   @NotNull
   public PsiElement getRparen() {
-    return findNotNullChildByType(RPAREN);
+    return notNullChild(findChildByType(RPAREN));
   }
 
 }

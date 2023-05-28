@@ -33,7 +33,9 @@
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
         <lang.commenter language="RuneScript" implementationClass="io.runescript.plugin.ide.RsCommenter"/>
         <stubElementTypeHolder externalIdPrefix="RuneScript." class="io.runescript.plugin.lang.psi.RsElementTypes"/>
+        <stubElementTypeHolder externalIdPrefix="RsOp." class="io.runescript.plugin.lang.psi.op.RsOpElementTypes"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex"/>
+        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsCommandIndex"/>
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>

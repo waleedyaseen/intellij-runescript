@@ -30,7 +30,7 @@ public class RsOpIntegerValueImpl extends ASTWrapperPsiElement implements RsOpIn
   @Override
   @NotNull
   public PsiElement getInteger() {
-    return findNotNullChildByType(INTEGER);
+    return notNullChild(findChildByType(INTEGER));
   }
 
 }

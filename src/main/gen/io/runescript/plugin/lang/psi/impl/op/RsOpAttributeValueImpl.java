@@ -30,13 +30,13 @@ public class RsOpAttributeValueImpl extends ASTWrapperPsiElement implements RsOp
   @Override
   @Nullable
   public RsOpIntegerValue getIntegerValue() {
-    return findChildByClass(RsOpIntegerValue.class);
+    return PsiTreeUtil.getChildOfType(this, RsOpIntegerValue.class);
   }
 
   @Override
   @Nullable
   public RsOpNameLiteral getNameLiteral() {
-    return findChildByClass(RsOpNameLiteral.class);
+    return PsiTreeUtil.getChildOfType(this, RsOpNameLiteral.class);
   }
 
 }

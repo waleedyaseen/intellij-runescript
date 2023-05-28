@@ -60,6 +60,7 @@ INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
 ")" { return RPAREN; }
 "," { return COMMA; }
 "#" { return HASH; }
+"$" { return DOLLAR; }
 // Ignored
 [\ \t\r\n] { return TokenType.WHITE_SPACE; }
 [^] { return TokenType.BAD_CHARACTER; }

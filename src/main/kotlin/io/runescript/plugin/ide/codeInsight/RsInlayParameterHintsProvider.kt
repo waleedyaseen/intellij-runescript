@@ -7,6 +7,7 @@ import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsScriptHeader
+import io.runescript.plugin.lang.psi.op.RsOpCommand
 
 @Suppress("UnstableApiUsage")
 class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
@@ -41,6 +42,12 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
                 val reference = element.reference?.resolve() ?: return null
                 reference as RsScriptHeader
                 reference.parameterList?.parameterList?.map { it.localVariableExpression.variableName }
+            }
+
+            is RsCommandExpression -> {
+                val reference = element.reference?.resolve() ?: return null
+                reference as RsOpCommand
+                reference.parameterList.parameterList.map { it.nameLiteral.text }
             }
 
             else -> return null

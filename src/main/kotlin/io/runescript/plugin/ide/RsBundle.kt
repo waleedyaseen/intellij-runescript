@@ -16,6 +16,6 @@ object RsBundle {
     }
 
     fun pointer(@PropertyKey(resourceBundle = BUNDLE_FQN) key: String, vararg params: Any): () -> String {
-        return { message(key) }
+        return { message(key, params) }
     }
 }

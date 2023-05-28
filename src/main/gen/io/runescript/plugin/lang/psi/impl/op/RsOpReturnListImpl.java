@@ -8,13 +8,24 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.op.RsOpElementTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import io.runescript.plugin.lang.stubs.RsOpReturnListStub;
 import io.runescript.plugin.lang.psi.op.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
-public class RsOpReturnListImpl extends ASTWrapperPsiElement implements RsOpReturnList {
+public class RsOpReturnListImpl extends StubBasedPsiElementBase<RsOpReturnListStub> implements RsOpReturnList {
+
+  public RsOpReturnListImpl(@NotNull RsOpReturnListStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
 
   public RsOpReturnListImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public RsOpReturnListImpl(RsOpReturnListStub stub, IElementType type, ASTNode node) {
+    super(stub, type, node);
   }
 
   public void accept(@NotNull RsOpVisitor visitor) {
@@ -30,19 +41,19 @@ public class RsOpReturnListImpl extends ASTWrapperPsiElement implements RsOpRetu
   @Override
   @NotNull
   public List<RsOpTypeName> getTypeNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsOpTypeName.class);
+    return PsiTreeUtil.getStubChildrenOfTypeAsList(this, RsOpTypeName.class);
   }
 
   @Override
   @NotNull
   public PsiElement getLparen() {
-    return findNotNullChildByType(LPAREN);
+    return notNullChild(findChildByType(LPAREN));
   }
 
   @Override
   @NotNull
   public PsiElement getRparen() {
-    return findNotNullChildByType(RPAREN);
+    return notNullChild(findChildByType(RPAREN));
   }
 
 }

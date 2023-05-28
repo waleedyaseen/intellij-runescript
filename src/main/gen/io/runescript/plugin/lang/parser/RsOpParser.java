@@ -186,7 +186,21 @@ public class RsOpParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '(' (TypeName (',' TypeName)*)? ')'
+  // TypeName '$' NameLiteral
+  public static boolean Parameter(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Parameter")) return false;
+    if (!nextTokenIs(b, TYPE_LITERAL)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = TypeName(b, l + 1);
+    r = r && consumeToken(b, DOLLAR);
+    r = r && NameLiteral(b, l + 1);
+    exit_section_(b, m, PARAMETER, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '(' (Parameter (',' Parameter)*)? ')'
   public static boolean ParameterList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList")) return false;
     if (!nextTokenIs(b, LPAREN)) return false;
@@ -199,25 +213,25 @@ public class RsOpParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (TypeName (',' TypeName)*)?
+  // (Parameter (',' Parameter)*)?
   private static boolean ParameterList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1")) return false;
     ParameterList_1_0(b, l + 1);
     return true;
   }
 
-  // TypeName (',' TypeName)*
+  // Parameter (',' Parameter)*
   private static boolean ParameterList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = TypeName(b, l + 1);
+    r = Parameter(b, l + 1);
     r = r && ParameterList_1_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // (',' TypeName)*
+  // (',' Parameter)*
   private static boolean ParameterList_1_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0_1")) return false;
     while (true) {
@@ -228,13 +242,13 @@ public class RsOpParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // ',' TypeName
+  // ',' Parameter
   private static boolean ParameterList_1_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ParameterList_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
-    r = r && TypeName(b, l + 1);
+    r = r && Parameter(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }

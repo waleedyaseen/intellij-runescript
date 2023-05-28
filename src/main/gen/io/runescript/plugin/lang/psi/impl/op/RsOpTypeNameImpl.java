@@ -8,13 +8,24 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.op.RsOpElementTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import io.runescript.plugin.lang.stubs.RsOpTypeNameStub;
 import io.runescript.plugin.lang.psi.op.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
-public class RsOpTypeNameImpl extends ASTWrapperPsiElement implements RsOpTypeName {
+public class RsOpTypeNameImpl extends StubBasedPsiElementBase<RsOpTypeNameStub> implements RsOpTypeName {
+
+  public RsOpTypeNameImpl(@NotNull RsOpTypeNameStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
 
   public RsOpTypeNameImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public RsOpTypeNameImpl(RsOpTypeNameStub stub, IElementType type, ASTNode node) {
+    super(stub, type, node);
   }
 
   public void accept(@NotNull RsOpVisitor visitor) {
@@ -30,7 +41,7 @@ public class RsOpTypeNameImpl extends ASTWrapperPsiElement implements RsOpTypeNa
   @Override
   @NotNull
   public PsiElement getTypeLiteral() {
-    return findNotNullChildByType(TYPE_LITERAL);
+    return notNullChild(findChildByType(TYPE_LITERAL));
   }
 
 }

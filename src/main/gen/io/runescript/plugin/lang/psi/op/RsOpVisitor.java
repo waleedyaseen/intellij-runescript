@@ -35,6 +35,10 @@ public class RsOpVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitParameter(@NotNull RsOpParameter o) {
+    visitPsiElement(o);
+  }
+
   public void visitParameterList(@NotNull RsOpParameterList o) {
     visitPsiElement(o);
   }

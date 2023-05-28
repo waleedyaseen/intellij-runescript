@@ -36,37 +36,37 @@ public class RsOpAttributeImpl extends ASTWrapperPsiElement implements RsOpAttri
   @Override
   @NotNull
   public RsOpNameLiteral getNameLiteral() {
-    return findNotNullChildByClass(RsOpNameLiteral.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, RsOpNameLiteral.class));
   }
 
   @Override
   @NotNull
   public PsiElement getHash() {
-    return findNotNullChildByType(HASH);
+    return notNullChild(findChildByType(HASH));
   }
 
   @Override
   @NotNull
   public PsiElement getLbracket() {
-    return findNotNullChildByType(LBRACKET);
+    return notNullChild(findChildByType(LBRACKET));
   }
 
   @Override
   @NotNull
   public PsiElement getLparen() {
-    return findNotNullChildByType(LPAREN);
+    return notNullChild(findChildByType(LPAREN));
   }
 
   @Override
   @NotNull
   public PsiElement getRbracket() {
-    return findNotNullChildByType(RBRACKET);
+    return notNullChild(findChildByType(RBRACKET));
   }
 
   @Override
   @NotNull
   public PsiElement getRparen() {
-    return findNotNullChildByType(RPAREN);
+    return notNullChild(findChildByType(RPAREN));
   }
 
 }
