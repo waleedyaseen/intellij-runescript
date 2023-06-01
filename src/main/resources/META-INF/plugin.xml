@@ -47,6 +47,7 @@
         <!-- Code Insights -->
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
+        <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
 
         <!-- Inspections -->
         <localInspection language="RuneScript"
