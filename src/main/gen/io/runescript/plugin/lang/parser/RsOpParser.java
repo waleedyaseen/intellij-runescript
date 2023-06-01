@@ -36,7 +36,7 @@ public class RsOpParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '#' '[' NameLiteral '(' (AttributeValue (',' AttributeValue)*)? ')' ']'
+  // '#' '[' NameLiteral ('(' (AttributeValue (',' AttributeValue)*)? ')')? ']'
   public static boolean Attribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Attribute")) return false;
     if (!nextTokenIs(b, HASH)) return false;
@@ -44,45 +44,63 @@ public class RsOpParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, HASH, LBRACKET);
     r = r && NameLiteral(b, l + 1);
-    r = r && consumeToken(b, LPAREN);
-    r = r && Attribute_4(b, l + 1);
-    r = r && consumeTokens(b, 0, RPAREN, RBRACKET);
+    r = r && Attribute_3(b, l + 1);
+    r = r && consumeToken(b, RBRACKET);
     exit_section_(b, m, ATTRIBUTE, r);
     return r;
   }
 
+  // ('(' (AttributeValue (',' AttributeValue)*)? ')')?
+  private static boolean Attribute_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Attribute_3")) return false;
+    Attribute_3_0(b, l + 1);
+    return true;
+  }
+
+  // '(' (AttributeValue (',' AttributeValue)*)? ')'
+  private static boolean Attribute_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Attribute_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LPAREN);
+    r = r && Attribute_3_0_1(b, l + 1);
+    r = r && consumeToken(b, RPAREN);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   // (AttributeValue (',' AttributeValue)*)?
-  private static boolean Attribute_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Attribute_4")) return false;
-    Attribute_4_0(b, l + 1);
+  private static boolean Attribute_3_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Attribute_3_0_1")) return false;
+    Attribute_3_0_1_0(b, l + 1);
     return true;
   }
 
   // AttributeValue (',' AttributeValue)*
-  private static boolean Attribute_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Attribute_4_0")) return false;
+  private static boolean Attribute_3_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Attribute_3_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = AttributeValue(b, l + 1);
-    r = r && Attribute_4_0_1(b, l + 1);
+    r = r && Attribute_3_0_1_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // (',' AttributeValue)*
-  private static boolean Attribute_4_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Attribute_4_0_1")) return false;
+  private static boolean Attribute_3_0_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Attribute_3_0_1_0_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!Attribute_4_0_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "Attribute_4_0_1", c)) break;
+      if (!Attribute_3_0_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "Attribute_3_0_1_0_1", c)) break;
     }
     return true;
   }
 
   // ',' AttributeValue
-  private static boolean Attribute_4_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Attribute_4_0_1_0")) return false;
+  private static boolean Attribute_3_0_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Attribute_3_0_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);

@@ -19,13 +19,13 @@ public interface RsOpAttribute extends PsiElement {
   @NotNull
   PsiElement getLbracket();
 
-  @NotNull
+  @Nullable
   PsiElement getLparen();
 
   @NotNull
   PsiElement getRbracket();
 
-  @NotNull
+  @Nullable
   PsiElement getRparen();
 
 }

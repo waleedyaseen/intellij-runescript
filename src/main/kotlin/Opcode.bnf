@@ -34,7 +34,7 @@ AttributeList ::= Attribute* {
     stubClass="io.runescript.plugin.lang.stubs.RsOpAttributeListStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
 }
-Attribute ::= '#' '[' NameLiteral '(' (AttributeValue (',' AttributeValue)*)? ')' ']'
+Attribute ::= '#' '[' NameLiteral ('(' (AttributeValue (',' AttributeValue)*)? ')')? ']'
 AttributeValue ::= NameLiteral | IntegerValue
 IntegerValue ::= INTEGER
 CommandHeader ::= '[' NameLiteral ',' NameLiteral ']' {

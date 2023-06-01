@@ -52,9 +52,9 @@ public class RsOpAttributeImpl extends ASTWrapperPsiElement implements RsOpAttri
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getLparen() {
-    return notNullChild(findChildByType(LPAREN));
+    return findChildByType(LPAREN);
   }
 
   @Override
@@ -64,9 +64,9 @@ public class RsOpAttributeImpl extends ASTWrapperPsiElement implements RsOpAttri
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getRparen() {
-    return notNullChild(findChildByType(RPAREN));
+    return findChildByType(RPAREN);
   }
 
 }
