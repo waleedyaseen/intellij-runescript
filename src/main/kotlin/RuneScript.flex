@@ -38,7 +38,11 @@ HEX_INTEGER = 0[xX]({HEX_DIGIT})+
 DECIMAL_INTEGER = ({DECIMAL_DIGIT})+
 INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
 STRING_PART = [^\"\r\n<]+
-COLOR_TAG = "<col="([0-9a-fA-F]+)">"
+COLOR_TAG = "<"(shad|col|str|u)"="([0-9a-fA-F]+)">"
+OTHER_TAG = "<"(str|u|br)">"
+IMG_TAG = "<img="([0-9]+)">"
+CLOSE_TAG = "</"(shad|col|str|u)">"
+INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 
 %x STRING, STRING_INTERPOLATION
 
@@ -144,10 +148,8 @@ COLOR_TAG = "<col="([0-9a-fA-F]+)">"
 }
 <STRING> {
 \" { yybegin(YYINITIAL); return STRING_END; }
-"<br>" { return STRING_TAG; }
-"</col>" { return STRING_TAG; }
-{COLOR_TAG} { return STRING_TAG; }
-"<col=" { return STRING_PART; }
+({OTHER_TAG}|{CLOSE_TAG}|{COLOR_TAG}|{IMG_TAG}) { return STRING_TAG; }
+{INCOMPLETE_TAG} { return STRING_PART; }
 "<" { yybegin(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
 {STRING_PART} { return STRING_PART; }
 [^] { return TokenType.BAD_CHARACTER; }
