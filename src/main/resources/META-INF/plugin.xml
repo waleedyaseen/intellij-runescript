@@ -65,6 +65,11 @@
                          enabledByDefault="true"
                          level="WARNING"
                          implementationClass="io.runescript.plugin.ide.inspections.RsUnreachableCodeInspection"/>
+        <intentionAction>
+            <className>io.runescript.plugin.ide.codeInsight.intention.RsNumberConversionIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.expressions</categoryKey>
+        </intentionAction>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">

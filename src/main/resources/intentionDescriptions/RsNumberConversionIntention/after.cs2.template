@@ -1,0 +1,2 @@
+[proc,x]
+def_int $var = <spot>0x37</spot>;

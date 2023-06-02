@@ -12,6 +12,12 @@ import io.runescript.plugin.lang.RuneScript
 
 object RsElementGenerator {
 
+    fun createIntegerLiteral(project: Project, replacement: String): PsiElement {
+        val element = createDummyFile(project, "[proc,dummy]()()$replacement;")
+        val literal = PsiTreeUtil.findChildOfType(element, RsIntegerLiteralExpression::class.java) as RsIntegerLiteralExpression
+        return literal.node.firstChildNode.psi!!
+    }
+
     fun createColorTag(project: Project, color: Int, tagName: String = "col"): PsiElement {
         val element = createDummyFile(project, "[proc,dummy]()()\"<$tagName=%06x>\";".format(color and 0xffffff))
         val literal = PsiTreeUtil.findChildOfType(element, RsStringLiteralExpression::class.java) as RsStringLiteralExpression
