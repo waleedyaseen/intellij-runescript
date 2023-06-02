@@ -38,6 +38,7 @@
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
+        <colorProvider implementation="io.runescript.plugin.ide.RsElementColorProvider"/>
 
         <!-- Formatter -->
         <lang.formatter language="RuneScript" implementationClass="io.runescript.plugin.ide.formatter.RsFormatter"/>
