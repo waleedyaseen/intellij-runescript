@@ -8,6 +8,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.observable.properties.GraphProperty
 import com.intellij.openapi.observable.properties.PropertyGraph
+import com.intellij.openapi.projectRoots.SdkTypeId
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider
 import com.intellij.openapi.ui.DialogPanel
@@ -16,6 +17,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.ui.dsl.builder.*
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.sdk.RsSdkType
 import java.util.function.Supplier
 import javax.swing.JComponent
 
@@ -45,6 +47,10 @@ class RsModuleBuilder : ModuleBuilder() {
         val projectDir = contentEntry?.file ?: return
         val module = modifiableRootModel.module
         RsProjectTemplate().generateTemplate(module, contentEntry, projectDir)
+    }
+
+    override fun isSuitableSdkType(sdkType: SdkTypeId?): Boolean {
+        return sdkType == RsSdkType.find()
     }
 
     enum class RsModuleBackendType(val messagePointer: Supplier<String>) {

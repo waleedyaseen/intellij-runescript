@@ -42,6 +42,8 @@
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
+        <sdkType implementation="io.runescript.plugin.ide.sdk.RsSdkType"/>
+        <projectSdkSetupValidator implementation="io.runescript.plugin.ide.sdk.RsSdkSetupValidator"/>
         <colorProvider implementation="io.runescript.plugin.ide.RsElementColorProvider"/>
 
         <!-- Formatter -->
