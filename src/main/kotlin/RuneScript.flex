@@ -36,7 +36,7 @@ DECIMAL_DIGIT = [0-9]
 HEX_DIGIT = [0-9a-fA-F]
 HEX_INTEGER = 0[xX]({HEX_DIGIT})+
 DECIMAL_INTEGER = ({DECIMAL_DIGIT})+
-INTEGER = ({DECIMAL_INTEGER})|({HEX_INTEGER})
+INTEGER = ([-+]?)(({DECIMAL_INTEGER})|({HEX_INTEGER}))
 STRING_PART = [^\"\r\n<]+
 COLOR_TAG = "<"(shad|col|str|u)"="([0-9a-fA-F]+)">"
 OTHER_TAG = "<"(str|u|br)">"
