@@ -1,6 +1,7 @@
 package io.runescript.plugin.lang.psi
 
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.PsiFileFactoryImpl
@@ -9,8 +10,13 @@ import com.intellij.testFramework.LightVirtualFile
 import io.runescript.plugin.ide.filetypes.Cs2FileType
 import io.runescript.plugin.lang.RuneScript
 
-
 object RsElementGenerator {
+
+    fun createColorTag(project: Project, color: Int, tagName: String = "col"): PsiElement {
+        val element = createDummyFile(project, "[proc,dummy]()()\"<$tagName=%06x>\";".format(color and 0xffffff))
+        val literal = PsiTreeUtil.findChildOfType(element, RsStringLiteralExpression::class.java) as RsStringLiteralExpression
+        return literal.node.findChildByType(RsElementTypes.STRING_TAG)!!.psi
+    }
 
     fun createScript(project: Project, text: String): RsScript {
         val element = createDummyFile(project, text)
