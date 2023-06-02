@@ -27,6 +27,7 @@ object RsSyntaxHighlighterColors {
     private const val RUNESCRIPT_SCRIPT_DECLARATION = "RUNESCRIPT_SCRIPT_DECLARATION"
     private const val RUNESCRIPT_COMMAND_CALL = "RUNESCRIPT_COMMAND_CALL"
     private const val RUNESCRIPT_PROC_CALL = "RUNESCRIPT_PROC_CALL"
+    private const val RUNESCRIPT_SCOPED_VARIABLE = "RUNESCRIPT_SCOPED_VARIABLE"
 
     // Lexer based attributes
     val IDENTIFIER = createTextAttributesKey(RUNESCRIPT_IDENTIFIER, DefaultLanguageHighlighterColors.IDENTIFIER)
@@ -35,7 +36,7 @@ object RsSyntaxHighlighterColors {
     val TYPE_LITERAL = createTextAttributesKey(RUNESCRIPT_TYPE_LITERAL, DefaultLanguageHighlighterColors.KEYWORD)
     val ARRAY_TYPE_LITERAL = createTextAttributesKey(RUNESCRIPT_ARRAY_TYPE_LITERAL, DefaultLanguageHighlighterColors.KEYWORD)
     val STRING = createTextAttributesKey(RUNESCRIPT_STRING, DefaultLanguageHighlighterColors.STRING)
-    val STRING_TAG = createTextAttributesKey(RUNESCRIPT_STRING_TAG, DefaultLanguageHighlighterColors.STRING)
+    val STRING_TAG = createTextAttributesKey(RUNESCRIPT_STRING_TAG, DefaultLanguageHighlighterColors.MARKUP_ENTITY)
     val BLOCK_COMMENT = createTextAttributesKey(RUNESCRIPT_BLOCK_COMMENT, DefaultLanguageHighlighterColors.BLOCK_COMMENT)
     val LINE_COMMENT = createTextAttributesKey(RUNESCRIPT_LINE_COMMENT, DefaultLanguageHighlighterColors.LINE_COMMENT)
     val OPERATION_SIGN = createTextAttributesKey(RUNESCRIPT_OPERATION_SIGN, DefaultLanguageHighlighterColors.OPERATION_SIGN)
@@ -47,7 +48,8 @@ object RsSyntaxHighlighterColors {
 
     // Parser based attributes
     val SCRIPT_DECLARATION = createTextAttributesKey(RUNESCRIPT_SCRIPT_DECLARATION, DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
-    val LOCAL_VARIABLE = createTextAttributesKey(RUNESCRIPT_LOCAL_VARIABLE, DefaultLanguageHighlighterColors.LOCAL_VARIABLE)
-    val COMMAND_CALL = createTextAttributesKey(RUNESCRIPT_COMMAND_CALL, DefaultLanguageHighlighterColors.FUNCTION_CALL)
-    val PROC_CALL = createTextAttributesKey(RUNESCRIPT_PROC_CALL, DefaultLanguageHighlighterColors.FUNCTION_CALL)
+    val LOCAL_VARIABLE = createTextAttributesKey(RUNESCRIPT_LOCAL_VARIABLE, DefaultLanguageHighlighterColors.INSTANCE_FIELD)
+    val COMMAND_CALL = createTextAttributesKey(RUNESCRIPT_COMMAND_CALL, DefaultLanguageHighlighterColors.STATIC_METHOD)
+    val PROC_CALL = createTextAttributesKey(RUNESCRIPT_PROC_CALL, DefaultLanguageHighlighterColors.INSTANCE_METHOD)
+    val SCOPED_VARIABLE = createTextAttributesKey(RUNESCRIPT_SCOPED_VARIABLE, DefaultLanguageHighlighterColors.STATIC_FIELD)
 }

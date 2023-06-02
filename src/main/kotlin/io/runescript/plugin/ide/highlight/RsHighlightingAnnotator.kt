@@ -4,12 +4,15 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoType
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
+import com.intellij.refactoring.suggested.endOffset
+import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.lang.psi.*
 
-class RsHighlightingAnnotator : Annotator{
+class RsHighlightingAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        element.accept(object: RsVisitor() {
+        element.accept(object : RsVisitor() {
 
             override fun visitScriptName(o: RsScriptName) {
                 super.visitScriptName(o)
@@ -23,7 +26,12 @@ class RsHighlightingAnnotator : Annotator{
 
             override fun visitArrayVariableExpression(o: RsArrayVariableExpression) {
                 super.visitArrayVariableExpression(o)
-                element.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
+                o.expressionList[0].highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
+            }
+
+            override fun visitScopedVariableExpression(o: RsScopedVariableExpression) {
+                super.visitScopedVariableExpression(o)
+                element.highlight(holder, RsSyntaxHighlighterColors.SCOPED_VARIABLE)
             }
 
             override fun visitCommandExpression(o: RsCommandExpression) {
@@ -33,14 +41,19 @@ class RsHighlightingAnnotator : Annotator{
 
             override fun visitGosubExpression(o: RsGosubExpression) {
                 super.visitGosubExpression(o)
-                o.nameLiteral.highlight(holder, RsSyntaxHighlighterColors.PROC_CALL)
+                val textRange = TextRange(o.tilde.startOffset, o.nameLiteral.endOffset)
+                textRange.highlight(holder, RsSyntaxHighlighterColors.PROC_CALL)
             }
         })
     }
 
     private fun PsiElement.highlight(holder: AnnotationHolder, attribute: TextAttributesKey) {
+        textRange.highlight(holder, attribute)
+    }
+
+    private fun TextRange.highlight(holder: AnnotationHolder, attribute: TextAttributesKey) {
         holder.newSilentAnnotation(HighlightInfoType.SYMBOL_TYPE_SEVERITY)
-            .range(textRange)
+            .range(this)
             .textAttributes(attribute)
             .create()
     }
