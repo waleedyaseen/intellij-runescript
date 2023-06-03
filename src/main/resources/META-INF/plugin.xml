@@ -70,6 +70,11 @@
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.expressions</categoryKey>
         </intentionAction>
+        <intentionAction>
+            <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsMergeIfAndIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.control.flow</categoryKey>
+        </intentionAction>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">

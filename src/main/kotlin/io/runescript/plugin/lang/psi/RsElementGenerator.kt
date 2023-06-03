@@ -12,6 +12,11 @@ import io.runescript.plugin.lang.RuneScript
 
 object RsElementGenerator {
 
+    fun createConditionExpression(project: Project, expression: String): RsExpression {
+        val element = createDummyFile(project, "[proc,dummy]()()if ($expression){}")
+        return PsiTreeUtil.findChildOfType(element, RsExpression::class.java) as RsExpression
+
+    }
     fun createIntegerLiteral(project: Project, replacement: String): PsiElement {
         val element = createDummyFile(project, "[proc,dummy]()()$replacement;")
         val literal = PsiTreeUtil.findChildOfType(element, RsIntegerLiteralExpression::class.java) as RsIntegerLiteralExpression
