@@ -8,6 +8,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedProcedureInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Unresolved local variable"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedLocalVariableInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unresolved command"
                          enabledByDefault="true"
                          level="ERROR"
