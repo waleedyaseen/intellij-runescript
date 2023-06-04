@@ -8,23 +8,23 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import io.runescript.plugin.lang.stubs.RsParameterListStub;
+import io.runescript.plugin.lang.psi.mixin.RsParameterListMixin;
 import io.runescript.plugin.lang.psi.*;
+import io.runescript.plugin.lang.stubs.RsParameterListStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 
-public class RsParameterListImpl extends StubBasedPsiElementBase<RsParameterListStub> implements RsParameterList {
-
-  public RsParameterListImpl(@NotNull RsParameterListStub stub, @NotNull IStubElementType<?, ?> type) {
-    super(stub, type);
-  }
+public class RsParameterListImpl extends RsParameterListMixin implements RsParameterList {
 
   public RsParameterListImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  public RsParameterListImpl(RsParameterListStub stub, IElementType type, ASTNode node) {
+  public RsParameterListImpl(@NotNull RsParameterListStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
+
+  public RsParameterListImpl(@Nullable RsParameterListStub stub, @Nullable IElementType type, @Nullable ASTNode node) {
     super(stub, type, node);
   }
 

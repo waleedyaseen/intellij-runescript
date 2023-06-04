@@ -63,6 +63,7 @@ Script ::= ScriptHeader StatementList {
 }
 
 ScriptHeader ::= ScriptName ParameterList? ReturnList? {
+    mixin="io.runescript.plugin.lang.psi.mixin.RsScriptHeaderMixin"
     stubClass="io.runescript.plugin.lang.stubs.RsScriptHeaderStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }
@@ -79,6 +80,7 @@ ScriptName ::= '[' NameLiteral ',' NameLiteral ']' {
 }
 
 ParameterList ::= '(' (Parameter (',' Parameter)*)? ')' {
+    mixin="io.runescript.plugin.lang.psi.mixin.RsParameterListMixin"
     stubClass="io.runescript.plugin.lang.stubs.RsParameterListStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }
@@ -97,7 +99,9 @@ TypeName ::= TYPE_LITERAL {
     stubClass="io.runescript.plugin.lang.stubs.RsTypeNameStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }
-StatementList ::= Statement*
+StatementList ::= Statement* {
+    mixin="io.runescript.plugin.lang.psi.mixin.RsStatementListMixin"
+}
 Statement ::= BlockStatement
             | IfStatement
             | WhileStatement
@@ -124,8 +128,12 @@ private SwitchCaseExpressionList ::= SwitchCaseExpression (',' SwitchCaseExpress
 private SwitchCaseExpression ::= Expression | DEFAULT
 ReturnStatement ::= RETURN ('(' ExpressionList? ')')? ';'
 LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' Expression)? ';' {
-    methods=[getNameExpression]
+    mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableDeclarationStatementMixin"
+    methods=[
+        getNameExpression
+    ]
 }
+
 LocalVariableAssignmentStatement ::= LocalVariableExpression '=' Expression ';'
 ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';'
 ArrayVariableAssignmentStatement ::= LocalVariableExpression '(' Expression ')' '=' Expression ';'

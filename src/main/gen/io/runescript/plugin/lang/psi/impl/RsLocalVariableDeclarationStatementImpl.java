@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
+import io.runescript.plugin.lang.psi.mixin.RsLocalVariableDeclarationStatementMixin;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsLocalVariableDeclarationStatementImpl extends RsStatementImpl implements RsLocalVariableDeclarationStatement {
+public class RsLocalVariableDeclarationStatementImpl extends RsLocalVariableDeclarationStatementMixin implements RsLocalVariableDeclarationStatement {
 
   public RsLocalVariableDeclarationStatementImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull RsVisitor visitor) {
     visitor.visitLocalVariableDeclarationStatement(this);
   }

@@ -3,6 +3,9 @@ package io.runescript.plugin.lang.psi.mixin
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
 import com.intellij.navigation.ItemPresentation
+import com.intellij.psi.PsiElement
+import com.intellij.psi.ResolveState
+import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.CachedValueProvider
@@ -25,6 +28,13 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
             val controlFlow = RsControlFlow(result.instructions)
             CachedValueProvider.Result(controlFlow, this)
         }
+
+    override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
+        if (!scriptHeader.processDeclarations(processor, state, lastParent, place)) {
+            return false
+        }
+        return true
+    }
 
     override fun getPresentation(): ItemPresentation? {
         return scriptHeader.scriptName.presentation
