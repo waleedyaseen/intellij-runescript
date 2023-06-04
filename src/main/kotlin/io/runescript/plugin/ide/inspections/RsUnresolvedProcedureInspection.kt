@@ -6,31 +6,18 @@ import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.text.HtmlChunk.body
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.findParentOfType
 import io.runescript.plugin.ide.RsBundle
-import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsVisitor
 
-
-class RsUnresolvedReferenceInspection : LocalInspectionTool() {
+class RsUnresolvedProcedureInspection : LocalInspectionTool() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {
-            override fun visitCommandExpression(o: RsCommandExpression) {
-                val resolvedCommand = o.reference!!.resolve()
-                if (resolvedCommand == null) {
-                    holder.registerProblem(o.nameLiteral,
-                            RsBundle.message("inspection.error.unresolved.command", o.nameLiteral.text),
-                            ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
-                            RsUnresolvedReferenceQuickFix(o.nameLiteral.text)
-                    )
-                }
-            }
             override fun visitGosubExpression(o: RsGosubExpression) {
                 val resolvedGosub = o.reference!!.resolve()
                 if (resolvedGosub == null) {

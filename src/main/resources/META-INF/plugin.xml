@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>me.waleedyaseen.runescript-plugin</id>
     <name>RuneScript</name>
     <description><![CDATA[
@@ -6,6 +6,7 @@
 ]]></description>
     <vendor></vendor>
     <depends>com.intellij.modules.platform</depends>
+    <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
@@ -51,21 +52,8 @@
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
         <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
-
         <!-- Inspections -->
-        <localInspection language="RuneScript"
-                         groupName="RuneScript"
-                         displayName="Unresolved reference"
-                         enabledByDefault="true"
-                         level="ERROR"
-                         implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedReferenceInspection"/>
-        <localInspection language="RuneScript"
-                         groupName="RuneScript"
-                         displayName="Unreachable code"
-                         enabledByDefault="true"
-                         level="WARNING"
-                         implementationClass="io.runescript.plugin.ide.inspections.RsUnreachableCodeInspection"/>
-        <intentionAction>
+      <intentionAction>
             <className>io.runescript.plugin.ide.codeInsight.intention.RsNumberConversionIntention</className>
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.expressions</categoryKey>
