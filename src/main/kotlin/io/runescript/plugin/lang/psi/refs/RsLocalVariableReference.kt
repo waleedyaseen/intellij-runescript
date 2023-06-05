@@ -14,7 +14,7 @@ class RsLocalVariableReference(element: RsLocalVariableExpression) :
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val resolver = RsLocalVariableResolver(element.variableName)
+        val resolver = RsLocalVariableResolver(element.name!!)
         RsScopesUtil.walkUpScopes(resolver, ResolveState.initial(), element)
         return resolver.declaration?.let {
             arrayOf(PsiElementResolveResult(it))
@@ -22,7 +22,7 @@ class RsLocalVariableReference(element: RsLocalVariableExpression) :
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        element.variableName = newElementName
+        element.setName(newElementName)
         return element
     }
 }

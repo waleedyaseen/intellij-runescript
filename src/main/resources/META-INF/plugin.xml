@@ -28,7 +28,7 @@
         <internalFileTemplate name="ClientScript"/>
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
         <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RsReferenceContributor"/>
-        <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.lang.psi.refs.RsFindUsagesProvider"/>
+        <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
@@ -52,8 +52,7 @@
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
         <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
-        <!-- Inspections -->
-      <intentionAction>
+        <intentionAction>
             <className>io.runescript.plugin.ide.codeInsight.intention.RsNumberConversionIntention</className>
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.expressions</categoryKey>

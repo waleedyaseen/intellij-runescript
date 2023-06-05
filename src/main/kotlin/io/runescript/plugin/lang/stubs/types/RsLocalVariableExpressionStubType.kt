@@ -21,7 +21,7 @@ object RsLocalVariableExpressionStubType : RsStubType<RsLocalVariableExpressionS
     }
 
     override fun createStub(psi: RsLocalVariableExpression, parentStub: StubElement<out PsiElement>?): RsLocalVariableExpressionStub {
-        return RsLocalVariableExpressionStub(parentStub, this, psi.variableName)
+        return RsLocalVariableExpressionStub(parentStub, this, psi.name!!)
     }
 
     override fun createPsi(stub: RsLocalVariableExpressionStub): RsLocalVariableExpression {

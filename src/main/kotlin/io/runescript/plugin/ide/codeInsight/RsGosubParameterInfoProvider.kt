@@ -132,7 +132,7 @@ data class CallInfo(
 
         fun of(parameters: List<RsParameter>) = CallInfo(parameters.map {
             val typeName = it.arrayTypeLiteral?.text ?: it.typeName?.text ?: "unknown"
-            val parameterName = it.localVariableExpression.variableName
+            val parameterName = it.localVariableExpression.name!!
             CallParameterInfo(typeName, parameterName)
         })
     }

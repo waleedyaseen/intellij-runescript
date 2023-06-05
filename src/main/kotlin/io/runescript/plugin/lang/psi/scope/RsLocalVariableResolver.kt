@@ -11,7 +11,7 @@ class RsLocalVariableResolver(private val name: String) : PsiScopeProcessor {
 
     override fun execute(element: PsiElement, state: ResolveState): Boolean {
         if (element is RsLocalVariableExpression) {
-            if (element.variableName == name) {
+            if (element.name == name) {
                 declaration = element
                 return false
             }

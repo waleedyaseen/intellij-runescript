@@ -101,6 +101,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitLocalVariableExpression(@NotNull RsLocalVariableExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitNameLiteral(@NotNull RsNameLiteral o) {

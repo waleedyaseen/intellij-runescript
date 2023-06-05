@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 import io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub;
 
-public interface RsLocalVariableExpression extends RsExpression, StubBasedPsiElement<RsLocalVariableExpressionStub> {
+public interface RsLocalVariableExpression extends RsExpression, RsNamedElement, StubBasedPsiElement<RsLocalVariableExpressionStub> {
 
   @NotNull
   RsNameLiteral getNameLiteral();
@@ -15,11 +15,11 @@ public interface RsLocalVariableExpression extends RsExpression, StubBasedPsiEle
   @NotNull
   PsiElement getDollar();
 
-  @NotNull
-  String getVariableName();
+  @Nullable
+  String getName();
 
   @NotNull
-  PsiElement setVariableName(@NotNull String newName);
+  PsiElement setName(@NotNull String newName);
 
   @NotNull
   PsiElement getNameIdentifier();

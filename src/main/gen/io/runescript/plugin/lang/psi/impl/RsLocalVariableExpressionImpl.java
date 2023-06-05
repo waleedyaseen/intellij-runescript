@@ -51,15 +51,15 @@ public class RsLocalVariableExpressionImpl extends RsLocalVariableExpressionMixi
   }
 
   @Override
-  @NotNull
-  public String getVariableName() {
-    return RsPsiImplUtil.getVariableName(this);
+  @Nullable
+  public String getName() {
+    return RsPsiImplUtil.getName(this);
   }
 
   @Override
   @NotNull
-  public PsiElement setVariableName(@NotNull String newName) {
-    return RsPsiImplUtil.setVariableName(this, newName);
+  public PsiElement setName(@NotNull String newName) {
+    return RsPsiImplUtil.setName(this, newName);
   }
 
   @Override

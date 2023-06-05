@@ -217,7 +217,8 @@ LocalVariableExpression ::= '$' NameLiteral {
     mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableExpressionMixin"
     stubClass="io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
-    methods=[getVariableName setVariableName getNameIdentifier]
+    implements="io.runescript.plugin.lang.psi.RsNamedElement"
+    methods=[getName setName getNameIdentifier]
 }
 
 ArrayVariableExpression ::= LocalVariableExpression '(' Expression ')'
