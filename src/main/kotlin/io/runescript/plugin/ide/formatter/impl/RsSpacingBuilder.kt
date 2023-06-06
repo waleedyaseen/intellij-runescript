@@ -39,10 +39,8 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         if (child1.isAdditiveOperator() || child2.isAdditiveOperator()) {
             return spaceIf(settings.SPACE_AROUND_ADDITIVE_OPERATORS)
         }
-        if (elementType == LOCAL_VARIABLE_ASSIGNMENT_STATEMENT
-                || elementType == LOCAL_VARIABLE_DECLARATION_STATEMENT
-                || elementType == ARRAY_VARIABLE_ASSIGNMENT_STATEMENT
-                || elementType == SCOPED_VARIABLE_ASSIGNMENT_STATEMENT) {
+        if (elementType == ASSIGNMENT_STATEMENT
+                || elementType == LOCAL_VARIABLE_DECLARATION_STATEMENT) {
             if (type1 == EQUAL || type2 == EQUAL) {
                 return spaceIf(settings.SPACE_AROUND_ASSIGNMENT_OPERATORS)
             }
@@ -56,9 +54,9 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         if (type1 == SEMICOLON) {
             return spaceIf(settings.SPACE_AFTER_SEMICOLON)
         }
-        if (elementType == ARRAY_VARIABLE_ASSIGNMENT_STATEMENT
+        if ((elementType == ASSIGNMENT_STATEMENT &&  false /* was ARRAY_ASSIGNMENT_STATEMENT */)
                 || elementType == ARRAY_VARIABLE_DECLARATION_STATEMENT
-                || elementType == ARRAY_VARIABLE_EXPRESSION) {
+                || elementType == ARRAY_ACCESS_EXPRESSION) {
             if (type1 == LPAREN || type2 == RPAREN) {
                 return spaceIf(rsSettings.SPACE_WITHIN_ARRAY_BOUNDS)
             }

@@ -51,12 +51,6 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addVariableDefinition(o)
         }
 
-        override fun visitLocalVariableAssignmentStatement(o: RsLocalVariableAssignmentStatement) {
-            o.expressionList[1].accept(this)
-            o.expressionList[0].accept(this)
-            addInstruction(o)
-        }
-
         override fun visitLocalVariableExpression(o: RsLocalVariableExpression) {
             o.nameLiteral.accept(this)
             addInstruction(o)
@@ -68,21 +62,14 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
-        override fun visitArrayVariableAssignmentStatement(o: RsArrayVariableAssignmentStatement) {
+        override fun visitAssignmentStatement(o: RsAssignmentStatement) {
             o.expressionList[1].accept(this)
             o.expressionList[0].accept(this)
             addInstruction(o)
         }
 
-        override fun visitArrayVariableExpression(o: RsArrayVariableExpression) {
-            o.expressionList[1].accept(this)
+        override fun visitArrayAccessExpression(o: RsArrayAccessExpression) {
             o.expressionList[0].accept(this)
-        }
-
-        override fun visitScopedVariableAssignmentStatement(o: RsScopedVariableAssignmentStatement) {
-            o.expressionList[0].accept(this)
-            o.expressionList[1].accept(this)
-            addInstruction(o)
         }
 
         override fun visitScopedVariableExpression(o: RsScopedVariableExpression) {

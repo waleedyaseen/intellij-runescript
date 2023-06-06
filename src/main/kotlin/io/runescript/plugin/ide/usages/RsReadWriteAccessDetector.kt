@@ -6,17 +6,14 @@ import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
-import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.lang.lexer.RsLexerAdapter
-import io.runescript.plugin.lang.lexer.RsLexerInfo
-import io.runescript.plugin.lang.psi.RsArrayVariableAssignmentStatement
-import io.runescript.plugin.lang.psi.RsElementTypes
-import io.runescript.plugin.lang.psi.RsLocalVariableAssignmentStatement
+import io.runescript.plugin.lang.psi.RsAssignmentStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
-import io.runescript.plugin.lang.psi.RsTokenTypesSets
 
 class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
+
+    // TODO(Walied): Add array variable support and do not assume declaration
+    //  without initializer are write accesses.
 
     override fun isReadWriteAccessible(element: PsiElement): Boolean {
         return element is RsLocalVariableExpression
@@ -25,10 +22,7 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
     override fun isDeclarationWriteAccess(element: PsiElement): Boolean {
         require(element is RsLocalVariableExpression)
         val parent = element.parent
-        if (element is RsLocalVariableAssignmentStatement || parent is RsLocalVariableDeclarationStatement) {
-            return true
-        }
-        return false
+        return element is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement
     }
 
     override fun getReferenceAccess(referencedElement: PsiElement, reference: PsiReference): Access {
@@ -38,7 +32,7 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
     override fun getExpressionAccess(expression: PsiElement): Access {
         require(expression is RsLocalVariableExpression)
         val parent = expression.parent
-        if (parent is RsLocalVariableAssignmentStatement || parent is RsLocalVariableDeclarationStatement) {
+        if (parent is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement) {
             return Access.Write
         }
         return Access.Read

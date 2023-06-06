@@ -13,9 +13,9 @@ public interface RsElementTypes {
   IElementType ARITHMETIC_EXPRESSION = new RsElementType("ARITHMETIC_EXPRESSION");
   IElementType ARITHMETIC_OP = new RsElementType("ARITHMETIC_OP");
   IElementType ARITHMETIC_VALUE_EXPRESSION = new RsElementType("ARITHMETIC_VALUE_EXPRESSION");
-  IElementType ARRAY_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("ARRAY_VARIABLE_ASSIGNMENT_STATEMENT");
+  IElementType ARRAY_ACCESS_EXPRESSION = new RsElementType("ARRAY_ACCESS_EXPRESSION");
   IElementType ARRAY_VARIABLE_DECLARATION_STATEMENT = new RsElementType("ARRAY_VARIABLE_DECLARATION_STATEMENT");
-  IElementType ARRAY_VARIABLE_EXPRESSION = new RsElementType("ARRAY_VARIABLE_EXPRESSION");
+  IElementType ASSIGNMENT_STATEMENT = new RsElementType("ASSIGNMENT_STATEMENT");
   IElementType BLOCK_STATEMENT = new RsElementType("BLOCK_STATEMENT");
   IElementType BOOLEAN_LITERAL_EXPRESSION = new RsElementType("BOOLEAN_LITERAL_EXPRESSION");
   IElementType CALC_EXPRESSION = new RsElementType("CALC_EXPRESSION");
@@ -29,7 +29,6 @@ public interface RsElementTypes {
   IElementType GOSUB_EXPRESSION = new RsElementType("GOSUB_EXPRESSION");
   IElementType IF_STATEMENT = new RsElementType("IF_STATEMENT");
   IElementType INTEGER_LITERAL_EXPRESSION = new RsElementType("INTEGER_LITERAL_EXPRESSION");
-  IElementType LOCAL_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("LOCAL_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new RsElementType("LOCAL_VARIABLE_DECLARATION_STATEMENT");
   IElementType LOCAL_VARIABLE_EXPRESSION = StubElementTypeFactory.create("LOCAL_VARIABLE_EXPRESSION");
   IElementType NAME_LITERAL = StubElementTypeFactory.create("NAME_LITERAL");
@@ -40,7 +39,6 @@ public interface RsElementTypes {
   IElementType RELATIONAL_VALUE_EXPRESSION = new RsElementType("RELATIONAL_VALUE_EXPRESSION");
   IElementType RETURN_LIST = StubElementTypeFactory.create("RETURN_LIST");
   IElementType RETURN_STATEMENT = new RsElementType("RETURN_STATEMENT");
-  IElementType SCOPED_VARIABLE_ASSIGNMENT_STATEMENT = new RsElementType("SCOPED_VARIABLE_ASSIGNMENT_STATEMENT");
   IElementType SCOPED_VARIABLE_EXPRESSION = new RsElementType("SCOPED_VARIABLE_EXPRESSION");
   IElementType SCRIPT = StubElementTypeFactory.create("SCRIPT");
   IElementType SCRIPT_HEADER = StubElementTypeFactory.create("SCRIPT_HEADER");
@@ -117,14 +115,14 @@ public interface RsElementTypes {
       else if (type == ARITHMETIC_VALUE_EXPRESSION) {
         return new RsArithmeticValueExpressionImpl(node);
       }
-      else if (type == ARRAY_VARIABLE_ASSIGNMENT_STATEMENT) {
-        return new RsArrayVariableAssignmentStatementImpl(node);
+      else if (type == ARRAY_ACCESS_EXPRESSION) {
+        return new RsArrayAccessExpressionImpl(node);
       }
       else if (type == ARRAY_VARIABLE_DECLARATION_STATEMENT) {
         return new RsArrayVariableDeclarationStatementImpl(node);
       }
-      else if (type == ARRAY_VARIABLE_EXPRESSION) {
-        return new RsArrayVariableExpressionImpl(node);
+      else if (type == ASSIGNMENT_STATEMENT) {
+        return new RsAssignmentStatementImpl(node);
       }
       else if (type == BLOCK_STATEMENT) {
         return new RsBlockStatementImpl(node);
@@ -162,9 +160,6 @@ public interface RsElementTypes {
       else if (type == INTEGER_LITERAL_EXPRESSION) {
         return new RsIntegerLiteralExpressionImpl(node);
       }
-      else if (type == LOCAL_VARIABLE_ASSIGNMENT_STATEMENT) {
-        return new RsLocalVariableAssignmentStatementImpl(node);
-      }
       else if (type == LOCAL_VARIABLE_DECLARATION_STATEMENT) {
         return new RsLocalVariableDeclarationStatementImpl(node);
       }
@@ -194,9 +189,6 @@ public interface RsElementTypes {
       }
       else if (type == RETURN_STATEMENT) {
         return new RsReturnStatementImpl(node);
-      }
-      else if (type == SCOPED_VARIABLE_ASSIGNMENT_STATEMENT) {
-        return new RsScopedVariableAssignmentStatementImpl(node);
       }
       else if (type == SCOPED_VARIABLE_EXPRESSION) {
         return new RsScopedVariableExpressionImpl(node);

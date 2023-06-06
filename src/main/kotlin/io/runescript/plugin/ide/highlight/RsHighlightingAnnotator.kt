@@ -24,8 +24,7 @@ class RsHighlightingAnnotator : Annotator {
                 element.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
             }
 
-            override fun visitArrayVariableExpression(o: RsArrayVariableExpression) {
-                super.visitArrayVariableExpression(o)
+            override fun visitArrayAccessExpression(o: RsArrayAccessExpression) {
                 o.expressionList[0].highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
             }
 

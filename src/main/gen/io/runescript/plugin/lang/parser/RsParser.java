@@ -36,10 +36,10 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(ARRAY_VARIABLE_ASSIGNMENT_STATEMENT, ARRAY_VARIABLE_DECLARATION_STATEMENT, BLOCK_STATEMENT, EXPRESSION_STATEMENT,
-      IF_STATEMENT, LOCAL_VARIABLE_ASSIGNMENT_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT,
-      SCOPED_VARIABLE_ASSIGNMENT_STATEMENT, STATEMENT, SWITCH_STATEMENT, WHILE_STATEMENT),
-    create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_VARIABLE_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
+    create_token_set_(ARRAY_VARIABLE_DECLARATION_STATEMENT, ASSIGNMENT_STATEMENT, BLOCK_STATEMENT, EXPRESSION_STATEMENT,
+      IF_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT, STATEMENT,
+      SWITCH_STATEMENT, WHILE_STATEMENT),
+    create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_ACCESS_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
       CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
       DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION,
       LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION,
@@ -285,18 +285,16 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression '(' Expression ')' '=' Expression ';'
-  public static boolean ArrayVariableAssignmentStatement(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ArrayVariableAssignmentStatement")) return false;
-    if (!nextTokenIs(b, "<Statement>", DOLLAR)) return false;
+  // LocalVariableExpression '(' Expression ')'
+  public static boolean ArrayAccessExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArrayAccessExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", DOLLAR)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, ARRAY_VARIABLE_ASSIGNMENT_STATEMENT, "<Statement>");
+    Marker m = enter_section_(b, l, _NONE_, ARRAY_ACCESS_EXPRESSION, "<Expression>");
     r = LocalVariableExpression(b, l + 1);
     r = r && consumeToken(b, LPAREN);
     r = r && Expression(b, l + 1);
-    r = r && consumeTokens(b, 0, RPAREN, EQUAL);
-    r = r && Expression(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
+    r = r && consumeToken(b, RPAREN);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -318,16 +316,30 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression '(' Expression ')'
-  public static boolean ArrayVariableExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ArrayVariableExpression")) return false;
-    if (!nextTokenIs(b, "<Expression>", DOLLAR)) return false;
+  // LocalVariableExpression | ScopedVariableExpression | ArrayAccessExpression
+  static boolean AssignableExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssignableExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", DOLLAR, PERCENT)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, ARRAY_VARIABLE_EXPRESSION, "<Expression>");
+    Marker m = enter_section_(b, l, _NONE_, null, "<Expression>");
     r = LocalVariableExpression(b, l + 1);
-    r = r && consumeToken(b, LPAREN);
+    if (!r) r = ScopedVariableExpression(b, l + 1);
+    if (!r) r = ArrayAccessExpression(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // AssignableExpression '=' Expression ';'
+  public static boolean AssignmentStatement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssignmentStatement")) return false;
+    if (!nextTokenIs(b, "<Statement>", DOLLAR, PERCENT)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, ASSIGNMENT_STATEMENT, "<Statement>");
+    r = AssignableExpression(b, l + 1);
+    r = r && consumeToken(b, EQUAL);
     r = r && Expression(b, l + 1);
-    r = r && consumeToken(b, RPAREN);
+    r = r && consumeToken(b, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -465,7 +477,7 @@ public class RsParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // ParExpression
-  //              | ArrayVariableExpression
+  //              | ArrayAccessExpression
   //              | LocalVariableExpression
   //              | ScopedVariableExpression
   //              | LiteralExpression
@@ -479,7 +491,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _COLLAPSE_, EXPRESSION, "<Expression>");
     r = ParExpression(b, l + 1);
-    if (!r) r = ArrayVariableExpression(b, l + 1);
+    if (!r) r = ArrayAccessExpression(b, l + 1);
     if (!r) r = LocalVariableExpression(b, l + 1);
     if (!r) r = ScopedVariableExpression(b, l + 1);
     if (!r) r = LiteralExpression(b, l + 1);
@@ -630,21 +642,6 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = BooleanLiteralExpression(b, l + 1);
     if (!r) r = NullLiteralExpression(b, l + 1);
     if (!r) r = StringLiteralExpression(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // LocalVariableExpression '=' Expression ';'
-  public static boolean LocalVariableAssignmentStatement(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "LocalVariableAssignmentStatement")) return false;
-    if (!nextTokenIs(b, "<Statement>", DOLLAR)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, LOCAL_VARIABLE_ASSIGNMENT_STATEMENT, "<Statement>");
-    r = LocalVariableExpression(b, l + 1);
-    r = r && consumeToken(b, EQUAL);
-    r = r && Expression(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1032,21 +1029,6 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ScopedVariableExpression '=' Expression ';'
-  public static boolean ScopedVariableAssignmentStatement(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ScopedVariableAssignmentStatement")) return false;
-    if (!nextTokenIs(b, "<Statement>", PERCENT)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SCOPED_VARIABLE_ASSIGNMENT_STATEMENT, "<Statement>");
-    r = ScopedVariableExpression(b, l + 1);
-    r = r && consumeToken(b, EQUAL);
-    r = r && Expression(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
   // '%' NameLiteral
   public static boolean ScopedVariableExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ScopedVariableExpression")) return false;
@@ -1123,10 +1105,8 @@ public class RsParser implements PsiParser, LightPsiParser {
   //             | SwitchStatement
   //             | ReturnStatement
   //             | LocalVariableDeclarationStatement
-  //             | LocalVariableAssignmentStatement
   //             | ArrayVariableDeclarationStatement
-  //             | ArrayVariableAssignmentStatement
-  //             | ScopedVariableAssignmentStatement
+  //             | AssignmentStatement
   //             | ExpressionStatement
   public static boolean Statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Statement")) return false;
@@ -1138,10 +1118,8 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = SwitchStatement(b, l + 1);
     if (!r) r = ReturnStatement(b, l + 1);
     if (!r) r = LocalVariableDeclarationStatement(b, l + 1);
-    if (!r) r = LocalVariableAssignmentStatement(b, l + 1);
     if (!r) r = ArrayVariableDeclarationStatement(b, l + 1);
-    if (!r) r = ArrayVariableAssignmentStatement(b, l + 1);
-    if (!r) r = ScopedVariableAssignmentStatement(b, l + 1);
+    if (!r) r = AssignmentStatement(b, l + 1);
     if (!r) r = ExpressionStatement(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;

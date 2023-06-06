@@ -25,16 +25,16 @@ public class RsVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitArrayVariableAssignmentStatement(@NotNull RsArrayVariableAssignmentStatement o) {
-    visitStatement(o);
+  public void visitArrayAccessExpression(@NotNull RsArrayAccessExpression o) {
+    visitExpression(o);
   }
 
   public void visitArrayVariableDeclarationStatement(@NotNull RsArrayVariableDeclarationStatement o) {
     visitStatement(o);
   }
 
-  public void visitArrayVariableExpression(@NotNull RsArrayVariableExpression o) {
-    visitExpression(o);
+  public void visitAssignmentStatement(@NotNull RsAssignmentStatement o) {
+    visitStatement(o);
   }
 
   public void visitBlockStatement(@NotNull RsBlockStatement o) {
@@ -91,10 +91,6 @@ public class RsVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitLocalVariableAssignmentStatement(@NotNull RsLocalVariableAssignmentStatement o) {
-    visitStatement(o);
-  }
-
   public void visitLocalVariableDeclarationStatement(@NotNull RsLocalVariableDeclarationStatement o) {
     visitStatement(o);
   }
@@ -133,10 +129,6 @@ public class RsVisitor extends PsiElementVisitor {
   }
 
   public void visitReturnStatement(@NotNull RsReturnStatement o) {
-    visitStatement(o);
-  }
-
-  public void visitScopedVariableAssignmentStatement(@NotNull RsScopedVariableAssignmentStatement o) {
     visitStatement(o);
   }
 

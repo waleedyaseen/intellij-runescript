@@ -21,7 +21,4 @@ public interface RsLocalVariableExpression extends RsExpression, RsNamedElement,
   @NotNull
   PsiElement setName(@NotNull String newName);
 
-  @NotNull
-  PsiElement getNameIdentifier();
-
 }

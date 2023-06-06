@@ -5,15 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsArrayVariableExpression extends RsExpression {
+public interface RsAssignmentStatement extends RsStatement {
 
   @NotNull
   List<RsExpression> getExpressionList();
 
   @NotNull
-  PsiElement getLparen();
+  PsiElement getEqual();
 
   @NotNull
-  PsiElement getRparen();
+  PsiElement getSemicolon();
 
 }

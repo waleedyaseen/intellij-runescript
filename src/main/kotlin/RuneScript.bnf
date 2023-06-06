@@ -108,10 +108,8 @@ Statement ::= BlockStatement
             | SwitchStatement
             | ReturnStatement
             | LocalVariableDeclarationStatement
-            | LocalVariableAssignmentStatement
             | ArrayVariableDeclarationStatement
-            | ArrayVariableAssignmentStatement
-            | ScopedVariableAssignmentStatement
+            | AssignmentStatement
             | ExpressionStatement
 
 BlockStatement ::= '{' StatementList '}'
@@ -133,11 +131,9 @@ LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' E
         getNameExpression
     ]
 }
-
-LocalVariableAssignmentStatement ::= LocalVariableExpression '=' Expression ';'
 ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';'
-ArrayVariableAssignmentStatement ::= LocalVariableExpression '(' Expression ')' '=' Expression ';'
-ScopedVariableAssignmentStatement ::= ScopedVariableExpression '=' Expression ';'
+AssignmentStatement ::= AssignableExpression '=' Expression ';'
+private AssignableExpression ::= LocalVariableExpression | ScopedVariableExpression | ArrayAccessExpression
 ExpressionStatement ::= Expression ';'
 
 // Arithmetic & Bitwise Expressions
@@ -200,7 +196,7 @@ RelationalValueExpression ::= ('(' LogicalOrWrapper ')') | Expression
 // General Expressions
 
 Expression ::= ParExpression
-             | ArrayVariableExpression
+             | ArrayAccessExpression
              | LocalVariableExpression
              | ScopedVariableExpression
              | LiteralExpression
@@ -218,10 +214,10 @@ LocalVariableExpression ::= '$' NameLiteral {
     stubClass="io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
-    methods=[getName setName getNameIdentifier]
+    methods=[getName setName]
 }
 
-ArrayVariableExpression ::= LocalVariableExpression '(' Expression ')'
+ArrayAccessExpression ::= LocalVariableExpression '(' Expression ')'
 ScopedVariableExpression ::= '%' NameLiteral
 private LiteralExpression ::= IntegerLiteralExpression
                              | BooleanLiteralExpression

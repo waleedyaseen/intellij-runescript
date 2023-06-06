@@ -62,10 +62,4 @@ public class RsLocalVariableExpressionImpl extends RsLocalVariableExpressionMixi
     return RsPsiImplUtil.setName(this, newName);
   }
 
-  @Override
-  @NotNull
-  public PsiElement getNameIdentifier() {
-    return RsPsiImplUtil.getNameIdentifier(this);
-  }
-
 }

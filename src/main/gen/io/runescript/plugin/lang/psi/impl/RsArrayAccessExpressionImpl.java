@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsLocalVariableAssignmentStatementImpl extends RsStatementImpl implements RsLocalVariableAssignmentStatement {
+public class RsArrayAccessExpressionImpl extends RsExpressionImpl implements RsArrayAccessExpression {
 
-  public RsLocalVariableAssignmentStatementImpl(@NotNull ASTNode node) {
+  public RsArrayAccessExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull RsVisitor visitor) {
-    visitor.visitLocalVariableAssignmentStatement(this);
+    visitor.visitArrayAccessExpression(this);
   }
 
   @Override
@@ -35,14 +35,14 @@ public class RsLocalVariableAssignmentStatementImpl extends RsStatementImpl impl
 
   @Override
   @NotNull
-  public PsiElement getEqual() {
-    return notNullChild(findChildByType(EQUAL));
+  public PsiElement getLparen() {
+    return notNullChild(findChildByType(LPAREN));
   }
 
   @Override
   @NotNull
-  public PsiElement getSemicolon() {
-    return notNullChild(findChildByType(SEMICOLON));
+  public PsiElement getRparen() {
+    return notNullChild(findChildByType(RPAREN));
   }
 
 }
