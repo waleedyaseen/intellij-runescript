@@ -386,22 +386,15 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NameLiteral ArgumentList?
+  // NameLiteral ArgumentList
   public static boolean CommandExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, COMMAND_EXPRESSION, "<Expression>");
     r = NameLiteral(b, l + 1);
-    r = r && CommandExpression_1(b, l + 1);
+    r = r && ArgumentList(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  // ArgumentList?
-  private static boolean CommandExpression_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "CommandExpression_1")) return false;
-    ArgumentList(b, l + 1);
-    return true;
   }
 
   /* ********************************************************** */

@@ -8,7 +8,7 @@ import com.intellij.psi.NavigatablePsiElement;
 
 public interface RsCommandExpression extends RsExpression, NavigatablePsiElement {
 
-  @Nullable
+  @NotNull
   RsArgumentList getArgumentList();
 
   @NotNull

@@ -228,7 +228,7 @@ BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
 StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
 StringInterpolationExpression ::= STRING_INTERPOLATION_START Expression STRING_INTERPOLATION_END
-CommandExpression ::= NameLiteral ArgumentList? {
+CommandExpression ::= NameLiteral ArgumentList {
     implements="com.intellij.psi.NavigatablePsiElement"
     mixin=" io.runescript.plugin.lang.psi.mixin.RsCommandExpressionMixin"
 }

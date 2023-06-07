@@ -28,9 +28,9 @@ public class RsCommandExpressionImpl extends  RsCommandExpressionMixin implement
   }
 
   @Override
-  @Nullable
+  @NotNull
   public RsArgumentList getArgumentList() {
-    return PsiTreeUtil.getChildOfType(this, RsArgumentList.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, RsArgumentList.class));
   }
 
   @Override
