@@ -30,7 +30,7 @@ this.lexerInfo =  lexerInfo;
 %type IElementType
 SINGLE_LINE_COMMENT = "//"([^\r\n]*)(\r|\n|\r\n)
 MULTI_LINE_COMMENT = "/*" [^*] ~"*/" | "/*" "*"+ "/"
-IDENTIFIER_PART = [a-zA-Z0-9_+\.]
+IDENTIFIER_PART = [a-zA-Z0-9_+\.:]
 IDENTIFIER = ({IDENTIFIER_PART})+
 DECIMAL_DIGIT = [0-9]
 HEX_DIGIT = [0-9a-fA-F]
@@ -90,6 +90,18 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 "|" { return BAR; }
 "$" { return DOLLAR; }
 
+// Separators
+"^" { return CARET; }
+"{" { return LBRACE; }
+"}" { return RBRACE; }
+"[" { return LBRACKET; }
+"]" { return RBRACKET; }
+"(" { return LPAREN; }
+")" { return RPAREN; }
+"," { return COMMA; }
+":" { return COLON; }
+";" { return SEMICOLON; }
+
 // General
 {IDENTIFIER} {
   CharSequence lexeme = yytext();
@@ -129,18 +141,6 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
   }
   return IDENTIFIER;
 }
-
-// Separators
-"^" { return CARET; }
-"{" { return LBRACE; }
-"}" { return RBRACE; }
-"[" { return LBRACKET; }
-"]" { return RBRACKET; }
-"(" { return LPAREN; }
-")" { return RPAREN; }
-"," { return COMMA; }
-":" { return COLON; }
-";" { return SEMICOLON; }
 
 // Ignored
 [\ \t\r\n] { return TokenType.WHITE_SPACE; }
