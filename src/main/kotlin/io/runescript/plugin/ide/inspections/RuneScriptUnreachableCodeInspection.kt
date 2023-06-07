@@ -11,7 +11,7 @@ import io.runescript.plugin.lang.psi.RsStatement
 import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.controlFlowHolder
 
-class RsUnreachableCodeInspection : LocalInspectionTool() {
+class RuneScriptUnreachableCodeInspection : LocalInspectionTool() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {

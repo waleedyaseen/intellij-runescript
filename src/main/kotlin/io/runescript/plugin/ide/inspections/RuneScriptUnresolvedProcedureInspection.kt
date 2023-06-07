@@ -14,7 +14,7 @@ import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsVisitor
 
-class RsUnresolvedProcedureInspection : LocalInspectionTool() {
+class RuneScriptUnresolvedProcedureInspection : LocalInspectionTool() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {

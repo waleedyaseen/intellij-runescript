@@ -5,24 +5,24 @@
                          displayName="Unresolved procedure"
                          enabledByDefault="true"
                          level="ERROR"
-                         implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedProcedureInspection"/>
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnresolvedProcedureInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
                          displayName="Unresolved local variable"
                          enabledByDefault="true"
                          level="ERROR"
-                         implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedLocalVariableInspection"/>
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnresolvedLocalVariableInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
                          displayName="Unresolved command"
                          enabledByDefault="true"
                          level="ERROR"
-                         implementationClass="io.runescript.plugin.ide.inspections.RsUnresolvedCommandInspection"/>
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnresolvedCommandInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
                          displayName="Unreachable code"
                          enabledByDefault="true"
                          level="WARNING"
-                         implementationClass="io.runescript.plugin.ide.inspections.RsUnreachableCodeInspection"/>
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnreachableCodeInspection"/>
     </extensions>
 </idea-plugin>

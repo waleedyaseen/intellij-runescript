@@ -8,7 +8,7 @@ import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsVisitor
 
-class RsUnresolvedLocalVariableInspection : LocalInspectionTool() {
+class RuneScriptUnresolvedLocalVariableInspection : LocalInspectionTool() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {
