@@ -53,6 +53,7 @@
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
         <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
+        <documentationProvider implementation="io.runescript.plugin.ide.doc.RsDocumentationProvider"/>
         <intentionAction>
             <className>io.runescript.plugin.ide.codeInsight.intention.RsNumberConversionIntention</className>
             <bundleName>messages.RsBundle</bundleName>
