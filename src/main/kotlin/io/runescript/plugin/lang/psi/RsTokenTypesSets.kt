@@ -19,7 +19,8 @@ object RsTokenTypesSets {
         CALC,
         RETURN,
         TRUE,
-        FALSE
+        FALSE,
+        NULL
     )
     val OPERATORS = TokenSet.create(
         PLUS,
