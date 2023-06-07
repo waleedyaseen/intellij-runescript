@@ -94,6 +94,12 @@ public class RsNameLiteralImpl extends StubBasedPsiElementBase<RsNameLiteralStub
 
   @Override
   @Nullable
+  public PsiElement getTypeLiteral() {
+    return findChildByType(TYPE_LITERAL);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getWhile() {
     return findChildByType(WHILE);
   }

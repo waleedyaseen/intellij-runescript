@@ -239,7 +239,7 @@ ArgumentList ::= '(' ExpressionList? ')'
 ConstantExpression ::= '^' NameLiteral
 DynamicExpression ::= NameLiteral
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
-NameLiteral ::= IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE {
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE {
     stubClass="io.runescript.plugin.lang.stubs.RsNameLiteralStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }

@@ -789,13 +789,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER | DEFINE_TYPE | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
   public static boolean NameLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NameLiteral")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, NAME_LITERAL, "<name literal>");
     r = consumeToken(b, IDENTIFIER);
     if (!r) r = consumeToken(b, DEFINE_TYPE);
+    if (!r) r = consumeToken(b, TYPE_LITERAL);
     if (!r) r = consumeToken(b, ARRAY_TYPE_LITERAL);
     if (!r) r = consumeToken(b, WHILE);
     if (!r) r = consumeToken(b, IF);

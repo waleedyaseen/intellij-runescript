@@ -37,6 +37,9 @@ public interface RsNameLiteral extends PsiElement, StubBasedPsiElement<RsNameLit
   PsiElement getTrue();
 
   @Nullable
+  PsiElement getTypeLiteral();
+
+  @Nullable
   PsiElement getWhile();
 
 }
