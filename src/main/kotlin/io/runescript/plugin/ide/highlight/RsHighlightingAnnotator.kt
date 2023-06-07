@@ -19,6 +19,10 @@ class RsHighlightingAnnotator : Annotator {
                 element.highlight(holder, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
             }
 
+            override fun visitConstantExpression(o: RsConstantExpression) {
+                element.highlight(holder, RsSyntaxHighlighterColors.CONSTANT)
+            }
+
             override fun visitLocalVariableExpression(o: RsLocalVariableExpression) {
                 super.visitLocalVariableExpression(o)
                 element.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)

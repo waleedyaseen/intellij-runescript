@@ -23,11 +23,12 @@ object RsSyntaxHighlighterColors {
     const val RUNESCRIPT_BRACKETS = "RUNESCRIPT_BRACKETS"
 
     // Parser based attribute keys
-    private const val RUNESCRIPT_LOCAL_VARIABLE = "RUNESCRIPT_LOCAL_VARIABLE"
     private const val RUNESCRIPT_SCRIPT_DECLARATION = "RUNESCRIPT_SCRIPT_DECLARATION"
+    private const val RUNESCRIPT_CONSTANT = "RUNESCRIPT_CONSTANT"
+    private const val RUNESCRIPT_LOCAL_VARIABLE = "RUNESCRIPT_LOCAL_VARIABLE"
+    private const val RUNESCRIPT_SCOPED_VARIABLE = "RUNESCRIPT_SCOPED_VARIABLE"
     private const val RUNESCRIPT_COMMAND_CALL = "RUNESCRIPT_COMMAND_CALL"
     private const val RUNESCRIPT_PROC_CALL = "RUNESCRIPT_PROC_CALL"
-    private const val RUNESCRIPT_SCOPED_VARIABLE = "RUNESCRIPT_SCOPED_VARIABLE"
 
     // Lexer based attributes
     val IDENTIFIER = createTextAttributesKey(RUNESCRIPT_IDENTIFIER, DefaultLanguageHighlighterColors.IDENTIFIER)
@@ -49,8 +50,9 @@ object RsSyntaxHighlighterColors {
 
     // Parser based attributes
     val SCRIPT_DECLARATION = createTextAttributesKey(RUNESCRIPT_SCRIPT_DECLARATION, DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
+    val CONSTANT = createTextAttributesKey(RUNESCRIPT_CONSTANT, DefaultLanguageHighlighterColors.CONSTANT)
     val LOCAL_VARIABLE = createTextAttributesKey(RUNESCRIPT_LOCAL_VARIABLE, DefaultLanguageHighlighterColors.INSTANCE_FIELD)
+    val SCOPED_VARIABLE = createTextAttributesKey(RUNESCRIPT_SCOPED_VARIABLE, DefaultLanguageHighlighterColors.STATIC_FIELD)
     val COMMAND_CALL = createTextAttributesKey(RUNESCRIPT_COMMAND_CALL, DefaultLanguageHighlighterColors.STATIC_METHOD)
     val PROC_CALL = createTextAttributesKey(RUNESCRIPT_PROC_CALL, DefaultLanguageHighlighterColors.INSTANCE_METHOD)
-    val SCOPED_VARIABLE = createTextAttributesKey(RUNESCRIPT_SCOPED_VARIABLE, DefaultLanguageHighlighterColors.STATIC_FIELD)
 }
