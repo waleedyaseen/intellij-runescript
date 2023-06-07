@@ -9,7 +9,10 @@ import io.runescript.plugin.lang.stubs.RsOpNameLiteralStub;
 
 public interface RsOpNameLiteral extends PsiElement, StubBasedPsiElement<RsOpNameLiteralStub> {
 
-  @NotNull
+  @Nullable
   PsiElement getIdentifier();
+
+  @Nullable
+  PsiElement getTypeLiteral();
 
 }

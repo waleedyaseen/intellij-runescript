@@ -57,7 +57,7 @@ TypeName ::= TYPE_LITERAL {
     stubClass="io.runescript.plugin.lang.stubs.RsOpTypeNameStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
 }
-NameLiteral ::= IDENTIFIER {
+NameLiteral ::= IDENTIFIER | TYPE_LITERAL {
     stubClass="io.runescript.plugin.lang.stubs.RsOpNameLiteralStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.OpStubElementTypeFactory.create"
 }

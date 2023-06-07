@@ -127,7 +127,6 @@ public class RsOpParser implements PsiParser, LightPsiParser {
   // NameLiteral | IntegerValue
   public static boolean AttributeValue(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttributeValue")) return false;
-    if (!nextTokenIs(b, "<attribute value>", IDENTIFIER, INTEGER)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ATTRIBUTE_VALUE, "<attribute value>");
     r = NameLiteral(b, l + 1);
@@ -192,14 +191,15 @@ public class RsOpParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER
+  // IDENTIFIER | TYPE_LITERAL
   public static boolean NameLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NameLiteral")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    if (!nextTokenIs(b, "<name literal>", IDENTIFIER, TYPE_LITERAL)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _NONE_, NAME_LITERAL, "<name literal>");
     r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, NAME_LITERAL, r);
+    if (!r) r = consumeToken(b, TYPE_LITERAL);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

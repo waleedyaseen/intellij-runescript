@@ -39,9 +39,15 @@ public class RsOpNameLiteralImpl extends StubBasedPsiElementBase<RsOpNameLiteral
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getIdentifier() {
-    return notNullChild(findChildByType(IDENTIFIER));
+    return findChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTypeLiteral() {
+    return findChildByType(TYPE_LITERAL);
   }
 
 }
