@@ -45,4 +45,16 @@ public class RsAssignmentStatementImpl extends RsStatementImpl implements RsAssi
     return notNullChild(findChildByType(SEMICOLON));
   }
 
+  @Override
+  @NotNull
+  public List<RsExpression> getLeftExpressions() {
+    return RsPsiImplUtil.getLeftExpressions(this);
+  }
+
+  @Override
+  @NotNull
+  public List<RsExpression> getRightExpressions() {
+    return RsPsiImplUtil.getRightExpressions(this);
+  }
+
 }

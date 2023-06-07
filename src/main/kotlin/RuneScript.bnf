@@ -132,8 +132,13 @@ LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' E
     ]
 }
 ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';'
-AssignmentStatement ::= AssignableExpression '=' Expression ';'
-private AssignableExpression ::= LocalVariableExpression | ScopedVariableExpression | ArrayAccessExpression
+AssignmentStatement ::= AssignableExpression (',' AssignableExpression)* '=' Expression (',' Expression)* ';' {
+    methods=[
+        getLeftExpressions
+        getRightExpressions
+    ]
+}
+private AssignableExpression ::= ArrayAccessExpression | LocalVariableExpression | ScopedVariableExpression
 ExpressionStatement ::= Expression ';'
 
 // Arithmetic & Bitwise Expressions

@@ -1,6 +1,7 @@
 package io.runescript.plugin.lang.psi
 
 import com.intellij.psi.PsiElement
+import com.intellij.refactoring.suggested.startOffset
 
 object RsPsiImplUtil {
 
@@ -26,5 +27,15 @@ object RsPsiImplUtil {
     @JvmStatic
     fun getNameIdentifier(element: RsLocalVariableExpression): PsiElement {
         return element.nameLiteral
+    }
+
+    @JvmStatic
+    fun getLeftExpressions(statement: RsAssignmentStatement): List<RsExpression> {
+        return statement.expressionList.takeWhile { it.startOffset < statement.equal.startOffset }
+    }
+
+    @JvmStatic
+    fun getRightExpressions(statement: RsAssignmentStatement): List<RsExpression> {
+        return statement.expressionList.takeWhile { it.startOffset > statement.equal.startOffset }
     }
 }

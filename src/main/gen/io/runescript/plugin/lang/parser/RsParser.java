@@ -316,31 +316,77 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LocalVariableExpression | ScopedVariableExpression | ArrayAccessExpression
+  // ArrayAccessExpression | LocalVariableExpression | ScopedVariableExpression
   static boolean AssignableExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AssignableExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", DOLLAR, PERCENT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, null, "<Expression>");
-    r = LocalVariableExpression(b, l + 1);
+    r = ArrayAccessExpression(b, l + 1);
+    if (!r) r = LocalVariableExpression(b, l + 1);
     if (!r) r = ScopedVariableExpression(b, l + 1);
-    if (!r) r = ArrayAccessExpression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // AssignableExpression '=' Expression ';'
+  // AssignableExpression (',' AssignableExpression)* '=' Expression (',' Expression)* ';'
   public static boolean AssignmentStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AssignmentStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DOLLAR, PERCENT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ASSIGNMENT_STATEMENT, "<Statement>");
     r = AssignableExpression(b, l + 1);
+    r = r && AssignmentStatement_1(b, l + 1);
     r = r && consumeToken(b, EQUAL);
     r = r && Expression(b, l + 1);
+    r = r && AssignmentStatement_4(b, l + 1);
     r = r && consumeToken(b, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (',' AssignableExpression)*
+  private static boolean AssignmentStatement_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssignmentStatement_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!AssignmentStatement_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "AssignmentStatement_1", c)) break;
+    }
+    return true;
+  }
+
+  // ',' AssignableExpression
+  private static boolean AssignmentStatement_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssignmentStatement_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && AssignableExpression(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (',' Expression)*
+  private static boolean AssignmentStatement_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssignmentStatement_4")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!AssignmentStatement_4_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "AssignmentStatement_4", c)) break;
+    }
+    return true;
+  }
+
+  // ',' Expression
+  private static boolean AssignmentStatement_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AssignmentStatement_4_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && Expression(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 

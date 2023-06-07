@@ -63,8 +63,8 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitAssignmentStatement(o: RsAssignmentStatement) {
-            o.expressionList[1].accept(this)
-            o.expressionList[0].accept(this)
+            // Same as calling it for leftExpressions then for rightExpressions
+            o.expressionList.forEach { it.accept(this) }
             addInstruction(o)
         }
 
