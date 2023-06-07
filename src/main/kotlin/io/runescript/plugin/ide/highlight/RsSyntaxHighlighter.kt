@@ -42,6 +42,7 @@ class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighte
             fillMap(attributes, OPERATORS, RsSyntaxHighlighterColors.OPERATION_SIGN)
             fillMap(attributes, BRACES, RsSyntaxHighlighterColors.BRACES)
             attributes[SEMICOLON] = RsSyntaxHighlighterColors.SEMICOLON
+            attributes[COLON] = RsSyntaxHighlighterColors.COLON
             attributes[COMMA] = RsSyntaxHighlighterColors.COMMA
             fillMap(attributes, PARENS, RsSyntaxHighlighterColors.PARENTHESIS)
             fillMap(attributes, BRACKETS, RsSyntaxHighlighterColors.BRACKETS)

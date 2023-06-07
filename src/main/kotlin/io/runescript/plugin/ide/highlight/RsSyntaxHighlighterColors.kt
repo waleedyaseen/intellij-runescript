@@ -42,6 +42,7 @@ object RsSyntaxHighlighterColors {
     val OPERATION_SIGN = createTextAttributesKey(RUNESCRIPT_OPERATION_SIGN, DefaultLanguageHighlighterColors.OPERATION_SIGN)
     val BRACES = createTextAttributesKey(RUNESCRIPT_BRACES, DefaultLanguageHighlighterColors.BRACES)
     val SEMICOLON = createTextAttributesKey(RUNESCRIPT_SEMICOLON, DefaultLanguageHighlighterColors.SEMICOLON)
+    val COLON = createTextAttributesKey(RUNESCRIPT_SEMICOLON, DefaultLanguageHighlighterColors.SEMICOLON)
     val COMMA = createTextAttributesKey(RUNESCRIPT_COMMA, DefaultLanguageHighlighterColors.COMMA)
     val PARENTHESIS = createTextAttributesKey(RUNESCRIPT_PARENTHESIS, DefaultLanguageHighlighterColors.PARENTHESES)
     val BRACKETS = createTextAttributesKey(RUNESCRIPT_BRACKETS, DefaultLanguageHighlighterColors.BRACKETS)
