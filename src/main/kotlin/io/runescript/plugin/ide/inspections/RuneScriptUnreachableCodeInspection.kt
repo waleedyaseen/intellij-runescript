@@ -15,8 +15,7 @@ class RuneScriptUnreachableCodeInspection : LocalInspectionTool() {
         return object : RsVisitor() {
             override fun visitStatement(element: RsStatement) {
                 element.controlFlowHolder?.controlFlow?.let {
-                    val insn = it.instructions.find { instruction -> instruction.element == element } ?: return@let
-                    if (it.isReachable(insn)) {
+                    if (it.isReachable(element)) {
                         return@visitStatement
                     }
                     holder.registerProblem(element, RsBundle.message("inspection.warning.unreachable.code"), ProblemHighlightType.WARNING)
