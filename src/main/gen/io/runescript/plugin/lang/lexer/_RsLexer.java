@@ -6,6 +6,8 @@ package io.runescript.plugin.lang.lexer;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntStack;
 
 import java.util.List;
 
@@ -375,10 +377,20 @@ class _RsLexer implements FlexLexer {
   private boolean zzEOFDone;
 
   /* user code: */
-private RsLexerInfo lexerInfo;
+private final RsLexerInfo lexerInfo;
+private final IntStack statesStack = new IntArrayList();
 
 public List<String> getTypeNames() {
     return lexerInfo.getTypeNames();
+}
+
+public void pushState(int state) {
+    statesStack.push(yystate());
+    yybegin(state);
+}
+
+public void popState() {
+    yybegin(statesStack.pop());
 }
 
 
@@ -640,7 +652,7 @@ public List<String> getTypeNames() {
           // fall through
           case 49: break;
           case 4:
-            { yybegin(STRING); return STRING_START;
+            { pushState(STRING); return STRING_START;
             }
           // fall through
           case 50: break;
@@ -761,7 +773,7 @@ public List<String> getTypeNames() {
           case 66: break;
           case 21:
             { if (yystate() == STRING_INTERPOLATION) {
-        yybegin(STRING);
+        popState();
         return STRING_INTERPOLATION_END;
     } else {
         return GT;
@@ -810,12 +822,12 @@ public List<String> getTypeNames() {
           // fall through
           case 75: break;
           case 30:
-            { yybegin(YYINITIAL); return STRING_END;
+            { popState(); return STRING_END;
             }
           // fall through
           case 76: break;
           case 31:
-            { yybegin(STRING_INTERPOLATION); return STRING_INTERPOLATION_START;
+            { pushState(STRING_INTERPOLATION); return STRING_INTERPOLATION_START;
             }
           // fall through
           case 77: break;

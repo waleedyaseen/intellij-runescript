@@ -3,6 +3,8 @@ package io.runescript.plugin.lang.lexer;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntStack;
 
 import java.util.List;
 
@@ -11,10 +13,20 @@ import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 %%
 
 %{
-private RsLexerInfo lexerInfo;
+private final RsLexerInfo lexerInfo;
+private final IntStack statesStack = new IntArrayList();
 
 public List<String> getTypeNames() {
     return lexerInfo.getTypeNames();
+}
+
+public void pushState(int state) {
+    statesStack.push(yystate());
+    yybegin(state);
+}
+
+public void popState() {
+    yybegin(statesStack.pop());
 }
 %}
 
@@ -61,7 +73,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 "default" { return DEFAULT; }
 "calc" { return CALC; }
 "return" { return RETURN; }
-\" { yybegin(STRING); return STRING_START; }
+\" { pushState(STRING); return STRING_START; }
 
 {INTEGER} { return INTEGER; }
 
@@ -72,7 +84,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 "<" { return LT; }
 ">" {
     if (yystate() == STRING_INTERPOLATION) {
-        yybegin(STRING);
+        popState();
         return STRING_INTERPOLATION_END;
     } else {
         return GT;
@@ -147,10 +159,10 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 [^] { return TokenType.BAD_CHARACTER; }
 }
 <STRING> {
-\" { yybegin(YYINITIAL); return STRING_END; }
+\" { popState(); return STRING_END; }
 ({OTHER_TAG}|{CLOSE_TAG}|{COLOR_TAG}|{IMG_TAG}) { return STRING_TAG; }
 {INCOMPLETE_TAG} { return STRING_PART; }
-"<" { yybegin(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
+"<" { pushState(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
 {STRING_PART} { return STRING_PART; }
 [^] { return TokenType.BAD_CHARACTER; }
 }
