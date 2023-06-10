@@ -9,6 +9,9 @@ import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsElementTypes
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsScriptHeader
+import io.runescript.plugin.lang.psi.RsScriptName
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
 
 class RsFindUsagesProvider : FindUsagesProvider {
@@ -23,7 +26,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
     }
 
     override fun canFindUsagesFor(psiElement: PsiElement): Boolean {
-        return psiElement is RsLocalVariableExpression
+        return psiElement is RsLocalVariableExpression || psiElement is RsScript
     }
 
     override fun getHelpId(psiElement: PsiElement): String? {
@@ -34,6 +37,9 @@ class RsFindUsagesProvider : FindUsagesProvider {
         if (element is RsLocalVariableExpression) {
             return "Local variable"
         }
+        if (element is RsScript) {
+            return "Procedure"
+        }
         return ""
     }
 
@@ -41,12 +47,18 @@ class RsFindUsagesProvider : FindUsagesProvider {
         if (element is RsLocalVariableExpression) {
             return element.nameLiteral.text
         }
+        if (element is RsScript) {
+            return element.scriptHeader.scriptName.nameLiteralList[1].text
+        }
         return ""
     }
 
     override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
         if (element is RsLocalVariableExpression) {
             return element.nameLiteral.text
+        }
+        if (element is RsScript) {
+            return element.scriptHeader.scriptName.nameLiteralList[1].text
         }
         return ""
     }

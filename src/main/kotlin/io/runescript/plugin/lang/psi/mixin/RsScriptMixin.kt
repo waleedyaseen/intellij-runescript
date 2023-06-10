@@ -53,4 +53,20 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
             return PresentationData("[${triggerExpression.text},${nameExpression!!.text}]", containingFile.name, icon, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
         }
     }
+
+    override fun getUseScope(): SearchScope {
+        return GlobalSearchScope.projectScope(project)
+    }
+
+    override fun setName(name: String): PsiElement {
+        return RsPsiImplUtil.setName(scriptHeader.scriptName.nameExpression as RsNameLiteral, name)
+    }
+
+    override fun getName(): String? {
+        return RsPsiImplUtil.getName(scriptHeader.scriptName.nameExpression as RsNameLiteral)
+    }
+
+    override fun getNameIdentifier(): PsiElement? {
+        return scriptHeader.scriptName.nameExpression
+    }
 }

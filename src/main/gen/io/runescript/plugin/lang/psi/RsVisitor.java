@@ -81,6 +81,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitGosubExpression(@NotNull RsGosubExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitIfStatement(@NotNull RsIfStatement o) {
@@ -139,6 +140,7 @@ public class RsVisitor extends PsiElementVisitor {
   public void visitScript(@NotNull RsScript o) {
     visitNavigatablePsiElement(o);
     // visitControlFlowHolder(o);
+    // visitNamedElement(o);
   }
 
   public void visitScriptHeader(@NotNull RsScriptHeader o) {

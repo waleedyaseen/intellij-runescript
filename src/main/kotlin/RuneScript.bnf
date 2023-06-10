@@ -22,6 +22,7 @@
   elementType("(LogicalAnd|LogicalOr|Compare)Operator")=ConditionOp
 
   implements("Script")="io.runescript.plugin.lang.psi.RsControlFlowHolder"
+  implements("Script")="io.runescript.plugin.lang.psi.RsNamedElement"
   classHeader="// This class is automatically generated. Do not edit."
 
   tokens=[
@@ -237,6 +238,7 @@ CommandExpression ::= NameLiteral ArgumentList {
 }
 GosubExpression ::= '~' NameLiteral ArgumentList? {
     mixin="io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin"
+    implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
 ArgumentList ::= '(' ExpressionList? ')'
 ConstantExpression ::= '^' NameLiteral
