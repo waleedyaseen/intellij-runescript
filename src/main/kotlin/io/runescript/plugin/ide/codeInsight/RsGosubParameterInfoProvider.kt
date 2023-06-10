@@ -17,8 +17,8 @@ class RsGosubParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<Rs
         val argumentList = element.parentOfType<RsArgumentList>() ?: return null
         val gosub = argumentList.parentOfType<RsGosubExpression>() ?: return null
         val reference = gosub.reference?.resolve() ?: return null
-        reference as RsScriptHeader
-        val parameters = reference.parameterList?.parameterList ?: emptyList()
+        reference as RsScript
+        val parameters = reference.scriptHeader.parameterList?.parameterList ?: emptyList()
         context.itemsToShow = arrayOf(CallInfo.of(parameters))
         return argumentList
     }

@@ -9,6 +9,7 @@ import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsScriptImpl
 import io.runescript.plugin.lang.stubs.RsScriptStub
+import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
 
 object RsScriptStubType : RsStubType<RsScriptStub, RsScript>("SCRIPT") {
 
@@ -28,6 +29,10 @@ object RsScriptStubType : RsStubType<RsScriptStub, RsScript>("SCRIPT") {
     }
 
     override fun indexStub(stub: RsScriptStub, sink: IndexSink) {
-        // TODO
+        val header = stub.findChildStubByType(RsScriptHeaderStubType)!!
+        val name = header.findChildStubByType(RsScriptNameStubType)!!
+        if (name.triggerName == "proc") {
+            sink.occurrence(RsGotoScriptIndex.KEY, name.scriptName)
+        }
     }
 }

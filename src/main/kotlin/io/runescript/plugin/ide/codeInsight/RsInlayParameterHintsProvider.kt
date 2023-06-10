@@ -15,6 +15,7 @@ import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsNullLiteralExpression
 import io.runescript.plugin.lang.psi.RsParExpression
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
+import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsScriptHeader
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.op.RsOpCommand
@@ -91,8 +92,8 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
         return when (element) {
             is RsGosubExpression -> {
                 val reference = element.reference?.resolve() ?: return null
-                reference as RsScriptHeader
-                reference.parameterList?.parameterList?.map { it.localVariableExpression.name!! }
+                reference as RsScript
+                reference.scriptHeader.parameterList?.parameterList?.map { it.localVariableExpression.name!! }
             }
 
             is RsCommandExpression -> {
@@ -111,8 +112,8 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
             if (reference == null) {
                 1
             } else {
-                reference as RsScriptHeader
-                reference.returnList?.typeNameList?.size ?: 0
+                reference as RsScript
+                reference.scriptHeader.returnList?.typeNameList?.size ?: 0
             }
         }
 

@@ -75,7 +75,6 @@ ScriptName ::= '[' NameLiteral ',' NameLiteral ']' {
     ]
     stubClass="io.runescript.plugin.lang.stubs.RsScriptNameStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
-    implements="com.intellij.psi.NavigatablePsiElement"
     mixin="io.runescript.plugin.lang.psi.mixin.RsScriptNameMixin"
 }
 
@@ -237,7 +236,7 @@ CommandExpression ::= NameLiteral ArgumentList {
     mixin=" io.runescript.plugin.lang.psi.mixin.RsCommandExpressionMixin"
 }
 GosubExpression ::= '~' NameLiteral ArgumentList? {
-    mixin=" io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin"
+    mixin="io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin"
 }
 ArgumentList ::= '(' ExpressionList? ')'
 ConstantExpression ::= '^' NameLiteral

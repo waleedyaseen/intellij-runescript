@@ -11,7 +11,7 @@ import static io.runescript.plugin.lang.psi.RsElementTypes.*;
 import io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsGosubExpressionImpl extends  RsGosubExpressionMixin implements RsGosubExpression {
+public class RsGosubExpressionImpl extends RsGosubExpressionMixin implements RsGosubExpression {
 
   public RsGosubExpressionImpl(@NotNull ASTNode node) {
     super(node);

@@ -25,7 +25,7 @@ object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
         return node.firstChildNode
     }
 
-    override fun getStubVersion() = 0
+    override fun getStubVersion() = 1
 
     override fun serialize(stub: RsFileStub, dataStream: StubOutputStream) {
 
