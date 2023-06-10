@@ -40,6 +40,10 @@ abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalV
         return nameLiteral.startOffset
     }
 
+    override fun getNameIdentifier(): PsiElement {
+        return nameLiteral
+    }
+
     override fun getName(): String {
         return RsPsiImplUtil.getName(nameLiteral)
     }
