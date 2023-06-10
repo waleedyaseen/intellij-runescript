@@ -13,19 +13,12 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
 
         override fun visitScript(o: RsScript) {
             addScriptDefinitionInstruction(o)
-            o.scriptHeader.parameterList?.parameterList?.forEach { parameter ->
+            o.parameterList?.parameterList?.forEach { parameter ->
                 parameter.accept(this)
             }
             o.statementList.accept(this)
         }
 
-        override fun visitScriptHeader(o: RsScriptHeader) {
-            // Nothing
-        }
-
-        override fun visitScriptName(o: RsScriptName) {
-            // Nothing
-        }
 
         override fun visitParameterList(o: RsParameterList) {
             // Nothing
@@ -96,7 +89,7 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitCommandExpression(o: RsCommandExpression) {
-            o.argumentList?.accept(this)
+            o.argumentList.accept(this)
             o.nameLiteral.accept(this)
             addInstruction(o)
         }

@@ -40,14 +40,44 @@ public class RsScriptImpl extends RsScriptMixin implements RsScript {
 
   @Override
   @NotNull
-  public RsScriptHeader getScriptHeader() {
-    return notNullChild(PsiTreeUtil.getStubChildOfType(this, RsScriptHeader.class));
+  public List<RsNameLiteral> getNameLiteralList() {
+    return PsiTreeUtil.getStubChildrenOfTypeAsList(this, RsNameLiteral.class);
+  }
+
+  @Override
+  @Nullable
+  public RsParameterList getParameterList() {
+    return PsiTreeUtil.getStubChildOfType(this, RsParameterList.class);
+  }
+
+  @Override
+  @Nullable
+  public RsReturnList getReturnList() {
+    return PsiTreeUtil.getStubChildOfType(this, RsReturnList.class);
   }
 
   @Override
   @NotNull
   public RsStatementList getStatementList() {
     return notNullChild(PsiTreeUtil.getChildOfType(this, RsStatementList.class));
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getComma() {
+    return notNullChild(findChildByType(COMMA));
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getLbracket() {
+    return notNullChild(findChildByType(LBRACKET));
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getRbracket() {
+    return notNullChild(findChildByType(RBRACKET));
   }
 
 }

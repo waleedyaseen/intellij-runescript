@@ -56,27 +56,11 @@
 
 File ::= Script*
 
-Script ::= ScriptHeader StatementList {
+Script ::= '[' NameLiteral ',' NameLiteral ']' ParameterList? ReturnList? StatementList {
     stubClass="io.runescript.plugin.lang.stubs.RsScriptStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
     implements="com.intellij.psi.NavigatablePsiElement"
     mixin="io.runescript.plugin.lang.psi.mixin.RsScriptMixin"
-}
-
-ScriptHeader ::= ScriptName ParameterList? ReturnList? {
-    mixin="io.runescript.plugin.lang.psi.mixin.RsScriptHeaderMixin"
-    stubClass="io.runescript.plugin.lang.stubs.RsScriptHeaderStub"
-    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
-}
-
-ScriptName ::= '[' NameLiteral ',' NameLiteral ']' {
-    methods=[
-        triggerExpression="/NameLiteral[0]"
-        nameExpression="/NameLiteral[1]"
-    ]
-    stubClass="io.runescript.plugin.lang.stubs.RsScriptNameStub"
-    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
-    mixin="io.runescript.plugin.lang.psi.mixin.RsScriptNameMixin"
 }
 
 ParameterList ::= '(' (Parameter (',' Parameter)*)? ')' {

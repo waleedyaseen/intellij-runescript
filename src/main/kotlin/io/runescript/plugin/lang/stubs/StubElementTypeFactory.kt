@@ -9,8 +9,6 @@ object StubElementTypeFactory {
     fun create(name: String): IStubElementType<*, *> {
         return when (name) {
             "SCRIPT" -> RsScriptStubType
-            "SCRIPT_HEADER" -> RsScriptHeaderStubType
-            "SCRIPT_NAME" -> RsScriptNameStubType
             "PARAMETER_LIST" -> RsParameterListStubType
             "PARAMETER" -> RsParameterStubType
             "RETURN_LIST" -> RsReturnListStubType

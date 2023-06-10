@@ -39,9 +39,9 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
                 return builder.build()
             }
 
-            is RsScriptHeader -> {
+            is RsScript -> {
                 val builder = element.project.createDocumentationGenerator()
-                builder.appendHighlighted(element.scriptName.text, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
+                builder.appendHighlighted(element.qualifiedName, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
                 builder.appendLParen()
                 var appendComma = false
                 element.parameterList?.parameterList?.forEach {

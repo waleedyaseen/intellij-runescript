@@ -1082,50 +1082,9 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ScriptHeader StatementList
+  // '[' NameLiteral ',' NameLiteral ']' ParameterList? ReturnList? StatementList
   public static boolean Script(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Script")) return false;
-    if (!nextTokenIs(b, LBRACKET)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = ScriptHeader(b, l + 1);
-    r = r && StatementList(b, l + 1);
-    exit_section_(b, m, SCRIPT, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // ScriptName ParameterList? ReturnList?
-  public static boolean ScriptHeader(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ScriptHeader")) return false;
-    if (!nextTokenIs(b, LBRACKET)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = ScriptName(b, l + 1);
-    r = r && ScriptHeader_1(b, l + 1);
-    r = r && ScriptHeader_2(b, l + 1);
-    exit_section_(b, m, SCRIPT_HEADER, r);
-    return r;
-  }
-
-  // ParameterList?
-  private static boolean ScriptHeader_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ScriptHeader_1")) return false;
-    ParameterList(b, l + 1);
-    return true;
-  }
-
-  // ReturnList?
-  private static boolean ScriptHeader_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ScriptHeader_2")) return false;
-    ReturnList(b, l + 1);
-    return true;
-  }
-
-  /* ********************************************************** */
-  // '[' NameLiteral ',' NameLiteral ']'
-  public static boolean ScriptName(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ScriptName")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
     boolean r;
     Marker m = enter_section_(b);
@@ -1134,8 +1093,25 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = r && consumeToken(b, COMMA);
     r = r && NameLiteral(b, l + 1);
     r = r && consumeToken(b, RBRACKET);
-    exit_section_(b, m, SCRIPT_NAME, r);
+    r = r && Script_5(b, l + 1);
+    r = r && Script_6(b, l + 1);
+    r = r && StatementList(b, l + 1);
+    exit_section_(b, m, SCRIPT, r);
     return r;
+  }
+
+  // ParameterList?
+  private static boolean Script_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Script_5")) return false;
+    ParameterList(b, l + 1);
+    return true;
+  }
+
+  // ReturnList?
+  private static boolean Script_6(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Script_6")) return false;
+    ReturnList(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */

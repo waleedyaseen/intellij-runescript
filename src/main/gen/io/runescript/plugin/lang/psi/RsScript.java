@@ -11,9 +11,24 @@ import io.runescript.plugin.lang.stubs.RsScriptStub;
 public interface RsScript extends NavigatablePsiElement, RsControlFlowHolder, RsNamedElement, StubBasedPsiElement<RsScriptStub> {
 
   @NotNull
-  RsScriptHeader getScriptHeader();
+  List<RsNameLiteral> getNameLiteralList();
+
+  @Nullable
+  RsParameterList getParameterList();
+
+  @Nullable
+  RsReturnList getReturnList();
 
   @NotNull
   RsStatementList getStatementList();
+
+  @NotNull
+  PsiElement getComma();
+
+  @NotNull
+  PsiElement getLbracket();
+
+  @NotNull
+  PsiElement getRbracket();
 
 }

@@ -13,10 +13,10 @@ import io.runescript.plugin.lang.psi.*
 class RsHighlightingAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         element.accept(object : RsVisitor() {
-
-            override fun visitScriptName(o: RsScriptName) {
-                super.visitScriptName(o)
-                element.highlight(holder, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
+            override fun visitScript(o: RsScript) {
+                val textRange = TextRange.create(o.lbracket.startOffset, o.rbracket.endOffset)
+                textRange.highlight(holder, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
+                super.visitScript(o)
             }
 
             override fun visitConstantExpression(o: RsConstantExpression) {

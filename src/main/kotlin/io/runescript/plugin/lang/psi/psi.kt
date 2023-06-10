@@ -29,3 +29,19 @@ fun RsStatement?.toSingleStatement(): RsStatement? {
     }
     return statementList.statementList[0]
 }
+
+val RsScript.qualifiedName: String
+    get() = "[$triggerName,$scriptName]"
+
+val RsScript.triggerNameExpression: RsNameLiteral
+    get() = nameLiteralList[0]
+
+val RsScript.triggerName: String
+    get() = triggerNameExpression.text
+
+val RsScript.scriptNameExpression: RsNameLiteral
+    get() = nameLiteralList[1]
+
+val RsScript.scriptName: String
+    get() = scriptNameExpression.text
+

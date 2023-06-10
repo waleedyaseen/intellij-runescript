@@ -143,14 +143,6 @@ public class RsVisitor extends PsiElementVisitor {
     // visitNamedElement(o);
   }
 
-  public void visitScriptHeader(@NotNull RsScriptHeader o) {
-    visitPsiElement(o);
-  }
-
-  public void visitScriptName(@NotNull RsScriptName o) {
-    visitPsiElement(o);
-  }
-
   public void visitStatement(@NotNull RsStatement o) {
     visitPsiElement(o);
   }

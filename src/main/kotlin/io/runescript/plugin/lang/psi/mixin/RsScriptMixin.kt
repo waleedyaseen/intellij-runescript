@@ -13,13 +13,12 @@ import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
+import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlow
 import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowBuilder
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
-import io.runescript.plugin.lang.psi.RsNameLiteral
-import io.runescript.plugin.lang.psi.RsPsiImplUtil
-import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.stubs.RsScriptStub
 
 abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
@@ -37,21 +36,21 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
         }
 
     override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
-        if (!scriptHeader.processDeclarations(processor, state, lastParent, place)) {
-            return false
+        parameterList?.let {
+            if (!it.processDeclarations(processor, state, lastParent, place)) {
+                return false
+            }
         }
         return true
     }
 
     override fun getPresentation(): ItemPresentation? {
-        with(scriptHeader.scriptName) {
-            val icon = when (triggerExpression.text) {
-                "proc" -> RsIcons.Proc
-                "clientscript" -> RsIcons.Cs2
-                else -> null
-            }
-            return PresentationData("[${triggerExpression.text},${nameExpression!!.text}]", containingFile.name, icon, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
+        val icon = when (triggerName) {
+            "proc" -> RsIcons.Proc
+            "clientscript" -> RsIcons.Cs2
+            else -> null
         }
+        return PresentationData(qualifiedName, containingFile.name, icon, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
     }
 
     override fun getUseScope(): SearchScope {
@@ -59,14 +58,49 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
     }
 
     override fun setName(name: String): PsiElement {
-        return RsPsiImplUtil.setName(scriptHeader.scriptName.nameExpression as RsNameLiteral, name)
+        return RsPsiImplUtil.setName(scriptNameExpression, name)
     }
 
     override fun getName(): String? {
-        return RsPsiImplUtil.getName(scriptHeader.scriptName.nameExpression as RsNameLiteral)
+        return RsPsiImplUtil.getName(scriptNameExpression)
     }
 
     override fun getNameIdentifier(): PsiElement? {
-        return scriptHeader.scriptName.nameExpression
+        return scriptNameExpression
     }
+
+    override fun getTextOffset(): Int {
+        return scriptNameExpression.startOffset
+    }
+
+    /*
+
+    override fun getName(): String? {
+        return RsPsiImplUtil.getName(nameLiteralList[1])
+    }
+
+    override fun setName(name: String): PsiElement {
+        return RsPsiImplUtil.setName(nameLiteralList[1], name)
+    }
+
+    override fun getNameIdentifier(): PsiElement? {
+        return nameLiteralList[1]
+    }
+
+    override fun getReference(): PsiReference? {
+        return object: PsiPolyVariantReferenceBase<RsScriptName>(this, nameExpression!!.textRangeInParent) {
+
+            override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+                val elements = StubIndex.getElements(RsGotoScriptIndex.KEY, nameExpression!!.text, element.project, GlobalSearchScope.allScope(element.project), RsScript::class.java)
+                return elements.map { PsiElementResolveResult(it) }.toTypedArray()
+            }
+
+            override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
+
+            override fun handleElementRename(newElementName: String): PsiElement {
+                return element.setName(newElementName)
+            }
+        }
+    }
+     */
 }

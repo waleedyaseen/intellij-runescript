@@ -41,8 +41,6 @@ public interface RsElementTypes {
   IElementType RETURN_STATEMENT = new RsElementType("RETURN_STATEMENT");
   IElementType SCOPED_VARIABLE_EXPRESSION = new RsElementType("SCOPED_VARIABLE_EXPRESSION");
   IElementType SCRIPT = StubElementTypeFactory.create("SCRIPT");
-  IElementType SCRIPT_HEADER = StubElementTypeFactory.create("SCRIPT_HEADER");
-  IElementType SCRIPT_NAME = StubElementTypeFactory.create("SCRIPT_NAME");
   IElementType STATEMENT = new RsElementType("STATEMENT");
   IElementType STATEMENT_LIST = new RsElementType("STATEMENT_LIST");
   IElementType STRING_INTERPOLATION_EXPRESSION = new RsElementType("STRING_INTERPOLATION_EXPRESSION");
@@ -195,12 +193,6 @@ public interface RsElementTypes {
       }
       else if (type == SCRIPT) {
         return new RsScriptImpl(node);
-      }
-      else if (type == SCRIPT_HEADER) {
-        return new RsScriptHeaderImpl(node);
-      }
-      else if (type == SCRIPT_NAME) {
-        return new RsScriptNameImpl(node);
       }
       else if (type == STATEMENT_LIST) {
         return new RsStatementListImpl(node);

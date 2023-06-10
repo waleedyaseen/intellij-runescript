@@ -23,14 +23,5 @@ class RsErrorAnnotator : Annotator, HighlightRangeExtension {
         override fun visitScript(o: RsScript) {
             super.visitScript(o)
         }
-
-        override fun visitScriptHeader(o: RsScriptHeader) {
-            super.visitScriptHeader(o)
-        }
-
-        override fun visitScriptName(o: RsScriptName) {
-
-            super.visitScriptName(o)
-        }
     }
 }

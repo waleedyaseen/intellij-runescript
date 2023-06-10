@@ -5,4 +5,4 @@ import com.intellij.psi.stubs.StubBase
 import com.intellij.psi.stubs.StubElement
 import io.runescript.plugin.lang.psi.RsScript
 
-class RsScriptStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>) : StubBase<RsScript>(parent, elementType)
+class RsScriptStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>, val triggerName: String, val scriptName: String) : StubBase<RsScript>(parent, elementType)

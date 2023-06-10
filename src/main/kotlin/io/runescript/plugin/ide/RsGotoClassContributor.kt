@@ -10,6 +10,7 @@ import com.intellij.util.indexing.FindSymbolParameters
 import com.intellij.util.indexing.IdFilter
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.qualifiedName
 import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
 
 class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
@@ -37,11 +38,7 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
     }
 
     override fun getQualifiedName(item: NavigationItem?): String? {
-        val scriptName = (item as? RsScript)?.scriptHeader?.scriptName
-        if (scriptName != null) {
-            return "${scriptName.triggerExpression.text}|${scriptName.nameExpression!!.text}"
-        }
-        return null
+        return (item as? RsScript)?.qualifiedName
     }
 
     override fun getQualifiedNameSeparator(): String? {

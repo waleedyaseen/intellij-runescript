@@ -21,6 +21,6 @@ class RsGosubReference(element: RsGosubExpression) : PsiPolyVariantReferenceBase
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        return element
+        return element.setName(newElementName)
     }
 }
