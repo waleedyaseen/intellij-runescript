@@ -15,10 +15,4 @@ public interface RsLocalVariableExpression extends RsExpression, RsNamedElement,
   @NotNull
   PsiElement getDollar();
 
-  @Nullable
-  String getName();
-
-  @NotNull
-  PsiElement setName(@NotNull String newName);
-
 }

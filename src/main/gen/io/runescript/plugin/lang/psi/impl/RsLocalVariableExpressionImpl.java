@@ -50,16 +50,4 @@ public class RsLocalVariableExpressionImpl extends RsLocalVariableExpressionMixi
     return notNullChild(findChildByType(DOLLAR));
   }
 
-  @Override
-  @Nullable
-  public String getName() {
-    return RsPsiImplUtil.getName(this);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return RsPsiImplUtil.setName(this, newName);
-  }
-
 }

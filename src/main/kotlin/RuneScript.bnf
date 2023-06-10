@@ -219,7 +219,6 @@ LocalVariableExpression ::= '$' NameLiteral {
     stubClass="io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
-    methods=[getName setName]
 }
 
 ArrayAccessExpression ::= LocalVariableExpression '(' Expression ')'

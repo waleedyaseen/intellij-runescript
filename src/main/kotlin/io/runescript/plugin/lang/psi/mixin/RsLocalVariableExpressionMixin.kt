@@ -2,6 +2,7 @@ package io.runescript.plugin.lang.psi.mixin
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.search.LocalSearchScope
 import com.intellij.psi.search.SearchScope
@@ -37,5 +38,13 @@ abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalV
 
     override fun getTextOffset(): Int {
         return nameLiteral.startOffset
+    }
+
+    override fun getName(): String {
+        return RsPsiImplUtil.getName(nameLiteral)
+    }
+
+    override fun setName(newName: String): PsiElement {
+        return RsPsiImplUtil.setName(nameLiteral, newName)
     }
 }
