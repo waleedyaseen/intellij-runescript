@@ -121,7 +121,7 @@ class RsModuleBuilder : ModuleBuilder() {
                         }
                 textFieldWithBrowseButton("Select Compiler JAR File", wizardContext.project, fileChooserDescriptor)
                         .bindText(neptuneCompilerPathProperty)
-                        .horizontalAlign(HorizontalAlign.FILL)
+                        .align(Align.FILL)
                         .comment("The path must lead to a valid compiler JAR file")
                 neptuneRows += this
             }

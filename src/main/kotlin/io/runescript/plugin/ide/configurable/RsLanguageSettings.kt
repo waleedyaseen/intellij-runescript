@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.InputValidator
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
+import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.LabelPosition
 import com.intellij.ui.dsl.builder.Panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
@@ -66,7 +67,7 @@ class RsLanguageSettings(private val project: Project) : SearchableConfigurable,
                             itemListModel.addAll(it)
                         }
                     }
-                    .horizontalAlign(HorizontalAlign.FILL)
+                    .align(Align.FILL)
                     .onIsModified {
                         val current = itemListModel.elements().toList()
                         return@onIsModified RsConfig.getPrimitiveTypes(project) != current
