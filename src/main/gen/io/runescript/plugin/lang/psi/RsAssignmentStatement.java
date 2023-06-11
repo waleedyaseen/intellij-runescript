@@ -16,10 +16,4 @@ public interface RsAssignmentStatement extends RsStatement {
   @NotNull
   PsiElement getSemicolon();
 
-  @NotNull
-  List<RsExpression> getLeftExpressions();
-
-  @NotNull
-  List<RsExpression> getRightExpressions();
-
 }
