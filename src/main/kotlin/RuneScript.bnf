@@ -115,7 +115,9 @@ LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' E
         getNameExpression
     ]
 }
-ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';'
+ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';' {
+    mixin="io.runescript.plugin.lang.psi.mixin.RsArrayVariableDeclarationStatementMixin"
+}
 AssignmentStatement ::= AssignableExpression (',' AssignableExpression)* '=' Expression (',' Expression)* ';' {
     methods=[
         getLeftExpressions
