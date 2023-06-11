@@ -4,7 +4,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings
 
 @Suppress("PropertyName", "unused")
-class RsCodeStyleSettings(container: CodeStyleSettings?) : CustomCodeStyleSettings("RuneScriptCodeStyleSettings", container) {
+class RsCodeStyleSettings(container: CodeStyleSettings) : CustomCodeStyleSettings("RuneScriptCodeStyleSettings", container) {
 
     @JvmField
     var SPACE_WITHIN_ARRAY_BOUNDS = false

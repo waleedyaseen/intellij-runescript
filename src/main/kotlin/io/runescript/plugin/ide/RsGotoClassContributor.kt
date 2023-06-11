@@ -37,7 +37,7 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
         }
     }
 
-    override fun getQualifiedName(item: NavigationItem?): String? {
+    override fun getQualifiedName(item: NavigationItem): String? {
         return (item as? RsScript)?.qualifiedName
     }
 

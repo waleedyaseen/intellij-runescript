@@ -1,27 +1,36 @@
+group = "io.runescript"
+version = "1.0-SNAPSHOT"
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
     id("org.jetbrains.intellij") version "1.13.3"
 }
 
-group = "me.waleedyaseen"
-version = "1.0-SNAPSHOT"
-
 repositories {
     mavenCentral()
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2.5")
-    type.set("IC") // Target IDE Platform
+    version.set("2023.1.2")
+    type.set("IC")
 
-    plugins.set(listOf(/* Plugin Dependencies */))
+    plugins.set(listOf())
+}
+
+idea {
+    module {
+        generatedSourceDirs.add(file("src/main/gen"))
+    }
+}
+
+sourceSets {
+    main {
+        java.srcDirs("src/main/gen")
+    }
 }
 
 tasks {
-    // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"
@@ -31,7 +40,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("222")
+        sinceBuild.set("231")
         untilBuild.set("232.*")
     }
 
@@ -45,5 +54,3 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
 }
-
-sourceSets["main"].java.srcDirs("src/main/gen")

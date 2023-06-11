@@ -17,7 +17,7 @@ class RsCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
         }
     }
 
-    override fun createCustomSettings(settings: CodeStyleSettings?): CustomCodeStyleSettings? {
+    override fun createCustomSettings(settings: CodeStyleSettings): CustomCodeStyleSettings {
         return RsCodeStyleSettings(settings)
     }
 
