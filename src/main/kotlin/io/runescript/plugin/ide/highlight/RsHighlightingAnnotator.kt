@@ -47,6 +47,16 @@ class RsHighlightingAnnotator : Annotator {
                 val textRange = TextRange(o.tilde.startOffset, o.nameLiteral.endOffset)
                 textRange.highlight(holder, RsSyntaxHighlighterColors.PROC_CALL)
             }
+
+            override fun visitDynamicExpression(o: RsDynamicExpression) {
+                // TODO(Walied): Make this error when we have config resolving
+                val reference = o.reference?.resolve() ?: return
+                if (reference is RsLocalVariableExpression) {
+                    o.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
+                } else {
+                    o.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
+                }
+            }
         })
     }
 

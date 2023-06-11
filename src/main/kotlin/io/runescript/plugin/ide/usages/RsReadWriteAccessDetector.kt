@@ -7,6 +7,7 @@ import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import io.runescript.plugin.lang.psi.RsAssignmentStatement
+import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 
@@ -30,7 +31,7 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
     }
 
     override fun getExpressionAccess(expression: PsiElement): Access {
-        require(expression is RsLocalVariableExpression)
+        require(expression is RsLocalVariableExpression || expression is RsDynamicExpression)
         val parent = expression.parent
         if (parent is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement) {
             return Access.Write

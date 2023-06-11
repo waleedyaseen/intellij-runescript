@@ -69,6 +69,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitDynamicExpression(@NotNull RsDynamicExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitExpression(@NotNull RsExpression o) {
