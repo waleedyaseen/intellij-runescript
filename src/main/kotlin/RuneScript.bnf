@@ -107,7 +107,9 @@ WhileStatement ::= WHILE '(' LogicalOrWrapper ')' Statement
 SwitchStatement ::= SWITCH '(' Expression ')' '{' SwitchCase* '}'
 SwitchCase ::= CASE SwitchCaseExpressionList ':' StatementList
 private SwitchCaseExpressionList ::= SwitchCaseExpression (',' SwitchCaseExpression)*
-private SwitchCaseExpression ::= Expression | DEFAULT
+private SwitchCaseExpression ::= SwitchCaseDefaultExpression | Expression
+SwitchCaseDefaultExpression ::= DEFAULT
+
 ReturnStatement ::= RETURN ('(' ExpressionList? ')')? ';'
 LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' Expression)? ';' {
     mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableDeclarationStatementMixin"

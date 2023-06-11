@@ -163,6 +163,10 @@ public class RsVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSwitchCaseDefaultExpression(@NotNull RsSwitchCaseDefaultExpression o) {
+    visitExpression(o);
+  }
+
   public void visitSwitchStatement(@NotNull RsSwitchStatement o) {
     visitStatement(o);
   }

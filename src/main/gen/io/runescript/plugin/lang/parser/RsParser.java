@@ -43,7 +43,7 @@ public class RsParser implements PsiParser, LightPsiParser {
       CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
       DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION,
       LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION,
-      SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION),
+      SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -1220,13 +1220,25 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Expression | DEFAULT
+  // DEFAULT
+  public static boolean SwitchCaseDefaultExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SwitchCaseDefaultExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", DEFAULT)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SWITCH_CASE_DEFAULT_EXPRESSION, "<Expression>");
+    r = consumeToken(b, DEFAULT);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // SwitchCaseDefaultExpression | Expression
   static boolean SwitchCaseExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchCaseExpression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, null, "<Expression>");
-    r = Expression(b, l + 1);
-    if (!r) r = consumeToken(b, DEFAULT);
+    r = SwitchCaseDefaultExpression(b, l + 1);
+    if (!r) r = Expression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

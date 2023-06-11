@@ -46,6 +46,7 @@ public interface RsElementTypes {
   IElementType STRING_INTERPOLATION_EXPRESSION = new RsElementType("STRING_INTERPOLATION_EXPRESSION");
   IElementType STRING_LITERAL_EXPRESSION = new RsElementType("STRING_LITERAL_EXPRESSION");
   IElementType SWITCH_CASE = new RsElementType("SWITCH_CASE");
+  IElementType SWITCH_CASE_DEFAULT_EXPRESSION = new RsElementType("SWITCH_CASE_DEFAULT_EXPRESSION");
   IElementType SWITCH_STATEMENT = new RsElementType("SWITCH_STATEMENT");
   IElementType TYPE_NAME = StubElementTypeFactory.create("TYPE_NAME");
   IElementType WHILE_STATEMENT = new RsElementType("WHILE_STATEMENT");
@@ -205,6 +206,9 @@ public interface RsElementTypes {
       }
       else if (type == SWITCH_CASE) {
         return new RsSwitchCaseImpl(node);
+      }
+      else if (type == SWITCH_CASE_DEFAULT_EXPRESSION) {
+        return new RsSwitchCaseDefaultExpressionImpl(node);
       }
       else if (type == SWITCH_STATEMENT) {
         return new RsSwitchStatementImpl(node);

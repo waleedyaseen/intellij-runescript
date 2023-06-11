@@ -3,6 +3,7 @@ package io.runescript.plugin.ide.codeInsight.controlFlow
 import com.intellij.codeInsight.controlflow.ControlFlowBuilder
 import com.intellij.codeInsight.controlflow.Instruction
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.elementType
 import io.runescript.plugin.lang.psi.*
 
 class RsControlFlowBuilder : ControlFlowBuilder() {
@@ -213,6 +214,7 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             o.expression.accept(this)
             val switchStart = addInstruction(o)
             val caseEnds = mutableSetOf<Instruction>()
+            var isExhaustive = false
             o.switchCaseList.forEach {
                 builder.prevInstruction = switchStart
                 addInstruction(null)
@@ -220,8 +222,11 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
                 if (builder.prevInstruction != null) {
                     caseEnds += builder.prevInstruction
                 }
+                if (it.expressionList.any { expression -> expression is RsSwitchCaseDefaultExpression }) {
+                    isExhaustive = true
+                }
             }
-            if (caseEnds.isNotEmpty()) {
+            if (caseEnds.isNotEmpty() || !isExhaustive) {
                 builder.prevInstruction = switchStart
                 val switchEnd = addInstruction(null)
                 caseEnds.forEach { caseEnd ->
@@ -233,6 +238,10 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         override fun visitSwitchCase(o: RsSwitchCase) {
             o.expressionList.forEach { it.accept(this) }
             o.statementList.accept(this)
+        }
+
+        override fun visitSwitchCaseDefaultExpression(o: RsSwitchCaseDefaultExpression) {
+            addInstruction(o)
         }
 
         override fun visitReturnStatement(o: RsReturnStatement) {
