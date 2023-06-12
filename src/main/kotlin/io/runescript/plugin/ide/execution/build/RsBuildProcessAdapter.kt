@@ -9,6 +9,7 @@ import com.intellij.build.events.impl.FinishBuildEventImpl
 import com.intellij.build.events.impl.StartBuildEventImpl
 import com.intellij.build.events.impl.SuccessResultImpl
 import com.intellij.build.output.BuildOutputInstantReaderImpl
+import com.intellij.execution.actions.StopProcessAction
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
 import com.intellij.openapi.util.Key
@@ -39,7 +40,7 @@ class RsBuildProcessAdapter(
 
         val buildDescriptor = DefaultBuildDescriptor(instance.buildId, instance.project.name, instance.workDirectory, System.currentTimeMillis())
             .withContentDescriptor { buildContentDescriptor }
-
+            .withRestartAction(StopProcessAction("Stop", "Stop", instance.processHandler))
         val buildStarted = StartBuildEventImpl(buildDescriptor, RsBundle.message("build.status.running"))
         buildProgressListener.onEvent(instance.buildId, buildStarted)
     }
