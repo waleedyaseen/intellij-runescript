@@ -18,6 +18,8 @@ import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.wm.ToolWindow
 import java.io.File
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicInteger
 
 class RsBuildInstance(
@@ -41,7 +43,8 @@ class RsBuildInstance(
     var processHandler: ProcessHandler? = null
     var errorCount = AtomicInteger()
 
-    fun build() {
+    fun build(): CompletableFuture<Any> {
+        val future = CompletableFuture<Any>()
         executionPublisher.processStartScheduled(executorId, environment)
         ApplicationManager.getApplication().executeOnPooledThread {
             executionPublisher.processStarting(executorId, environment)
@@ -49,11 +52,12 @@ class RsBuildInstance(
                 openBuildToolWindow()
                 val processHandler = createProcessHandler()
                 this.processHandler = processHandler
-                val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>())
+                val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), future)
                 processHandler.addProcessListener(processAdapter)
                 processHandler.startNotify()
             }
         }
+        return future
     }
 
     private fun openBuildToolWindow(): ToolWindow {

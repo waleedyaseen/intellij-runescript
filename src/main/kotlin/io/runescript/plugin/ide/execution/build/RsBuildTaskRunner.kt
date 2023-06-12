@@ -11,11 +11,14 @@ import com.intellij.ide.impl.isTrusted
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessModuleDir
 import com.intellij.openapi.projectRoots.JavaSdkType
 import com.intellij.openapi.projectRoots.JavaSdkVersion
 import com.intellij.openapi.projectRoots.ProjectJdkTable
+import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.task.ModuleBuildTask
@@ -86,17 +89,33 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
             promise.setError("Could not find JDK 17")
             return
         }
-        val runManager = RunManager.getInstance(project)
-        val executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID) ?: return
-        val runner = ProgramRunner.findRunnerById(RsProgramRunner.ID) ?: return
-        val settings = createBuildSettings(runManager)
-        val environment = ExecutionEnvironment(executor, runner, settings, project)
-        val workDirectory = task.module
-            .guessModuleDir()!!
-            .toNioPath()
-            .absolutePathString()
-        val buildInstance = RsBuildInstance(environment, Any(), task.module, workDirectory, sdk, javaSdk)
-        buildInstance.build()
+        val buildingTask = createBuildTask(project, task, sdk, javaSdk)
+        buildingTask.queue()
+    }
+
+    private fun createBuildTask(project: Project, task: ModuleBuildTask, sdk: Sdk, javaSdk: Sdk): Task.Backgroundable {
+        return object : Task.Backgroundable(project, "Building", false) {
+            override fun run(indicator: ProgressIndicator) {
+                indicator.text = "Building..."
+                indicator.text2 = ""
+                try {
+                    val runManager = RunManager.getInstance(project)
+                    val executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID)
+                        ?: return
+                    val runner = ProgramRunner.findRunnerById(RsProgramRunner.ID) ?: return
+                    val settings = createBuildSettings(runManager)
+                    val environment = ExecutionEnvironment(executor, runner, settings, project)
+                    val workDirectory = task.module
+                        .guessModuleDir()!!
+                        .toNioPath()
+                        .absolutePathString()
+                    val buildInstance = RsBuildInstance(environment, Any(), task.module, workDirectory, sdk, javaSdk)
+                    buildInstance.build().get()
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun createBuildSettings(runManager: RunManager): RunnerAndConfigurationSettings {

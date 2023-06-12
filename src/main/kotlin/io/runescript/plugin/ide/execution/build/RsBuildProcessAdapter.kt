@@ -14,11 +14,13 @@ import com.intellij.execution.process.ProcessEvent
 import com.intellij.openapi.util.Key
 import com.intellij.util.ThreeState
 import io.runescript.plugin.ide.RsBundle
+import java.util.concurrent.CompletableFuture
 import javax.swing.JComponent
 
 class RsBuildProcessAdapter(
     private val instance: RsBuildInstance,
-    private val buildProgressListener: BuildProgressListener
+    private val buildProgressListener: BuildProgressListener,
+    val future: CompletableFuture<Any>
 ) : ProcessAdapter() {
     private val instantReader = BuildOutputInstantReaderImpl(
         instance.buildId,
@@ -61,6 +63,7 @@ class RsBuildProcessAdapter(
             // createFinishEvent(RsBundle.message("build.status.cancelled"), SkippedResultImpl())
             buildProgressListener.onEvent(instance.buildId, finishEvent)
             instance.executionPublisher.processTerminated(instance.executorId, instance.environment, event.processHandler, event.exitCode)
+            future.complete(Any())
         }
     }
 
