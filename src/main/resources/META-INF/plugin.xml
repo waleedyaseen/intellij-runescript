@@ -6,6 +6,7 @@
 ]]></description>
     <vendor></vendor>
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <lang.parserDefinition language="RuneScript"
@@ -45,6 +46,14 @@
         <sdkType implementation="io.runescript.plugin.ide.sdk.RsSdkType"/>
         <projectSdkSetupValidator implementation="io.runescript.plugin.ide.sdk.RsSdkSetupValidator"/>
         <colorProvider implementation="io.runescript.plugin.ide.RsElementColorProvider"/>
+
+        <!-- Notifications -->
+        <notificationGroup displayType="TOOL_WINDOW" id="RuneScript Build"/>
+
+        <!-- Build & Run -->
+        <projectTaskRunner id="runescript" implementation="io.runescript.plugin.ide.execution.build.RsBuildTaskRunner" order="first"/>
+        <configurationType implementation="io.runescript.plugin.ide.execution.run.RsRunConfigurationType"/>
+        <programRunner implementation="io.runescript.plugin.ide.execution.run.RsProgramRunner"/>
 
         <!-- Formatter -->
         <lang.formatter language="RuneScript" implementationClass="io.runescript.plugin.ide.formatter.RsFormatter"/>
