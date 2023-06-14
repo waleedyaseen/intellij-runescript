@@ -8,6 +8,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
@@ -30,6 +31,7 @@
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
         <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RsReferenceContributor"/>
         <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
+        <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>

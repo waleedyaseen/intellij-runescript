@@ -89,6 +89,7 @@ class RsColorSettingsPage : ColorSettingsPage {
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.script_declaration"), RsSyntaxHighlighterColors.SCRIPT_DECLARATION),
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.command_call"), RsSyntaxHighlighterColors.COMMAND_CALL),
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.proc_call"), RsSyntaxHighlighterColors.PROC_CALL),
+            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.config.reference"), RsSyntaxHighlighterColors.CONFIG_REFERENCE),
         )
         private val TAG_TO_DESCRIPTOR_MAP = mutableMapOf(
             "RUNESCRIPT_IDENTIFIER" to RsSyntaxHighlighterColors.IDENTIFIER,
@@ -113,6 +114,7 @@ class RsColorSettingsPage : ColorSettingsPage {
             "RUNESCRIPT_SCRIPT_DECLARATION" to RsSyntaxHighlighterColors.SCRIPT_DECLARATION,
             "RUNESCRIPT_COMMAND_CALL" to RsSyntaxHighlighterColors.COMMAND_CALL,
             "RUNESCRIPT_PROC_CALL" to RsSyntaxHighlighterColors.PROC_CALL,
+            "RUNESCRIPT_CONFIG_REFERENCE" to RsSyntaxHighlighterColors.CONFIG_REFERENCE,
         )
 
         private val LEXER_INFO = RsLexerInfo(mutableListOf("int", "component", "string"))

@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.op.RsOpCommand
+import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 class RsHighlightingAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -49,12 +51,13 @@ class RsHighlightingAnnotator : Annotator {
             }
 
             override fun visitDynamicExpression(o: RsDynamicExpression) {
-                // TODO(Walied): Make this error when we have config resolving
                 val reference = o.reference?.resolve() ?: return
                 if (reference is RsLocalVariableExpression) {
                     o.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
-                } else {
+                } else if (reference is RsOpCommand) {
                     o.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
+                } else if (reference is RsSymSymbol) {
+                    o.highlight(holder, RsSyntaxHighlighterColors.CONFIG_REFERENCE)
                 }
             }
         })

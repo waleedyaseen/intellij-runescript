@@ -10,13 +10,22 @@ import io.runescript.plugin.lang.psi.op.RsOpCommand
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.stubs.index.RsCommandIndex
+import io.runescript.plugin.symbollang.psi.RsSymSymbol
+import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         resolveArray()?.let { return toResolveResult(listOf(it)) }
         val commands = StubIndex.getElements(RsCommandIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsOpCommand::class.java)
-        return toResolveResult(commands)
+        if (commands.isNotEmpty()) {
+            return toResolveResult(commands)
+        }
+        val configs = StubIndex.getElements(RsSymbolIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsSymSymbol::class.java)
+        if (configs.isNotEmpty()) {
+            return toResolveResult(configs)
+        }
+        return emptyArray()
     }
 
     private fun toResolveResult(elements: Iterable<PsiElement>): Array<ResolveResult> {

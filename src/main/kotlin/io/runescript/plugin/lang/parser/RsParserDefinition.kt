@@ -13,8 +13,6 @@ import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.ide.config.RsConfig
 import io.runescript.plugin.ide.filetypes.Cs2FileType
 import io.runescript.plugin.ide.filetypes.OpFileType
-import io.runescript.plugin.lang.lexer.RsLexerAdapter
-import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.op.RsOpElementTypes
 import io.runescript.plugin.lang.stubs.types.RsFileStubType

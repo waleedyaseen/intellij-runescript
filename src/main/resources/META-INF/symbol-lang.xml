@@ -1,0 +1,15 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="RuneScript Symbol" language="RuneScriptSymbol"
+                  implementationClass="io.runescript.plugin.symbollang.filetypes.RsSymFileType" fieldName="INSTANCE"
+                  extensions="sym"/>
+        <lang.parserDefinition language="RuneScriptSymbol"
+                               implementationClass="io.runescript.plugin.symbollang.parser.RsSymParserDefinition"/>
+        <annotator language="RuneScriptSymbol"
+                   implementationClass="io.runescript.plugin.symbollang.annotator.RsSymAnnotator"/>
+        <stubElementTypeHolder externalIdPrefix="RuneScriptSymbol."
+                               class="io.runescript.plugin.symbollang.psi.RsSymElementTypes"/>
+
+        <stubIndex implementation="io.runescript.plugin.symbollang.psi.index.RsSymbolIndex"/>
+    </extensions>
+</idea-plugin>

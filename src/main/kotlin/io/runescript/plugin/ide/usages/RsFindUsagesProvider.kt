@@ -8,6 +8,7 @@ import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 class RsFindUsagesProvider : FindUsagesProvider {
 
@@ -21,7 +22,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
     }
 
     override fun canFindUsagesFor(psiElement: PsiElement): Boolean {
-        return psiElement is RsLocalVariableExpression || psiElement is RsScript
+        return psiElement is RsLocalVariableExpression || psiElement is RsScript || psiElement is RsSymSymbol
     }
 
     override fun getHelpId(psiElement: PsiElement): String? {
@@ -35,6 +36,9 @@ class RsFindUsagesProvider : FindUsagesProvider {
         if (element is RsScript) {
             return "Procedure"
         }
+        if (element is RsSymSymbol) {
+            return "Symbol"
+        }
         return ""
     }
 
@@ -45,6 +49,9 @@ class RsFindUsagesProvider : FindUsagesProvider {
         if (element is RsScript) {
             return element.scriptName
         }
+        if (element is RsSymSymbol) {
+            return element.fieldList[1].text
+        }
         return ""
     }
 
@@ -54,6 +61,9 @@ class RsFindUsagesProvider : FindUsagesProvider {
         }
         if (element is RsScript) {
             return element.scriptName
+        }
+        if (element is RsSymSymbol) {
+            return element.fieldList[1].text
         }
         return ""
     }
