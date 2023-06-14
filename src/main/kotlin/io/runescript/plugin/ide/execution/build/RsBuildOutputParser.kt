@@ -13,18 +13,18 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
 
     private val fileMessageContext = FileMessageContext()
     private val detailsBuilder = StringBuilder()
-    private var parsingSyntaxDetailsCount = 0
+    private var detailsCount = 0
 
     override fun parse(line: String, reader: BuildOutputInstantReader, messageConsumer: Consumer<in BuildEvent>): Boolean {
-        if (parsingSyntaxDetailsCount > 0) {
-            parsingSyntaxDetailsCount--
+        if (detailsCount > 0) {
+            detailsCount--
             detailsBuilder.appendLine(line)
-            if (parsingSyntaxDetailsCount == 0) {
+            if (detailsCount == 0) {
                 val filePath = File(fileMessageContext.path)
                 val filePosition = FilePosition(filePath, fileMessageContext.line, fileMessageContext.column)
                 val fileMessage = FileMessageEventImpl(instance.buildId,
                     MessageEvent.Kind.ERROR,
-                    "Syntax Errors",
+                    "Compiler Errors",
                     fileMessageContext.message,
                     detailsBuilder.toString(),
                     filePosition
@@ -35,21 +35,22 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
             }
             return true
         }
-        val syntaxErrorMatch = SYNTAX_ERROR_PATTERN.matchEntire(line)
+        val syntaxErrorMatch = ERROR_PATTERN.matchEntire(line)
         if (syntaxErrorMatch != null) {
-            fileMessageContext.path = syntaxErrorMatch.groups["path"]!!.value
-            fileMessageContext.line = syntaxErrorMatch.groups["line"]!!.value.toInt() - 1
-            fileMessageContext.column = syntaxErrorMatch.groups["column"]!!.value.toInt() - 1
-            fileMessageContext.message = syntaxErrorMatch.groups["message"]!!.value
+            fileMessageContext.path = syntaxErrorMatch.groups[1]!!.value
+            fileMessageContext.line = syntaxErrorMatch.groups[2]!!.value.toInt() - 1
+            fileMessageContext.column = syntaxErrorMatch.groups[3]!!.value.toInt() - 1
+            fileMessageContext.message = syntaxErrorMatch.groups[4]!!.value
             detailsBuilder.appendLine(fileMessageContext.message)
-            parsingSyntaxDetailsCount = 2
+            detailsCount = 2
             return true
         }
+        println(line)
         return false
     }
 
     companion object {
-        private val SYNTAX_ERROR_PATTERN = Regex("(?<path>.+):(?<line>\\d+):(?<column>\\d+): SYNTAX_ERROR: (?<message>[^\\r\\n]+)")
+        private val ERROR_PATTERN = Regex("(?<path>.+):(?<line>\\d+):(?<column>\\d+): (?:ERROR|SYNTAX_ERROR): (?<message>[^\\r\\n]+)")
     }
 }
 

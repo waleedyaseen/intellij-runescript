@@ -10,8 +10,10 @@ import com.intellij.build.events.impl.StartBuildEventImpl
 import com.intellij.build.events.impl.SuccessResultImpl
 import com.intellij.build.output.BuildOutputInstantReaderImpl
 import com.intellij.execution.actions.StopProcessAction
+import com.intellij.execution.process.AnsiEscapeDecoder
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.openapi.util.Key
 import com.intellij.util.ThreeState
 import io.runescript.plugin.ide.RsBundle
@@ -29,6 +31,7 @@ class RsBuildProcessAdapter(
         buildProgressListener,
         listOf(RsBuildOutputParser(instance))
     )
+    private val decoder = AnsiEscapeDecoder()
 
     init {
         instance.executionPublisher.processStarted(instance.executorId, instance.environment, instance.processHandler!!)
@@ -46,7 +49,11 @@ class RsBuildProcessAdapter(
     }
 
     override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
-        instantReader.append(event.text)
+        val buffer = StringBuilder(event.text.length)
+        decoder.escapeText(event.text, ProcessOutputTypes.STDOUT) { text, _ ->
+            buffer.append(text)
+        }
+        instantReader.append(buffer.toString())
     }
 
     override fun processWillTerminate(event: ProcessEvent, willBeDestroyed: Boolean) {
