@@ -17,7 +17,7 @@ import io.runescript.plugin.lang.psi.RsParExpression
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
-import io.runescript.plugin.lang.psi.op.RsOpCommand
+import io.runescript.plugin.oplang.psi.RsOpCommand
 
 @Suppress("UnstableApiUsage")
 class RsInlayParameterHintsProvider : InlayParameterHintsProvider {

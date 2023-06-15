@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.lang.psi.op.RsOpCommand
+import io.runescript.plugin.oplang.psi.RsOpCommand
 
 class RsDocumentationProvider : AbstractDocumentationProvider() {
 

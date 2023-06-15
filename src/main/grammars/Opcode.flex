@@ -1,13 +1,14 @@
-package io.runescript.plugin.lang.lexer;
+package io.runescript.plugin.oplang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import io.runescript.plugin.lang.lexer.RsLexerInfo;
 
 import java.util.List;
 
 import static io.runescript.plugin.lang.psi.RsTokenTypes.*;
-import static io.runescript.plugin.lang.psi.op.RsOpElementTypes.*;
+import static io.runescript.plugin.oplang.psi.RsOpElementTypes.*;
 %%
 
 %{

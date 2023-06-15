@@ -9,15 +9,13 @@
     <depends>com.intellij.java</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="/META-INF/op-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
         <fileType name="ClientScript" language="RuneScript"
                   implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE"
                   extensions="cs2"/>
-        <fileType name="Command" language="RuneScript"
-                  implementationClass="io.runescript.plugin.ide.filetypes.OpFileType" fieldName="INSTANCE"
-                  extensions="op"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
         <projectConfigurable
                 groupId="language"
@@ -38,9 +36,7 @@
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
         <lang.commenter language="RuneScript" implementationClass="io.runescript.plugin.ide.RsCommenter"/>
         <stubElementTypeHolder externalIdPrefix="RuneScript." class="io.runescript.plugin.lang.psi.RsElementTypes"/>
-        <stubElementTypeHolder externalIdPrefix="RsOp." class="io.runescript.plugin.lang.psi.op.RsOpElementTypes"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex"/>
-        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsCommandIndex"/>
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>

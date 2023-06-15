@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.lang.psi.op.RsOpCommand
+import io.runescript.plugin.oplang.psi.RsOpCommand
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 class RsHighlightingAnnotator : Annotator {

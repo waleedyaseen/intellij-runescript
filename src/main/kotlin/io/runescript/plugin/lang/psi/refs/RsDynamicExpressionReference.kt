@@ -6,10 +6,10 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
-import io.runescript.plugin.lang.psi.op.RsOpCommand
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
-import io.runescript.plugin.lang.stubs.index.RsCommandIndex
+import io.runescript.plugin.oplang.psi.RsOpCommand
+import io.runescript.plugin.oplang.psi.index.RsCommandIndex
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 

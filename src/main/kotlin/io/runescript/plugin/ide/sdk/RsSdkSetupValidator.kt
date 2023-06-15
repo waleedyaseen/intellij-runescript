@@ -10,7 +10,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.ui.EditorNotificationPanel
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.filetypes.Cs2FileType
-import io.runescript.plugin.ide.filetypes.OpFileType
+import io.runescript.plugin.oplang.filetypes.RsOpFileType
 import io.runescript.plugin.lang.RuneScript
 
 
@@ -19,7 +19,7 @@ class RsSdkSetupValidator : ProjectSdkSetupValidator {
     override fun isApplicableFor(project: Project, file: VirtualFile): Boolean {
         val fileType = file.fileType
         when (fileType) {
-            is Cs2FileType, OpFileType -> {
+            is Cs2FileType, RsOpFileType -> {
                 val psiFile = PsiManager.getInstance(project).findFile(file) ?: return false
                 return psiFile.language.isKindOf(RuneScript)
             }

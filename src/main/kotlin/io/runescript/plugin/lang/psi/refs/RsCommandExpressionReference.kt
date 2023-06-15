@@ -8,8 +8,8 @@ import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsCommandExpression
-import io.runescript.plugin.lang.psi.op.RsOpCommand
-import io.runescript.plugin.lang.stubs.index.RsCommandIndex
+import io.runescript.plugin.oplang.psi.RsOpCommand
+import io.runescript.plugin.oplang.psi.index.RsCommandIndex
 
 class RsCommandExpressionReference(element: RsCommandExpression) : PsiPolyVariantReferenceBase<RsCommandExpression>(element, element.nameLiteral.textRangeInParent) {
 
