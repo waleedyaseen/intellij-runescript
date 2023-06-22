@@ -3,24 +3,29 @@ package io.runescript.plugin.lang.psi.scope
 import com.intellij.psi.PsiElement
 import com.intellij.psi.ResolveState
 import com.intellij.psi.scope.PsiScopeProcessor
-import io.runescript.plugin.lang.psi.RsArrayVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
-import io.runescript.plugin.lang.psi.RsParameter
+import io.runescript.plugin.lang.psi.isForArrayDeclaration
+import io.runescript.plugin.lang.psi.isForVariableDeclaration
 
-class RsLocalVariableResolver(private val name: String, private val arraysOnly: Boolean = false) : PsiScopeProcessor {
+enum class RsResolveMode {
+    Variables,
+    Arrays,
+    Both
+}
+
+class RsLocalVariableResolver(private val name: String, private val mode: RsResolveMode) : PsiScopeProcessor {
 
     var declaration: RsLocalVariableExpression? = null
 
     override fun execute(element: PsiElement, state: ResolveState): Boolean {
         if (element is RsLocalVariableExpression) {
             if (element.name != name) return true
-            if (arraysOnly) {
-                val parent = element.parent
-                if (parent is RsArrayVariableDeclarationStatement || (parent is RsParameter && parent.arrayTypeLiteral != null)) {
-                    declaration = element
-                    return false
-                }
-            } else {
+            val filterPassed = when (mode) {
+                RsResolveMode.Variables -> element.isForVariableDeclaration()
+                RsResolveMode.Arrays -> element.isForArrayDeclaration()
+                RsResolveMode.Both -> element.isForVariableDeclaration() || element.isForArrayDeclaration()
+            }
+            if (filterPassed) {
                 declaration = element
                 return false
             }

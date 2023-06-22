@@ -7,6 +7,7 @@ import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
+import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.oplang.psi.RsOpCommand
 import io.runescript.plugin.oplang.psi.index.RsCommandIndex
@@ -33,7 +34,7 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVarian
     }
 
     private fun resolveArray(): RsLocalVariableExpression? {
-        val resolver = RsLocalVariableResolver(element.nameLiteral.text, arraysOnly = true)
+        val resolver = RsLocalVariableResolver(element.nameLiteral.text, RsResolveMode.Arrays)
         RsScopesUtil.walkUpScopes(resolver, ResolveState.initial(), element)
         return resolver.declaration
     }

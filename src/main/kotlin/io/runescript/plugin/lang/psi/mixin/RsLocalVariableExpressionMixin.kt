@@ -25,15 +25,10 @@ abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalV
     }
 
     override fun getReference(): PsiReference? {
-        // Note(Walied): We need to separate the declaration rule from the assignment rule
-        // right now both are using LocalVariableExpression resulting in declaration trying to refer
-        // to other variables in parent scopes.
-        if (parent !is RsLocalVariableDeclarationStatement &&
-                parent !is RsArrayVariableDeclarationStatement &&
-                parent !is RsParameter) {
-            return RsLocalVariableReference(this)
+        if (isForVariableDeclaration() || isForArrayDeclaration()) {
+            return null
         }
-        return null
+        return RsLocalVariableReference(this)
     }
 
     override fun getTextOffset(): Int {

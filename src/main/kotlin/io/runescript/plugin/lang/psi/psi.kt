@@ -45,3 +45,25 @@ val RsScript.scriptNameExpression: RsNameLiteral
 val RsScript.scriptName: String
     get() = scriptNameExpression.text
 
+fun RsLocalVariableExpression.isForArrayDeclaration(): Boolean {
+    // Either a parameter "intarray $array" or declaration "def_int $array(...)"
+    val parent = parent
+    if (parent is RsArrayVariableDeclarationStatement && this === parent.expressionList[0]) {
+        return true
+    }
+    return parent is RsParameter && parent.arrayTypeLiteral != null
+}
+
+fun RsLocalVariableExpression.isForVariableDeclaration(): Boolean {
+    // Either a parameter "int $array" or declaration "def_int $array"
+    val parent = parent
+    if (parent is RsLocalVariableDeclarationStatement && this === parent.expressionList[0]) {
+        return true
+    }
+    return parent is RsParameter && parent.typeName != null
+}
+
+fun RsLocalVariableExpression.isForArrayAccess(): Boolean {
+    val parent = parent
+    return parent is RsArrayAccessExpression && this === parent.expressionList[0]
+}

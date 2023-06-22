@@ -2,7 +2,9 @@ package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.psi.*
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.isForArrayAccess
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
+import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
 class RsLocalVariableReference(element: RsLocalVariableExpression) :
@@ -14,7 +16,8 @@ class RsLocalVariableReference(element: RsLocalVariableExpression) :
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val resolver = RsLocalVariableResolver(element.name!!)
+        val resolveMode = if (element.isForArrayAccess()) RsResolveMode.Arrays else RsResolveMode.Variables
+        val resolver = RsLocalVariableResolver(element.name!!, resolveMode)
         RsScopesUtil.walkUpScopes(resolver, ResolveState.initial(), element)
         return resolver.declaration?.let {
             arrayOf(PsiElementResolveResult(it))
