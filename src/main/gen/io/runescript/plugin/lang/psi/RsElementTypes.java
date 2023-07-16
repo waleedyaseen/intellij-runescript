@@ -45,6 +45,7 @@ public interface RsElementTypes {
   IElementType STATEMENT = new RsElementType("STATEMENT");
   IElementType STATEMENT_LIST = new RsElementType("STATEMENT_LIST");
   IElementType STRING_INTERPOLATION_EXPRESSION = new RsElementType("STRING_INTERPOLATION_EXPRESSION");
+  IElementType STRING_LITERAL_CONTENT = new RsElementType("STRING_LITERAL_CONTENT");
   IElementType STRING_LITERAL_EXPRESSION = new RsElementType("STRING_LITERAL_EXPRESSION");
   IElementType SWITCH_CASE = new RsElementType("SWITCH_CASE");
   IElementType SWITCH_CASE_DEFAULT_EXPRESSION = new RsElementType("SWITCH_CASE_DEFAULT_EXPRESSION");
@@ -205,6 +206,9 @@ public interface RsElementTypes {
       }
       else if (type == STRING_INTERPOLATION_EXPRESSION) {
         return new RsStringInterpolationExpressionImpl(node);
+      }
+      else if (type == STRING_LITERAL_CONTENT) {
+        return new RsStringLiteralContentImpl(node);
       }
       else if (type == STRING_LITERAL_EXPRESSION) {
         return new RsStringLiteralExpressionImpl(node);

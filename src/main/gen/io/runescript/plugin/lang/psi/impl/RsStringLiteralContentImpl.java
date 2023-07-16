@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsStringLiteralExpressionImpl extends RsExpressionImpl implements RsStringLiteralExpression {
+public class RsStringLiteralContentImpl extends ASTWrapperPsiElement implements RsStringLiteralContent {
 
-  public RsStringLiteralExpressionImpl(@NotNull ASTNode node) {
+  public RsStringLiteralContentImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull RsVisitor visitor) {
-    visitor.visitStringLiteralExpression(this);
+    visitor.visitStringLiteralContent(this);
   }
 
   @Override
@@ -29,20 +29,8 @@ public class RsStringLiteralExpressionImpl extends RsExpressionImpl implements R
 
   @Override
   @NotNull
-  public RsStringLiteralContent getStringLiteralContent() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsStringLiteralContent.class));
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getStringEnd() {
-    return notNullChild(findChildByType(STRING_END));
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getStringStart() {
-    return notNullChild(findChildByType(STRING_START));
+  public List<RsStringInterpolationExpression> getStringInterpolationExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsStringInterpolationExpression.class);
   }
 
 }

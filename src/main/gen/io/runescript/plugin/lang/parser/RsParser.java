@@ -1185,37 +1185,40 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
+  // (STRING_PART | STRING_TAG | StringInterpolationExpression)*
+  public static boolean StringLiteralContent(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StringLiteralContent")) return false;
+    Marker m = enter_section_(b, l, _NONE_, STRING_LITERAL_CONTENT, "<string literal content>");
+    while (true) {
+      int c = current_position_(b);
+      if (!StringLiteralContent_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "StringLiteralContent", c)) break;
+    }
+    exit_section_(b, l, m, true, false, null);
+    return true;
+  }
+
+  // STRING_PART | STRING_TAG | StringInterpolationExpression
+  private static boolean StringLiteralContent_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "StringLiteralContent_0")) return false;
+    boolean r;
+    r = consumeToken(b, STRING_PART);
+    if (!r) r = consumeToken(b, STRING_TAG);
+    if (!r) r = StringInterpolationExpression(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // STRING_START StringLiteralContent STRING_END
   public static boolean StringLiteralExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StringLiteralExpression")) return false;
     if (!nextTokenIs(b, "<Expression>", STRING_START)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, STRING_LITERAL_EXPRESSION, "<Expression>");
     r = consumeToken(b, STRING_START);
-    r = r && StringLiteralExpression_1(b, l + 1);
+    r = r && StringLiteralContent(b, l + 1);
     r = r && consumeToken(b, STRING_END);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // (STRING_PART | STRING_TAG | StringInterpolationExpression)*
-  private static boolean StringLiteralExpression_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "StringLiteralExpression_1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!StringLiteralExpression_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "StringLiteralExpression_1", c)) break;
-    }
-    return true;
-  }
-
-  // STRING_PART | STRING_TAG | StringInterpolationExpression
-  private static boolean StringLiteralExpression_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "StringLiteralExpression_1_0")) return false;
-    boolean r;
-    r = consumeToken(b, STRING_PART);
-    if (!r) r = consumeToken(b, STRING_TAG);
-    if (!r) r = StringInterpolationExpression(b, l + 1);
     return r;
   }
 

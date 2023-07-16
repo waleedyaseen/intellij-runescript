@@ -160,6 +160,10 @@ public class RsVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitStringLiteralContent(@NotNull RsStringLiteralContent o) {
+    visitPsiElement(o);
+  }
+
   public void visitStringLiteralExpression(@NotNull RsStringLiteralExpression o) {
     visitExpression(o);
   }

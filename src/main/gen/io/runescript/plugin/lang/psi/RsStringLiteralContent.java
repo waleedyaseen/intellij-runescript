@@ -5,15 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsStringLiteralExpression extends RsExpression {
+public interface RsStringLiteralContent extends PsiElement {
 
   @NotNull
-  RsStringLiteralContent getStringLiteralContent();
-
-  @NotNull
-  PsiElement getStringEnd();
-
-  @NotNull
-  PsiElement getStringStart();
+  List<RsStringInterpolationExpression> getStringInterpolationExpressionList();
 
 }

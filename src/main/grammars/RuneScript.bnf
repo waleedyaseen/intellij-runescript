@@ -213,7 +213,9 @@ IntegerLiteralExpression ::= INTEGER
 CoordLiteralExpression ::= COORDGRID
 BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
-StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
+StringLiteralExpression ::= STRING_START StringLiteralContent STRING_END
+StringLiteralContent ::= (STRING_PART | STRING_TAG | StringInterpolationExpression)*
+
 StringInterpolationExpression ::= STRING_INTERPOLATION_START Expression STRING_INTERPOLATION_END
 CommandExpression ::= NameLiteral ArgumentList {
     implements="com.intellij.psi.NavigatablePsiElement"
