@@ -51,7 +51,7 @@ DECIMAL_INTEGER = ({DECIMAL_DIGIT})+
 INTEGER = ([-+]?)(({DECIMAL_INTEGER})|({HEX_INTEGER}))
 STRING_PART = [^\"\r\n<]+
 COLOR_TAG = "<"(shad|col|str|u)"="([0-9a-fA-F]+)">"
-OTHER_TAG = "<"(str|u|br)">"
+OTHER_TAG = "<"(str|u|br|lt|gt)">"
 IMG_TAG = "<img="([0-9]+)">"
 CLOSE_TAG = "</"(shad|col|str|u)">"
 INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
