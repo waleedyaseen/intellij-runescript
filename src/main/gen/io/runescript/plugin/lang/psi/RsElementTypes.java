@@ -23,6 +23,7 @@ public interface RsElementTypes {
   IElementType CONDITION_EXPRESSION = new RsElementType("CONDITION_EXPRESSION");
   IElementType CONDITION_OP = new RsElementType("CONDITION_OP");
   IElementType CONSTANT_EXPRESSION = new RsElementType("CONSTANT_EXPRESSION");
+  IElementType COORD_LITERAL_EXPRESSION = new RsElementType("COORD_LITERAL_EXPRESSION");
   IElementType DYNAMIC_EXPRESSION = new RsElementType("DYNAMIC_EXPRESSION");
   IElementType EXPRESSION = new RsElementType("EXPRESSION");
   IElementType EXPRESSION_STATEMENT = new RsElementType("EXPRESSION_STATEMENT");
@@ -59,6 +60,7 @@ public interface RsElementTypes {
   IElementType CASE = new RsElementType("CASE");
   IElementType COLON = new RsElementType(":");
   IElementType COMMA = new RsElementType(",");
+  IElementType COORDGRID = new RsElementType("COORDGRID");
   IElementType DEFAULT = new RsElementType("DEFAULT");
   IElementType DEFINE_TYPE = new RsElementType("DEFINE_TYPE");
   IElementType DOLLAR = new RsElementType("$");
@@ -143,6 +145,9 @@ public interface RsElementTypes {
       }
       else if (type == CONSTANT_EXPRESSION) {
         return new RsConstantExpressionImpl(node);
+      }
+      else if (type == COORD_LITERAL_EXPRESSION) {
+        return new RsCoordLiteralExpressionImpl(node);
       }
       else if (type == DYNAMIC_EXPRESSION) {
         return new RsDynamicExpressionImpl(node);

@@ -41,9 +41,10 @@ public class RsParser implements PsiParser, LightPsiParser {
       SWITCH_STATEMENT, WHILE_STATEMENT),
     create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_ACCESS_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
       CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
-      DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION,
-      LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION,
-      SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
+      COORD_LITERAL_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION,
+      INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION,
+      RELATIONAL_VALUE_EXPRESSION, SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION,
+      SWITCH_CASE_DEFAULT_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -504,6 +505,18 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // COORDGRID
+  public static boolean CoordLiteralExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "CoordLiteralExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", COORDGRID)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, COORD_LITERAL_EXPRESSION, "<Expression>");
+    r = consumeToken(b, COORDGRID);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // NameLiteral
   public static boolean DynamicExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DynamicExpression")) return false;
@@ -670,6 +683,7 @@ public class RsParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // IntegerLiteralExpression
+  //                              | CoordLiteralExpression
   //                              | BooleanLiteralExpression
   //                              | NullLiteralExpression
   //                              | StringLiteralExpression
@@ -678,6 +692,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, null, "<Expression>");
     r = IntegerLiteralExpression(b, l + 1);
+    if (!r) r = CoordLiteralExpression(b, l + 1);
     if (!r) r = BooleanLiteralExpression(b, l + 1);
     if (!r) r = NullLiteralExpression(b, l + 1);
     if (!r) r = StringLiteralExpression(b, l + 1);

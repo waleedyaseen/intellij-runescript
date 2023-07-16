@@ -268,6 +268,10 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
+        override fun visitCoordLiteralExpression(o: RsCoordLiteralExpression) {
+            addInstruction(o)
+        }
+
         override fun visitStringLiteralExpression(o: RsStringLiteralExpression) {
             o.stringInterpolationExpressionList.forEach { it.accept(this) }
             addInstruction(o)

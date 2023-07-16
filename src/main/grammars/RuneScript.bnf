@@ -205,10 +205,12 @@ LocalVariableExpression ::= '$' NameLiteral {
 ArrayAccessExpression ::= LocalVariableExpression '(' Expression ')'
 ScopedVariableExpression ::= '%' NameLiteral
 private LiteralExpression ::= IntegerLiteralExpression
+                             | CoordLiteralExpression
                              | BooleanLiteralExpression
                              | NullLiteralExpression
                              | StringLiteralExpression
 IntegerLiteralExpression ::= INTEGER
+CoordLiteralExpression ::= COORDGRID
 BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
 StringLiteralExpression ::= STRING_START (STRING_PART | STRING_TAG | StringInterpolationExpression)* STRING_END
