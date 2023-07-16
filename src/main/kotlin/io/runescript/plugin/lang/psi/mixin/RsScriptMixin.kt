@@ -72,35 +72,4 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
     override fun getTextOffset(): Int {
         return scriptNameExpression.startOffset
     }
-
-    /*
-
-    override fun getName(): String? {
-        return RsPsiImplUtil.getName(nameLiteralList[1])
-    }
-
-    override fun setName(name: String): PsiElement {
-        return RsPsiImplUtil.setName(nameLiteralList[1], name)
-    }
-
-    override fun getNameIdentifier(): PsiElement? {
-        return nameLiteralList[1]
-    }
-
-    override fun getReference(): PsiReference? {
-        return object: PsiPolyVariantReferenceBase<RsScriptName>(this, nameExpression!!.textRangeInParent) {
-
-            override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-                val elements = StubIndex.getElements(RsGotoScriptIndex.KEY, nameExpression!!.text, element.project, GlobalSearchScope.allScope(element.project), RsScript::class.java)
-                return elements.map { PsiElementResolveResult(it) }.toTypedArray()
-            }
-
-            override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
-
-            override fun handleElementRename(newElementName: String): PsiElement {
-                return element.setName(newElementName)
-            }
-        }
-    }
-     */
 }

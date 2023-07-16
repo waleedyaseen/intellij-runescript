@@ -11,8 +11,8 @@ class RsLocalVariableReference(element: RsLocalVariableExpression) :
         PsiReferenceBase<RsLocalVariableExpression>(element, element.nameLiteral.textRangeInParent), PsiPolyVariantReference {
 
     override fun resolve(): PsiElement? {
-        val result = multiResolve(false);
-        return if (result.isEmpty()) null else result[0].element
+        val result = multiResolve(false)
+        return result.singleOrNull()?.element
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {

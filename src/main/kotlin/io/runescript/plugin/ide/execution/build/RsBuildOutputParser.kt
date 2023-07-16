@@ -45,7 +45,6 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
             detailsCount = 2
             return true
         }
-        println(line)
         return false
     }
 
