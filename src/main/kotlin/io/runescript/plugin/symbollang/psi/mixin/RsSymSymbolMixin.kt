@@ -10,6 +10,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.symbollang.psi.RsSymPsiImplUtil
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
+import io.runescript.plugin.symbollang.psi.isConstantFile
 import io.runescript.plugin.symbollang.psi.stub.RsSymSymbolStub
 
 abstract class RsSymSymbolMixin : StubBasedPsiElementBase<RsSymSymbolStub>, RsSymSymbol {
@@ -22,19 +23,13 @@ abstract class RsSymSymbolMixin : StubBasedPsiElementBase<RsSymSymbolStub>, RsSy
         return GlobalSearchScope.projectScope(project)
     }
 
-    override fun setName(name: String): PsiElement {
-        return RsSymPsiImplUtil.setName(fieldList[1], name)
-    }
+    override fun setName(name: String) = RsSymPsiImplUtil.setName(fieldList[getNameFieldIndex()], name)
 
-    override fun getName(): String {
-        return RsSymPsiImplUtil.getName(fieldList[1])
-    }
+    override fun getName() = RsSymPsiImplUtil.getName(fieldList[getNameFieldIndex()])
 
-    override fun getNameIdentifier(): PsiElement? {
-        return fieldList[1]
-    }
+    override fun getNameIdentifier(): PsiElement = fieldList[getNameFieldIndex()]
 
-    override fun getTextOffset(): Int {
-        return fieldList[1].startOffset
-    }
+    override fun getTextOffset() = nameIdentifier.startOffset
+
+    private fun getNameFieldIndex() = if (containingFile.virtualFile.isConstantFile()) 0 else 1
 }
