@@ -30,5 +30,11 @@
                          enabledByDefault="true"
                          level="WARNING"
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnreachableCodeInspection"/>
+        <localInspection language="RuneScriptSymbol"
+                         groupName="RuneScript"
+                         displayName="Invalid symbol file"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptInvalidSymbolFileInspection"/>
     </extensions>
 </idea-plugin>

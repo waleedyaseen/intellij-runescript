@@ -5,8 +5,6 @@
                   extensions="sym"/>
         <lang.parserDefinition language="RuneScriptSymbol"
                                implementationClass="io.runescript.plugin.symbollang.parser.RsSymParserDefinition"/>
-        <annotator language="RuneScriptSymbol"
-                   implementationClass="io.runescript.plugin.symbollang.annotator.RsSymAnnotator"/>
         <stubElementTypeHolder externalIdPrefix="RuneScriptSymbol."
                                class="io.runescript.plugin.symbollang.psi.RsSymElementTypes"/>
 
