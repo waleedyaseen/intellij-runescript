@@ -50,7 +50,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
             return element.scriptName
         }
         if (element is RsSymSymbol) {
-            return element.fieldList[1].text
+            return element.name!!
         }
         return ""
     }
@@ -63,7 +63,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
             return element.scriptName
         }
         if (element is RsSymSymbol) {
-            return element.fieldList[1].text
+            return element.name!!
         }
         return ""
     }

@@ -39,6 +39,12 @@ object RsElementGenerator {
         return PsiTreeUtil.findChildOfType(element, RsNameLiteral::class.java) as RsNameLiteral
     }
 
+    fun createStringLiteralContent(project: Project, content: String): PsiElement {
+        val element = createDummyFile(project, "[proc,dummy]()()\"$content\";")
+        val literal = PsiTreeUtil.findChildOfType(element, RsStringLiteralExpression::class.java) as RsStringLiteralExpression
+        return PsiTreeUtil.findChildOfType(literal, RsStringLiteralContent::class.java) as RsStringLiteralContent
+    }
+
     private fun createDummyFile(project: Project, text: String): PsiFile {
         val factory = PsiFileFactory.getInstance(project) as PsiFileFactoryImpl
         val name = "dummy.${Cs2FileType.defaultExtension}"

@@ -26,6 +26,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnresolvedCommandInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Type checking"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptTypeCheckerInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unreachable code"
                          enabledByDefault="true"
                          level="WARNING"

@@ -166,6 +166,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitStringLiteralExpression(@NotNull RsStringLiteralExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitSwitchCase(@NotNull RsSwitchCase o) {

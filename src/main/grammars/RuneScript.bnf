@@ -213,7 +213,10 @@ IntegerLiteralExpression ::= INTEGER
 CoordLiteralExpression ::= COORDGRID
 BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL
-StringLiteralExpression ::= STRING_START StringLiteralContent STRING_END
+StringLiteralExpression ::= STRING_START StringLiteralContent STRING_END {
+    mixin=" io.runescript.plugin.lang.psi.mixin.RsStringLiteralExpressionMixin"
+    implements="io.runescript.plugin.lang.psi.RsNamedElement"
+}
 StringLiteralContent ::= (STRING_PART | STRING_TAG | StringInterpolationExpression)*
 
 StringInterpolationExpression ::= STRING_INTERPOLATION_START Expression STRING_INTERPOLATION_END
