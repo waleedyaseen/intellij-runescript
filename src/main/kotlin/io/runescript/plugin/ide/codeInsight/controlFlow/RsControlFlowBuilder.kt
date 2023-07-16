@@ -41,7 +41,9 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
 
         override fun visitLocalVariableDeclarationStatement(o: RsLocalVariableDeclarationStatement) {
             o.expressionList[0].accept(this)
-            o.expressionList[1].accept(this)
+            if (o.expressionList.size > 1) {
+                o.expressionList[1].accept(this)
+            }
             addVariableDefinition(o)
         }
 
