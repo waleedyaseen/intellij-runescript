@@ -11,6 +11,7 @@ import com.intellij.ide.impl.isTrusted
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -28,6 +29,7 @@ import com.intellij.task.ProjectTaskRunner
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.execution.run.RsProgramRunner
 import io.runescript.plugin.ide.execution.run.RsRunConfigurationType
+import io.runescript.plugin.ide.projectWizard.RsModuleType
 import io.runescript.plugin.ide.sdk.RsSdkType
 import org.jetbrains.concurrency.AsyncPromise
 import org.jetbrains.concurrency.Promise
@@ -38,7 +40,12 @@ import kotlin.io.path.absolutePathString
 class RsBuildTaskRunner : ProjectTaskRunner() {
 
     override fun canRun(projectTask: ProjectTask): Boolean {
-        return projectTask is ModuleBuildTask
+        if (projectTask !is ModuleBuildTask) {
+            return false
+        }
+        val moduleType = ModuleType.get(projectTask.module)
+        // TODO(Walied): Why the module is resolving to Unknown module type and not RsModuleType?
+        return moduleType.id == RsModuleType.ID
     }
 
     override fun run(project: Project, context: ProjectTaskContext, vararg tasks: ProjectTask): Promise<Result> {
