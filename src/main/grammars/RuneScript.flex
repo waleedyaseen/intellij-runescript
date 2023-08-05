@@ -50,7 +50,9 @@ HEX_INTEGER = 0[xX]({HEX_DIGIT})+
 DECIMAL_INTEGER = (({DECIMAL_DIGIT})+)
 COORDGRID = {DECIMAL_INTEGER}_{DECIMAL_INTEGER}_{DECIMAL_INTEGER}_{DECIMAL_INTEGER}_{DECIMAL_INTEGER}
 INTEGER = ([-+]?)(({DECIMAL_INTEGER})|({HEX_INTEGER}))
-STRING_PART = [^\"\r\n<]+
+STRING_ESCAPE_SEQUENCE=\\([abfnrtv\'\"\\])
+STRING_PART = [^\"\r\n<\\]+
+
 COLOR_TAG = "<"(shad|col|str|u)"="([0-9a-fA-F]+)">"
 OTHER_TAG = "<"(str|u|br|lt|gt)">"
 IMG_TAG = "<img="([0-9]+)">"
@@ -161,6 +163,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 [^] { return TokenType.BAD_CHARACTER; }
 }
 <STRING> {
+{STRING_ESCAPE_SEQUENCE} { return STRING_PART; }
 \" { popState(); return STRING_END; }
 ({OTHER_TAG}|{CLOSE_TAG}|{COLOR_TAG}|{IMG_TAG}) { return STRING_TAG; }
 {INCOMPLETE_TAG} { return STRING_PART; }
