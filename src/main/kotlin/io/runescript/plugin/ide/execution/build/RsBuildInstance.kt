@@ -10,6 +10,7 @@ import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeLater
+import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
@@ -49,11 +50,13 @@ class RsBuildInstance(
             executionPublisher.processStarting(executorId, environment)
             invokeLater {
                 openBuildToolWindow()
-                val processHandler = createProcessHandler()
-                this.processHandler = processHandler
-                val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), future)
-                processHandler.addProcessListener(processAdapter)
-                processHandler.startNotify()
+                runWriteAction {
+                    val processHandler = createProcessHandler()
+                    this.processHandler = processHandler
+                    val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), future)
+                    processHandler.addProcessListener(processAdapter)
+                    processHandler.startNotify()
+                }
             }
         }
         return future
