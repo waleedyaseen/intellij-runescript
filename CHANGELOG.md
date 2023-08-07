@@ -1,0 +1,3 @@
+# intellij-runescript Changelog
+
+## [Unreleased]

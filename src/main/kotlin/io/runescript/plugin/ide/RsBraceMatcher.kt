@@ -8,9 +8,14 @@ import io.runescript.plugin.lang.psi.RsElementTypes
 
 class RsBraceMatcher : PairedBraceMatcher {
 
+    private val pairs = arrayOf(
+        BracePair(RsElementTypes.LBRACE, RsElementTypes.RBRACE, true),
+        BracePair(RsElementTypes.LPAREN, RsElementTypes.RPAREN, false),
+        BracePair(RsElementTypes.LBRACKET, RsElementTypes.RBRACKET, false)
+    )
 
     override fun getPairs(): Array<BracePair> {
-        return PAIRS
+        return pairs
     }
 
     override fun isPairedBracesAllowedBeforeType(lbraceType: IElementType, contextType: IElementType?): Boolean {
@@ -19,13 +24,5 @@ class RsBraceMatcher : PairedBraceMatcher {
 
     override fun getCodeConstructStart(file: PsiFile?, openingBraceOffset: Int): Int {
         return openingBraceOffset
-    }
-
-    companion object {
-        private val PAIRS = arrayOf(
-            BracePair(RsElementTypes.LBRACE, RsElementTypes.RBRACE, true),
-            BracePair(RsElementTypes.LPAREN, RsElementTypes.RPAREN, false),
-            BracePair(RsElementTypes.LBRACKET, RsElementTypes.RBRACKET, false)
-        )
     }
 }

@@ -1,9 +1,12 @@
-[![RuneScript](https://img.shields.io/jetbrains/plugin/v/22431-runescript.svg)](https://plugins.jetbrains.com/plugin/22431-runescript)
-[![RuneScript](https://img.shields.io/jetbrains/plugin/d/22431-runescript.svg)](https://plugins.jetbrains.com/plugin/22431-runescript)
-
 # RuneScript Plugin for IntelliJ IDEA
 
-This plugin adds support for RuneScript language to IntelliJ IDEA.
+![Build](https://github.com/waleedyaseen/intellij-runescript/workflows/Build/badge.svg)
+[![Version](https://img.shields.io/jetbrains/plugin/v/22431-runescript.svg)](https://plugins.jetbrains.com/plugin/22431-runescript)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/22431-runescript.svg)](https://plugins.jetbrains.com/plugin/22431-runescript)
+
+<!-- Plugin description -->
+RuneScript is a plugin that adds support to the RuneScript language to IntelliJ IDEA.
+<!-- Plugin description end -->
 
 ## Installing
 

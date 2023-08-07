@@ -3,7 +3,6 @@ package io.runescript.plugin.ide.projectWizard
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.roots.ContentEntry
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.findOrCreateDirectory
 
 class RsProjectTemplate {
 
@@ -14,7 +13,7 @@ class RsProjectTemplate {
         contentEntry.addSourceFolder(srcDir, false)
         val packDir = projectDir.findChild("pack") ?: projectDir.createChildDirectory(projectDir, "pack")
         contentEntry.addExcludeFolder(packDir)
-        projectDir.findOrCreateDirectory("symbols")
+        projectDir.findChild("symbols") ?: projectDir.createChildDirectory(projectDir, "symbols")
     }
 
     private fun createGitIgnoreFile(projectDir: VirtualFile) {

@@ -22,7 +22,7 @@ class RsElementColorProvider : ElementColorProvider {
         val document = PsiDocumentManager.getInstance(element.project).getDocument(element.containingFile);
         CommandProcessor.getInstance().executeCommand(element.project, {
             element.replace(RsElementGenerator.createColorTag(element.project, color.rgb, tagName))
-        }, "Change color", null, document)
+        }, "Change Color", null, document)
     }
 
     companion object {
