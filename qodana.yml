@@ -7,3 +7,4 @@ exclude:
   - name: All
     paths:
       - .qodana
+      - ./src/main/gen/

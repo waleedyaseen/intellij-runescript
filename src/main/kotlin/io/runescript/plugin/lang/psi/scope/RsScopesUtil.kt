@@ -9,7 +9,7 @@ object RsScopesUtil {
 
     fun walkUpScopes(processor: PsiScopeProcessor, state: ResolveState, element: PsiElement): Boolean {
         var scope: PsiElement? = element
-        var lastParent: PsiElement? = element;
+        var lastParent: PsiElement? = element
         while (scope != null) {
             ProgressIndicatorProvider.checkCanceled()
             if (!scope.processDeclarations(processor, state, lastParent, element)) {

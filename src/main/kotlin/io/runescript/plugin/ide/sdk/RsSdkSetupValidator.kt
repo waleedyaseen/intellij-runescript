@@ -10,8 +10,8 @@ import com.intellij.psi.PsiManager
 import com.intellij.ui.EditorNotificationPanel
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.filetypes.Cs2FileType
-import io.runescript.plugin.oplang.filetypes.RsOpFileType
 import io.runescript.plugin.lang.RuneScript
+import io.runescript.plugin.oplang.filetypes.RsOpFileType
 
 
 class RsSdkSetupValidator : ProjectSdkSetupValidator {

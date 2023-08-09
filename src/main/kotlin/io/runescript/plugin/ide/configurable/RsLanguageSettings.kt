@@ -10,7 +10,6 @@ import com.intellij.ui.components.JBList
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.LabelPosition
 import com.intellij.ui.dsl.builder.Panel
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.config.RsConfig
 import javax.swing.DefaultListModel
@@ -88,7 +87,7 @@ class RsLanguageSettings(private val project: Project) : SearchableConfigurable,
 
 internal class LiteralInputValidator : InputValidator {
     override fun checkInput(inputString: String?): Boolean {
-        return !inputString.isNullOrBlank() && inputString.matches(Regex("[a-zA-Z0-9_]+"));
+        return !inputString.isNullOrBlank() && inputString.matches(Regex("[a-zA-Z0-9_]+"))
     }
 
     override fun canClose(inputString: String?): Boolean {

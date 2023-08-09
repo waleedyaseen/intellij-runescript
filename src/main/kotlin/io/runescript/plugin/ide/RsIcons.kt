@@ -2,7 +2,6 @@ package io.runescript.plugin.ide
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.IconManager
 import javax.swing.Icon
 
 object RsIcons {

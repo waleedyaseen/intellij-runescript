@@ -5,8 +5,8 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.AttributesDescriptor
 import com.intellij.openapi.options.colors.ColorDescriptor
 import com.intellij.openapi.options.colors.ColorSettingsPage
-import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import javax.swing.Icon
 

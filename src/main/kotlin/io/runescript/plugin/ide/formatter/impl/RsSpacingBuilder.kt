@@ -46,7 +46,7 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
             }
         }
         if (type1 == DEFINE_TYPE || type1 == TYPE_NAME || type1 == ARRAY_TYPE_LITERAL) {
-            return spaceIf(true);
+            return spaceIf(true)
         }
         if (type2 == SEMICOLON) {
             return spaceIf(settings.SPACE_BEFORE_SEMICOLON)

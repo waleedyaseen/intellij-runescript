@@ -56,11 +56,11 @@ class RuneScriptUnresolvedProcedureInspection : LocalInspectionTool() {
             val textEditor = FileEditorManager.getInstance(project).openTextEditor(openDescriptor, true)!!
             textEditor.selectionModel.removeSelection()
             val endOffset = script.textRange.endOffset
-            textEditor.caretModel.moveToOffset(endOffset + 1);
+            textEditor.caretModel.moveToOffset(endOffset + 1)
             val manager = PsiDocumentManager.getInstance(project)
-            manager.doPostponedOperationsAndUnblockDocument(textEditor.document);
-            EditorModificationUtilEx.insertStringAtCaret(textEditor, "\n", false, false);
-            textEditor.scrollingModel.scrollToCaret(ScrollType.RELATIVE);
+            manager.doPostponedOperationsAndUnblockDocument(textEditor.document)
+            EditorModificationUtilEx.insertStringAtCaret(textEditor, "\n", false, false)
+            textEditor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
         }
     }
 }

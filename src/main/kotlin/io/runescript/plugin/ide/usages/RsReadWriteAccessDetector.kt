@@ -1,9 +1,6 @@
 package io.runescript.plugin.ide.usages
 
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner
-import com.intellij.lang.cacheBuilder.WordsScanner
-import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import io.runescript.plugin.lang.psi.RsAssignmentStatement

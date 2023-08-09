@@ -1,7 +1,10 @@
 package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.psi.*
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiPolyVariantReferenceBase
+import com.intellij.psi.ResolveResult
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.isBasicContent
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType

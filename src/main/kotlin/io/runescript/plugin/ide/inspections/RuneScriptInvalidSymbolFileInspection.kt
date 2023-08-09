@@ -4,8 +4,6 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
-import com.intellij.codeInspection.incorrectFormatting.ReformatQuickFix
-import com.intellij.codeInspection.incorrectFormatting.ShowDetailedReportIntention
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.guessModuleDir
 import com.intellij.psi.PsiFile

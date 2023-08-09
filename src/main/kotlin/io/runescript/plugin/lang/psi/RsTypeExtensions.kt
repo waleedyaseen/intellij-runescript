@@ -1,6 +1,9 @@
 package io.runescript.plugin.lang.psi
 
-import io.runescript.plugin.lang.psi.type.*
+import io.runescript.plugin.lang.psi.type.RsPrimitiveType
+import io.runescript.plugin.lang.psi.type.RsTupleType
+import io.runescript.plugin.lang.psi.type.RsType
+import io.runescript.plugin.lang.psi.type.RsUnitType
 
 val RsTypeName.type: RsPrimitiveType
     get() = RsPrimitiveType.lookupOrNull(text)!!

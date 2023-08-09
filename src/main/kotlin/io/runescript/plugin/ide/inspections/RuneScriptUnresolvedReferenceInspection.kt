@@ -1,12 +1,13 @@
 package io.runescript.plugin.ide.inspections
 
-import com.intellij.codeInspection.*
+import com.intellij.codeInspection.LocalInspectionTool
+import com.intellij.codeInspection.ProblemHighlightType
+import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.RsVisitor
-import io.runescript.plugin.lang.psi.type.type
 
 class RuneScriptUnresolvedReferenceInspection : LocalInspectionTool() {
 

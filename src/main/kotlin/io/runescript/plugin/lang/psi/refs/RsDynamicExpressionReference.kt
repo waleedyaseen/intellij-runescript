@@ -10,7 +10,6 @@ import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.lang.psi.type.RsType
-import io.runescript.plugin.lang.psi.type.RsTypeType
 import io.runescript.plugin.lang.psi.type.type
 import io.runescript.plugin.oplang.psi.RsOpCommand
 import io.runescript.plugin.oplang.psi.index.RsCommandIndex

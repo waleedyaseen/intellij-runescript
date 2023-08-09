@@ -9,8 +9,8 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiDirectory
-import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.RsIcons
 
 class RsNewFileAction :
     CreateFileFromTemplateAction(

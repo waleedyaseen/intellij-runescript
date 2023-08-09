@@ -42,7 +42,7 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
     }
 
     override fun getQualifiedNameSeparator(): String? {
-        return "|";
+        return "|"
     }
 
     // These are only effective if we override the IdeLanguageCustomization

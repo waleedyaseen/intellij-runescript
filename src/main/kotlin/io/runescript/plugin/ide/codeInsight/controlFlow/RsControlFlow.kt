@@ -4,9 +4,7 @@ import com.intellij.codeInsight.controlflow.ControlFlow
 import com.intellij.codeInsight.controlflow.ControlFlowUtil
 import com.intellij.codeInsight.controlflow.Instruction
 import com.intellij.psi.PsiElement
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap
 import java.util.*
-import kotlin.collections.HashSet
 
 class RsControlFlow(private val instructions: Array<Instruction>) : ControlFlow {
 
@@ -19,7 +17,7 @@ class RsControlFlow(private val instructions: Array<Instruction>) : ControlFlow 
             if (element != null) {
                 reachableElements.add(element)
             }
-            reachable.set(it.num());
+            reachable.set(it.num())
             true
         }
     }

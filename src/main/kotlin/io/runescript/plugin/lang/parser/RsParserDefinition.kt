@@ -11,9 +11,9 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.ide.filetypes.Cs2FileType
-import io.runescript.plugin.oplang.filetypes.RsOpFileType
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
+import io.runescript.plugin.oplang.filetypes.RsOpFileType
 import io.runescript.plugin.oplang.psi.RsOpElementTypes
 import io.runescript.plugin.oplang.psi.RsOpFile
 

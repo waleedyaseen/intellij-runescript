@@ -7,6 +7,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
+import io.runescript.plugin.lang.psi.RsElementTypes.*
 import io.runescript.plugin.lang.psi.RsTokenTypes.MULTI_LINE_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypes.SINGLE_LINE_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACES
@@ -14,7 +15,6 @@ import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACKETS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.KEYWORDS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.OPERATORS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.PARENS
-import io.runescript.plugin.lang.psi.RsElementTypes.*
 
 class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighterBase() {
 

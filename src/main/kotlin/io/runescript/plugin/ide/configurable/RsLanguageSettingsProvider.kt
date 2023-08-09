@@ -1,11 +1,8 @@
 package io.runescript.plugin.ide.configurable
 
-import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurableProvider
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.modules
-import io.runescript.plugin.ide.projectWizard.RsModuleType
 
 class RsLanguageSettingsProvider(private val project: Project) : ConfigurableProvider() {
 

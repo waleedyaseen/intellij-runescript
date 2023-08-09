@@ -4,19 +4,7 @@ import com.intellij.codeInsight.hints.InlayInfo
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider
 import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.startOffset
-import io.runescript.plugin.lang.psi.RsArrayAccessExpression
-import io.runescript.plugin.lang.psi.RsBooleanLiteralExpression
-import io.runescript.plugin.lang.psi.RsCommandExpression
-import io.runescript.plugin.lang.psi.RsConstantExpression
-import io.runescript.plugin.lang.psi.RsExpression
-import io.runescript.plugin.lang.psi.RsGosubExpression
-import io.runescript.plugin.lang.psi.RsIntegerLiteralExpression
-import io.runescript.plugin.lang.psi.RsLocalVariableExpression
-import io.runescript.plugin.lang.psi.RsNullLiteralExpression
-import io.runescript.plugin.lang.psi.RsParExpression
-import io.runescript.plugin.lang.psi.RsScopedVariableExpression
-import io.runescript.plugin.lang.psi.RsScript
-import io.runescript.plugin.lang.psi.RsStringLiteralExpression
+import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.oplang.psi.RsOpCommand
 
 @Suppress("UnstableApiUsage")

@@ -15,7 +15,6 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.ui.dsl.builder.*
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.sdk.RsSdkType
 import java.util.function.Supplier

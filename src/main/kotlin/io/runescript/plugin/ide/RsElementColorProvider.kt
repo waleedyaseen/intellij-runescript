@@ -19,7 +19,7 @@ class RsElementColorProvider : ElementColorProvider {
 
     override fun setColorTo(element: PsiElement, color: Color) {
         val tagName = element.text.substring(1, element.text.indexOf('='))
-        val document = PsiDocumentManager.getInstance(element.project).getDocument(element.containingFile);
+        val document = PsiDocumentManager.getInstance(element.project).getDocument(element.containingFile)
         CommandProcessor.getInstance().executeCommand(element.project, {
             element.replace(RsElementGenerator.createColorTag(element.project, color.rgb, tagName))
         }, "Change Color", null, document)

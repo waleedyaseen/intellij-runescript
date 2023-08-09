@@ -3,7 +3,6 @@ package io.runescript.plugin.ide.codeInsight.controlFlow
 import com.intellij.codeInsight.controlflow.ControlFlowBuilder
 import com.intellij.codeInsight.controlflow.Instruction
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.elementType
 import io.runescript.plugin.lang.psi.*
 
 class RsControlFlowBuilder : ControlFlowBuilder() {

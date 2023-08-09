@@ -1,29 +1,11 @@
 package io.runescript.plugin.ide.sdk
 
-import com.intellij.compiler.JavaInMemoryCompiler
-import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.target.TargetEnvironmentsManager
-import com.intellij.execution.target.java.JavaLanguageRuntimeConfiguration
-import com.intellij.ide.wizard.withVisualPadding
-import com.intellij.openapi.application.Application
-import com.intellij.openapi.application.ApplicationInfo
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.projectRoots.*
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl
 import com.intellij.openapi.roots.OrderRootType
-import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.openapi.ui.validation.CHECK_NON_EMPTY
-import com.intellij.openapi.util.text.StringUtil
-import com.intellij.ui.dsl.builder.RightGap
-import com.intellij.ui.dsl.builder.bindText
-import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.builder.trimmedTextValidation
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.RsIcons
 import org.jdom.Element
 import java.io.File
-import javax.swing.JComponent
 
 
 class RsSdkType : SdkType("RuneScript SDK") {
