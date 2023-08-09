@@ -1,7 +1,9 @@
 package io.runescript.plugin.lang.psi.type.inference
 
+import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.findParentOfType
+import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.*
@@ -105,6 +107,10 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             // graphic extends fontmetrics
             return
         }
+        if (unfoldedExpectedType.isHookType() && unfoldedActualType == RsPrimitiveType.STRING) {
+            // hooks are just strings that are parsed different.
+            return
+        }
         if (unfoldedActualType != unfoldedExpectedType) {
             context.error(
                 "Type mismatch: '%s' was given but '%s' was expected".format(
@@ -134,7 +140,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             val returnTypes = reference
                 .returnList
                 ?.typeNameList
-                ?.map { RsPrimitiveType.lookup(it.text) }
+                ?.map { RsPrimitiveType.lookupReferencable(it.text) }
                 ?: emptyList()
 
             if (returnTypes.isEmpty()) {
@@ -143,6 +149,45 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                 o.type = returnTypes[0]
             } else {
                 o.type = RsTupleType(returnTypes.flatten())
+            }
+        }
+    }
+
+    override fun visitHookRoot(o: RsHookRoot) {
+        o.hookFragment.accept(this)
+    }
+
+    override fun visitHookFragment(o: RsHookFragment) {
+        val host = InjectedLanguageManager.getInstance(o.project).getInjectionHost(o)!!
+        val hostInferenceData = host.parentOfType<RsInferenceDataHolder>(true)!!.inferenceData
+        val typeHint = hostInferenceData.typeHintOf(host)
+        val reference = o.reference?.resolve()
+        if (reference == null) {
+            o.type = RsErrorType
+        } else {
+            reference as RsScript
+            val parameterTypes = reference
+                .parameterList
+                ?.parameterList
+                ?.map { findParameterType(it) }
+                ?.flatten()
+                ?: emptyArray()
+            o.argumentList?.let { checkArgumentList(it, parameterTypes) }
+            val expectedType = when (typeHint) {
+                RsPrimitiveType.VARPHOOK -> RsPrimitiveType.VARP
+                RsPrimitiveType.STATHOOK -> RsPrimitiveType.STAT
+                RsPrimitiveType.INVHOOK -> RsPrimitiveType.INV
+                else -> null
+            }
+            val hookTransmitList = o.hookTransmitList
+            if (hookTransmitList != null) {
+                if (expectedType == null) {
+                    hookTransmitList.error("${reference.name} does not allow transmit list.")
+                }
+                hookTransmitList.dynamicExpressionList.forEach {
+                    it.typeHint = expectedType ?: RsErrorType
+                    it.accept(this)
+                }
             }
         }
     }
@@ -226,7 +271,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitArrayVariableDeclarationStatement(o: RsArrayVariableDeclarationStatement) {
-        val type = RsPrimitiveType.lookup(o.defineType.text.substring("def_".length))
+        val type = RsPrimitiveType.lookupReferencable(o.defineType.text.substring("def_".length))
         val expression = o.expressionList[0]
         expression.type = RsArrayType(type)
 
@@ -238,7 +283,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
 
     override fun visitLocalVariableDeclarationStatement(o: RsLocalVariableDeclarationStatement) {
-        val type = RsPrimitiveType.lookup(o.defineType.text.substring("def_".length))
+        val type = RsPrimitiveType.lookupReferencable(o.defineType.text.substring("def_".length))
         val expression = o.expressionList[0]
         expression.type = type
         // expression.accept(this)
@@ -293,7 +338,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitSwitchStatement(o: RsSwitchStatement) {
-        val type = RsPrimitiveType.lookup(o.switch.text.substring("switch_".length))
+        val type = RsPrimitiveType.lookupReferencable(o.switch.text.substring("switch_".length))
         o.typeHint = type
         o.expression.accept(this)
         checkTypeMismatch(o.expression, type)
@@ -329,7 +374,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     override fun visitDynamicExpression(o: RsDynamicExpression) {
         val type = o.typeHint.unfold() ?: RsErrorType
         if (type is RsTypeType) {
-            val primitiveType = RsPrimitiveType.lookupOrNull(o.text)
+            val primitiveType = RsPrimitiveType.lookupReferencableOrNull(o.text)
             if (primitiveType == null) {
                 o.type = RsErrorType
             } else {
@@ -343,13 +388,14 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                 val returnTypes = reference
                     .returnList
                     .typeNameList
-                    .map { RsPrimitiveType.lookup(it.text) }
+                    .map { RsPrimitiveType.lookupReferencable(it.text) }
                 o.type = RsTupleType(returnTypes.flatten())
             }
 
             is RsSymSymbol -> {
                 o.type = type
             }
+
             else -> {
                 o.type = reference.type
             }
@@ -462,11 +508,11 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         if (o.arrayTypeLiteral != null) {
             val definitionLiteral = o.arrayTypeLiteral!!.text
             val typeLiteral = definitionLiteral.substring(0, definitionLiteral.length - "array".length)
-            val elementType = RsPrimitiveType.lookup(typeLiteral)
+            val elementType = RsPrimitiveType.lookupReferencable(typeLiteral)
             return RsArrayType(elementType)
         } else if (o.typeName != null) {
             val typeLiteral = o.typeName!!.text
-            return RsPrimitiveType.lookup(typeLiteral)
+            return RsPrimitiveType.lookupReferencable(typeLiteral)
         }
         return RsErrorType
     }
@@ -475,7 +521,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         val script = o.findParentOfType<RsScript>(true)!!
         val expectedReturnList = script.returnList
             ?.typeNameList
-            ?.map { RsPrimitiveType.lookup(it.text) }
+            ?.map { RsPrimitiveType.lookupReferencable(it.text) }
             ?.toTypedArray<RsType>()
         checkExpressionList(o.expressionList, expectedReturnList ?: emptyArray<RsType>())
     }

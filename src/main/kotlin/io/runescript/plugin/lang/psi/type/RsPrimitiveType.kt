@@ -1,14 +1,7 @@
 package io.runescript.plugin.lang.psi.type
 
 @Suppress("unused")
-enum class RsPrimitiveType(val literal: String) : RsType {
-    PARAM("param"),
-    FLO("flo"),
-    FLU("flu"),
-    VARP("varp"),
-    VARBIT("varbit"),
-    VARC("varc"),
-    NULL("null"),
+enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true) : RsType {
     INT("int"),
     STRING("string"),
     SPOTANIM("spotanim"),
@@ -49,7 +42,19 @@ enum class RsPrimitiveType(val literal: String) : RsType {
     DBTABLE("dbtable"),
     DBCOLUMN("dbcolumn"),
     PLAYER_UID("player_uid"),
-    STRINGVECTOR("stringvector");
+    STRINGVECTOR("stringvector"),
+    // Non-Referencable types
+    PARAM("param", referencable = false),
+    FLO("flo", referencable = false),
+    FLU("flu", referencable = false),
+    VARP("varp", referencable = false),
+    VARBIT("varbit", referencable = false),
+    VARC("varc", referencable = false),
+    NULL("null", referencable = false),
+    HOOK("hook", referencable = false),
+    VARPHOOK("varphook", referencable = false),
+    STATHOOK("stathook", referencable = false),
+    INVHOOK("invhook", referencable = false);
 
     override val representation: String
         get() = literal
@@ -62,7 +67,11 @@ enum class RsPrimitiveType(val literal: String) : RsType {
         }
 
     companion object {
+        private val LOOKUP_REFERENCABLE_BY_LITERAL = RsPrimitiveType.values().associateBy { it.literal }.filterValues { it.referencable }
         private val LOOKUP_BY_LITERAL = RsPrimitiveType.values().associateBy { it.literal }
+
+        fun lookupReferencableOrNull(literal: String) = LOOKUP_REFERENCABLE_BY_LITERAL[literal]
+        fun lookupReferencable(literal: String) = lookupReferencableOrNull(literal) ?: error("No primitive type could be found for literal: `$literal`")
         fun lookupOrNull(literal: String) = LOOKUP_BY_LITERAL[literal]
         fun lookup(literal: String) = lookupOrNull(literal) ?: error("No primitive type could be found for literal: `$literal`")
     }

@@ -8,6 +8,7 @@
     <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/META-INF/op-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
+        <languageInjectionContributor language="RuneScript" implementationClass="io.runescript.plugin.ide.injection.RsInjectionContributor"/>
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
         <fileType name="ClientScript" language="RuneScript"
@@ -34,8 +35,10 @@
         <lang.commenter language="RuneScript" implementationClass="io.runescript.plugin.ide.RsCommenter"/>
         <stubElementTypeHolder externalIdPrefix="RuneScript." class="io.runescript.plugin.lang.psi.RsElementTypes"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex"/>
+        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsClientScriptIndex"/>
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
+        <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
         <sdkType implementation="io.runescript.plugin.ide.sdk.RsSdkType"/>

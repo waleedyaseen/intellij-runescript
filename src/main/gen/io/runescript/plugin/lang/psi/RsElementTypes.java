@@ -28,6 +28,9 @@ public interface RsElementTypes {
   IElementType EXPRESSION = new RsElementType("EXPRESSION");
   IElementType EXPRESSION_STATEMENT = new RsElementType("EXPRESSION_STATEMENT");
   IElementType GOSUB_EXPRESSION = new RsElementType("GOSUB_EXPRESSION");
+  IElementType HOOK_FRAGMENT = new RsElementType("HOOK_FRAGMENT");
+  IElementType HOOK_ROOT = new RsElementType("HOOK_ROOT");
+  IElementType HOOK_TRANSMIT_LIST = new RsElementType("HOOK_TRANSMIT_LIST");
   IElementType IF_STATEMENT = new RsElementType("IF_STATEMENT");
   IElementType INTEGER_LITERAL_EXPRESSION = new RsElementType("INTEGER_LITERAL_EXPRESSION");
   IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new RsElementType("LOCAL_VARIABLE_DECLARATION_STATEMENT");
@@ -158,6 +161,15 @@ public interface RsElementTypes {
       }
       else if (type == GOSUB_EXPRESSION) {
         return new RsGosubExpressionImpl(node);
+      }
+      else if (type == HOOK_FRAGMENT) {
+        return new RsHookFragmentImpl(node);
+      }
+      else if (type == HOOK_ROOT) {
+        return new RsHookRootImpl(node);
+      }
+      else if (type == HOOK_TRANSMIT_LIST) {
+        return new RsHookTransmitListImpl(node);
       }
       else if (type == IF_STATEMENT) {
         return new RsIfStatementImpl(node);

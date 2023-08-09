@@ -15,14 +15,14 @@ object DefaultCommandHandler : CommandHandler {
         val parameterTypes = reference
             .parameterList
             .parameterList
-            .map { if ("hook" in it.typeName.text) RsPrimitiveType.STRING else RsPrimitiveType.lookup(it.typeName.text) }
+            .map { RsPrimitiveType.lookup(it.typeName.text) }
             .flatten()
         checkArgumentList(o.argumentList, parameterTypes)
 
         val returnTypes = reference
             .returnList
             .typeNameList
-            .map { RsPrimitiveType.lookup(it.text) }
+            .map { RsPrimitiveType.lookupReferencable(it.text) }
 
         if (returnTypes.isEmpty()) {
             o.type = RsUnitType
@@ -47,7 +47,7 @@ class ParamCommandHandler(val subjectType: RsPrimitiveType) : CommandHandler {
                 if (parameterSymbol == null || parameterSymbol.fieldList.size < 3) {
                     arguments[1].error("Reference to a parameter with an invalid definition.")
                 } else {
-                    val parameterType = RsPrimitiveType.lookupOrNull(parameterSymbol.fieldList[2].text)
+                    val parameterType = RsPrimitiveType.lookupReferencableOrNull(parameterSymbol.fieldList[2].text)
                     if (parameterType == null) {
                         arguments[1].error("Reference to a parameter with an invalid definition.")
                     }
@@ -83,7 +83,7 @@ class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
                 arguments[0].error("Reference to a dbtable with an invalid definition.")
             } else {
                 val typesField = dbTableSym.fieldList[2].text.split(",").map {
-                    RsPrimitiveType.lookupOrNull(it) ?: RsErrorType
+                    RsPrimitiveType.lookupReferencableOrNull(it) ?: RsErrorType
                 }
                 if (typesField.isEmpty() || typesField.any { it is RsErrorType }) {
                     arguments[0].error("Reference to a dbtable with an invalid definition.")
@@ -129,7 +129,7 @@ object DbGetFieldCommandHandler : CommandHandler {
                 arguments[1].error("Reference to a dbtable with an invalid definition.")
             } else {
                 val typesField = dbTableSym.fieldList[2].text.split(",").map {
-                    RsPrimitiveType.lookupOrNull(it) ?: RsErrorType
+                    RsPrimitiveType.lookupReferencableOrNull(it) ?: RsErrorType
                 }
                 if (typesField.isEmpty() || typesField.any { it is RsErrorType }) {
                     arguments[1].error("Reference to a dbtable with an invalid definition.")
@@ -162,7 +162,7 @@ object EnumCommandHandler : CommandHandler {
             arguments[0].typeHint = RsTypeType
             arguments[0].accept(this)
             if (arguments[0] is RsDynamicExpression) {
-                inputType = RsPrimitiveType.lookupOrNull(arguments[0].text) ?: RsErrorType
+                inputType = RsPrimitiveType.lookupReferencableOrNull(arguments[0].text) ?: RsErrorType
             }
         }
         var outputType: RsType? = null
@@ -170,7 +170,7 @@ object EnumCommandHandler : CommandHandler {
             arguments[1].typeHint = RsTypeType
             arguments[1].accept(this)
             if (arguments[1] is RsDynamicExpression) {
-                outputType = RsPrimitiveType.lookupOrNull(arguments[1].text) ?: RsErrorType
+                outputType = RsPrimitiveType.lookupReferencableOrNull(arguments[1].text) ?: RsErrorType
             }
         }
         val parameterTypes = arrayOf(

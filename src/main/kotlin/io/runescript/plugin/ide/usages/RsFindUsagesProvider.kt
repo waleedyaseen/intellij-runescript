@@ -34,7 +34,7 @@ class RsFindUsagesProvider : FindUsagesProvider {
             return "Local variable"
         }
         if (element is RsScript) {
-            return "Procedure"
+            return "Script"
         }
         if (element is RsSymSymbol) {
             return "Symbol"

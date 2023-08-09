@@ -4,11 +4,16 @@ package io.runescript.plugin.lang.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
 
-public interface RsStringLiteralContent extends PsiLanguageInjectionHost {
+public interface RsHookTransmitList extends PsiElement {
 
   @NotNull
-  List<RsStringInterpolationExpression> getStringInterpolationExpressionList();
+  List<RsDynamicExpression> getDynamicExpressionList();
+
+  @NotNull
+  PsiElement getLbrace();
+
+  @NotNull
+  PsiElement getRbrace();
 
 }

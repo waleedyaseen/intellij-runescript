@@ -90,6 +90,17 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
+        override fun visitHookFragment(o: RsHookFragment) {
+            o.hookTransmitList?.accept(this)
+            o.argumentList?.accept(this)
+            o.nameLiteral.accept(this)
+            addInstruction(o)
+        }
+
+        override fun visitHookTransmitList(o: RsHookTransmitList) {
+            o.dynamicExpressionList.forEach { it.accept(this) }
+        }
+
         override fun visitCommandExpression(o: RsCommandExpression) {
             o.argumentList.accept(this)
             o.nameLiteral.accept(this)

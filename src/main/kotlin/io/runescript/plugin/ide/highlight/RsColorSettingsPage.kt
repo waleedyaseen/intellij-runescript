@@ -60,6 +60,8 @@ class RsColorSettingsPage : ColorSettingsPage {
                     <RUNESCRIPT_PROC_CALL>~debug_mes</RUNESCRIPT_PROC_CALL>("<col=ff0000>No odd numbers were found.</col>");
                 case 1 :
                     <RUNESCRIPT_PROC_CALL>~debug_mes</RUNESCRIPT_PROC_CALL>("Only one odd number was found.");
+                case 2 :
+                    cc_setonvartransmit(<RUNESCRIPT_CLIENTSCRIPT_CALL>some_clientscript</RUNESCRIPT_CLIENTSCRIPT_CALL>(123));
                 case default :
                     <RUNESCRIPT_PROC_CALL>~debug_mes</RUNESCRIPT_PROC_CALL>("Many odd numbers were found (<RUNESCRIPT_COMMAND_CALL>tostring</RUNESCRIPT_COMMAND_CALL>>(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}odd_count</RUNESCRIPT_LOCAL_VARIABLE>)>).");
             }
@@ -89,6 +91,7 @@ class RsColorSettingsPage : ColorSettingsPage {
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.script_declaration"), RsSyntaxHighlighterColors.SCRIPT_DECLARATION),
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.command_call"), RsSyntaxHighlighterColors.COMMAND_CALL),
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.proc_call"), RsSyntaxHighlighterColors.PROC_CALL),
+            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.clientscript_call"), RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL),
             AttributesDescriptor(RsBundle.message("runescript.color.settings.description.config.reference"), RsSyntaxHighlighterColors.CONFIG_REFERENCE),
         )
         private val TAG_TO_DESCRIPTOR_MAP = mutableMapOf(
@@ -114,6 +117,7 @@ class RsColorSettingsPage : ColorSettingsPage {
             "RUNESCRIPT_SCRIPT_DECLARATION" to RsSyntaxHighlighterColors.SCRIPT_DECLARATION,
             "RUNESCRIPT_COMMAND_CALL" to RsSyntaxHighlighterColors.COMMAND_CALL,
             "RUNESCRIPT_PROC_CALL" to RsSyntaxHighlighterColors.PROC_CALL,
+            "RUNESCRIPT_CLIENTSCRIPT_CALL" to RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL,
             "RUNESCRIPT_CONFIG_REFERENCE" to RsSyntaxHighlighterColors.CONFIG_REFERENCE,
         )
 

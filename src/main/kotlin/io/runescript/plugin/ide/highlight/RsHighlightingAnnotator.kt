@@ -50,6 +50,10 @@ class RsHighlightingAnnotator : Annotator {
                 textRange.highlight(holder, RsSyntaxHighlighterColors.PROC_CALL)
             }
 
+            override fun visitHookFragment(o: RsHookFragment) {
+                o.nameLiteral.highlight(holder, RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL)
+            }
+
             override fun visitDynamicExpression(o: RsDynamicExpression) {
                 val reference = o.reference?.resolve() ?: return
                 if (reference is RsLocalVariableExpression) {

@@ -5,6 +5,8 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.NavigatablePsiElement;
+import io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder;
+import com.intellij.psi.PsiLanguageInjectionHost;
 
 public class RsVisitor extends PsiElementVisitor {
 
@@ -89,6 +91,19 @@ public class RsVisitor extends PsiElementVisitor {
     // visitNamedElement(o);
   }
 
+  public void visitHookFragment(@NotNull RsHookFragment o) {
+    visitNamedElement(o);
+    // visitInferenceDataHolder(o);
+  }
+
+  public void visitHookRoot(@NotNull RsHookRoot o) {
+    visitPsiElement(o);
+  }
+
+  public void visitHookTransmitList(@NotNull RsHookTransmitList o) {
+    visitPsiElement(o);
+  }
+
   public void visitIfStatement(@NotNull RsIfStatement o) {
     visitStatement(o);
   }
@@ -146,6 +161,7 @@ public class RsVisitor extends PsiElementVisitor {
     visitNavigatablePsiElement(o);
     // visitControlFlowHolder(o);
     // visitNamedElement(o);
+    // visitInferenceDataHolder(o);
   }
 
   public void visitStatement(@NotNull RsStatement o) {
@@ -161,7 +177,7 @@ public class RsVisitor extends PsiElementVisitor {
   }
 
   public void visitStringLiteralContent(@NotNull RsStringLiteralContent o) {
-    visitPsiElement(o);
+    visitPsiLanguageInjectionHost(o);
   }
 
   public void visitStringLiteralExpression(@NotNull RsStringLiteralExpression o) {
@@ -191,6 +207,14 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitNavigatablePsiElement(@NotNull NavigatablePsiElement o) {
     visitElement(o);
+  }
+
+  public void visitPsiLanguageInjectionHost(@NotNull PsiLanguageInjectionHost o) {
+    visitElement(o);
+  }
+
+  public void visitNamedElement(@NotNull RsNamedElement o) {
+    visitPsiElement(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {

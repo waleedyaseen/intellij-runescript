@@ -1,13 +1,12 @@
 package io.runescript.plugin.lang.psi.type.inference
 
 import com.intellij.psi.PsiElement
-import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.type.RsType
 
 data class RsTypeDiagnostic(val element: PsiElement, val message: String)
 
-class RsTypeInference(private val context: RsScript) : RsVisitor() {
+class RsTypeInference(private val context: RsInferenceDataHolder) : RsVisitor() {
 
     private val types = mutableMapOf<PsiElement, RsType>()
     private val typeHints = mutableMapOf<PsiElement, RsType>()

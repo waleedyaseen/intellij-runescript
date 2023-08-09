@@ -5,10 +5,11 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.NavigatablePsiElement;
+import io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder;
 import com.intellij.psi.StubBasedPsiElement;
 import io.runescript.plugin.lang.stubs.RsScriptStub;
 
-public interface RsScript extends NavigatablePsiElement, RsControlFlowHolder, RsNamedElement, StubBasedPsiElement<RsScriptStub> {
+public interface RsScript extends NavigatablePsiElement, RsControlFlowHolder, RsNamedElement, RsInferenceDataHolder, StubBasedPsiElement<RsScriptStub> {
 
   @NotNull
   List<RsNameLiteral> getNameLiteralList();

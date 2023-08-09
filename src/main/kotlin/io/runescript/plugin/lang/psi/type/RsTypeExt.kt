@@ -5,11 +5,11 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.parentOfType
-import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder
 import io.runescript.plugin.lang.psi.type.inference.RsTypeDiagnostic
 import io.runescript.plugin.lang.psi.type.inference.RsTypeInference
 
-val RsScript.inferenceData: RsTypeInference
+val RsInferenceDataHolder.inferenceData: RsTypeInference
     get() = CachedValuesManager.getCachedValue(this) {
         val inferenceData = RsTypeInference(this)
         inferenceData.infer()
@@ -18,14 +18,14 @@ val RsScript.inferenceData: RsTypeInference
 
 val PsiElement.type: RsType
     get() {
-        val script = parentOfType<RsScript>(true)!!
-        val inferenceData = script.inferenceData
+        val controlFlowHolder = parentOfType<RsInferenceDataHolder>(true)!!
+        val inferenceData = controlFlowHolder.inferenceData
         return inferenceData.typeOf(this) ?: RsErrorType
     }
 
 val PsiElement.typeErrors: List<RsTypeDiagnostic>
     get() {
-        val script = parentOfType<RsScript>(true) ?: return emptyList()
+        val script = parentOfType<RsInferenceDataHolder>(true) ?: return emptyList()
         val inferenceData = script.inferenceData
         return inferenceData.errorsFor(this) ?: emptyList()
     }

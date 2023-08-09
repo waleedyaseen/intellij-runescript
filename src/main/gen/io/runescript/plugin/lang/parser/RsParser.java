@@ -32,7 +32,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
-    return File(b, l + 1);
+    boolean r;
+    if (t == HOOK_ROOT) {
+      r = HookRoot(b, l + 1);
+    }
+    else {
+      r = File(b, l + 1);
+    }
+    return r;
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
@@ -633,6 +640,108 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "GosubExpression_2")) return false;
     ArgumentList(b, l + 1);
     return true;
+  }
+
+  /* ********************************************************** */
+  // NameLiteral (ArgumentList HookTransmitList?)?
+  public static boolean HookFragment(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookFragment")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, HOOK_FRAGMENT, "<hook fragment>");
+    r = NameLiteral(b, l + 1);
+    r = r && HookFragment_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (ArgumentList HookTransmitList?)?
+  private static boolean HookFragment_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookFragment_1")) return false;
+    HookFragment_1_0(b, l + 1);
+    return true;
+  }
+
+  // ArgumentList HookTransmitList?
+  private static boolean HookFragment_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookFragment_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ArgumentList(b, l + 1);
+    r = r && HookFragment_1_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // HookTransmitList?
+  private static boolean HookFragment_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookFragment_1_0_1")) return false;
+    HookTransmitList(b, l + 1);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // HookFragment
+  public static boolean HookRoot(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookRoot")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, HOOK_ROOT, "<hook root>");
+    r = HookFragment(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // LBRACE (DynamicExpression (',' DynamicExpression)*)? RBRACE
+  public static boolean HookTransmitList(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookTransmitList")) return false;
+    if (!nextTokenIs(b, LBRACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LBRACE);
+    r = r && HookTransmitList_1(b, l + 1);
+    r = r && consumeToken(b, RBRACE);
+    exit_section_(b, m, HOOK_TRANSMIT_LIST, r);
+    return r;
+  }
+
+  // (DynamicExpression (',' DynamicExpression)*)?
+  private static boolean HookTransmitList_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookTransmitList_1")) return false;
+    HookTransmitList_1_0(b, l + 1);
+    return true;
+  }
+
+  // DynamicExpression (',' DynamicExpression)*
+  private static boolean HookTransmitList_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookTransmitList_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = DynamicExpression(b, l + 1);
+    r = r && HookTransmitList_1_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (',' DynamicExpression)*
+  private static boolean HookTransmitList_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookTransmitList_1_0_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!HookTransmitList_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "HookTransmitList_1_0_1", c)) break;
+    }
+    return true;
+  }
+
+  // ',' DynamicExpression
+  private static boolean HookTransmitList_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookTransmitList_1_0_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && DynamicExpression(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */
