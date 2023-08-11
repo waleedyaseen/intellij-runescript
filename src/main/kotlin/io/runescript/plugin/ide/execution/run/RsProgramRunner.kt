@@ -19,6 +19,7 @@ class RsProgramRunner : ProgramRunner<RunnerSettings> {
 
     override fun execute(environment: ExecutionEnvironment) {
         val state = environment.state ?: return
+        @Suppress("UnstableApiUsage")
         ExecutionManager.getInstance(environment.project).startRunProfile(environment) {
             resolvedPromise(executeState(state, environment, this))
         }
