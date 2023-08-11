@@ -79,7 +79,7 @@
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
-            <add-to-group group-id="NewGroup" anchor="first"/>
+            <add-to-group group-id="NewGroup"/>
         </action>
     </actions>
 </idea-plugin>
