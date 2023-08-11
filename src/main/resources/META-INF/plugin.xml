@@ -11,8 +11,8 @@
         <languageInjectionContributor language="RuneScript" implementationClass="io.runescript.plugin.ide.injection.RsInjectionContributor"/>
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
-        <fileType name="ClientScript" language="RuneScript"
-                  implementationClass="io.runescript.plugin.ide.filetypes.Cs2FileType" fieldName="INSTANCE"
+        <fileType name="RuneScript" language="RuneScript"
+                  implementationClass="io.runescript.plugin.ide.filetypes.RsFileType" fieldName="INSTANCE"
                   extensions="cs2"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
         <projectConfigurable

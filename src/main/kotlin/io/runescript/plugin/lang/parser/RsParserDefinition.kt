@@ -10,7 +10,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.ide.filetypes.Cs2FileType
+import io.runescript.plugin.ide.filetypes.RsFileType
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
 import io.runescript.plugin.oplang.filetypes.RsOpFileType
@@ -49,7 +49,7 @@ class RsParserDefinition : ParserDefinition {
     override fun createFile(viewProvider: FileViewProvider): PsiFile {
         return when (val extension = viewProvider.virtualFile.extension) {
             RsOpFileType.defaultExtension -> RsOpFile(viewProvider)
-            Cs2FileType.defaultExtension -> RsFile(viewProvider)
+            RsFileType.defaultExtension -> RsFile(viewProvider)
             else -> error("Unrecognized extension: $extension")
         }
     }
