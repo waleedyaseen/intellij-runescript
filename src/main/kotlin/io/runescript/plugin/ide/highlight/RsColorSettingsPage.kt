@@ -36,7 +36,7 @@ class RsColorSettingsPage : ColorSettingsPage {
         return DEMO_TEXT
     }
 
-    override fun getAdditionalHighlightingTagToDescriptorMap(): MutableMap<String, TextAttributesKey>? {
+    override fun getAdditionalHighlightingTagToDescriptorMap(): MutableMap<String, TextAttributesKey> {
         return TAG_TO_DESCRIPTOR_MAP
     }
 

@@ -18,6 +18,6 @@ class RsOpFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, RuneS
     }
 
     override fun toString(): String {
-        return "RuneScript Command File"
+        return "RuneScript Op File"
     }
 }

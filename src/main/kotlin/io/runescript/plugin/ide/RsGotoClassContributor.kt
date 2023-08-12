@@ -41,7 +41,7 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
         return (item as? RsScript)?.qualifiedName
     }
 
-    override fun getQualifiedNameSeparator(): String? {
+    override fun getQualifiedNameSeparator(): String {
         return "|"
     }
 

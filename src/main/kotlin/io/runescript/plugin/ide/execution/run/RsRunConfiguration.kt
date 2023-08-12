@@ -12,8 +12,8 @@ import com.intellij.openapi.project.Project
 class RsRunConfiguration(project: Project, factory: ConfigurationFactory?, name: String?)
     : RunConfigurationBase<RsRunConfigurationOptions>(project, factory, name) {
 
-    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? {
-        return RsRunConfigurationRunState(environment)
+    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
+        return RsRunConfigurationRunState()
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {

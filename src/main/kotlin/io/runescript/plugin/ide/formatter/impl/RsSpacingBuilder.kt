@@ -54,7 +54,7 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         if (type1 == SEMICOLON) {
             return spaceIf(settings.SPACE_AFTER_SEMICOLON)
         }
-        if ((elementType == ASSIGNMENT_STATEMENT &&  false /* was ARRAY_ASSIGNMENT_STATEMENT */)
+        if (elementType == ASSIGNMENT_STATEMENT
                 || elementType == ARRAY_VARIABLE_DECLARATION_STATEMENT
                 || elementType == ARRAY_ACCESS_EXPRESSION) {
             if (type1 == LPAREN || type2 == RPAREN) {

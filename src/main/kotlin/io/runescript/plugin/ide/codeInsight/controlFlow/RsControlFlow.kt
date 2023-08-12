@@ -26,11 +26,6 @@ class RsControlFlow(private val instructions: Array<Instruction>) : ControlFlow 
         return reachableElements.contains(element)
     }
 
-    fun isReachable(instruction: Instruction): Boolean {
-        require(instruction === instructions[instruction.num()])
-        return reachable.get(instruction.num())
-    }
-
     override fun getInstructions(): Array<Instruction> {
         return instructions
     }

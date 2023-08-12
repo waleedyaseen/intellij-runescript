@@ -92,7 +92,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         o.type = RsTypeType
     }
 
-    internal fun checkTypeMismatch(context: PsiElement, expectedType: RsType) {
+    private fun checkTypeMismatch(context: PsiElement, expectedType: RsType) {
         checkTypeMismatch(context, context.type, expectedType)
     }
 
@@ -222,7 +222,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         }
     }
 
-    fun checkExpressionList(expressionList: List<RsExpression>, parameterTypes: Array<RsType>) {
+    private fun checkExpressionList(expressionList: List<RsExpression>, parameterTypes: Array<RsType>) {
         var index = 0
         expressionList.forEach {
             if (index < parameterTypes.size) {
@@ -234,8 +234,8 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             // TODO(Walied): Better error reporting here
             val actualType = it.type
             if (actualType != null) {
-                val expectedTuple = (0 until actualType.size).map {
-                    val expectedIndex = index + it
+                val expectedTuple = (0 until actualType.size).map { tupleIndex ->
+                    val expectedIndex = index + tupleIndex
                     if (expectedIndex < parameterTypes.size) parameterTypes[expectedIndex] else RsErrorType
                 }.joined()
                 checkTypeMismatch(it, actualType, expectedTuple)

@@ -45,7 +45,7 @@ class RsTypeInference(private val context: RsInferenceDataHolder) : RsVisitor() 
         errors.add(RsTypeDiagnostic(element, message))
     }
 
-    fun errorsFor(element: PsiElement): List<RsTypeDiagnostic>? {
+    fun errorsFor(element: PsiElement): List<RsTypeDiagnostic> {
         return errors.filter { it.element === element }
     }
 }

@@ -27,7 +27,7 @@ val PsiElement.typeErrors: List<RsTypeDiagnostic>
     get() {
         val script = parentOfType<RsInferenceDataHolder>(true) ?: return emptyList()
         val inferenceData = script.inferenceData
-        return inferenceData.errorsFor(this) ?: emptyList()
+        return inferenceData.errorsFor(this)
     }
 
 fun Iterable<RsType>.flatten(): Array<RsType> {

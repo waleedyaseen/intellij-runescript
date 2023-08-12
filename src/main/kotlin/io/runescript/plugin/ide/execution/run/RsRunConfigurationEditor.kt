@@ -4,7 +4,7 @@ import com.intellij.openapi.options.SettingsEditor
 import com.intellij.ui.dsl.builder.panel
 import javax.swing.JComponent
 
-class RsRunConfigurationEditor() : SettingsEditor<RsRunConfiguration>() {
+class RsRunConfigurationEditor : SettingsEditor<RsRunConfiguration>() {
 
 
     override fun applyEditorTo(s: RsRunConfiguration) {

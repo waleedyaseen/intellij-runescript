@@ -6,5 +6,4 @@ import io.runescript.plugin.ide.formatter.RsFormatterContext
 import io.runescript.plugin.ide.formatter.blocks.RsBlock
 
 class RsBracedBlock(context: RsFormatterContext, node: ASTNode)
-    : RsBlock(context, node, Indent.getNoneIndent(), null, null) {
-}
+    : RsBlock(context, node, Indent.getNoneIndent(), null, null)

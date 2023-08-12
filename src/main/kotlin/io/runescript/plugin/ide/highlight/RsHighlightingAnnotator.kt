@@ -56,12 +56,10 @@ class RsHighlightingAnnotator : Annotator {
 
             override fun visitDynamicExpression(o: RsDynamicExpression) {
                 val reference = o.reference?.resolve() ?: return
-                if (reference is RsLocalVariableExpression) {
-                    o.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
-                } else if (reference is RsOpCommand) {
-                    o.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
-                } else if (reference is RsSymSymbol) {
-                    o.highlight(holder, RsSyntaxHighlighterColors.CONFIG_REFERENCE)
+                when (reference) {
+                    is RsLocalVariableExpression -> o.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
+                    is RsOpCommand -> o.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
+                    is RsSymSymbol -> o.highlight(holder, RsSyntaxHighlighterColors.CONFIG_REFERENCE)
                 }
             }
         })

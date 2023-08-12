@@ -6,7 +6,7 @@ import io.runescript.plugin.lang.psi.RsGosubExpression
 
 class RsGosubExpressionManipulator : AbstractElementManipulator<RsGosubExpression>() {
 
-    override fun handleContentChange(element: RsGosubExpression, range: TextRange, newContent: String?): RsGosubExpression? {
+    override fun handleContentChange(element: RsGosubExpression, range: TextRange, newContent: String?): RsGosubExpression {
         return element
     }
 }

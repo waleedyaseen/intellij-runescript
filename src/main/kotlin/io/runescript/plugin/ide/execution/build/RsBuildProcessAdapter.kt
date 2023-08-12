@@ -23,7 +23,7 @@ import javax.swing.JComponent
 class RsBuildProcessAdapter(
     private val instance: RsBuildInstance,
     private val buildProgressListener: BuildProgressListener,
-    val future: CompletableFuture<Any>
+    private val future: CompletableFuture<Any>
 ) : ProcessAdapter() {
     private val instantReader = BuildOutputInstantReaderImpl(
         instance.buildId,
@@ -41,6 +41,7 @@ class RsBuildProcessAdapter(
         buildContentDescriptor.isActivateToolWindowWhenFailed = true
         buildContentDescriptor.isNavigateToError = ThreeState.UNSURE
 
+        @Suppress("UnstableApiUsage")
         val buildDescriptor = DefaultBuildDescriptor(instance.buildId, instance.project.name, instance.workDirectory, System.currentTimeMillis())
             .withContentDescriptor { buildContentDescriptor }
             .withRestartAction(StopProcessAction("Stop", "Stop", instance.processHandler))

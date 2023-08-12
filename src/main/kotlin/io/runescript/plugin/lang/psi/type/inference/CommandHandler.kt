@@ -10,7 +10,7 @@ sealed interface CommandHandler {
     fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression)
 }
 
-object DefaultCommandHandler : CommandHandler {
+data object DefaultCommandHandler : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression) {
         val parameterTypes = reference
             .parameterList
@@ -34,7 +34,7 @@ object DefaultCommandHandler : CommandHandler {
     }
 }
 
-class ParamCommandHandler(val subjectType: RsPrimitiveType) : CommandHandler {
+class ParamCommandHandler(private val subjectType: RsPrimitiveType) : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression) {
         val arguments = o.argumentList.expressionList
         var outputType: RsType? = null
@@ -97,7 +97,7 @@ class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
         if (keyType != null && keyType !is RsPrimitiveType) {
             arguments[1].error("Tuple types are not allowed to be used in db_find commands.")
         }
-        val parameterTypes = arrayOf<RsType>(
+        val parameterTypes = arrayOf(
             RsPrimitiveType.DBCOLUMN,
             keyType ?: RsErrorType
         )
@@ -116,7 +116,7 @@ class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
         val DB_FIND_REFINE_WITH_COUNT = DbFindCommandHandler(true)
     }
 }
-object DbGetFieldCommandHandler : CommandHandler {
+data object DbGetFieldCommandHandler : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(
         reference: RsOpCommand,
         o: RsCommandExpression
@@ -151,7 +151,7 @@ object DbGetFieldCommandHandler : CommandHandler {
     }
 }
 
-object EnumCommandHandler : CommandHandler {
+data object EnumCommandHandler : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(
         reference: RsOpCommand,
         o: RsCommandExpression

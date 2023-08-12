@@ -13,8 +13,8 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
 
     override fun customizeSettings(consumer: CodeStyleSettingsCustomizable, settingsType: SettingsType) {
         if (settingsType == SettingsType.SPACING_SETTINGS) {
-            val SPACES_WITHIN = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_WITHIN
-            val SPACES_BEFORE_PARENTHESES = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_BEFORE_PARENTHESES
+            val spacesWithin = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_WITHIN
+            val spacesBeforeParen = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_BEFORE_PARENTHESES
             consumer.showStandardOptions(
                     // Before parentheses
                     "SPACE_BEFORE_IF_PARENTHESES",
@@ -69,22 +69,22 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
             consumer.showCustomOption(RsCodeStyleSettings::class.java,
                     "SPACE_BEFORE_CALC_PARENTHESES",
                     "'calc' parentheses",
-                    SPACES_BEFORE_PARENTHESES)
+                    spacesBeforeParen)
 
             consumer.showCustomOption(RsCodeStyleSettings::class.java,
                     "SPACE_WITHIN_CALC_PARENTHESES",
                     "'calc' parentheses",
-                    SPACES_WITHIN)
+                    spacesWithin)
 
             consumer.showCustomOption(RsCodeStyleSettings::class.java,
                     "SPACE_WITHIN_ARRAY_BOUNDS",
                     "Array bounds",
-                    SPACES_WITHIN)
+                    spacesWithin)
 
             consumer.showCustomOption(RsCodeStyleSettings::class.java,
                     "SPACE_BEFORE_ARRAY_BOUNDS",
                     "Array bounds",
-                    SPACES_BEFORE_PARENTHESES)
+                    spacesBeforeParen)
         }
     }
 
