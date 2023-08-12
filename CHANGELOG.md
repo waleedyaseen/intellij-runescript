@@ -1,6 +1,8 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+### Added
+- Support for basic spell checking and custom dictionary.
 
 ## [1.1.0] - 2023-08-11
 

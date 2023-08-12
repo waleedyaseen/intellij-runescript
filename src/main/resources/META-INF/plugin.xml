@@ -64,6 +64,10 @@
         <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
         <documentationProvider implementation="io.runescript.plugin.ide.doc.RsDocumentationProvider"/>
 
+        <!-- Spell Checking -->
+        <spellchecker.support language="RuneScript" implementationClass="io.runescript.plugin.ide.spellchecker.RsSpellcheckingStrategy"/>
+        <spellchecker.bundledDictionaryProvider implementation="io.runescript.plugin.ide.spellchecker.RsBundledDictionaryProvider"/>
+
         <intentionAction>
             <language>RuneScript</language>
             <className>io.runescript.plugin.ide.codeInsight.intention.RsNumberConversionIntention</className>
