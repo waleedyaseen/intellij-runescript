@@ -56,6 +56,14 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             }
         }
         o.parameterList?.parameterList?.forEach { it.accept(this) }
+        val expectedParameterTypes = triggerType.parameterTypes
+        if (expectedParameterTypes != null) {
+            val actualParametersType = o.parameterList?.parameterList
+                ?.map { it.localVariableExpression.type!! }
+                .fold()
+            val expectedParametersType = expectedParameterTypes.toList().fold()
+            checkTypeMismatch(o.scriptNameExpression, actualParametersType, expectedParametersType)
+        }
         o.statementList.accept(this)
     }
 
@@ -91,6 +99,16 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     private fun RsType?.unfold(): RsType? {
         if (this is RsTupleType && types.size == 1) return types[0]
         return this
+    }
+
+    private fun Collection<RsType>?.fold(): RsType {
+        if (this == null) {
+            return RsUnitType
+        }
+        if (size == 1) {
+            return first()
+        }
+        return RsTupleType(flatten())
     }
 
     private fun checkTypeMismatch(context: PsiElement, actualType: RsType?, expectedType: RsType?) {
