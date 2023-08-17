@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsConstantExpression extends RsExpression {
+public interface RsConstantExpression extends RsExpression, RsNamedElement {
 
   @NotNull
   RsNameLiteral getNameLiteral();

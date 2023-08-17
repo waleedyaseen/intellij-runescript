@@ -238,7 +238,10 @@ GosubExpression ::= '~' NameLiteral ArgumentList? {
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
 ArgumentList ::= '(' ExpressionList? ')'
-ConstantExpression ::= '^' NameLiteral
+ConstantExpression ::= '^' NameLiteral {
+    mixin="io.runescript.plugin.lang.psi.mixin.RsConstantExpressionMixin"
+    implements="io.runescript.plugin.lang.psi.RsNamedElement"
+}
 DynamicExpression ::= NameLiteral {
     mixin="io.runescript.plugin.lang.psi.mixin.RsDynamicExpressionMixin"
     implements="io.runescript.plugin.lang.psi.RsNamedElement"

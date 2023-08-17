@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
+import io.runescript.plugin.lang.psi.mixin.RsConstantExpressionMixin;
 import io.runescript.plugin.lang.psi.*;
 
-public class RsConstantExpressionImpl extends RsExpressionImpl implements RsConstantExpression {
+public class RsConstantExpressionImpl extends RsConstantExpressionMixin implements RsConstantExpression {
 
   public RsConstantExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull RsVisitor visitor) {
     visitor.visitConstantExpression(this);
   }

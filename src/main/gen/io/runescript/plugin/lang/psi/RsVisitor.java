@@ -67,6 +67,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitConstantExpression(@NotNull RsConstantExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitCoordLiteralExpression(@NotNull RsCoordLiteralExpression o) {

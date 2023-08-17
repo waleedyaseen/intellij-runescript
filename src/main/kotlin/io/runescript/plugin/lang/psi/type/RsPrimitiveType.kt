@@ -54,7 +54,8 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     HOOK("hook", referencable = false),
     VARPHOOK("varphook", referencable = false),
     STATHOOK("stathook", referencable = false),
-    INVHOOK("invhook", referencable = false);
+    INVHOOK("invhook", referencable = false),
+    CONSTANT("constant", referencable = false);
 
     override val representation: String
         get() = literal

@@ -485,8 +485,41 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitConstantExpression(o: RsConstantExpression) {
-        // TODO(Walied): Implement when constants have references
+        val reference = o.reference?.resolve() as? RsSymSymbol
+        val type = o.typeHint
+        if (reference == null || type !is RsPrimitiveType || !type.referencable) {
+            o.type = RsErrorType
+            return
+        }
         o.type = o.typeHint
+        val value = reference.fieldList[1].text
+        when (type) {
+            RsPrimitiveType.STRING -> {
+                // Do nothing
+            }
+
+            RsPrimitiveType.INT -> {
+                val radix: Int
+                val trimmedValue: String
+                if (value.startsWith("0x")) {
+                    radix = 16
+                    trimmedValue = value.substring(2)
+                } else {
+                    radix = 10
+                    trimmedValue = value
+                }
+                if (trimmedValue.toIntOrNull(radix) == null) {
+                    o.error("Could not convert constant value '${value}' to an integer number.")
+                }
+            }
+
+            else -> {
+                val configReference = RsSymbolIndex.lookup(o.project, type, value)
+                if (configReference == null) {
+                    o.error("Could not resolve constant value '${value} to a reference.'")
+                }
+            }
+        }
     }
 
     override fun visitNullLiteralExpression(o: RsNullLiteralExpression) {
