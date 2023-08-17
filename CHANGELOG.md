@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Support for basic spell checking and custom dictionary.
+- Support for specific parameter types in triggers.
 
 ## [1.1.0] - 2023-08-11
 
