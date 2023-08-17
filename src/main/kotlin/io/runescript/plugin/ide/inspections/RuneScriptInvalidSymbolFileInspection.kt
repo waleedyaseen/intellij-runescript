@@ -8,6 +8,7 @@ import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.guessModuleDir
 import com.intellij.psi.PsiFile
 import io.runescript.plugin.ide.config.RsConfig
+import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.symbollang.psi.RsSymFile
 
 class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
@@ -25,7 +26,7 @@ class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
         }
         val name = file.containingFile.name
         val typeName = name.substring(0, name.indexOf('.'))
-        if (typeName !in RsConfig.getPrimitiveTypes(null)) {
+        if (RsPrimitiveType.lookupOrNull(typeName) == null) {
             return arrayOf(
                 manager.createProblemDescriptor(
                     file,
