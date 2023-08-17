@@ -43,7 +43,7 @@ public interface RsElementTypes {
   IElementType RELATIONAL_VALUE_EXPRESSION = new RsElementType("RELATIONAL_VALUE_EXPRESSION");
   IElementType RETURN_LIST = StubElementTypeFactory.create("RETURN_LIST");
   IElementType RETURN_STATEMENT = new RsElementType("RETURN_STATEMENT");
-  IElementType SCOPED_VARIABLE_EXPRESSION = new RsElementType("SCOPED_VARIABLE_EXPRESSION");
+  IElementType SCOPED_VARIABLE_EXPRESSION = StubElementTypeFactory.create("SCOPED_VARIABLE_EXPRESSION");
   IElementType SCRIPT = StubElementTypeFactory.create("SCRIPT");
   IElementType STATEMENT = new RsElementType("STATEMENT");
   IElementType STATEMENT_LIST = new RsElementType("STATEMENT_LIST");

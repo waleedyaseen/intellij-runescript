@@ -8,15 +8,26 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
+import io.runescript.plugin.lang.psi.mixin.RsScopedVariableExpressionMixin;
 import io.runescript.plugin.lang.psi.*;
+import io.runescript.plugin.lang.stubs.RsScopedVariableExpressionStub;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
-public class RsScopedVariableExpressionImpl extends RsExpressionImpl implements RsScopedVariableExpression {
+public class RsScopedVariableExpressionImpl extends RsScopedVariableExpressionMixin implements RsScopedVariableExpression {
 
   public RsScopedVariableExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
+  public RsScopedVariableExpressionImpl(@NotNull RsScopedVariableExpressionStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
+
+  public RsScopedVariableExpressionImpl(@Nullable RsScopedVariableExpressionStub stub, @Nullable IElementType type, @Nullable ASTNode node) {
+    super(stub, type, node);
+  }
+
   public void accept(@NotNull RsVisitor visitor) {
     visitor.visitScopedVariableExpression(this);
   }
@@ -30,7 +41,7 @@ public class RsScopedVariableExpressionImpl extends RsExpressionImpl implements 
   @Override
   @NotNull
   public RsNameLiteral getNameLiteral() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsNameLiteral.class));
+    return notNullChild(PsiTreeUtil.getStubChildOfType(this, RsNameLiteral.class));
   }
 
   @Override

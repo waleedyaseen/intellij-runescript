@@ -155,6 +155,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitScopedVariableExpression(@NotNull RsScopedVariableExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
   }
 
   public void visitScript(@NotNull RsScript o) {

@@ -203,7 +203,13 @@ LocalVariableExpression ::= '$' NameLiteral {
 }
 
 ArrayAccessExpression ::= LocalVariableExpression '(' Expression ')'
-ScopedVariableExpression ::= '%' NameLiteral
+ScopedVariableExpression ::= '%' NameLiteral {
+    mixin="io.runescript.plugin.lang.psi.mixin.RsScopedVariableExpressionMixin"
+    stubClass="io.runescript.plugin.lang.stubs.RsScopedVariableExpressionStub"
+    elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+    implements="io.runescript.plugin.lang.psi.RsNamedElement"
+}
+
 private LiteralExpression ::= IntegerLiteralExpression
                              | CoordLiteralExpression
                              | BooleanLiteralExpression

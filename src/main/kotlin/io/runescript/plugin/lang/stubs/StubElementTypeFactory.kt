@@ -14,6 +14,7 @@ object StubElementTypeFactory {
             "RETURN_LIST" -> RsReturnListStubType
             "TYPE_NAME" -> RsTypeNameStubType
             "LOCAL_VARIABLE_EXPRESSION" -> RsLocalVariableExpressionStubType
+            "SCOPED_VARIABLE_EXPRESSION" -> RsScopedVariableExpressionStubType
             "NAME_LITERAL" -> RsNameLiteralStubType
             else -> error("Unrecognized stub type: $name")
         }

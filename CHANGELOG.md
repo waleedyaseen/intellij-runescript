@@ -4,6 +4,7 @@
 ### Added
 - Support for basic spell checking and custom dictionary.
 - Support for specific parameter types in triggers.
+- Support for game variable type checking/refactoring/find usages.
 
 ## [1.1.0] - 2023-08-11
 

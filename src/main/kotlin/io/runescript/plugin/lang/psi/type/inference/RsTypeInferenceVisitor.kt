@@ -314,6 +314,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitScopedVariableExpression(o: RsScopedVariableExpression) {
+        val reference = o.reference?.resolve() as? RsSymSymbol
+        if (reference == null) {
+            o.type = RsErrorType
+            return
+        }
+        o.type = RsPrimitiveType.lookupReferencableOrNull(reference.fieldList[2].text) ?: RsErrorType
     }
 
     override fun visitLocalVariableExpression(o: RsLocalVariableExpression) {

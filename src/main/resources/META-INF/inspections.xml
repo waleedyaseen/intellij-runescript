@@ -26,6 +26,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnresolvedLocalVariableInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Unresolved game variable"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnresolvedScopedVariableInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unresolved command"
                          enabledByDefault="true"
                          level="ERROR"
