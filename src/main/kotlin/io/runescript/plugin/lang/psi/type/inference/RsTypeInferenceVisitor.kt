@@ -315,7 +315,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
     override fun visitScopedVariableExpression(o: RsScopedVariableExpression) {
         val reference = o.reference?.resolve() as? RsSymSymbol
-        if (reference == null) {
+        if (reference == null || reference.fieldList.size < 3) {
             o.type = RsErrorType
             return
         }
