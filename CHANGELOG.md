@@ -7,6 +7,9 @@
 - Support for game variable type checking/refactoring/find usages.
 - Support for constant type checking/refactoring/find usages.
 
+### Changed
+- Fix issue with symbol file type inspection using outdated types.
+
 ## [1.1.0] - 2023-08-11
 
 ### Added
