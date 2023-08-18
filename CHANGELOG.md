@@ -1,6 +1,9 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+
+## [1.2.0] - 2023-08-18
+
 ### Added
 - Support for basic spell checking and custom dictionary.
 - Support for specific parameter types in triggers.
@@ -20,5 +23,6 @@
 ### Changed
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/waleedyaseen/intellij-runescript/commits/v1.1.0
