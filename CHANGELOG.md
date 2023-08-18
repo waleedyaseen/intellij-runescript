@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- The build window will now display internal compiler errors as well.
+
 ## [1.2.0] - 2023-08-18
 
 ### Added
