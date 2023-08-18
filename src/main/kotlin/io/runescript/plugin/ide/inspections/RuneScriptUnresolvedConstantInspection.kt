@@ -6,7 +6,6 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsConstantExpression
-import io.runescript.plugin.lang.psi.RsScopedVariableExpression
 import io.runescript.plugin.lang.psi.RsVisitor
 
 class RuneScriptUnresolvedConstantInspection : LocalInspectionTool() {

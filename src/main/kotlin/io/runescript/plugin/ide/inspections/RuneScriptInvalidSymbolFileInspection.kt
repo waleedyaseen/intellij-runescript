@@ -7,7 +7,6 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.guessModuleDir
 import com.intellij.psi.PsiFile
-import io.runescript.plugin.ide.config.RsConfig
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.symbollang.psi.RsSymFile
 
