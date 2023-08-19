@@ -7,22 +7,22 @@ import com.intellij.psi.PsiElement;
 
 public interface RsSwitchStatement extends RsStatement {
 
-  @NotNull
+  @Nullable
   RsExpression getExpression();
 
   @NotNull
   List<RsSwitchCase> getSwitchCaseList();
 
-  @NotNull
+  @Nullable
   PsiElement getLbrace();
 
   @NotNull
   PsiElement getLparen();
 
-  @NotNull
+  @Nullable
   PsiElement getRbrace();
 
-  @NotNull
+  @Nullable
   PsiElement getRparen();
 
   @NotNull

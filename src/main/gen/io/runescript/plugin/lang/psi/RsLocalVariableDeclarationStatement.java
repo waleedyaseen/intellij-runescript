@@ -16,7 +16,7 @@ public interface RsLocalVariableDeclarationStatement extends RsStatement {
   @Nullable
   PsiElement getEqual();
 
-  @NotNull
+  @Nullable
   PsiElement getSemicolon();
 
 }

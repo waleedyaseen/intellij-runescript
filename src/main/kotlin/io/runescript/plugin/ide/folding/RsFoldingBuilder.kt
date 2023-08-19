@@ -32,9 +32,13 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
                 }
 
                 is RsSwitchStatement -> {
-                    val startOffset = element.lbrace.startOffset
-                    val endOffset = element.rbrace.endOffset
-                    descriptors.add(FoldingDescriptor(element.node, TextRange.create(startOffset, endOffset)))
+                    val lbrace = element.lbrace
+                    val rbrace = element.rbrace
+                    if (lbrace != null && rbrace != null) {
+                        val startOffset = lbrace.startOffset
+                        val endOffset = rbrace.endOffset
+                        descriptors.add(FoldingDescriptor(element.node, TextRange.create(startOffset, endOffset)))
+                    }
                 }
 
                 is PsiComment -> {

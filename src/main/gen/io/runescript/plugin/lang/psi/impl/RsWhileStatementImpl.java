@@ -28,15 +28,15 @@ public class RsWhileStatementImpl extends RsStatementImpl implements RsWhileStat
   }
 
   @Override
-  @NotNull
+  @Nullable
   public RsExpression getExpression() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsExpression.class));
+    return PsiTreeUtil.getChildOfType(this, RsExpression.class);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public RsStatement getStatement() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsStatement.class));
+    return PsiTreeUtil.getChildOfType(this, RsStatement.class);
   }
 
   @Override
@@ -46,9 +46,9 @@ public class RsWhileStatementImpl extends RsStatementImpl implements RsWhileStat
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getRparen() {
-    return notNullChild(findChildByType(RPAREN));
+    return findChildByType(RPAREN);
   }
 
   @Override

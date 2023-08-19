@@ -46,12 +46,6 @@ public class RsNameLiteralImpl extends StubBasedPsiElementBase<RsNameLiteralStub
 
   @Override
   @Nullable
-  public PsiElement getCase() {
-    return findChildByType(CASE);
-  }
-
-  @Override
-  @Nullable
   public PsiElement getDefineType() {
     return findChildByType(DEFINE_TYPE);
   }

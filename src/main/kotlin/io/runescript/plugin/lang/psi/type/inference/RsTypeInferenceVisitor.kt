@@ -80,11 +80,13 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitIfStatement(o: RsIfStatement) {
-        o.expression.typeHint = RsPrimitiveType.BOOLEAN
-        o.expression.accept(this)
-        checkTypeMismatch(o.expression, RsPrimitiveType.BOOLEAN)
-
-        o.trueStatement.accept(this)
+        val expression = o.expression
+        if (expression != null) {
+            expression.typeHint = RsPrimitiveType.BOOLEAN
+            expression.accept(this)
+            checkTypeMismatch(expression, RsPrimitiveType.BOOLEAN)
+        }
+        o.trueStatement?.accept(this)
         o.falseStatement?.accept(this)
     }
 
@@ -281,27 +283,33 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitWhileStatement(o: RsWhileStatement) {
-        o.expression.typeHint = RsPrimitiveType.BOOLEAN
-        o.expression.accept(this)
-        checkTypeMismatch(o.expression, RsPrimitiveType.BOOLEAN)
-
-        o.statement.accept(this)
+        val expression = o.expression
+        if (expression != null) {
+            expression.typeHint = RsPrimitiveType.BOOLEAN
+            expression.accept(this)
+            checkTypeMismatch(expression, RsPrimitiveType.BOOLEAN)
+        }
+        o.statement?.accept(this)
     }
 
     override fun visitArrayVariableDeclarationStatement(o: RsArrayVariableDeclarationStatement) {
         val type = RsPrimitiveType.lookupReferencable(o.defineType.text.substring("def_".length))
         val expression = o.expressionList[0]
         expression.type = RsArrayType(type)
-
-        val countExpression = o.expressionList[1]
-        countExpression.typeHint = RsPrimitiveType.INT
-        countExpression.accept(this)
-        checkTypeMismatch(countExpression, RsPrimitiveType.INT)
+        if (o.expressionList.size > 1) {
+            val countExpression = o.expressionList[1]
+            countExpression.typeHint = RsPrimitiveType.INT
+            countExpression.accept(this)
+            checkTypeMismatch(countExpression, RsPrimitiveType.INT)
+        }
     }
 
 
     override fun visitLocalVariableDeclarationStatement(o: RsLocalVariableDeclarationStatement) {
         val type = RsPrimitiveType.lookupReferencable(o.defineType.text.substring("def_".length))
+        if (o.expressionList.isEmpty()) {
+            return
+        }
         val expression = o.expressionList[0]
         expression.type = type
         // expression.accept(this)
@@ -363,10 +371,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
     override fun visitSwitchStatement(o: RsSwitchStatement) {
         val type = RsPrimitiveType.lookupReferencable(o.switch.text.substring("switch_".length))
-        o.typeHint = type
-        o.expression.accept(this)
-        checkTypeMismatch(o.expression, type)
-
+        val expression = o.expression
+        if (expression != null) {
+            o.typeHint = type
+            expression.accept(this)
+            checkTypeMismatch(expression, type)
+        }
         o.switchCaseList.forEach {
             it.expressionList.forEach { expression ->
                 expression.typeHint = type

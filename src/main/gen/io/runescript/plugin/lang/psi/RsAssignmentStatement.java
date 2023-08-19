@@ -13,7 +13,7 @@ public interface RsAssignmentStatement extends RsStatement {
   @NotNull
   PsiElement getEqual();
 
-  @NotNull
+  @Nullable
   PsiElement getSemicolon();
 
 }

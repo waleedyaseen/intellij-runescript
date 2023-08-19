@@ -46,9 +46,9 @@ public class RsLocalVariableDeclarationStatementImpl extends RsLocalVariableDecl
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getSemicolon() {
-    return notNullChild(findChildByType(SEMICOLON));
+    return findChildByType(SEMICOLON);
   }
 
 }

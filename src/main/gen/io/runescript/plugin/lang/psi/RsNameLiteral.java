@@ -13,9 +13,6 @@ public interface RsNameLiteral extends PsiElement, StubBasedPsiElement<RsNameLit
   PsiElement getArrayTypeLiteral();
 
   @Nullable
-  PsiElement getCase();
-
-  @Nullable
   PsiElement getDefineType();
 
   @Nullable

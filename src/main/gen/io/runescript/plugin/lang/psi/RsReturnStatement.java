@@ -19,7 +19,7 @@ public interface RsReturnStatement extends RsStatement {
   @Nullable
   PsiElement getRparen();
 
-  @NotNull
+  @Nullable
   PsiElement getSemicolon();
 
 }

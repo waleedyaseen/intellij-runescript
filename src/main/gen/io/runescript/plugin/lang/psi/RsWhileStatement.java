@@ -7,16 +7,16 @@ import com.intellij.psi.PsiElement;
 
 public interface RsWhileStatement extends RsStatement {
 
-  @NotNull
+  @Nullable
   RsExpression getExpression();
 
-  @NotNull
+  @Nullable
   RsStatement getStatement();
 
   @NotNull
   PsiElement getLparen();
 
-  @NotNull
+  @Nullable
   PsiElement getRparen();
 
   @NotNull

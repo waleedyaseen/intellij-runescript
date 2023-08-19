@@ -10,7 +10,10 @@ import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 abstract class RsLocalVariableDeclarationStatementMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsLocalVariableDeclarationStatement {
 
     override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
-        val declaredVariable = expressionList[0]
-        return processor.execute(declaredVariable, state)
+        if (expressionList.isNotEmpty()) {
+            val declaredVariable = expressionList[0]
+            return processor.execute(declaredVariable, state)
+        }
+        return true
     }
 }

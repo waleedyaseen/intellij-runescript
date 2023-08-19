@@ -20,13 +20,13 @@ class RsMergeIfAndIntention : BaseElementAtCaretIntentionAction() {
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         val ifStmt = element.parent as RsIfStatement
         val trueStmt = ifStmt.trueStatement.toSingleStatement() as RsIfStatement
-        val leftParen = ifStmt.expression.precedence > PRECEDENCE_LOGICAL_AND
-        val rightParen = trueStmt.expression.precedence > PRECEDENCE_LOGICAL_AND
+        val leftParen = (ifStmt.expression?.precedence ?: 0) > PRECEDENCE_LOGICAL_AND
+        val rightParen = (trueStmt.expression?.precedence ?: 0) > PRECEDENCE_LOGICAL_AND
         val exprText = buildString {
             if (leftParen) {
                 append('(')
             }
-            append(ifStmt.expression.text)
+            append(ifStmt.expression?.text?:"")
             if (leftParen) {
                 append(')')
             }
@@ -34,14 +34,15 @@ class RsMergeIfAndIntention : BaseElementAtCaretIntentionAction() {
             if (rightParen) {
                 append('(')
             }
-            append(trueStmt.expression.text)
+            append(trueStmt.expression?.text?:"")
             if (rightParen) {
                 append(')')
             }
         }
         val conditionExpr = RsElementGenerator.createConditionExpression(element.project, exprText)
-        ifStmt.expression.replace(conditionExpr)
-        ifStmt.trueStatement.replace(trueStmt.trueStatement)
+        ifStmt.expression?.replace(conditionExpr)
+        trueStmt.trueStatement?.let { ifStmt.trueStatement?.replace(it) }
+
     }
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {

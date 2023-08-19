@@ -52,9 +52,9 @@ public class RsReturnStatementImpl extends RsStatementImpl implements RsReturnSt
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getSemicolon() {
-    return notNullChild(findChildByType(SEMICOLON));
+    return findChildByType(SEMICOLON);
   }
 
 }

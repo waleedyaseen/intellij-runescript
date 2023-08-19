@@ -28,9 +28,9 @@ public class RsIfStatementImpl extends RsStatementImpl implements RsIfStatement 
   }
 
   @Override
-  @NotNull
+  @Nullable
   public RsExpression getExpression() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsExpression.class));
+    return PsiTreeUtil.getChildOfType(this, RsExpression.class);
   }
 
   @Override
@@ -58,16 +58,16 @@ public class RsIfStatementImpl extends RsStatementImpl implements RsIfStatement 
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getRparen() {
-    return notNullChild(findChildByType(RPAREN));
+    return findChildByType(RPAREN);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public RsStatement getTrueStatement() {
     List<RsStatement> p1 = getStatementList();
-    return p1.get(0);
+    return p1.size() < 1 ? null : p1.get(0);
   }
 
   @Override

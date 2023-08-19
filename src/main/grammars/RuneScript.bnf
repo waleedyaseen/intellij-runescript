@@ -91,36 +91,52 @@ Statement ::= BlockStatement
             | WhileStatement
             | SwitchStatement
             | ReturnStatement
-            | LocalVariableDeclarationStatement
             | ArrayVariableDeclarationStatement
+            | LocalVariableDeclarationStatement
             | AssignmentStatement
             | ExpressionStatement
 
 BlockStatement ::= '{' StatementList '}'
 IfStatement ::= IF '(' LogicalOrWrapper ')' Statement (ELSE Statement)? {
+    pin=2
     methods=[
         trueStatement="/Statement[0]"
         falseStatement="/Statement[1]"
     ]
 }
-WhileStatement ::= WHILE '(' LogicalOrWrapper ')' Statement
-SwitchStatement ::= SWITCH '(' Expression ')' '{' SwitchCase* '}'
+WhileStatement ::= WHILE '(' LogicalOrWrapper ')' Statement {
+    pin=2
+}
+SwitchStatement ::= SWITCH '(' Expression ')' '{' SwitchCase* '}' {
+    pin=2
+}
 SwitchCase ::= CASE SwitchCaseExpressionList ':' StatementList
 private SwitchCaseExpressionList ::= SwitchCaseExpression (',' SwitchCaseExpression)*
 private SwitchCaseExpression ::= SwitchCaseDefaultExpression | Expression
 SwitchCaseDefaultExpression ::= DEFAULT
 
-ReturnStatement ::= RETURN ('(' ExpressionList? ')')? ';'
+ReturnStatement ::= RETURN ('(' ExpressionList? ')')? ';' {
+    pin=1
+}
+
 LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' Expression)? ';' {
+    pin=1
     mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableDeclarationStatementMixin"
 }
+
 ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';' {
+    pin=3
     mixin="io.runescript.plugin.lang.psi.mixin.RsArrayVariableDeclarationStatementMixin"
 }
-AssignmentStatement ::= AssignableExpression (',' AssignableExpression)* '=' Expression (',' Expression)* ';'
+
+AssignmentStatement ::= AssignableExpression (',' AssignableExpression)* '=' Expression (',' Expression)* ';' {
+    pin=3
+}
 
 private AssignableExpression ::= ArrayAccessExpression | LocalVariableExpression | ScopedVariableExpression
-ExpressionStatement ::= Expression ';'
+ExpressionStatement ::= Expression ';' {
+    pin=1
+}
 
 // Arithmetic & Bitwise Expressions
 
@@ -247,7 +263,7 @@ DynamicExpression ::= NameLiteral {
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
-NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE {
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH {
     stubClass="io.runescript.plugin.lang.stubs.RsNameLiteralStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }

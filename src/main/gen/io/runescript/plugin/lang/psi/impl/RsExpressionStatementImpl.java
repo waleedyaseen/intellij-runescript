@@ -34,9 +34,9 @@ public class RsExpressionStatementImpl extends RsStatementImpl implements RsExpr
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getSemicolon() {
-    return notNullChild(findChildByType(SEMICOLON));
+    return findChildByType(SEMICOLON);
   }
 
 }

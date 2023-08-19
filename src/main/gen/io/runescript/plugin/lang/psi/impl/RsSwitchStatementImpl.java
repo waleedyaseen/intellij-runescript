@@ -28,9 +28,9 @@ public class RsSwitchStatementImpl extends RsStatementImpl implements RsSwitchSt
   }
 
   @Override
-  @NotNull
+  @Nullable
   public RsExpression getExpression() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsExpression.class));
+    return PsiTreeUtil.getChildOfType(this, RsExpression.class);
   }
 
   @Override
@@ -40,9 +40,9 @@ public class RsSwitchStatementImpl extends RsStatementImpl implements RsSwitchSt
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getLbrace() {
-    return notNullChild(findChildByType(LBRACE));
+    return findChildByType(LBRACE);
   }
 
   @Override
@@ -52,15 +52,15 @@ public class RsSwitchStatementImpl extends RsStatementImpl implements RsSwitchSt
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getRbrace() {
-    return notNullChild(findChildByType(RBRACE));
+    return findChildByType(RBRACE);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getRparen() {
-    return notNullChild(findChildByType(RPAREN));
+    return findChildByType(RPAREN);
   }
 
   @Override

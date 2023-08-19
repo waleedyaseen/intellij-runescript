@@ -312,15 +312,16 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean ArrayVariableDeclarationStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayVariableDeclarationStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DEFINE_TYPE)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, ARRAY_VARIABLE_DECLARATION_STATEMENT, "<Statement>");
     r = consumeToken(b, DEFINE_TYPE);
     r = r && LocalVariableExpression(b, l + 1);
     r = r && consumeToken(b, LPAREN);
-    r = r && Expression(b, l + 1);
-    r = r && consumeTokens(b, 0, RPAREN, SEMICOLON);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 3
+    r = r && report_error_(b, Expression(b, l + 1));
+    r = p && report_error_(b, consumeTokens(b, -1, RPAREN, SEMICOLON)) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -342,16 +343,17 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean AssignmentStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AssignmentStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DOLLAR, PERCENT)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, ASSIGNMENT_STATEMENT, "<Statement>");
     r = AssignableExpression(b, l + 1);
     r = r && AssignmentStatement_1(b, l + 1);
     r = r && consumeToken(b, EQUAL);
-    r = r && Expression(b, l + 1);
-    r = r && AssignmentStatement_4(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 3
+    r = r && report_error_(b, Expression(b, l + 1));
+    r = p && report_error_(b, AssignmentStatement_4(b, l + 1)) && r;
+    r = p && consumeToken(b, SEMICOLON) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (',' AssignableExpression)*
@@ -601,12 +603,13 @@ public class RsParser implements PsiParser, LightPsiParser {
   // Expression ';'
   public static boolean ExpressionStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ExpressionStatement")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, EXPRESSION_STATEMENT, "<Statement>");
     r = Expression(b, l + 1);
+    p = r; // pin = 1
     r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -749,15 +752,16 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean IfStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IfStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", IF)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, IF_STATEMENT, "<Statement>");
-    r = consumeTokens(b, 0, IF, LPAREN);
-    r = r && LogicalOrWrapper(b, l + 1);
-    r = r && consumeToken(b, RPAREN);
-    r = r && Statement(b, l + 1);
-    r = r && IfStatement_5(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    r = consumeTokens(b, 2, IF, LPAREN);
+    p = r; // pin = 2
+    r = r && report_error_(b, LogicalOrWrapper(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, RPAREN)) && r;
+    r = p && report_error_(b, Statement(b, l + 1)) && r;
+    r = p && IfStatement_5(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // (ELSE Statement)?
@@ -814,14 +818,15 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean LocalVariableDeclarationStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LocalVariableDeclarationStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", DEFINE_TYPE)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, LOCAL_VARIABLE_DECLARATION_STATEMENT, "<Statement>");
     r = consumeToken(b, DEFINE_TYPE);
-    r = r && LocalVariableExpression(b, l + 1);
-    r = r && LocalVariableDeclarationStatement_2(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, LocalVariableExpression(b, l + 1));
+    r = p && report_error_(b, LocalVariableDeclarationStatement_2(b, l + 1)) && r;
+    r = p && consumeToken(b, SEMICOLON) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // ('=' Expression)?
@@ -952,7 +957,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH | CASE
+  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH
   public static boolean NameLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NameLiteral")) return false;
     boolean r;
@@ -967,7 +972,6 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, FALSE);
     if (!r) r = consumeToken(b, NULL);
     if (!r) r = consumeToken(b, SWITCH);
-    if (!r) r = consumeToken(b, CASE);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1157,13 +1161,14 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean ReturnStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ReturnStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", RETURN)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, RETURN_STATEMENT, "<Statement>");
     r = consumeToken(b, RETURN);
-    r = r && ReturnStatement_1(b, l + 1);
-    r = r && consumeToken(b, SEMICOLON);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, ReturnStatement_1(b, l + 1));
+    r = p && consumeToken(b, SEMICOLON) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // ('(' ExpressionList? ')')?
@@ -1244,8 +1249,8 @@ public class RsParser implements PsiParser, LightPsiParser {
   //             | WhileStatement
   //             | SwitchStatement
   //             | ReturnStatement
-  //             | LocalVariableDeclarationStatement
   //             | ArrayVariableDeclarationStatement
+  //             | LocalVariableDeclarationStatement
   //             | AssignmentStatement
   //             | ExpressionStatement
   public static boolean Statement(PsiBuilder b, int l) {
@@ -1257,8 +1262,8 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = WhileStatement(b, l + 1);
     if (!r) r = SwitchStatement(b, l + 1);
     if (!r) r = ReturnStatement(b, l + 1);
-    if (!r) r = LocalVariableDeclarationStatement(b, l + 1);
     if (!r) r = ArrayVariableDeclarationStatement(b, l + 1);
+    if (!r) r = LocalVariableDeclarationStatement(b, l + 1);
     if (!r) r = AssignmentStatement(b, l + 1);
     if (!r) r = ExpressionStatement(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -1409,15 +1414,16 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean SwitchStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "SwitchStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", SWITCH)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, SWITCH_STATEMENT, "<Statement>");
-    r = consumeTokens(b, 0, SWITCH, LPAREN);
-    r = r && Expression(b, l + 1);
-    r = r && consumeTokens(b, 0, RPAREN, LBRACE);
-    r = r && SwitchStatement_5(b, l + 1);
-    r = r && consumeToken(b, RBRACE);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    r = consumeTokens(b, 2, SWITCH, LPAREN);
+    p = r; // pin = 2
+    r = r && report_error_(b, Expression(b, l + 1));
+    r = p && report_error_(b, consumeTokens(b, -1, RPAREN, LBRACE)) && r;
+    r = p && report_error_(b, SwitchStatement_5(b, l + 1)) && r;
+    r = p && consumeToken(b, RBRACE) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // SwitchCase*
@@ -1448,14 +1454,15 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean WhileStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "WhileStatement")) return false;
     if (!nextTokenIs(b, "<Statement>", WHILE)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, WHILE_STATEMENT, "<Statement>");
-    r = consumeTokens(b, 0, WHILE, LPAREN);
-    r = r && LogicalOrWrapper(b, l + 1);
-    r = r && consumeToken(b, RPAREN);
-    r = r && Statement(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    r = consumeTokens(b, 2, WHILE, LPAREN);
+    p = r; // pin = 2
+    r = r && report_error_(b, LogicalOrWrapper(b, l + 1));
+    r = p && report_error_(b, consumeToken(b, RPAREN)) && r;
+    r = p && Statement(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
 }

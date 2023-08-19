@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface RsIfStatement extends RsStatement {
 
-  @NotNull
+  @Nullable
   RsExpression getExpression();
 
   @NotNull
@@ -22,10 +22,10 @@ public interface RsIfStatement extends RsStatement {
   @NotNull
   PsiElement getLparen();
 
-  @NotNull
+  @Nullable
   PsiElement getRparen();
 
-  @NotNull
+  @Nullable
   RsStatement getTrueStatement();
 
   @Nullable

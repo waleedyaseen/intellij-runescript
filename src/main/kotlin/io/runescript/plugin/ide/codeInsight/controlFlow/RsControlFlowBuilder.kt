@@ -39,10 +39,7 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitLocalVariableDeclarationStatement(o: RsLocalVariableDeclarationStatement) {
-            o.expressionList[0].accept(this)
-            if (o.expressionList.size > 1) {
-                o.expressionList[1].accept(this)
-            }
+            o.expressionList.forEach { it.accept(this) }
             addVariableDefinition(o)
         }
 
@@ -52,7 +49,9 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitArrayVariableDeclarationStatement(o: RsArrayVariableDeclarationStatement) {
-            o.expressionList[1].accept(this)
+            if (o.expressionList.size > 1) {
+                o.expressionList[1].accept(this)
+            }
             o.expressionList[0].accept(this)
             addInstruction(o)
         }
@@ -173,12 +172,12 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             val trueStatement = o.trueStatement
             val falseStatement = o.falseStatement
 
-            o.expression.accept(this)
+            o.expression?.accept(this)
             val ifStartBlock = addInstruction(o)
             builder.flowAbrupted()
 
             val ifTrueBlockStart = addInstruction(null)
-            trueStatement.accept(this)
+            trueStatement?.accept(this)
             val ifTrueBlockEnd = builder.prevInstruction
             builder.flowAbrupted()
 
@@ -215,15 +214,15 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
 
         override fun visitWhileStatement(o: RsWhileStatement) {
             val whileStart = addInstruction(o)
-            o.expression.accept(this)
-            o.statement.accept(this)
+            o.expression?.accept(this)
+            o.statement?.accept(this)
             // Jump from last instruction in the body to the beginning of the while
             builder.addEdge(builder.instructions.last(), whileStart)
             builder.prevInstruction = whileStart
         }
 
         override fun visitSwitchStatement(o: RsSwitchStatement) {
-            o.expression.accept(this)
+            o.expression?.accept(this)
             val switchStart = addInstruction(o)
             val caseEnds = mutableSetOf<Instruction>()
             var isExhaustive = false
