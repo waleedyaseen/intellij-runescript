@@ -2,8 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+- Add a formatter option for space around commas in return lists.
+- Add a formatter option for space within return list parenthesis.
+
 ### Changed
 - The build window will now display internal compiler errors as well.
+
+### Fixed
+- Fix a bug with script block indentation.
 
 ## [1.2.0] - 2023-08-18
 

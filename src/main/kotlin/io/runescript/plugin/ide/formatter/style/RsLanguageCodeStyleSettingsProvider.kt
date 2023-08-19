@@ -15,6 +15,7 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
         if (settingsType == SettingsType.SPACING_SETTINGS) {
             val spacesWithin = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_WITHIN
             val spacesBeforeParen = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_BEFORE_PARENTHESES
+            val spacesOther = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_OTHER
             consumer.showStandardOptions(
                     // Before parentheses
                     "SPACE_BEFORE_IF_PARENTHESES",
@@ -77,6 +78,11 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                     spacesWithin)
 
             consumer.showCustomOption(RsCodeStyleSettings::class.java,
+                "SPACE_WITHIN_RETURN_LIST_PARENTHESES",
+                "Return list parentheses",
+                spacesWithin)
+
+            consumer.showCustomOption(RsCodeStyleSettings::class.java,
                     "SPACE_WITHIN_ARRAY_BOUNDS",
                     "Array bounds",
                     spacesWithin)
@@ -85,6 +91,20 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                     "SPACE_BEFORE_ARRAY_BOUNDS",
                     "Array bounds",
                     spacesBeforeParen)
+
+            consumer.showCustomOption(RsCodeStyleSettings::class.java,
+                "SPACE_BEFORE_COMMA_IN_RETURN_LIST",
+                "Before comma in return list",
+                spacesOther,
+                CodeStyleSettingsCustomizable.OptionAnchor.AFTER,
+                "SPACE_AFTER_COMMA")
+
+            consumer.showCustomOption(RsCodeStyleSettings::class.java,
+                "SPACE_AFTER_COMMA_IN_RETURN_LIST",
+                "After comma in return list",
+                spacesOther,
+                CodeStyleSettingsCustomizable.OptionAnchor.AFTER,
+                "SPACE_AFTER_COMMA")
         }
     }
 
@@ -131,5 +151,7 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
             return(${'$'}odd_count);
             
             [proc,tostring](string ${'$'}text)
+            
+            [proc,multiple_returns]()(int,int,string)
         """.trimIndent()
 }

@@ -17,4 +17,13 @@ class RsCodeStyleSettings(container: CodeStyleSettings) : CustomCodeStyleSetting
 
     @JvmField
     var SPACE_WITHIN_CALC_PARENTHESES = false
+
+    @JvmField
+    var SPACE_WITHIN_RETURN_LIST_PARENTHESES = false
+
+    @JvmField
+    var SPACE_BEFORE_COMMA_IN_RETURN_LIST = false
+
+    @JvmField
+    var SPACE_AFTER_COMMA_IN_RETURN_LIST = false
 }

@@ -45,9 +45,6 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
                 return spaceIf(settings.SPACE_AROUND_ASSIGNMENT_OPERATORS)
             }
         }
-        if (type1 == DEFINE_TYPE || type1 == TYPE_NAME || type1 == ARRAY_TYPE_LITERAL) {
-            return spaceIf(true)
-        }
         if (type2 == SEMICOLON) {
             return spaceIf(settings.SPACE_BEFORE_SEMICOLON)
         }
@@ -110,6 +107,9 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         if (elementType == CALC_EXPRESSION && (type1 == LPAREN || type2 == RPAREN)) {
             return spaceIf(rsSettings.SPACE_WITHIN_CALC_PARENTHESES)
         }
+        if (elementType == RETURN_LIST && (type1 == LPAREN || type2 == RPAREN)) {
+            return spaceIf(rsSettings.SPACE_WITHIN_RETURN_LIST_PARENTHESES)
+        }
         if (elementType == ARGUMENT_LIST && (type1 == LPAREN || type2 == RPAREN)) {
             val superType = parent.node.treeParent.elementType
             if (superType == GOSUB_EXPRESSION || superType == COMMAND_EXPRESSION) {
@@ -118,15 +118,25 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
             }
         }
         if (elementType == ARGUMENT_LIST || elementType == SWITCH_CASE
-                || elementType == PARAMETER_LIST || elementType == RETURN_LIST) {
+                || elementType == PARAMETER_LIST) {
             if (type2 == COMMA) {
                 return spaceIf(settings.SPACE_BEFORE_COMMA)
             } else if (type1 == COMMA) {
                 return spaceIf(settings.SPACE_AFTER_COMMA)
             }
         }
+        if (elementType == RETURN_LIST) {
+            if (type2 == COMMA) {
+                return spaceIf(rsSettings.SPACE_BEFORE_COMMA_IN_RETURN_LIST)
+            } else if (type1 == COMMA) {
+                return spaceIf(rsSettings.SPACE_AFTER_COMMA_IN_RETURN_LIST)
+            }
+        }
         if (type2 == ARGUMENT_LIST && (elementType == GOSUB_EXPRESSION || elementType == COMMAND_EXPRESSION)) {
             return spaceIf(settings.SPACE_BEFORE_METHOD_CALL_PARENTHESES)
+        }
+        if (type1 == DEFINE_TYPE || type1 == TYPE_NAME || type1 == ARRAY_TYPE_LITERAL) {
+            return spaceIf(true)
         }
         return null
     }
