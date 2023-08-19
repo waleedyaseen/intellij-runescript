@@ -43,9 +43,9 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(ARRAY_VARIABLE_DECLARATION_STATEMENT, ASSIGNMENT_STATEMENT, BLOCK_STATEMENT, EXPRESSION_STATEMENT,
-      IF_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT, STATEMENT,
-      SWITCH_STATEMENT, WHILE_STATEMENT),
+    create_token_set_(ARRAY_VARIABLE_DECLARATION_STATEMENT, ASSIGNMENT_STATEMENT, BLOCK_STATEMENT, EMPTY_STATEMENT,
+      EXPRESSION_STATEMENT, IF_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT,
+      STATEMENT, SWITCH_STATEMENT, WHILE_STATEMENT),
     create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_ACCESS_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
       CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
       COORD_LITERAL_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION,
@@ -532,6 +532,18 @@ public class RsParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, DYNAMIC_EXPRESSION, "<Expression>");
     r = NameLiteral(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // ';'
+  public static boolean EmptyStatement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EmptyStatement")) return false;
+    if (!nextTokenIs(b, "<Statement>", SEMICOLON)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EMPTY_STATEMENT, "<Statement>");
+    r = consumeToken(b, SEMICOLON);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -1253,6 +1265,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   //             | LocalVariableDeclarationStatement
   //             | AssignmentStatement
   //             | ExpressionStatement
+  //             | EmptyStatement
   public static boolean Statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Statement")) return false;
     boolean r;
@@ -1266,6 +1279,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = LocalVariableDeclarationStatement(b, l + 1);
     if (!r) r = AssignmentStatement(b, l + 1);
     if (!r) r = ExpressionStatement(b, l + 1);
+    if (!r) r = EmptyStatement(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

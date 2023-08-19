@@ -369,6 +369,10 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         o.expression.accept(this)
     }
 
+    override fun visitEmptyStatement(o: RsEmptyStatement) {
+        // Do nothing.
+    }
+
     override fun visitSwitchStatement(o: RsSwitchStatement) {
         val type = RsPrimitiveType.lookupReferencable(o.switch.text.substring("switch_".length))
         val expression = o.expression

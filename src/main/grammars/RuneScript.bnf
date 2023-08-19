@@ -95,6 +95,7 @@ Statement ::= BlockStatement
             | LocalVariableDeclarationStatement
             | AssignmentStatement
             | ExpressionStatement
+            | EmptyStatement
 
 BlockStatement ::= '{' StatementList '}'
 IfStatement ::= IF '(' LogicalOrWrapper ')' Statement (ELSE Statement)? {
@@ -137,6 +138,7 @@ private AssignableExpression ::= ArrayAccessExpression | LocalVariableExpression
 ExpressionStatement ::= Expression ';' {
     pin=1
 }
+EmptyStatement ::= ';'
 
 // Arithmetic & Bitwise Expressions
 

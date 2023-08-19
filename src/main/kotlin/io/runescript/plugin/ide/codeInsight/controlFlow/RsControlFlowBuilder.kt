@@ -147,6 +147,10 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
+        override fun visitEmptyStatement(o: RsEmptyStatement) {
+            addInstruction(o)
+        }
+
         override fun visitIfStatement(o: RsIfStatement) {
             // ------------------------
             // Case 1:false statement is not present

@@ -6,6 +6,7 @@
 - Add a formatter option for space around commas in return lists.
 - Add a formatter option for space within return list parenthesis.
 - Add error recovery for statements.
+- Add support for parsing empty statements.
 
 ### Changed
 - The build window will now display internal compiler errors as well.

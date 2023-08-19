@@ -79,6 +79,10 @@ public class RsVisitor extends PsiElementVisitor {
     // visitNamedElement(o);
   }
 
+  public void visitEmptyStatement(@NotNull RsEmptyStatement o) {
+    visitStatement(o);
+  }
+
   public void visitExpression(@NotNull RsExpression o) {
     visitPsiElement(o);
   }

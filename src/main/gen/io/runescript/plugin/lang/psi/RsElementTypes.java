@@ -25,6 +25,7 @@ public interface RsElementTypes {
   IElementType CONSTANT_EXPRESSION = new RsElementType("CONSTANT_EXPRESSION");
   IElementType COORD_LITERAL_EXPRESSION = new RsElementType("COORD_LITERAL_EXPRESSION");
   IElementType DYNAMIC_EXPRESSION = new RsElementType("DYNAMIC_EXPRESSION");
+  IElementType EMPTY_STATEMENT = new RsElementType("EMPTY_STATEMENT");
   IElementType EXPRESSION = new RsElementType("EXPRESSION");
   IElementType EXPRESSION_STATEMENT = new RsElementType("EXPRESSION_STATEMENT");
   IElementType GOSUB_EXPRESSION = new RsElementType("GOSUB_EXPRESSION");
@@ -155,6 +156,9 @@ public interface RsElementTypes {
       }
       else if (type == DYNAMIC_EXPRESSION) {
         return new RsDynamicExpressionImpl(node);
+      }
+      else if (type == EMPTY_STATEMENT) {
+        return new RsEmptyStatementImpl(node);
       }
       else if (type == EXPRESSION_STATEMENT) {
         return new RsExpressionStatementImpl(node);
