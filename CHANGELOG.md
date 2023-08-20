@@ -14,6 +14,7 @@
 
 ### Fixed
 - Fix a bug with script block indentation.
+- Fix missing indentation for file block.
 
 ## [1.2.0] - 2023-08-18
 
