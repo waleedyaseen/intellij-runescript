@@ -10,6 +10,7 @@
 
 ### Changed
 - The build window will now display internal compiler errors as well.
+- The build system will now save all documents automatically upon building.
 
 ### Fixed
 - Fix a bug with script block indentation.

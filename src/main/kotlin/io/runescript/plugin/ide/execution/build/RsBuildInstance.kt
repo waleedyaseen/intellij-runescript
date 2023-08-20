@@ -12,6 +12,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.components.service
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessModuleDir
@@ -49,6 +50,7 @@ class RsBuildInstance(
         ApplicationManager.getApplication().executeOnPooledThread {
             executionPublisher.processStarting(executorId, environment)
             invokeLater {
+                FileDocumentManager.getInstance().saveAllDocuments()
                 openBuildToolWindow()
                 runWriteAction {
                     val processHandler = createProcessHandler()
