@@ -224,32 +224,29 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         }
     }
 
-    private fun checkExpressionList(expressionList: List<RsExpression>, parameterTypes: Array<RsType>) {
+    private fun checkExpressionList(context: PsiElement, expressionList: List<RsExpression>, parameterTypes: Array<RsType>) {
         var index = 0
-        expressionList.forEach {
+        val actualTypes = expressionList.map{
             if (index < parameterTypes.size) {
                 it.typeHint = parameterTypes[index]
             }
             if (it.type == null) {
                 it.accept(this)
             }
-            // TODO(Walied): Better error reporting here
             val actualType = it.type
             if (actualType != null) {
-                val expectedTuple = (0 until actualType.size).map { tupleIndex ->
-                    val expectedIndex = index + tupleIndex
-                    if (expectedIndex < parameterTypes.size) parameterTypes[expectedIndex] else RsErrorType
-                }.joined()
-                checkTypeMismatch(it, actualType, expectedTuple)
-                index += expectedTuple.size
+                index += actualType.size
+                actualType
             } else {
                 index++
+                RsErrorType
             }
-        }
+        }.joined()
+        checkTypeMismatch(context, actualTypes, parameterTypes.toList().joined())
     }
 
     fun checkArgumentList(argumentList: RsArgumentList, parameterTypes: Array<RsType>) {
-        checkExpressionList(argumentList.expressionList, parameterTypes)
+        checkExpressionList(argumentList, argumentList.expressionList, parameterTypes)
     }
 
     override fun visitConditionExpression(o: RsConditionExpression) {
@@ -594,7 +591,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             ?.typeNameList
             ?.map { RsPrimitiveType.lookupReferencable(it.text) }
             ?.toTypedArray<RsType>()
-        checkExpressionList(o.expressionList, expectedReturnList ?: emptyArray<RsType>())
+        checkExpressionList(o, o.expressionList, expectedReturnList ?: emptyArray<RsType>())
     }
 }
 

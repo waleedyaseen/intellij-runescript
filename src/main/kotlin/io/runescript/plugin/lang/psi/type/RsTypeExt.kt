@@ -44,9 +44,9 @@ fun Iterable<RsType>.flatten(): Array<RsType> {
     return flattened.toTypedArray()
 }
 
-fun List<RsType>.joined(): RsType {
+fun Collection<RsType>.joined(): RsType {
     if (size == 1) {
-        return this[0]
+        return first()
     }
-    return RsTupleType(toTypedArray())
+    return RsTupleType(flatten())
 }
