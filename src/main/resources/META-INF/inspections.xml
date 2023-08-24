@@ -54,6 +54,12 @@
                          enabledByDefault="true"
                          level="WARNING"
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnreachableCodeInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
+                         displayName="Missing script symbol"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptMissingScriptSymbolInspection"/>
         <localInspection language="RuneScriptSymbol"
                          groupName="RuneScript"
                          displayName="Invalid symbol file"
