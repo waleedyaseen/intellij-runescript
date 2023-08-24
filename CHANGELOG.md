@@ -20,6 +20,7 @@
 - Fix type checking for expression lists.
 - Fix type checking when there is a type error.
 - Fix type checking for varbit game variables.
+- Fix parsing trailing tabs in .sym file format.
 
 ## [1.2.0] - 2023-08-18
 

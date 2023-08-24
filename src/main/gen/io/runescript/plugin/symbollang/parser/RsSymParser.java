@@ -61,7 +61,7 @@ public class RsSymParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Field '\t' Field ('\t' Field)* '\n'
+  // Field '\t' Field ('\t' Field)* '\t'* '\n'
   public static boolean Symbol(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Symbol")) return false;
     if (!nextTokenIs(b, STRING)) return false;
@@ -71,6 +71,7 @@ public class RsSymParser implements PsiParser, LightPsiParser {
     r = r && consumeToken(b, TAB);
     r = r && Field(b, l + 1);
     r = r && Symbol_3(b, l + 1);
+    r = r && Symbol_4(b, l + 1);
     r = r && consumeToken(b, NEW_LINE);
     exit_section_(b, m, SYMBOL, r);
     return r;
@@ -96,6 +97,17 @@ public class RsSymParser implements PsiParser, LightPsiParser {
     r = r && Field(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // '\t'*
+  private static boolean Symbol_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Symbol_4")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!consumeToken(b, TAB)) break;
+      if (!empty_element_parsed_guard_(b, "Symbol_4", c)) break;
+    }
+    return true;
   }
 
 }
