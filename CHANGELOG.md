@@ -21,6 +21,7 @@
 - Fix type checking when there is a type error.
 - Fix type checking for varbit game variables.
 - Fix parsing trailing tabs in .sym file format.
+- Fix bundled custom dictionary loading.
 
 ## [1.2.0] - 2023-08-18
 

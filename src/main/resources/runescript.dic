@@ -1,3 +1,7 @@
 runescript
 clientscript
 proc
+setpos
+setsize
+iftype
+ontimer
