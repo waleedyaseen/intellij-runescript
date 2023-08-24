@@ -99,7 +99,9 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     private fun RsType?.unfold(): RsType? {
-        if (this is RsTupleType && types.size == 1) return types[0]
+        if (this is RsTupleType && types.size == 1) {
+            return types[0]
+        }
         return this
     }
 
@@ -117,6 +119,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         val unfoldedActualType = actualType.unfold() ?: RsErrorType
         val unfoldedExpectedType = expectedType.unfold() ?: RsErrorType
         if (unfoldedActualType is RsErrorType || unfoldedExpectedType is RsErrorType) {
+            return
+        }
+        if (unfoldedActualType is RsTupleType && RsErrorType in unfoldedActualType.types) {
+            return
+        }
+        if (unfoldedExpectedType is RsTupleType && RsErrorType in unfoldedExpectedType.types) {
             return
         }
         if (unfoldedExpectedType == RsPrimitiveType.OBJ && unfoldedActualType == RsPrimitiveType.NAMEDOBJ) {

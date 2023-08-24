@@ -35,10 +35,7 @@ fun Iterable<RsType>.flatten(): Array<RsType> {
     for (type in this) {
         when (type) {
             is RsTupleType -> flattened.addAll(type.types)
-            is RsPrimitiveType -> flattened.add(type)
-            is RsArrayType -> flattened.add(type)
-            is RsTypeType -> flattened.add(type)
-            else -> error("Called flatten() on non primitive type array: ${type::class}")
+            else -> flattened.add(type)
         }
     }
     return flattened.toTypedArray()

@@ -16,6 +16,7 @@
 - Fix a bug with script block indentation.
 - Fix missing indentation for file block.
 - Fix type checking for expression lists.
+- Fix type checking when there is a type error.
 
 ## [1.2.0] - 2023-08-18
 
