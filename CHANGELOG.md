@@ -17,6 +17,7 @@
 - Fix missing indentation for file block.
 - Fix type checking for expression lists.
 - Fix type checking when there is a type error.
+- Fix type checking for varbit game variables.
 
 ## [1.2.0] - 2023-08-18
 

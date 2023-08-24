@@ -328,11 +328,21 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
     override fun visitScopedVariableExpression(o: RsScopedVariableExpression) {
         val reference = o.reference?.resolve() as? RsSymSymbol
-        if (reference == null || reference.fieldList.size < 3) {
+        if (reference == null) {
             o.type = RsErrorType
             return
         }
-        o.type = RsPrimitiveType.lookupReferencableOrNull(reference.fieldList[2].text) ?: RsErrorType
+        val isVarbit = reference.containingFile.virtualFile.nameWithoutExtension == "varbit"
+        if (isVarbit) {
+            o.type = RsPrimitiveType.INT
+        } else {
+            if (reference.fieldList.size < 3) {
+                o.error("Missing type field for game variable symbol")
+                o.type = RsErrorType
+                return
+            }
+            o.type = RsPrimitiveType.lookupReferencableOrNull(reference.fieldList[2].text) ?: RsErrorType
+        }
     }
 
     override fun visitLocalVariableExpression(o: RsLocalVariableExpression) {
