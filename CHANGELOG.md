@@ -8,6 +8,7 @@
 - Add error recovery for statements.
 - Add support for parsing empty statements.
 - Add an inspection for missing script symbols.
+- Add clientscript.sym to valid symbol file types.
 
 ### Changed
 - The build window will now display internal compiler errors as well.

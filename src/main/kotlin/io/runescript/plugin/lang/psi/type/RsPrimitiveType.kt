@@ -43,6 +43,7 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     DBCOLUMN("dbcolumn"),
     PLAYER_UID("player_uid"),
     STRINGVECTOR("stringvector"),
+
     // Non-Referencable types
     PARAM("param", referencable = false),
     FLO("flo", referencable = false),
@@ -55,25 +56,39 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     VARPHOOK("varphook", referencable = false),
     STATHOOK("stathook", referencable = false),
     INVHOOK("invhook", referencable = false),
-    CONSTANT("constant", referencable = false);
+    CONSTANT("constant", referencable = false),
+    CLIENTSCRIPT("clientscript", referencable = false);
 
     override val representation: String
         get() = literal
 
     val baseType: RsBaseType
-        get() = when(this) {
+        get() = when (this) {
             STRING -> RsBaseType.STRING
             LONG -> RsBaseType.LONG
             else -> RsBaseType.INT
         }
 
+    val isDeclarable: Boolean
+        get() = referencable
+
     companion object {
-        private val LOOKUP_REFERENCABLE_BY_LITERAL = RsPrimitiveType.values().associateBy { it.literal }.filterValues { it.referencable }
-        private val LOOKUP_BY_LITERAL = RsPrimitiveType.values().associateBy { it.literal }
+
+        private val LOOKUP_REFERENCABLE_BY_LITERAL = RsPrimitiveType.values()
+            .associateBy { it.literal }
+            .filterValues { it.referencable }
+
+        private val LOOKUP_BY_LITERAL = RsPrimitiveType.values()
+            .associateBy { it.literal }
 
         fun lookupReferencableOrNull(literal: String) = LOOKUP_REFERENCABLE_BY_LITERAL[literal]
-        fun lookupReferencable(literal: String) = lookupReferencableOrNull(literal) ?: error("No primitive type could be found for literal: `$literal`")
+
+        fun lookupReferencable(literal: String) = lookupReferencableOrNull(literal)
+            ?: error("No primitive type could be found for literal: `$literal`")
+
         fun lookupOrNull(literal: String) = LOOKUP_BY_LITERAL[literal]
-        fun lookup(literal: String) = lookupOrNull(literal) ?: error("No primitive type could be found for literal: `$literal`")
+
+        fun lookup(literal: String) = lookupOrNull(literal)
+            ?: error("No primitive type could be found for literal: `$literal`")
     }
 }
