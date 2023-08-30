@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-08-30
+
 ### Added
 - Add a formatter option for space around commas in return lists.
 - Add a formatter option for space within return list parenthesis.
@@ -44,6 +46,7 @@
 ### Changed
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/waleedyaseen/intellij-runescript/commits/v1.1.0
