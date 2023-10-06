@@ -25,6 +25,10 @@ class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
         }
         val name = file.containingFile.name
         val typeName = name.substring(0, name.indexOf('.'))
+        if (typeName == "commands") {
+            // Technically this is not a type, but is required by the compiler.
+            return null;
+        }
         if (RsPrimitiveType.lookupOrNull(typeName) == null) {
             return arrayOf(
                 manager.createProblemDescriptor(
