@@ -706,7 +706,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LBRACE (DynamicExpression (',' DynamicExpression)*)? RBRACE
+  // LBRACE ExpressionList? RBRACE
   public static boolean HookTransmitList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "HookTransmitList")) return false;
     if (!nextTokenIs(b, LBRACE)) return false;
@@ -719,44 +719,11 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (DynamicExpression (',' DynamicExpression)*)?
+  // ExpressionList?
   private static boolean HookTransmitList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "HookTransmitList_1")) return false;
-    HookTransmitList_1_0(b, l + 1);
+    ExpressionList(b, l + 1);
     return true;
-  }
-
-  // DynamicExpression (',' DynamicExpression)*
-  private static boolean HookTransmitList_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "HookTransmitList_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = DynamicExpression(b, l + 1);
-    r = r && HookTransmitList_1_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // (',' DynamicExpression)*
-  private static boolean HookTransmitList_1_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "HookTransmitList_1_0_1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!HookTransmitList_1_0_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "HookTransmitList_1_0_1", c)) break;
-    }
-    return true;
-  }
-
-  // ',' DynamicExpression
-  private static boolean HookTransmitList_1_0_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "HookTransmitList_1_0_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, COMMA);
-    r = r && DynamicExpression(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   /* ********************************************************** */

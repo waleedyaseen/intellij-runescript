@@ -97,7 +97,7 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitHookTransmitList(o: RsHookTransmitList) {
-            o.dynamicExpressionList.forEach { it.accept(this) }
+            o.expressionList.forEach { it.accept(this) }
         }
 
         override fun visitCommandExpression(o: RsCommandExpression) {

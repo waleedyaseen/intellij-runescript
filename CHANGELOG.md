@@ -1,6 +1,9 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+### Fixed
+- Fix regular expressions not being allowed in hook transmits list.
+
 ### Changed
 - Inspections that require symbols will no longer run on files outside the project.
 - Update the file extension for commands from ".op" to ".cs2".

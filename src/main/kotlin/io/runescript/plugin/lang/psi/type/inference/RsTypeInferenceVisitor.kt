@@ -214,7 +214,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                 if (expectedType == null) {
                     hookTransmitList.error("${reference.name} does not allow transmit list.")
                 }
-                hookTransmitList.dynamicExpressionList.forEach {
+                hookTransmitList.expressionList.forEach {
                     it.typeHint = expectedType ?: RsErrorType
                     it.accept(this)
                 }

@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface RsHookTransmitList extends PsiElement {
 
   @NotNull
-  List<RsDynamicExpression> getDynamicExpressionList();
+  List<RsExpression> getExpressionList();
 
   @NotNull
   PsiElement getLbrace();

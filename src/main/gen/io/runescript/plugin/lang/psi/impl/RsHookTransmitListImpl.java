@@ -29,8 +29,8 @@ public class RsHookTransmitListImpl extends ASTWrapperPsiElement implements RsHo
 
   @Override
   @NotNull
-  public List<RsDynamicExpression> getDynamicExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsDynamicExpression.class);
+  public List<RsExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsExpression.class);
   }
 
   @Override

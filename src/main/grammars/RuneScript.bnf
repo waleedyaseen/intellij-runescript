@@ -278,4 +278,4 @@ HookFragment ::= NameLiteral (ArgumentList HookTransmitList?)? {
     mixin="io.runescript.plugin.lang.psi.mixin.RsHookFragmentMixin"
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
-HookTransmitList ::= LBRACE (DynamicExpression (',' DynamicExpression)*)? RBRACE
+HookTransmitList ::= LBRACE ExpressionList? RBRACE
