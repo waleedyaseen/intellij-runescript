@@ -7,12 +7,14 @@ import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsConstantExpression
 import io.runescript.plugin.lang.psi.RsVisitor
+import io.runescript.plugin.lang.psi.isSourceFile
 
 class RuneScriptUnresolvedConstantInspection : LocalInspectionTool() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitConstantExpression(o: RsConstantExpression) {
+                if (!o.isSourceFile()) return
                 val reference = o.reference ?: return
                 if (reference.resolve() == null) {
                     holder.registerProblem(o,

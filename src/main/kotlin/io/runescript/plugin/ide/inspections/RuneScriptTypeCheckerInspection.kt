@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.lang.psi.RsVisitor
+import io.runescript.plugin.lang.psi.isSourceFile
 import io.runescript.plugin.lang.psi.type.typeErrors
 
 class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
@@ -13,6 +14,7 @@ class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
         return object : RsVisitor() {
 
             override fun visitElement(element: PsiElement) {
+                if (!element.isSourceFile()) return
                 element.typeErrors.forEach {
                     holder.registerProblem(it.element, it.message)
                 }

@@ -1,6 +1,12 @@
 package io.runescript.plugin.lang.psi
 
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.modules
+import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
+import io.runescript.plugin.ide.sdk.RsSdkType
 
 val RsStatement.controlFlowHolder: RsControlFlowHolder?
     get() = parentOfType<RsControlFlowHolder>()
@@ -66,4 +72,25 @@ fun RsLocalVariableExpression.isForVariableDeclaration(): Boolean {
 fun RsLocalVariableExpression.isForArrayAccess(): Boolean {
     val parent = parent
     return parent is RsArrayAccessExpression && this === parent.expressionList[0]
+}
+
+fun Project.isRsProject(): Boolean {
+    if (modules.size != 1) {
+        return false
+    }
+    val moduleRootManager = ModuleRootManager.getInstance(modules[0])
+    val sdk = moduleRootManager.sdk
+    return sdk?.sdkType == RsSdkType.find()
+}
+
+fun PsiElement.isSourceFile(): Boolean {
+    if (!project.isRsProject()) {
+        return false
+    }
+    val containingFile = containingFile?.virtualFile ?: return false
+    val fileIndex = ProjectFileIndex.getInstance(project)
+    if (fileIndex.isExcluded(containingFile)) {
+        return false
+    }
+    return fileIndex.isInContent(containingFile)
 }

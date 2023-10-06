@@ -8,12 +8,14 @@ import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.RsVisitor
+import io.runescript.plugin.lang.psi.isSourceFile
 
 class RuneScriptUnresolvedReferenceInspection : LocalInspectionTool() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitStringLiteralExpression(o: RsStringLiteralExpression) {
+                if (!o.isSourceFile()) return
                 val reference = o.reference ?: return
                 val resolved = reference.resolve()
                 if (resolved == null) {
@@ -25,6 +27,7 @@ class RuneScriptUnresolvedReferenceInspection : LocalInspectionTool() {
                 }
             }
             override fun visitDynamicExpression(o: RsDynamicExpression) {
+                if (!o.isSourceFile()) return
                 val reference = o.reference?: return
                 val resolved = reference.resolve()
                 if (resolved==null) {

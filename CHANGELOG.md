@@ -1,6 +1,8 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+### Changed
+- Inspections that require symbols will no longer run on files outside the project.
 
 ## [1.3.0] - 2023-08-30
 
