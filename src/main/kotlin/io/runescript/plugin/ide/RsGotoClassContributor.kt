@@ -11,12 +11,12 @@ import com.intellij.util.indexing.IdFilter
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.qualifiedName
-import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
 class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
     override fun processNames(processor: Processor<in String>, scope: GlobalSearchScope, filter: IdFilter?) {
         StubIndex.getInstance().processAllKeys(
-                RsGotoScriptIndex.KEY,
+                RsProcScriptIndex.KEY,
                 processor,
                 scope,
                 null
@@ -26,7 +26,7 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
     override fun processElementsWithName(name: String, processor: Processor<in NavigationItem>, parameters: FindSymbolParameters) {
         val originScope = parameters.searchScope
         StubIndex.getInstance().processElements(
-                RsGotoScriptIndex.KEY,
+                RsProcScriptIndex.KEY,
                 name,
                 parameters.project,
                 originScope,

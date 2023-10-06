@@ -9,12 +9,12 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsScript
-import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
 class RsGosubReference(element: RsGosubExpression) : PsiPolyVariantReferenceBase<RsGosubExpression>(element, element.nameLiteral.textRangeInParent) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val elements = StubIndex.getElements(RsGotoScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsScript::class.java)
+        val elements = StubIndex.getElements(RsProcScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsScript::class.java)
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 

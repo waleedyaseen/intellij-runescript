@@ -5,14 +5,14 @@ import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsDynamicExpression
+import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
 import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.lang.psi.type.RsType
 import io.runescript.plugin.lang.psi.type.type
-import io.runescript.plugin.oplang.psi.RsOpCommand
-import io.runescript.plugin.oplang.psi.index.RsCommandIndex
+import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
@@ -50,7 +50,7 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVarian
 
             // Try to resolve the element as a command reference.
             val searchScope = GlobalSearchScope.allScope(project)
-            return StubIndex.getElements(RsCommandIndex.KEY, elementName, project, searchScope, RsOpCommand::class.java)
+            return StubIndex.getElements(RsCommandScriptIndex.KEY, elementName, project, searchScope, RsScript::class.java)
                     .map { PsiElementResolveResult(it) }
                     .toTypedArray()
         }

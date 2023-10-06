@@ -10,6 +10,7 @@ enum class RsTriggerType(
     val parameterTypes: Array<RsPrimitiveType>? = null,
     val allowReturns: Boolean = false
 ) {
+    COMMAND("command", allowParameters = true, allowReturns = true),
     OPWORLDMAPELEMENT1("opworldmapelement1", subjectType = MAPELEMENT),
     OPWORLDMAPELEMENT2("opworldmapelement2", subjectType = MAPELEMENT),
     OPWORLDMAPELEMENT3("opworldmapelement3", subjectType = MAPELEMENT),

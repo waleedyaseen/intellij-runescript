@@ -6,7 +6,6 @@
     <depends>com.intellij.java</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
-    <xi:include href="/META-INF/op-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <languageInjectionContributor language="RuneScript" implementationClass="io.runescript.plugin.ide.injection.RsInjectionContributor"/>
         <lang.parserDefinition language="RuneScript"
@@ -34,8 +33,9 @@
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
         <lang.commenter language="RuneScript" implementationClass="io.runescript.plugin.ide.RsCommenter"/>
         <stubElementTypeHolder externalIdPrefix="RuneScript." class="io.runescript.plugin.lang.psi.RsElementTypes"/>
-        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex"/>
+        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsProcScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsClientScriptIndex"/>
+        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex"/>
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>

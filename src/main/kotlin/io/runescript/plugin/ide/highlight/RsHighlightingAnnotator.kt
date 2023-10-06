@@ -9,7 +9,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.oplang.psi.RsOpCommand
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 class RsHighlightingAnnotator : Annotator {
@@ -58,7 +57,12 @@ class RsHighlightingAnnotator : Annotator {
                 val reference = o.reference?.resolve() ?: return
                 when (reference) {
                     is RsLocalVariableExpression -> o.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
-                    is RsOpCommand -> o.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
+                    is RsScript -> {
+                        if (reference.triggerName == "command") {
+                            o.highlight(holder, RsSyntaxHighlighterColors.COMMAND_CALL)
+                        }
+                    }
+
                     is RsSymSymbol -> o.highlight(holder, RsSyntaxHighlighterColors.CONFIG_REFERENCE)
                 }
             }

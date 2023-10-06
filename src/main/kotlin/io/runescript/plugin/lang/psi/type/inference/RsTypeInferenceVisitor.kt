@@ -10,7 +10,6 @@ import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
 import io.runescript.plugin.lang.psi.type.*
 import io.runescript.plugin.lang.psi.type.trigger.RsTriggerType
-import io.runescript.plugin.oplang.psi.RsOpCommand
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 import kotlin.contracts.ExperimentalContracts
@@ -63,6 +62,9 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                 .fold()
             val expectedParametersType = expectedParameterTypes.toList().fold()
             checkTypeMismatch(o.scriptNameExpression, actualParametersType, expectedParametersType)
+        }
+        if (o.statementList.statementList.size > 0 && triggerType == RsTriggerType.COMMAND) {
+            o.statementList.error(RsBundle.message("inspection.error.trigger.code.not.allowed"))
         }
         o.statementList.accept(this)
     }
@@ -155,16 +157,16 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             o.type = RsErrorType
         } else {
             reference as RsScript
-            val parameterTypes = reference
+            val expectedTypes = reference
                 .parameterList
                 ?.parameterList
                 ?.map { findParameterType(it) }
                 ?.flatten()
                 ?: emptyArray()
-            // TODO(Walied): This is off, it doesnt' check if the argument list is not present
-            o.argumentList?.let {
-                checkArgumentList(it, parameterTypes)
-            }
+            val actual = o.argumentList?.expressionList ?: emptyList()
+            // TODO(Waleed): Thre is a case where arguments list length does not match the expected length
+            //  causing an RsErrorType to be produced in actual types array preventing error reporting.
+            checkExpressionList(o.argumentList ?: o, actual, expectedTypes)
             val returnTypes = reference
                 .returnList
                 ?.typeNameList
@@ -225,16 +227,20 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         if (reference == null) {
             o.type = RsErrorType
         } else {
-            reference as RsOpCommand
+            reference as RsScript
             with(reference.findCommandHandler()) {
                 inferTypes(reference, o)
             }
         }
     }
 
-    private fun checkExpressionList(context: PsiElement, expressionList: List<RsExpression>, parameterTypes: Array<RsType>) {
+    private fun checkExpressionList(
+        context: PsiElement,
+        expressionList: List<RsExpression>,
+        parameterTypes: Array<RsType>
+    ) {
         var index = 0
-        val actualTypes = expressionList.map{
+        val actualTypes = expressionList.map {
             if (index < parameterTypes.size) {
                 it.typeHint = parameterTypes[index]
             }
@@ -437,11 +443,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         }
         when (val reference = RsDynamicExpressionReference.resolveElement(o, type).singleOrNull()?.element) {
             null -> o.type = RsErrorType
-            is RsOpCommand -> {
+            is RsScript -> {
                 val returnTypes = reference
                     .returnList
-                    .typeNameList
-                    .map { RsPrimitiveType.lookupReferencable(it.text) }
+                    ?.typeNameList
+                    ?.map { RsPrimitiveType.lookupReferencable(it.text) }
+                    ?: emptyList()
                 o.type = RsTupleType(returnTypes.flatten())
             }
 
@@ -495,7 +502,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     override fun visitStringLiteralExpression(o: RsStringLiteralExpression) {
         o.stringLiteralContent.typeHint = o.typeHint
         o.stringLiteralContent.accept(this)
-        o.type = o.typeHint
+        o.type = o.typeHint ?: RsPrimitiveType.STRING
     }
 
     override fun visitStringLiteralContent(o: RsStringLiteralContent) {
@@ -598,7 +605,11 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             return RsArrayType(elementType)
         } else if (o.typeName != null) {
             val typeLiteral = o.typeName!!.text
-            return RsPrimitiveType.lookupReferencable(typeLiteral)
+            if (o.parentOfType<RsScript>()?.triggerName == "command") {
+                return RsPrimitiveType.lookup(typeLiteral)
+            } else {
+                return RsPrimitiveType.lookupReferencable(typeLiteral)
+            }
         }
         return RsErrorType
     }
@@ -613,8 +624,8 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 }
 
-private fun RsOpCommand.findCommandHandler(): CommandHandler {
-    return when (commandHeader.nameLiteralList[1].text) {
+private fun RsScript.findCommandHandler(): CommandHandler {
+    return when (nameLiteralList[1].text) {
         "enum" -> EnumCommandHandler
         "struct_param" -> ParamCommandHandler.STRUCT_PARAM
         "lc_param" -> ParamCommandHandler.LC_PARAM

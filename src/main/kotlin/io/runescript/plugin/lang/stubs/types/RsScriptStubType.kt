@@ -12,7 +12,8 @@ import io.runescript.plugin.lang.psi.scriptName
 import io.runescript.plugin.lang.psi.triggerName
 import io.runescript.plugin.lang.stubs.RsScriptStub
 import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
-import io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
 object RsScriptStubType : RsStubType<RsScriptStub, RsScript>("SCRIPT") {
 
@@ -35,8 +36,9 @@ object RsScriptStubType : RsStubType<RsScriptStub, RsScript>("SCRIPT") {
 
     override fun indexStub(stub: RsScriptStub, sink: IndexSink) {
         when (stub.triggerName) {
-            "proc" -> sink.occurrence(RsGotoScriptIndex.KEY, stub.scriptName)
+            "proc" -> sink.occurrence(RsProcScriptIndex.KEY, stub.scriptName)
             "clientscript" -> sink.occurrence(RsClientScriptIndex.KEY, stub.scriptName)
+            "command" -> sink.occurrence(RsCommandScriptIndex.KEY, stub.scriptName)
         }
     }
 }

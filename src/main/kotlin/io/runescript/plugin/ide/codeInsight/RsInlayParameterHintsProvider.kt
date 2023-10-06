@@ -5,7 +5,6 @@ import com.intellij.codeInsight.hints.InlayParameterHintsProvider
 import com.intellij.psi.PsiElement
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.oplang.psi.RsOpCommand
 
 @Suppress("UnstableApiUsage")
 class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
@@ -77,16 +76,10 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
 
     private fun getParametersList(element: PsiElement): List<String>? {
         return when (element) {
-            is RsGosubExpression -> {
+            is RsGosubExpression, is RsCommandExpression -> {
                 val reference = element.reference?.resolve() ?: return null
                 reference as RsScript
                 reference.parameterList?.parameterList?.map { it.localVariableExpression.name!! }
-            }
-
-            is RsCommandExpression -> {
-                val reference = element.reference?.resolve() ?: return null
-                reference as RsOpCommand
-                reference.parameterList.parameterList.map { it.nameLiteral.text }
             }
 
             else -> return null

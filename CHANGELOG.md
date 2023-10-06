@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Inspections that require symbols will no longer run on files outside the project.
+- Update the file extension for commands from ".op" to ".cs2".
 
 ## [1.3.0] - 2023-08-30
 

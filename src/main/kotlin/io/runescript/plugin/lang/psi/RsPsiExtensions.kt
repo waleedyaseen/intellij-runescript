@@ -4,7 +4,6 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.lang.psi.type.RsType
-import io.runescript.plugin.oplang.psi.RsOpCommand
 
 fun RsStringLiteralContent.isBasicContent(): Boolean {
     val first = node.firstChildNode ?: return true
@@ -20,11 +19,11 @@ fun RsStringLiteralContent.isHookExpression(): Boolean = CachedValuesManager.get
             if (commandExpr is RsCommandExpression) {
                 val argumentIndex = argumentList.expressionList.indexOf(argument)
                 val reference = commandExpr.reference?.resolve()
-                if (reference is RsOpCommand) {
-                    val parameterList = reference.parameterList.parameterList
+                if (reference is RsScript) {
+                    val parameterList = reference.parameterList?.parameterList ?: emptyList()
                     if (argumentIndex < parameterList.size) {
                         val hookParameter = parameterList[argumentIndex]
-                        val isHookType = RsPrimitiveType.lookupOrNull(hookParameter.typeName.text)?.isHookType()
+                        val isHookType = RsPrimitiveType.lookupOrNull(hookParameter.typeName!!.text)?.isHookType()
                         return@getCachedValue CachedValueProvider.Result(isHookType ?: false, this)
                     }
                 }

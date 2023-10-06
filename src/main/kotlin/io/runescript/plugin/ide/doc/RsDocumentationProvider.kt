@@ -4,7 +4,6 @@ import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.oplang.psi.RsOpCommand
 
 class RsDocumentationProvider : AbstractDocumentationProvider() {
 
@@ -56,35 +55,6 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
                 appendComma = false
                 builder.appendLParen()
                 element.returnList?.typeNameList?.forEach {
-                    if (appendComma) {
-                        builder.appendComma(", ")
-                    } else {
-                        appendComma = true
-                    }
-                    builder.appendKeyword(it.text)
-                }
-                builder.appendRParen()
-                return builder.build()
-            }
-
-            is RsOpCommand -> {
-                val builder = createDocumentationGenerator()
-                builder.appendHighlighted(element.commandHeader.text, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
-                builder.appendLParen()
-                var appendComma = false
-                element.parameterList.parameterList.forEach {
-                    if (appendComma) {
-                        builder.appendComma(", ")
-                    } else {
-                        appendComma = true
-                    }
-                    builder.appendKeyword(it.typeName.text)
-                    builder.appendHighlighted(" $${it.nameLiteral.text}", RsSyntaxHighlighterColors.LOCAL_VARIABLE)
-                }
-                builder.appendRParen()
-                appendComma = false
-                builder.appendLParen()
-                element.returnList.typeNameList.forEach {
                     if (appendComma) {
                         builder.appendComma(", ")
                     } else {

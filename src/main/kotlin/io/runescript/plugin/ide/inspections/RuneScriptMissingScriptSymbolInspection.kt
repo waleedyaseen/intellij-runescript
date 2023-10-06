@@ -8,10 +8,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import io.runescript.plugin.ide.RsBundle
-import io.runescript.plugin.lang.psi.RsScript
-import io.runescript.plugin.lang.psi.RsVisitor
-import io.runescript.plugin.lang.psi.isSourceFile
-import io.runescript.plugin.lang.psi.qualifiedName
+import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
@@ -21,7 +18,7 @@ class RuneScriptMissingScriptSymbolInspection : LocalInspectionTool() {
         return object : RsVisitor() {
 
             override fun visitScript(o: RsScript) {
-                if (!o.isSourceFile()) return
+                if (!o.isSourceFile() || o.triggerName == "command") return
                 val name = o.qualifiedName
                 val length = o.rbracket.endOffset - o.lbracket.startOffset
                 val range = TextRange.from(o.lbracket.startOffsetInParent, length)

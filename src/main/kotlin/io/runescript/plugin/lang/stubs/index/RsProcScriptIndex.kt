@@ -6,13 +6,13 @@ import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
 
-class RsGotoScriptIndex : StringStubIndexExtension<RsScript>() {
+class RsProcScriptIndex : StringStubIndexExtension<RsScript>() {
 
     override fun getVersion(): Int = RsFileStubType.stubVersion
 
     override fun getKey(): StubIndexKey<String, RsScript> = KEY
 
     companion object {
-        val KEY = StubIndexKey.createIndexKey<String, RsScript>("io.runescript.plugin.lang.stubs.index.RsGotoScriptIndex")
+        val KEY = StubIndexKey.createIndexKey<String, RsScript>("io.runescript.plugin.lang.stubs.index.RsProcScriptIndex")
     }
 }

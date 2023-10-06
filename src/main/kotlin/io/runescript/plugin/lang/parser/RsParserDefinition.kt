@@ -10,12 +10,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.ide.filetypes.RsFileType
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsFile
+import io.runescript.plugin.lang.psi.RsTokenTypesSets
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
-import io.runescript.plugin.oplang.filetypes.RsOpFileType
-import io.runescript.plugin.oplang.psi.RsOpElementTypes
-import io.runescript.plugin.oplang.psi.RsOpFile
 
 class RsParserDefinition : ParserDefinition {
 
@@ -40,17 +38,10 @@ class RsParserDefinition : ParserDefinition {
     }
 
     override fun createElement(node: ASTNode?): PsiElement {
-        return when (node!!.elementType) {
-            is RsStubType<*, *>, is RsElementType -> RsElementTypes.Factory.createElement(node)
-            else -> RsOpElementTypes.Factory.createElement(node)
-        }
+        return RsElementTypes.Factory.createElement(node)
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return when (val extension = viewProvider.virtualFile.extension) {
-            RsOpFileType.defaultExtension -> RsOpFile(viewProvider)
-            RsFileType.defaultExtension -> RsFile(viewProvider)
-            else -> error("Unrecognized extension: $extension")
-        }
+        return RsFile(viewProvider)
     }
 }

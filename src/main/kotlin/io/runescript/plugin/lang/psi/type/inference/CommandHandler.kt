@@ -2,27 +2,29 @@ package io.runescript.plugin.lang.psi.type.inference
 
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsDynamicExpression
+import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.type.*
-import io.runescript.plugin.oplang.psi.RsOpCommand
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 sealed interface CommandHandler {
-    fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression)
+    fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression)
 }
 
 data object DefaultCommandHandler : CommandHandler {
-    override fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression) {
+    override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
         val parameterTypes = reference
             .parameterList
-            .parameterList
-            .map { RsPrimitiveType.lookup(it.typeName.text) }
-            .flatten()
+            ?.parameterList
+            ?.map { RsPrimitiveType.lookup(it.typeName!!.text) }
+            ?.flatten()
+            ?: emptyArray<RsType>()
         checkArgumentList(o.argumentList, parameterTypes)
 
         val returnTypes = reference
             .returnList
-            .typeNameList
-            .map { RsPrimitiveType.lookupReferencable(it.text) }
+            ?.typeNameList
+            ?.map { RsPrimitiveType.lookupReferencable(it.text) }
+            ?: emptyList()
 
         if (returnTypes.isEmpty()) {
             o.type = RsUnitType
@@ -35,7 +37,7 @@ data object DefaultCommandHandler : CommandHandler {
 }
 
 class ParamCommandHandler(private val subjectType: RsPrimitiveType) : CommandHandler {
-    override fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression) {
+    override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
         val arguments = o.argumentList.expressionList
         var outputType: RsType? = null
         if (o.argumentList.expressionList.size >= 2) {
@@ -74,7 +76,7 @@ class ParamCommandHandler(private val subjectType: RsPrimitiveType) : CommandHan
 }
 
 class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
-    override fun RsTypeInferenceVisitor.inferTypes(reference: RsOpCommand, o: RsCommandExpression) {
+    override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
         val arguments = o.argumentList.expressionList
         var keyType: RsType? = null
         if (arguments[0] is RsDynamicExpression) {
@@ -116,9 +118,10 @@ class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
         val DB_FIND_REFINE_WITH_COUNT = DbFindCommandHandler(true)
     }
 }
+
 data object DbGetFieldCommandHandler : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(
-        reference: RsOpCommand,
+        reference: RsScript,
         o: RsCommandExpression
     ) {
         val arguments = o.argumentList.expressionList
@@ -153,7 +156,7 @@ data object DbGetFieldCommandHandler : CommandHandler {
 
 data object EnumCommandHandler : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(
-        reference: RsOpCommand,
+        reference: RsScript,
         o: RsCommandExpression
     ) {
         val arguments = o.argumentList.expressionList

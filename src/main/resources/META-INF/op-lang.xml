@@ -1,9 +1,0 @@
-<idea-plugin>
-    <extensions defaultExtensionNs="com.intellij">
-        <fileType name="RuneScript Op" language="RuneScript"
-                  implementationClass="io.runescript.plugin.oplang.filetypes.RsOpFileType" fieldName="INSTANCE"
-                  extensions="op"/>
-        <stubElementTypeHolder externalIdPrefix="RuneScriptOp." class="io.runescript.plugin.oplang.psi.RsOpElementTypes"/>
-        <stubIndex implementation="io.runescript.plugin.oplang.psi.index.RsCommandIndex"/>
-    </extensions>
-</idea-plugin>

@@ -8,13 +8,13 @@ import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsCommandExpression
-import io.runescript.plugin.oplang.psi.RsOpCommand
-import io.runescript.plugin.oplang.psi.index.RsCommandIndex
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 
 class RsCommandExpressionReference(element: RsCommandExpression) : PsiPolyVariantReferenceBase<RsCommandExpression>(element, element.nameLiteral.textRangeInParent) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val elements = StubIndex.getElements(RsCommandIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsOpCommand::class.java)
+        val elements = StubIndex.getElements(RsCommandScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsScript::class.java)
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 
