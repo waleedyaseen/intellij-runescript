@@ -4,6 +4,7 @@
 ### Fixed
 - Fix regular expressions not being allowed in hook transmits list.
 - Fix invalid symbol file inspection reporting an error for "commands.sym".
+- Fix "Create procedure" placement of script.
 
 ### Changed
 - Inspections that require symbols will no longer run on files outside the project.
