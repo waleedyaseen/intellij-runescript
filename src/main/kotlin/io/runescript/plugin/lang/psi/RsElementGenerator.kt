@@ -5,12 +5,8 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.TokenType
 import com.intellij.psi.impl.PsiFileFactoryImpl
-import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.childrenOfType
 import com.intellij.testFramework.LightVirtualFile
 import io.runescript.plugin.ide.filetypes.RsFileType
 import io.runescript.plugin.lang.RuneScript

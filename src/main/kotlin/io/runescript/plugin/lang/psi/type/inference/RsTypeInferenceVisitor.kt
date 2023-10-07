@@ -598,20 +598,21 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         set(value) = myInferenceData.typeHintInferred(this, value)
 
     private fun findParameterType(o: RsParameter): RsType {
-        if (o.arrayTypeLiteral != null) {
+        return if (o.arrayTypeLiteral != null) {
             val definitionLiteral = o.arrayTypeLiteral!!.text
             val typeLiteral = definitionLiteral.substring(0, definitionLiteral.length - "array".length)
             val elementType = RsPrimitiveType.lookupReferencable(typeLiteral)
-            return RsArrayType(elementType)
+            RsArrayType(elementType)
         } else if (o.typeName != null) {
             val typeLiteral = o.typeName!!.text
             if (o.parentOfType<RsScript>()?.triggerName == "command") {
-                return RsPrimitiveType.lookup(typeLiteral)
+                RsPrimitiveType.lookup(typeLiteral)
             } else {
-                return RsPrimitiveType.lookupReferencable(typeLiteral)
+                RsPrimitiveType.lookupReferencable(typeLiteral)
             }
+        } else {
+            RsErrorType
         }
-        return RsErrorType
     }
 
     override fun visitReturnStatement(o: RsReturnStatement) {

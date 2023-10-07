@@ -18,8 +18,8 @@ class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
         }
         val module = ModuleUtilCore.findModuleForPsiElement(file)
         val moduleDir = module?.guessModuleDir() ?: return null
-        val symbolsDir = moduleDir.findChild("symbols") ?:  return null
-        val fileDir = file.containingDirectory ?:  return null
+        val symbolsDir = moduleDir.findChild("symbols") ?: return null
+        val fileDir = file.containingDirectory ?: return null
         if (fileDir.virtualFile != symbolsDir) {
             return null
         }
@@ -27,7 +27,7 @@ class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
         val typeName = name.substring(0, name.indexOf('.'))
         if (typeName == "commands") {
             // Technically this is not a type, but is required by the compiler.
-            return null;
+            return null
         }
         if (RsPrimitiveType.lookupOrNull(typeName) == null) {
             return arrayOf(
