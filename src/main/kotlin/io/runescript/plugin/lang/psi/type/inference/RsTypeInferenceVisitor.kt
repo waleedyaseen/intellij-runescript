@@ -368,7 +368,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             }
         }
         variables.forEach { it.accept(this) }
-        val expectedTypes = variables.map { it.type }
+        val expectedTypes = variables.map { it.type ?: RsErrorType }
         var index = 0
         for (expr in expressions) {
             if (index < expectedTypes.size) {
@@ -377,12 +377,13 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             expr.accept(this)
             val expectedType = expr.type
             if (expectedType != null) {
-                checkTypeMismatch(expr, expectedType)
                 index += expectedType.size
             } else {
                 index++
             }
         }
+        val actualTypes = expressions.map { it.type ?: RsErrorType }.joined()
+        checkTypeMismatch(o, actualTypes, expectedTypes.joined())
     }
 
 
