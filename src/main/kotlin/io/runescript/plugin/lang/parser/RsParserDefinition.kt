@@ -10,6 +10,9 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import io.runescript.plugin.ide.config.RsConfig
+import io.runescript.plugin.lang.lexer.RsLexerAdapter
+import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsElementTypes
 import io.runescript.plugin.lang.psi.RsFile
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
@@ -18,7 +21,7 @@ import io.runescript.plugin.lang.stubs.types.RsFileStubType
 class RsParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project): Lexer {
-        error("Should not be called")
+        return RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes(project)))
     }
 
     override fun createParser(project: Project): PsiParser {

@@ -40,8 +40,7 @@ this.lexerInfo =  lexerInfo;
 %unicode
 %function advance
 %type IElementType
-SINGLE_LINE_COMMENT = "//"([^\r\n]*)(\r|\n|\r\n)
-MULTI_LINE_COMMENT = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+LINE_COMMENT = "//"([^\r\n]*)(\r|\n|\r\n)
 IDENTIFIER_PART = [a-zA-Z0-9_+\.:]
 IDENTIFIER = ({IDENTIFIER_PART})+
 DECIMAL_DIGIT = [0-9]
@@ -59,12 +58,29 @@ IMG_TAG = "<img="([0-9]+)">"
 CLOSE_TAG = "</"(shad|col|str|u)">"
 INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 
-%x STRING, STRING_INTERPOLATION
+%x STRING, STRING_INTERPOLATION, BLOCK_COMMENT
 
 %%
+
+<BLOCK_COMMENT> {
+"*/" {
+    popState();
+    return MULTI_LINE_COMMENT;
+}
+<<EOF>> {
+    popState();
+    return MULTI_LINE_COMMENT;
+}
+[\s\S] { }
+}
+
 <YYINITIAL,STRING_INTERPOLATION> {
-{MULTI_LINE_COMMENT} { return MULTI_LINE_COMMENT; }
-{SINGLE_LINE_COMMENT} { return SINGLE_LINE_COMMENT; }
+
+// Comments
+"/**/" { return MULTI_LINE_COMMENT; }
+"/*" { pushState(BLOCK_COMMENT); }
+
+{LINE_COMMENT} { return SINGLE_LINE_COMMENT; }
 // Keywords
 "if" { return IF; }
 "else" { return ELSE; }
