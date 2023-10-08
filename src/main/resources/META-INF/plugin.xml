@@ -57,6 +57,7 @@
         <lang.formatter language="RuneScript" implementationClass="io.runescript.plugin.ide.formatter.RsFormatter"/>
         <codeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsLanguageCodeStyleSettingsProvider"/>
+        <lineIndentProvider implementation="io.runescript.plugin.ide.formatter.lineIndent.RsLineIndentProvider"/>
 
         <!-- Code Insights -->
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>

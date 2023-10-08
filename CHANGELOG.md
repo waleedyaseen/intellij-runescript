@@ -12,6 +12,7 @@
 - Inspections that require symbols will no longer run on files outside the project.
 - Update the file extension for commands from ".op" to ".cs2".
 - Improve the handling and parsing of block comments.
+- Add line indentation support to the formatter.
 
 ## [1.3.0] - 2023-08-30
 
