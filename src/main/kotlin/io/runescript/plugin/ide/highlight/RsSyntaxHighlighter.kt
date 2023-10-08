@@ -8,8 +8,8 @@ import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsElementTypes.*
-import io.runescript.plugin.lang.psi.RsTokenTypes.MULTI_LINE_COMMENT
-import io.runescript.plugin.lang.psi.RsTokenTypes.SINGLE_LINE_COMMENT
+import io.runescript.plugin.lang.psi.RsTokenTypes.BLOCK_COMMENT
+import io.runescript.plugin.lang.psi.RsTokenTypes.LINE_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACES
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACKETS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.KEYWORDS
@@ -37,8 +37,8 @@ class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighte
             attributes[ARRAY_TYPE_LITERAL] = RsSyntaxHighlighterColors.ARRAY_TYPE_LITERAL
             fillMap(attributes, TokenSet.create(STRING_START, STRING_PART, STRING_END), RsSyntaxHighlighterColors.STRING)
             attributes[STRING_TAG] = RsSyntaxHighlighterColors.STRING_TAG
-            attributes[MULTI_LINE_COMMENT] = RsSyntaxHighlighterColors.BLOCK_COMMENT
-            attributes[SINGLE_LINE_COMMENT] = RsSyntaxHighlighterColors.LINE_COMMENT
+            attributes[BLOCK_COMMENT] = RsSyntaxHighlighterColors.BLOCK_COMMENT
+            attributes[LINE_COMMENT] = RsSyntaxHighlighterColors.LINE_COMMENT
             fillMap(attributes, OPERATORS, RsSyntaxHighlighterColors.OPERATION_SIGN)
             fillMap(attributes, BRACES, RsSyntaxHighlighterColors.BRACES)
             attributes[SEMICOLON] = RsSyntaxHighlighterColors.SEMICOLON

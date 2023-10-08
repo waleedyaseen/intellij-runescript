@@ -655,7 +655,7 @@ public void popState() {
             switch (zzLexicalState) {
             case BLOCK_COMMENT: {
               popState();
-    return MULTI_LINE_COMMENT;
+    return BLOCK_COMMENT;
             }  // fall though
             case 133: break;
             default:
@@ -886,12 +886,12 @@ public void popState() {
           case 86: break;
           case 37:
             { popState();
-    return MULTI_LINE_COMMENT;
+    return BLOCK_COMMENT;
             }
           // fall through
           case 87: break;
           case 38:
-            { return SINGLE_LINE_COMMENT;
+            { return LINE_COMMENT;
             }
           // fall through
           case 88: break;
@@ -901,7 +901,7 @@ public void popState() {
           // fall through
           case 89: break;
           case 40:
-            { return MULTI_LINE_COMMENT;
+            { return BLOCK_COMMENT;
             }
           // fall through
           case 90: break;

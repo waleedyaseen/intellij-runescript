@@ -48,8 +48,8 @@ class RsLineIndentProvider : JavaLikeLangLineIndentProvider() {
             RsElementTypes.DEFAULT to SwitchDefault,
             RsElementTypes.ELSE to ElseKeyword,
             RsElementTypes.IF to IfKeyword,
-            RsTokenTypes.MULTI_LINE_COMMENT to BlockComment,
-            RsTokenTypes.SINGLE_LINE_COMMENT to LineComment,
+            RsTokenTypes.BLOCK_COMMENT to BlockComment,
+            RsTokenTypes.LINE_COMMENT to LineComment,
             RsElementTypes.COMMA to Comma
         )
     }

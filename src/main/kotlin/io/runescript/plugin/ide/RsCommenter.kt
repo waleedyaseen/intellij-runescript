@@ -28,11 +28,11 @@ class RsCommenter : CodeDocumentationAwareCommenter {
     }
 
     override fun getLineCommentTokenType(): IElementType {
-        return RsTokenTypes.SINGLE_LINE_COMMENT
+        return RsTokenTypes.LINE_COMMENT
     }
 
     override fun getBlockCommentTokenType(): IElementType {
-        return RsTokenTypes.MULTI_LINE_COMMENT
+        return RsTokenTypes.BLOCK_COMMENT
     }
 
     override fun getDocumentationCommentTokenType(): IElementType? {

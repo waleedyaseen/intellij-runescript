@@ -42,7 +42,7 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
                 }
 
                 is PsiComment -> {
-                    if (element.tokenType == RsTokenTypes.MULTI_LINE_COMMENT && !element.textRange.isEmpty) {
+                    if (element.tokenType == RsTokenTypes.BLOCK_COMMENT && !element.textRange.isEmpty) {
                         descriptors.add(FoldingDescriptor(element.node, element.textRange))
                     }
                 }
@@ -57,7 +57,7 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
                 return "{...}"
             }
 
-            RsTokenTypes.MULTI_LINE_COMMENT -> {
+            RsTokenTypes.BLOCK_COMMENT -> {
                 val whiteSpace = node.text.indexOfFirst { !Character.isWhitespace(it) && it != '/' && it != '*' }
                 val newLineIndex = node.text.indexOf('\n', whiteSpace).let { if (it == -1) node.text.length else it }
                 if (whiteSpace == -1 || newLineIndex < 1) {

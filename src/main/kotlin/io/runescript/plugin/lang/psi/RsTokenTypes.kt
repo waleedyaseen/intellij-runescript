@@ -2,7 +2,7 @@ package io.runescript.plugin.lang.psi
 
 object RsTokenTypes {
     @JvmField
-    val SINGLE_LINE_COMMENT = RsElementType("SINGLE_LINE_COMMENT")
+    val LINE_COMMENT = RsElementType("LINE_COMMENT")
     @JvmField
-    val MULTI_LINE_COMMENT = RsElementType("MULTI_LINE_COMMENT")
+    val BLOCK_COMMENT = RsElementType("BLOCK_COMMENT")
 }

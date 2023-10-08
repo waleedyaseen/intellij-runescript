@@ -65,11 +65,11 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 <BLOCK_COMMENT> {
 "*/" {
     popState();
-    return MULTI_LINE_COMMENT;
+    return BLOCK_COMMENT;
 }
 <<EOF>> {
     popState();
-    return MULTI_LINE_COMMENT;
+    return BLOCK_COMMENT;
 }
 [\s\S] { }
 }
@@ -77,10 +77,10 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 <YYINITIAL,STRING_INTERPOLATION> {
 
 // Comments
-"/**/" { return MULTI_LINE_COMMENT; }
+"/**/" { return BLOCK_COMMENT; }
 "/*" { pushState(BLOCK_COMMENT); }
 
-{LINE_COMMENT} { return SINGLE_LINE_COMMENT; }
+{LINE_COMMENT} { return LINE_COMMENT; }
 // Keywords
 "if" { return IF; }
 "else" { return ELSE; }
