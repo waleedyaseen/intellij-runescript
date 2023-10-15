@@ -6,7 +6,7 @@ package io.runescript.plugin.lang.lexer;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import io.runescript.plugin.lang.psi.RsTokenTypes;import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;
 
 import java.util.List;
@@ -655,7 +655,7 @@ public void popState() {
             switch (zzLexicalState) {
             case BLOCK_COMMENT: {
               popState();
-    return BLOCK_COMMENT;
+    return RsTokenTypes.BLOCK_COMMENT;
             }  // fall though
             case 133: break;
             default:
@@ -886,7 +886,7 @@ public void popState() {
           case 86: break;
           case 37:
             { popState();
-    return BLOCK_COMMENT;
+    return RsTokenTypes.BLOCK_COMMENT;
             }
           // fall through
           case 87: break;
@@ -901,7 +901,7 @@ public void popState() {
           // fall through
           case 89: break;
           case 40:
-            { return BLOCK_COMMENT;
+            { return RsTokenTypes.BLOCK_COMMENT;
             }
           // fall through
           case 90: break;

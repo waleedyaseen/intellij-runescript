@@ -3,6 +3,7 @@ package io.runescript.plugin.lang.lexer;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import io.runescript.plugin.lang.psi.RsTokenTypes;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;
 
@@ -65,11 +66,11 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 <BLOCK_COMMENT> {
 "*/" {
     popState();
-    return BLOCK_COMMENT;
+    return RsTokenTypes.BLOCK_COMMENT;
 }
 <<EOF>> {
     popState();
-    return BLOCK_COMMENT;
+    return RsTokenTypes.BLOCK_COMMENT;
 }
 [\s\S] { }
 }
@@ -77,7 +78,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 <YYINITIAL,STRING_INTERPOLATION> {
 
 // Comments
-"/**/" { return BLOCK_COMMENT; }
+"/**/" { return RsTokenTypes.BLOCK_COMMENT; }
 "/*" { pushState(BLOCK_COMMENT); }
 
 {LINE_COMMENT} { return LINE_COMMENT; }
