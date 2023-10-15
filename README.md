@@ -37,3 +37,4 @@ To install the plugin, follow the following steps:
 ## Acknowledgements
 
 The [IntelliJ Rust](https://github.com/intellij-rust/intellij-rust) plugin was used for reference.
+The [Kotlin Compiler](https://github.com/JetBrains/Kotlin) plugin was used for reference.

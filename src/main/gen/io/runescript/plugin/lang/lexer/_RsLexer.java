@@ -28,6 +28,7 @@ class _RsLexer implements FlexLexer {
   public static final int STRING = 2;
   public static final int STRING_INTERPOLATION = 4;
   public static final int BLOCK_COMMENT = 6;
+  public static final int DOC_COMMENT = 8;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -36,7 +37,7 @@ class _RsLexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = {
-     0,  0,  1,  1,  0,  0,  2, 2
+     0,  0,  1,  1,  0,  0,  2,  2,  2, 2
   };
 
   /**
@@ -113,11 +114,12 @@ class _RsLexer implements FlexLexer {
     "\2\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27"+
     "\1\30\11\16\1\31\1\32\1\33\1\34\1\35\1\36"+
     "\1\37\1\1\2\40\4\20\1\41\1\0\2\16\1\42"+
-    "\1\43\4\16\1\44\4\16\7\0\1\35\1\45\2\0"+
-    "\2\46\1\20\12\16\7\0\1\35\1\47\1\20\1\50"+
-    "\1\16\1\51\1\52\1\16\1\53\1\16\1\54\1\16"+
-    "\1\55\1\16\6\0\2\16\1\56\1\16\1\57\1\0"+
-    "\1\35\2\16\1\60\1\0\1\16\1\61\1\16\1\62";
+    "\1\43\4\16\1\44\4\16\7\0\1\35\1\45\1\0"+
+    "\1\46\2\47\1\20\12\16\7\0\1\35\1\50\1\20"+
+    "\1\51\1\16\1\52\1\53\1\16\1\54\1\16\1\55"+
+    "\1\16\1\56\1\16\6\0\2\16\1\57\1\16\1\60"+
+    "\1\0\1\35\2\16\1\61\1\0\1\16\1\62\1\16"+
+    "\1\63";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[132];
@@ -325,9 +327,9 @@ class _RsLexer implements FlexLexer {
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\3\0\12\11\1\1\1\11\6\1\1\11\1\1\1\11"+
     "\1\1\3\11\11\1\4\11\1\1\1\11\2\1\1\11"+
-    "\6\1\1\0\2\1\2\11\11\1\7\0\2\11\2\0"+
-    "\1\11\14\1\7\0\1\1\1\11\1\1\1\11\12\1"+
-    "\6\0\5\1\1\0\4\1\1\0\4\1";
+    "\6\1\1\0\2\1\2\11\11\1\7\0\2\11\1\0"+
+    "\1\1\1\11\14\1\7\0\1\1\1\11\1\1\1\11"+
+    "\12\1\6\0\5\1\1\0\4\1\1\0\4\1";
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[132];
@@ -655,10 +657,17 @@ public void popState() {
         zzAtEOF = true;
             switch (zzLexicalState) {
             case BLOCK_COMMENT: {
-              popState();
-    return RsTokenTypes.BLOCK_COMMENT;
+              int state = yystate();
+    popState();
+    return state == DOC_COMMENT ? RsTokenTypes.DOC_COMMENT : RsTokenTypes.BLOCK_COMMENT;
             }  // fall though
             case 133: break;
+            case DOC_COMMENT: {
+              int state = yystate();
+    popState();
+    return state == DOC_COMMENT ? RsTokenTypes.DOC_COMMENT : RsTokenTypes.BLOCK_COMMENT;
+            }  // fall though
+            case 134: break;
             default:
         return null;
         }
@@ -669,67 +678,67 @@ public void popState() {
             { return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 51: break;
+          case 52: break;
           case 2:
             { return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 52: break;
+          case 53: break;
           case 3:
             { return EXCEL;
             }
           // fall through
-          case 53: break;
+          case 54: break;
           case 4:
             { pushState(STRING); return STRING_START;
             }
           // fall through
-          case 54: break;
+          case 55: break;
           case 5:
             { return DOLLAR;
             }
           // fall through
-          case 55: break;
+          case 56: break;
           case 6:
             { return PERCENT;
             }
           // fall through
-          case 56: break;
+          case 57: break;
           case 7:
             { return AMPERSAND;
             }
           // fall through
-          case 57: break;
+          case 58: break;
           case 8:
             { return LPAREN;
             }
           // fall through
-          case 58: break;
+          case 59: break;
           case 9:
             { return RPAREN;
             }
           // fall through
-          case 59: break;
+          case 60: break;
           case 10:
             { return STAR;
             }
           // fall through
-          case 60: break;
+          case 61: break;
           case 11:
             { return PLUS;
             }
           // fall through
-          case 61: break;
+          case 62: break;
           case 12:
             { return COMMA;
             }
           // fall through
-          case 62: break;
+          case 63: break;
           case 13:
             { return MINUS;
             }
           // fall through
-          case 63: break;
+          case 64: break;
           case 14:
             { CharSequence lexeme = yytext();
   for (String typeName: getTypeNames()) {
@@ -769,37 +778,37 @@ public void popState() {
   return IDENTIFIER;
             }
           // fall through
-          case 64: break;
+          case 65: break;
           case 15:
             { return SLASH;
             }
           // fall through
-          case 65: break;
+          case 66: break;
           case 16:
             { return INTEGER;
             }
           // fall through
-          case 66: break;
+          case 67: break;
           case 17:
             { return COLON;
             }
           // fall through
-          case 67: break;
+          case 68: break;
           case 18:
             { return SEMICOLON;
             }
           // fall through
-          case 68: break;
+          case 69: break;
           case 19:
             { return LT;
             }
           // fall through
-          case 69: break;
+          case 70: break;
           case 20:
             { return EQUAL;
             }
           // fall through
-          case 70: break;
+          case 71: break;
           case 21:
             { if (yystate() == STRING_INTERPOLATION) {
         popState();
@@ -809,153 +818,159 @@ public void popState() {
     }
             }
           // fall through
-          case 71: break;
+          case 72: break;
           case 22:
             { return LBRACKET;
             }
           // fall through
-          case 72: break;
+          case 73: break;
           case 23:
             { return RBRACKET;
             }
           // fall through
-          case 73: break;
+          case 74: break;
           case 24:
             { return CARET;
             }
           // fall through
-          case 74: break;
+          case 75: break;
           case 25:
             { return LBRACE;
             }
           // fall through
-          case 75: break;
+          case 76: break;
           case 26:
             { return BAR;
             }
           // fall through
-          case 76: break;
+          case 77: break;
           case 27:
             { return RBRACE;
             }
           // fall through
-          case 77: break;
+          case 78: break;
           case 28:
             { return TILDE;
             }
           // fall through
-          case 78: break;
+          case 79: break;
           case 29:
             { return STRING_PART;
             }
           // fall through
-          case 79: break;
+          case 80: break;
           case 30:
             { popState(); return STRING_END;
             }
           // fall through
-          case 80: break;
+          case 81: break;
           case 31:
             { pushState(STRING_INTERPOLATION); return STRING_INTERPOLATION_START;
             }
           // fall through
-          case 81: break;
+          case 82: break;
           case 32:
             { 
             }
           // fall through
-          case 82: break;
+          case 83: break;
           case 33:
             { pushState(BLOCK_COMMENT);
             }
           // fall through
-          case 83: break;
+          case 84: break;
           case 34:
             { return LTE;
             }
           // fall through
-          case 84: break;
+          case 85: break;
           case 35:
             { return GTE;
             }
           // fall through
-          case 85: break;
+          case 86: break;
           case 36:
             { return IF;
             }
           // fall through
-          case 86: break;
-          case 37:
-            { popState();
-    return RsTokenTypes.BLOCK_COMMENT;
-            }
-          // fall through
           case 87: break;
-          case 38:
-            { return LINE_COMMENT;
+          case 37:
+            { int state = yystate();
+    popState();
+    return state == DOC_COMMENT ? RsTokenTypes.DOC_COMMENT : RsTokenTypes.BLOCK_COMMENT;
             }
           // fall through
           case 88: break;
-          case 39:
-            { return STRING_TAG;
+          case 38:
+            { pushState(DOC_COMMENT);
             }
           // fall through
           case 89: break;
-          case 40:
-            { return RsTokenTypes.BLOCK_COMMENT;
+          case 39:
+            { return LINE_COMMENT;
             }
           // fall through
           case 90: break;
-          case 41:
-            { return CALC;
+          case 40:
+            { return STRING_TAG;
             }
           // fall through
           case 91: break;
-          case 42:
-            { return CASE;
+          case 41:
+            { return RsTokenTypes.BLOCK_COMMENT;
             }
           // fall through
           case 92: break;
-          case 43:
-            { return ELSE;
+          case 42:
+            { return CALC;
             }
           // fall through
           case 93: break;
-          case 44:
-            { return NULL;
+          case 43:
+            { return CASE;
             }
           // fall through
           case 94: break;
-          case 45:
-            { return TRUE;
+          case 44:
+            { return ELSE;
             }
           // fall through
           case 95: break;
-          case 46:
-            { return FALSE;
+          case 45:
+            { return NULL;
             }
           // fall through
           case 96: break;
-          case 47:
-            { return WHILE;
+          case 46:
+            { return TRUE;
             }
           // fall through
           case 97: break;
-          case 48:
-            { return RETURN;
+          case 47:
+            { return FALSE;
             }
           // fall through
           case 98: break;
-          case 49:
-            { return DEFAULT;
+          case 48:
+            { return WHILE;
             }
           // fall through
           case 99: break;
-          case 50:
-            { return COORDGRID;
+          case 49:
+            { return RETURN;
             }
           // fall through
           case 100: break;
+          case 50:
+            { return DEFAULT;
+            }
+          // fall through
+          case 101: break;
+          case 51:
+            { return COORDGRID;
+            }
+          // fall through
+          case 102: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

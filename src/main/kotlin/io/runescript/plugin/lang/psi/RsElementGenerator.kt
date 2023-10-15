@@ -10,6 +10,8 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.LightVirtualFile
 import io.runescript.plugin.ide.filetypes.RsFileType
 import io.runescript.plugin.lang.RuneScript
+import io.runescript.plugin.lang.doc.findDescendantOfType
+import io.runescript.plugin.lang.doc.psi.impl.RsDocLink
 
 object RsElementGenerator {
 
@@ -48,6 +50,11 @@ object RsElementGenerator {
         val literal =
             PsiTreeUtil.findChildOfType(element, RsStringLiteralExpression::class.java) as RsStringLiteralExpression
         return PsiTreeUtil.findChildOfType(literal, RsStringLiteralContent::class.java) as RsStringLiteralContent
+    }
+
+    fun createDocIdentifier(project: Project, name: String): PsiElement {
+        val element = createDummyFile(project, "/** [$name] */[proc,dummy]()()")
+        return element.findDescendantOfType<RsDocLink>()!!.firstChild.nextSibling
     }
 
     private fun createDummyFile(project: Project, text: String): PsiFile {

@@ -3,6 +3,7 @@ package io.runescript.plugin.ide.usages
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
+import io.runescript.plugin.lang.doc.psi.impl.RsDocName
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.isVarFile
@@ -32,7 +33,8 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
     override fun getExpressionAccess(expression: PsiElement): Access {
         require(expression is RsLocalVariableExpression
                 || expression is RsScopedVariableExpression
-                || expression is RsDynamicExpression)
+                || expression is RsDynamicExpression
+                || expression is RsDocName)
         val parent = expression.parent
         if (parent is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement) {
             return Access.Write
