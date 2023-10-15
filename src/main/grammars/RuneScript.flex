@@ -59,18 +59,20 @@ IMG_TAG = "<img="([0-9]+)">"
 CLOSE_TAG = "</"(shad|col|str|u)">"
 INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 
-%x STRING, STRING_INTERPOLATION, BLOCK_COMMENT
+%x STRING, STRING_INTERPOLATION, BLOCK_COMMENT, DOC_COMMENT
 
 %%
 
-<BLOCK_COMMENT> {
+<BLOCK_COMMENT, DOC_COMMENT> {
 "*/" {
+    int state = yystate();
     popState();
-    return RsTokenTypes.BLOCK_COMMENT;
+    return state == DOC_COMMENT ? RsTokenTypes.DOC_COMMENT : RsTokenTypes.BLOCK_COMMENT;
 }
 <<EOF>> {
+    int state = yystate();
     popState();
-    return RsTokenTypes.BLOCK_COMMENT;
+    return state == DOC_COMMENT ? RsTokenTypes.DOC_COMMENT : RsTokenTypes.BLOCK_COMMENT;
 }
 [\s\S] { }
 }
@@ -79,6 +81,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 
 // Comments
 "/**/" { return RsTokenTypes.BLOCK_COMMENT; }
+"/**" { pushState(DOC_COMMENT); }
 "/*" { pushState(BLOCK_COMMENT); }
 
 {LINE_COMMENT} { return LINE_COMMENT; }

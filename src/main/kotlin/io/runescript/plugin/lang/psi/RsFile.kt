@@ -5,19 +5,15 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import io.runescript.plugin.ide.filetypes.RsFileType
 import io.runescript.plugin.lang.RuneScript
-import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
 class RsFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, RuneScript) {
-
-    init {
-        init(RsFileStubType, RsFileStubType)
-    }
 
     override fun getFileType(): FileType {
         return RsFileType
     }
 
     override fun toString(): String {
-        return "RuneScript File"
+        return "RsFile: $name"
     }
+
 }

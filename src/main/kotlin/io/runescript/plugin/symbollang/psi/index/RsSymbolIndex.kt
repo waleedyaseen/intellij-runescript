@@ -27,7 +27,7 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
             return configs.singleOrNull { it.containingFile.nameWithoutExtension == lookupType.literal }
         }
 
-        private val PsiFile.nameWithoutExtension: String
+        val PsiFile.nameWithoutExtension: String
             get() {
                 val dot = name.lastIndexOf('.')
                 if (dot == -1) {

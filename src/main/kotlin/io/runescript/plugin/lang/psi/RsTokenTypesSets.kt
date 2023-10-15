@@ -2,6 +2,7 @@ package io.runescript.plugin.lang.psi
 
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.psi.RsElementTypes.*
+import io.runescript.plugin.lang.psi.RsTokenTypes.DOC_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypes.BLOCK_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypes.LINE_COMMENT
 
@@ -52,6 +53,7 @@ object RsTokenTypesSets {
     val COMMENTS = TokenSet.create(
         LINE_COMMENT,
         BLOCK_COMMENT,
+        DOC_COMMENT
     )
 
     val STRING_ELEMENTS = TokenSet.create(STRING_START, STRING_PART, STRING_TAG, STRING_END)

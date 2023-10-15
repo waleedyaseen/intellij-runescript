@@ -22,6 +22,11 @@ object RsSyntaxHighlighterColors {
     private const val RUNESCRIPT_PARENTHESIS = "RUNESCRIPT_PARENTHESIS"
     private const val RUNESCRIPT_BRACKETS = "RUNESCRIPT_BRACKETS"
 
+    // Documentation
+    private const val RUNESCRIPT_DOC_COMMENT = "RUNESCRIPT_DOC_COMMENT"
+    private const val RUNESCRIPT_DOC_COMMENT_TAG = "RUNESCRIPT_DOC_COMMENT_TAG"
+    private const val RUNESCRIPT_DOC_COMMENT_LINK = "RUNESCRIPT_DOC_COMMENT_LINK"
+
     // Parser based attribute keys
     private const val RUNESCRIPT_SCRIPT_DECLARATION = "RUNESCRIPT_SCRIPT_DECLARATION"
     private const val RUNESCRIPT_CONSTANT = "RUNESCRIPT_CONSTANT"
@@ -49,6 +54,11 @@ object RsSyntaxHighlighterColors {
     val COMMA = createTextAttributesKey(RUNESCRIPT_COMMA, DefaultLanguageHighlighterColors.COMMA)
     val PARENTHESIS = createTextAttributesKey(RUNESCRIPT_PARENTHESIS, DefaultLanguageHighlighterColors.PARENTHESES)
     val BRACKETS = createTextAttributesKey(RUNESCRIPT_BRACKETS, DefaultLanguageHighlighterColors.BRACKETS)
+
+    // Documentation
+    val DOC_COMMENT = createTextAttributesKey(RUNESCRIPT_DOC_COMMENT, DefaultLanguageHighlighterColors.DOC_COMMENT)
+    val DOC_COMMENT_TAG = createTextAttributesKey(RUNESCRIPT_DOC_COMMENT_TAG, DefaultLanguageHighlighterColors.DOC_COMMENT_TAG)
+    val DOC_COMMENT_LINK = createTextAttributesKey(RUNESCRIPT_DOC_COMMENT_LINK, DefaultLanguageHighlighterColors.DOC_COMMENT_TAG_VALUE)
 
     // Parser based attributes
     val SCRIPT_DECLARATION = createTextAttributesKey(RUNESCRIPT_SCRIPT_DECLARATION, DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)

@@ -11,6 +11,9 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.ide.config.RsConfig
+import io.runescript.plugin.lang.doc.lexer.RsDocTokens
+import io.runescript.plugin.lang.doc.parser.RsDocElementType
+import io.runescript.plugin.lang.doc.psi.impl.RsDocLink
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsElementTypes
@@ -40,8 +43,12 @@ class RsParserDefinition : ParserDefinition {
         return RsTokenTypesSets.STRING_ELEMENTS
     }
 
-    override fun createElement(node: ASTNode?): PsiElement {
-        return RsElementTypes.Factory.createElement(node)
+    override fun createElement(node: ASTNode): PsiElement {
+        return when (val elementType = node.elementType) {
+            is RsDocElementType -> elementType.createPsi(node)
+            RsDocTokens.MARKDOWN_LINK -> RsDocLink(node)
+            else -> RsElementTypes.Factory.createElement(node)
+        }
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {

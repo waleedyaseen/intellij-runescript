@@ -11,6 +11,7 @@ import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentP
 import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.*
 import com.intellij.psi.tree.IElementType
 import io.runescript.plugin.lang.RuneScript
+import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 import io.runescript.plugin.lang.psi.RsElementTypes
 import io.runescript.plugin.lang.psi.RsTokenTypes
 
@@ -50,6 +51,8 @@ class RsLineIndentProvider : JavaLikeLangLineIndentProvider() {
             RsElementTypes.IF to IfKeyword,
             RsTokenTypes.BLOCK_COMMENT to BlockComment,
             RsTokenTypes.LINE_COMMENT to LineComment,
+            RsDocTokens.START to DocBlockStart,
+            RsDocTokens.END to DocBlockEnd,
             RsElementTypes.COMMA to Comma
         )
     }

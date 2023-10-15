@@ -10,6 +10,7 @@ import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.suggested.startOffset
+import io.runescript.plugin.ide.doc.findDoc
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.refs.RsLocalVariableReference
 import io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub
@@ -21,7 +22,13 @@ abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalV
     constructor(stub: RsLocalVariableExpressionStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
     override fun getUseScope(): SearchScope {
-        return LocalSearchScope(parentOfType<RsScript>()!!)
+        val script = parentOfType<RsScript>()!!
+        val doc = script.findDoc()
+        return if (doc != null) {
+            LocalSearchScope(arrayOf(script, doc))
+        } else {
+            LocalSearchScope(this)
+        }
     }
 
     override fun getReference(): PsiReference? {

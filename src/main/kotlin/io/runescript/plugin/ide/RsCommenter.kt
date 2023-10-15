@@ -3,6 +3,7 @@ package io.runescript.plugin.ide
 import com.intellij.lang.CodeDocumentationAwareCommenter
 import com.intellij.psi.PsiComment
 import com.intellij.psi.tree.IElementType
+import io.runescript.plugin.lang.doc.psi.api.RsDoc
 import io.runescript.plugin.lang.psi.RsTokenTypes
 
 class RsCommenter : CodeDocumentationAwareCommenter {
@@ -35,23 +36,23 @@ class RsCommenter : CodeDocumentationAwareCommenter {
         return RsTokenTypes.BLOCK_COMMENT
     }
 
-    override fun getDocumentationCommentTokenType(): IElementType? {
-        return null
+    override fun getDocumentationCommentTokenType(): IElementType {
+        return RsTokenTypes.DOC_COMMENT
     }
 
-    override fun getDocumentationCommentPrefix(): String? {
-        return null
+    override fun getDocumentationCommentPrefix(): String {
+        return "/**"
     }
 
-    override fun getDocumentationCommentLinePrefix(): String? {
-        return null
+    override fun getDocumentationCommentLinePrefix(): String {
+        return "*"
     }
 
-    override fun getDocumentationCommentSuffix(): String? {
-        return null
+    override fun getDocumentationCommentSuffix(): String {
+        return "*/"
     }
 
     override fun isDocumentationComment(element: PsiComment?): Boolean {
-        return false
+        return element is RsDoc
     }
 }

@@ -29,6 +29,7 @@
         <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
+        <renameHandler implementation="io.runescript.plugin.ide.refactoring.RsMemberInplaceRenameHandler"/>
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
         <lang.commenter language="RuneScript" implementationClass="io.runescript.plugin.ide.RsCommenter"/>
@@ -39,6 +40,7 @@
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>
+        <lang.elementManipulator forClass="io.runescript.plugin.lang.doc.psi.impl.RsDocName" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsDocNameManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
         <sdkType implementation="io.runescript.plugin.ide.sdk.RsSdkType"/>
@@ -53,6 +55,9 @@
         <configurationType implementation="io.runescript.plugin.ide.execution.run.RsRunConfigurationType"/>
         <programRunner implementation="io.runescript.plugin.ide.execution.run.RsProgramRunner"/>
 
+        <!-- Documentation -->
+        <documentationProvider implementation="io.runescript.plugin.ide.doc.RsDocumentationProvider"/>
+
         <!-- Formatter -->
         <lang.formatter language="RuneScript" implementationClass="io.runescript.plugin.ide.formatter.RsFormatter"/>
         <codeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsCodeStyleSettingsProvider"/>
@@ -63,7 +68,6 @@
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
         <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
-        <documentationProvider implementation="io.runescript.plugin.ide.doc.RsDocumentationProvider"/>
 
         <!-- Spell Checking -->
         <spellchecker.support language="RuneScript" implementationClass="io.runescript.plugin.ide.spellchecker.RsSpellcheckingStrategy"/>

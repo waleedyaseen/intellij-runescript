@@ -1,6 +1,9 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+### Added
+- Add documentation support based on the KDoc.
+
 ### Fixed
 - Fix regular expressions not being allowed in hook transmits list.
 - Fix invalid symbol file inspection reporting an error for "commands.sym".
