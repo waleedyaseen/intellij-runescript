@@ -14,6 +14,7 @@
 - Update the file extension for commands from ".op" to ".cs2".
 - Improve the handling and parsing of block comments.
 - Add line indentation support to the formatter.
+- Improve renaming support for script references.
 
 ## [1.3.0] - 2023-08-30
 

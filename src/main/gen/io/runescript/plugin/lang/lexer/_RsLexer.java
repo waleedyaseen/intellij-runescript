@@ -6,7 +6,8 @@ package io.runescript.plugin.lang.lexer;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import io.runescript.plugin.lang.psi.RsTokenTypes;import it.unimi.dsi.fastutil.ints.IntArrayList;
+import io.runescript.plugin.lang.psi.RsTokenTypes;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;
 
 import java.util.List;
