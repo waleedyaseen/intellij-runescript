@@ -25,4 +25,4 @@ public class RsDocLexer extends MergingLexerAdapter {
     public RsDocLexer() {
         super(new FlexAdapter(new _RsDocLexer(null)), RSDOC_TOKENS);
     }
-}m
+}
