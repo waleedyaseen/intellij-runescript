@@ -8,6 +8,7 @@
   psiPackage="io.runescript.plugin.lang.psi"
   psiImplPackage="io.runescript.plugin.lang.psi.impl"
   psiImplUtilClass="io.runescript.plugin.lang.psi.RsPsiImplUtil"
+  parserUtilClass="io.runescript.plugin.lang.parser.RsParserUtil"
   elementTypeHolderClass="io.runescript.plugin.lang.psi.RsElementTypes"
   elementTypeClass="io.runescript.plugin.lang.psi.RsElementType"
   tokenTypeClass="io.runescript.plugin.lang.psi.RsElementType"
@@ -25,6 +26,9 @@
   implements("Script")="io.runescript.plugin.lang.psi.RsNamedElement"
   implements("Script|HookFragment")="io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder"
   classHeader="// This class is automatically generated. Do not edit."
+  parserImports=[
+    "static com.intellij.lang.WhitespacesBinders.*"
+  ]
   tokens=[
     LBRACKET='['
     RBRACKET=']'
@@ -57,6 +61,10 @@
 File ::= Script*
 
 Script ::= '[' NameLiteral ',' NameLiteral ']' ParameterList? ReturnList? StatementList {
+    hooks=[
+        leftBinder="SCRIPT_LEFT_BINDER"
+        rightBinder="SCRIPT_RIGHT_BINDER"
+    ]
     stubClass="io.runescript.plugin.lang.stubs.RsScriptStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
     implements="com.intellij.psi.NavigatablePsiElement"
@@ -85,6 +93,9 @@ TypeName ::= TYPE_LITERAL {
 }
 StatementList ::= Statement* {
     mixin="io.runescript.plugin.lang.psi.mixin.RsStatementListMixin"
+    hooks=[
+        leftBinder="GREEDY_LEFT_BINDER"
+    ]
 }
 Statement ::= BlockStatement
             | IfStatement

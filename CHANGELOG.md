@@ -1,6 +1,9 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+### Fixed
+
+- Fix documentation for empty scripts.
 
 ## [1.4.0] - 2023-10-15
 

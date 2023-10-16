@@ -4,12 +4,13 @@ package io.runescript.plugin.lang.parser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import static io.runescript.plugin.lang.psi.RsElementTypes.*;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
+import static io.runescript.plugin.lang.parser.RsParserUtil.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.LightPsiParser;
+import static com.intellij.lang.WhitespacesBinders.*;
 
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class RsParser implements PsiParser, LightPsiParser {
@@ -1204,6 +1205,8 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = r && Script_5(b, l + 1);
     r = r && Script_6(b, l + 1);
     r = r && StatementList(b, l + 1);
+    register_hook_(b, LEFT_BINDER, SCRIPT_LEFT_BINDER);
+    register_hook_(b, RIGHT_BINDER, SCRIPT_RIGHT_BINDER);
     exit_section_(b, m, SCRIPT, r);
     return r;
   }
@@ -1261,6 +1264,7 @@ public class RsParser implements PsiParser, LightPsiParser {
       if (!Statement(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "StatementList", c)) break;
     }
+    register_hook_(b, LEFT_BINDER, GREEDY_LEFT_BINDER);
     exit_section_(b, l, m, true, false, null);
     return true;
   }

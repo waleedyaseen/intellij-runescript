@@ -8,10 +8,8 @@ import com.intellij.lang.documentation.DocumentationSettings
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.richcopy.HtmlSyntaxInfoUtil
 import com.intellij.psi.*
-import com.intellij.psi.tree.TokenSet
+import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
-import com.intellij.psi.util.siblings
-import com.intellij.psi.util.skipTokens
 import io.runescript.plugin.ide.doc.RsDocRenderer.renderRsDoc
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
 import io.runescript.plugin.lang.doc.psi.api.RsDoc
@@ -194,7 +192,5 @@ private fun StringBuilder.appendColon(text: String = ":") {
 }
 
 fun RsScript.findDoc(): RsDoc? {
-    return siblings(false, withSelf = false)
-        .skipTokens(TokenSet.WHITE_SPACE)
-        .firstOrNull() as? RsDoc
+    return childrenOfType<RsDoc>().firstOrNull()
 }

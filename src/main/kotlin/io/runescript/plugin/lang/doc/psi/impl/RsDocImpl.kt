@@ -7,9 +7,7 @@ package io.runescript.plugin.lang.doc.psi.impl
 import com.intellij.lang.Language
 import com.intellij.psi.impl.source.tree.LazyParseablePsiElement
 import com.intellij.psi.tree.IElementType
-import com.intellij.psi.tree.TokenSet
-import com.intellij.psi.util.siblings
-import com.intellij.psi.util.skipTokens
+import com.intellij.psi.util.parentOfType
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.doc.getChildOfType
 import io.runescript.plugin.lang.doc.getChildrenOfType
@@ -28,9 +26,7 @@ class RsDocImpl(buffer: CharSequence?) : LazyParseablePsiElement(RsDocTokens.RSD
     override fun getTokenType(): IElementType = RsTokenTypes.DOC_COMMENT
 
     override fun getOwner(): RsScript? {
-        return siblings(true, withSelf = false)
-            .skipTokens(TokenSet.WHITE_SPACE)
-            .firstOrNull() as? RsScript
+        return parentOfType<RsScript>()
     }
 
     override fun getDefaultSection(): RsDocSection = getChildOfType()!!
