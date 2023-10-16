@@ -27,7 +27,7 @@ abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalV
         return if (doc != null) {
             LocalSearchScope(arrayOf(script, doc))
         } else {
-            LocalSearchScope(this)
+            LocalSearchScope(script)
         }
     }
 

@@ -4,6 +4,7 @@
 ### Fixed
 
 - Fix documentation for empty scripts.
+- Fix local variables find usages.
 
 ## [1.4.0] - 2023-10-15
 
