@@ -50,9 +50,9 @@ public class RsParser implements PsiParser, LightPsiParser {
     create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_ACCESS_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
       CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
       COORD_LITERAL_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION,
-      INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION,
-      RELATIONAL_VALUE_EXPRESSION, SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION,
-      SWITCH_CASE_DEFAULT_EXPRESSION),
+      INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, LONG_LITERAL_EXPRESSION, NULL_LITERAL_EXPRESSION,
+      PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION, SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION,
+      STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -776,6 +776,7 @@ public class RsParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // IntegerLiteralExpression
+  //                              | LongLiteralExpression
   //                              | CoordLiteralExpression
   //                              | BooleanLiteralExpression
   //                              | NullLiteralExpression
@@ -785,6 +786,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, null, "<Expression>");
     r = IntegerLiteralExpression(b, l + 1);
+    if (!r) r = LongLiteralExpression(b, l + 1);
     if (!r) r = CoordLiteralExpression(b, l + 1);
     if (!r) r = BooleanLiteralExpression(b, l + 1);
     if (!r) r = NullLiteralExpression(b, l + 1);
@@ -934,6 +936,18 @@ public class RsParser implements PsiParser, LightPsiParser {
       if (!empty_element_parsed_guard_(b, "LogicalOrWrapper_1", c)) break;
     }
     return true;
+  }
+
+  /* ********************************************************** */
+  // LONG
+  public static boolean LongLiteralExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "LongLiteralExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", LONG)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, LONG_LITERAL_EXPRESSION, "<Expression>");
+    r = consumeToken(b, LONG);
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */

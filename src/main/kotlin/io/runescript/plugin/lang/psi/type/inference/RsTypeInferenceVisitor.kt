@@ -117,38 +117,51 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         return RsTupleType(flatten())
     }
 
-    private fun checkTypeMismatch(context: PsiElement, actualType: RsType?, expectedType: RsType?) {
+    private fun checkTypeMismatchAll(context: PsiElement, actualType: RsType?, expectedTypes: List<RsType>): Boolean {
+        return expectedTypes.all { checkTypeMismatch(context, actualType, it, false) }
+    }
+
+    private fun checkTypeMismatch(
+        context: PsiElement,
+        actualType: RsType?,
+        expectedType: RsType?,
+        reportError: Boolean = true
+    ): Boolean {
         val unfoldedActualType = actualType.unfold() ?: RsErrorType
         val unfoldedExpectedType = expectedType.unfold() ?: RsErrorType
         if (unfoldedActualType is RsErrorType || unfoldedExpectedType is RsErrorType) {
-            return
+            return false
         }
         if (unfoldedActualType is RsTupleType && RsErrorType in unfoldedActualType.types) {
-            return
+            return false
         }
         if (unfoldedExpectedType is RsTupleType && RsErrorType in unfoldedExpectedType.types) {
-            return
+            return false
         }
         if (unfoldedExpectedType == RsPrimitiveType.OBJ && unfoldedActualType == RsPrimitiveType.NAMEDOBJ) {
             // namedobj extends obj
-            return
+            return true
         }
         if (unfoldedExpectedType == RsPrimitiveType.FONTMETRICS && unfoldedActualType == RsPrimitiveType.GRAPHIC) {
             // graphic extends fontmetrics
-            return
+            return true
         }
         if (unfoldedExpectedType.isHookType() && unfoldedActualType == RsPrimitiveType.STRING) {
             // hooks are just strings that are parsed different.
-            return
+            return true
         }
         if (unfoldedActualType != unfoldedExpectedType) {
-            context.error(
-                "Type mismatch: '%s' was given but '%s' was expected".format(
-                    unfoldedActualType.representation,
-                    unfoldedExpectedType.representation
+            if (reportError) {
+                context.error(
+                    "Type mismatch: '%s' was given but '%s' was expected".format(
+                        unfoldedActualType.representation,
+                        unfoldedExpectedType.representation
+                    )
                 )
-            )
+            }
+            return false
         }
+        return true
     }
 
     override fun visitGosubExpression(o: RsGosubExpression) {
@@ -280,10 +293,19 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         o.left.accept(this)
 
         if (valueRequiredType != null) {
-            o.right.typeHint = o.right.typeHint ?: o.left.type
+            o.right.typeHint = o.left.type ?: o.right.typeHint
             o.right.accept(this)
-            checkTypeMismatch(o.left, valueRequiredType)
-            checkTypeMismatch(o.right, valueRequiredType)
+            if (op.isRelational()) {
+                var expectedType = o.left.type ?: o.right.type
+                if (expectedType != RsPrimitiveType.LONG) {
+                    expectedType = valueRequiredType
+                }
+                checkTypeMismatch(o.left, expectedType)
+                checkTypeMismatch(o.right, expectedType)
+            } else {
+                checkTypeMismatch(o.left, valueRequiredType)
+                checkTypeMismatch(o.right, valueRequiredType)
+            }
         } else {
             o.right.typeHint = o.left.type
             o.right.accept(this)
@@ -416,11 +438,10 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         o.statementList.accept(this)
     }
 
-
     override fun visitCalcExpression(o: RsCalcExpression) {
-        o.type = RsPrimitiveType.INT
+        o.type = o.typeHint ?: RsPrimitiveType.INT
 
-        o.expression.typeHint = RsPrimitiveType.INT
+        o.expression.typeHint = o.typeHint ?: RsPrimitiveType.INT
         o.expression.accept(this)
     }
 
@@ -485,10 +506,10 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitArithmeticExpression(o: RsArithmeticExpression) {
-        o.left.typeHint = RsPrimitiveType.INT
+        o.left.typeHint = o.typeHint ?: RsPrimitiveType.INT
         o.left.accept(this)
 
-        o.right.typeHint = RsPrimitiveType.INT
+        o.right.typeHint = o.typeHint ?: RsPrimitiveType.INT
         o.right.accept(this)
     }
 
@@ -540,16 +561,31 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                 val trimmedValue: String
                 if (value.startsWith("0x")) {
                     radix = 16
-                    trimmedValue = value.substring(2)
+                    trimmedValue = value.substring(2, value.length)
                 } else {
                     radix = 10
-                    trimmedValue = value
+                    trimmedValue = value.substring(0, value.length)
                 }
                 if (trimmedValue.toIntOrNull(radix) == null) {
                     o.error("Could not convert constant value '${value}' to an integer number.")
                 }
             }
 
+            RsPrimitiveType.LONG -> {
+                val radix: Int
+                val trimmedValue: String
+                val endIndex = if (value.endsWith('L', ignoreCase = true)) value.length - 1 else value.length
+                if (value.startsWith("0x")) {
+                    radix = 16
+                    trimmedValue = value.substring(2, endIndex)
+                } else {
+                    radix = 10
+                    trimmedValue = value.substring(0, endIndex)
+                }
+                if (trimmedValue.toLongOrNull(radix) == null) {
+                    o.error("Could not convert constant value '${value}' to a long number.")
+                }
+            }
             else -> {
                 val configReference = RsSymbolIndex.lookup(o.project, type, value)
                 if (configReference == null) {
@@ -576,6 +612,10 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
     override fun visitIntegerLiteralExpression(o: RsIntegerLiteralExpression) {
         o.type = RsPrimitiveType.INT
+    }
+
+    override fun visitLongLiteralExpression(o: RsLongLiteralExpression) {
+        o.type = RsPrimitiveType.LONG
     }
 
     override fun visitCoordLiteralExpression(o: RsCoordLiteralExpression) {
@@ -623,6 +663,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             ?.map { RsPrimitiveType.lookupReferencable(it.text) }
             ?.toTypedArray<RsType>()
         checkExpressionList(o, o.expressionList, expectedReturnList ?: emptyArray<RsType>())
+    }
+    companion object {
+        private val ALLOWED_RELATIONAL_TYPES = arrayOf(
+            RsPrimitiveType.INT,
+            RsPrimitiveType.LONG
+        )
     }
 }
 

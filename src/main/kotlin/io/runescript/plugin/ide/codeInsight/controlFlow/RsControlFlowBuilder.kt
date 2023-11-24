@@ -281,6 +281,10 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
+        override fun visitLongLiteralExpression(o: RsLongLiteralExpression) {
+            addInstruction(o)
+        }
+
         override fun visitCoordLiteralExpression(o: RsCoordLiteralExpression) {
             addInstruction(o)
         }

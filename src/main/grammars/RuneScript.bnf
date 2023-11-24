@@ -240,11 +240,13 @@ ScopedVariableExpression ::= '%' NameLiteral {
 }
 
 private LiteralExpression ::= IntegerLiteralExpression
+                             | LongLiteralExpression
                              | CoordLiteralExpression
                              | BooleanLiteralExpression
                              | NullLiteralExpression
                              | StringLiteralExpression
 IntegerLiteralExpression ::= INTEGER
+LongLiteralExpression ::= LONG
 CoordLiteralExpression ::= COORDGRID
 BooleanLiteralExpression ::= TRUE | FALSE
 NullLiteralExpression ::= NULL

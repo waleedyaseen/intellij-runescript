@@ -1,6 +1,7 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+- Add support for long numeric type.
 
 ## [1.4.1] - 2023-10-16
 

@@ -36,6 +36,7 @@ public interface RsElementTypes {
   IElementType INTEGER_LITERAL_EXPRESSION = new RsElementType("INTEGER_LITERAL_EXPRESSION");
   IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new RsElementType("LOCAL_VARIABLE_DECLARATION_STATEMENT");
   IElementType LOCAL_VARIABLE_EXPRESSION = StubElementTypeFactory.create("LOCAL_VARIABLE_EXPRESSION");
+  IElementType LONG_LITERAL_EXPRESSION = new RsElementType("LONG_LITERAL_EXPRESSION");
   IElementType NAME_LITERAL = StubElementTypeFactory.create("NAME_LITERAL");
   IElementType NULL_LITERAL_EXPRESSION = new RsElementType("NULL_LITERAL_EXPRESSION");
   IElementType PARAMETER = StubElementTypeFactory.create("PARAMETER");
@@ -80,6 +81,7 @@ public interface RsElementTypes {
   IElementType INTEGER = new RsElementType("INTEGER");
   IElementType LBRACE = new RsElementType("{");
   IElementType LBRACKET = new RsElementType("[");
+  IElementType LONG = new RsElementType("LONG");
   IElementType LPAREN = new RsElementType("(");
   IElementType LT = new RsElementType("<");
   IElementType LTE = new RsElementType("<=");
@@ -186,6 +188,9 @@ public interface RsElementTypes {
       }
       else if (type == LOCAL_VARIABLE_EXPRESSION) {
         return new RsLocalVariableExpressionImpl(node);
+      }
+      else if (type == LONG_LITERAL_EXPRESSION) {
+        return new RsLongLiteralExpressionImpl(node);
       }
       else if (type == NAME_LITERAL) {
         return new RsNameLiteralImpl(node);

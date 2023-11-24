@@ -61,6 +61,7 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
             unwrappedExpression = unwrappedExpression.expression
         }
         return unwrappedExpression !is RsIntegerLiteralExpression
+                && unwrappedExpression !is RsLongLiteralExpression
                 && unwrappedExpression !is RsBooleanLiteralExpression
                 && unwrappedExpression !is RsStringLiteralExpression
                 && unwrappedExpression !is RsNullLiteralExpression
