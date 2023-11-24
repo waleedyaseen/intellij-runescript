@@ -153,7 +153,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         if (unfoldedActualType != unfoldedExpectedType) {
             if (reportError) {
                 context.error(
-                    "Type mismatch: '%s' was given but '%s' was expected".format(
+                    TYPE_MISMATCH_ERROR.format(
                         unfoldedActualType.representation,
                         unfoldedExpectedType.representation
                     )
@@ -511,6 +511,17 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
         o.right.typeHint = o.typeHint ?: RsPrimitiveType.INT
         o.right.accept(this)
+
+        val leftType = o.left.type.unfold()
+        val rightType = o.right.type.unfold()
+
+        if (leftType == null || rightType == null || leftType is RsErrorType || rightType == RsErrorType) return
+
+        val operator = o.arithmeticOp
+
+        if (leftType != rightType) {
+            o.error(INVALID_OPERATOR_ERROR.format(operator.text, leftType.representation, rightType.representation))
+        }
     }
 
     override fun visitArithmeticValueExpression(o: RsArithmeticValueExpression) {
@@ -665,10 +676,8 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         checkExpressionList(o, o.expressionList, expectedReturnList ?: emptyArray<RsType>())
     }
     companion object {
-        private val ALLOWED_RELATIONAL_TYPES = arrayOf(
-            RsPrimitiveType.INT,
-            RsPrimitiveType.LONG
-        )
+        private const val TYPE_MISMATCH_ERROR = "Type mismatch: '%s' was given but '%s' was expected"
+        private const val INVALID_OPERATOR_ERROR = "Operator '%s' cannot be applied to '%s', '%s'"
     }
 }
 

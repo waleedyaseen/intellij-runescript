@@ -3,6 +3,7 @@
 ## [Unreleased]
 - Add support for `long` numeric type.
 - Add `stylesheet` to the valid types list.
+- Add type checking for arithmetic operators.
 
 ## [1.4.1] - 2023-10-16
 
