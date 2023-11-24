@@ -56,6 +56,7 @@ object RsConfig {
         "dbcolumn",
         "player_uid",
         "stringvector",
+        "stylesheet",
         // Types only for the .op file
         "hook",
         "varphook",

@@ -1,7 +1,8 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
-- Add support for long numeric type.
+- Add support for `long` numeric type.
+- Add `stylesheet` to the valid types list.
 
 ## [1.4.1] - 2023-10-16
 

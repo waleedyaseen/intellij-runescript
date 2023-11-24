@@ -43,6 +43,7 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     DBCOLUMN("dbcolumn"),
     PLAYER_UID("player_uid"),
     STRINGVECTOR("stringvector"),
+    STYLESHEET("stylesheet"),
 
     // Non-Referencable types
     PARAM("param", referencable = false),
