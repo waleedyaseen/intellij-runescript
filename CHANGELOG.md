@@ -1,6 +1,8 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+
+### Added
 - Add support for `long` numeric type.
 - Add `stylesheet` to the valid types list.
 - Add type checking for arithmetic operators.
