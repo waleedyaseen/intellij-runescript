@@ -1,8 +1,5 @@
 package io.runescript.plugin.ide.config
 
-import com.intellij.ide.util.PropertiesComponent
-import com.intellij.openapi.project.Project
-
 object RsConfig {
 
     private const val PRIMITIVE_TYPES_KEY = "runescript.settings.primitivetypes"
@@ -66,11 +63,7 @@ object RsConfig {
         "any"
     )
 
-    fun getPrimitiveTypes(project: Project?): List<String> {
+    fun getPrimitiveTypes(): List<String> {
         return PRIMITIVE_TYPES_DEFAULT
-    }
-
-    fun setPrimitiveTypes(project: Project, types: List<String>?) {
-        PropertiesComponent.getInstance(project).setList(PRIMITIVE_TYPES_KEY, types)
     }
 }

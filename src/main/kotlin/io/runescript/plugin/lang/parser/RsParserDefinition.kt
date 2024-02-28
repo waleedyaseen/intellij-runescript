@@ -24,7 +24,7 @@ import io.runescript.plugin.lang.stubs.types.RsFileStubType
 class RsParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project): Lexer {
-        return RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes(project)))
+        return RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes()))
     }
 
     override fun createParser(project: Project): PsiParser {

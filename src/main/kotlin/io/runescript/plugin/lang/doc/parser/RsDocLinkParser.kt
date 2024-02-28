@@ -38,7 +38,7 @@ class RsDocLinkParser : PsiParser {
             val builder = PsiBuilderFactory.getInstance().createBuilder(
                 project,
                 chameleon,
-                RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes(project))),
+                RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes())),
                 root.language,
                 chameleon.text
             )

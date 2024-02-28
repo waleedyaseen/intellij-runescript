@@ -14,11 +14,6 @@
                   implementationClass="io.runescript.plugin.ide.filetypes.RsFileType" fieldName="INSTANCE"
                   extensions="cs2"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
-        <projectConfigurable
-                groupId="language"
-                id="runescript.languageSettings"
-                displayName="RuneScript"
-                instance="io.runescript.plugin.ide.configurable.RsLanguageSettings"/>
         <lang.syntaxHighlighterFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="io.runescript.plugin.ide.highlight.RsColorSettingsPage"/>
         <annotator language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
