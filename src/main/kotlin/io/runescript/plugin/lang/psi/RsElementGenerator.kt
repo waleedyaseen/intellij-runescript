@@ -57,6 +57,11 @@ object RsElementGenerator {
         return element.findDescendantOfType<RsDocLink>()!!.firstChild.nextSibling
     }
 
+    fun createExpressionStatement(project: Project, text: String): RsExpressionStatement {
+        val element = createDummyFile(project, "[proc,dummy]()()$text;")
+        return PsiTreeUtil.findChildOfType(element, RsExpressionStatement::class.java) as RsExpressionStatement
+    }
+
     private fun createDummyFile(project: Project, text: String): PsiFile {
         val factory = PsiFileFactory.getInstance(project) as PsiFileFactoryImpl
         val name = "dummy.${RsFileType.defaultExtension}"

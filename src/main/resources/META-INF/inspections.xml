@@ -56,6 +56,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnreachableCodeInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Unused local variable"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptUnusedLocalVariableInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Missing script symbol"
                          enabledByDefault="true"
                          level="ERROR"
