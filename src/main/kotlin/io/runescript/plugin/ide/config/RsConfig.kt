@@ -62,6 +62,7 @@ object RsConfig {
         "varphook",
         "stathook",
         "invhook",
+        "varchook",
         "any"
     )
 

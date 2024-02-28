@@ -55,6 +55,7 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     NULL("null", referencable = false),
     HOOK("hook", referencable = false),
     VARPHOOK("varphook", referencable = false),
+    VARCHOOK("varchook", referencable = false),
     STATHOOK("stathook", referencable = false),
     INVHOOK("invhook", referencable = false),
     CONSTANT("constant", referencable = false),

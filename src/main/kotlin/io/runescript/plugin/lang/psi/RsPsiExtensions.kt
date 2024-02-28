@@ -36,6 +36,7 @@ fun RsStringLiteralContent.isHookExpression(): Boolean = CachedValuesManager.get
 fun RsType.isHookType() = when (this) {
     RsPrimitiveType.HOOK,
     RsPrimitiveType.VARPHOOK,
+    RsPrimitiveType.VARCHOOK,
     RsPrimitiveType.STATHOOK,
     RsPrimitiveType.INVHOOK -> true
 

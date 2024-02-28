@@ -218,6 +218,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             o.argumentList?.let { checkArgumentList(it, parameterTypes) }
             val expectedType = when (typeHint) {
                 RsPrimitiveType.VARPHOOK -> RsPrimitiveType.VARP
+                RsPrimitiveType.VARCHOOK -> RsPrimitiveType.VARC
                 RsPrimitiveType.STATHOOK -> RsPrimitiveType.STAT
                 RsPrimitiveType.INVHOOK -> RsPrimitiveType.INV
                 else -> null

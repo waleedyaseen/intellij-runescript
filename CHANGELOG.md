@@ -5,6 +5,7 @@
 ### Added
 
 - Add inspection and quick fix for unused local variables.
+- Add varchook to valid types.
 
 ## [1.5.0] - 2023-11-27
 
