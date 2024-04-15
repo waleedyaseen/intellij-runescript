@@ -186,3 +186,38 @@ data object EnumCommandHandler : CommandHandler {
         o.type = outputType ?: RsErrorType
     }
 }
+
+
+data object EnumGetReverseIndexCommandHandler : CommandHandler {
+    override fun RsTypeInferenceVisitor.inferTypes(
+        reference: RsScript,
+        o: RsCommandExpression
+    ) {
+        val arguments = o.argumentList.expressionList
+        var outputType: RsType? = null
+        if (arguments.size >= 1) {
+            arguments[0].typeHint = RsTypeType
+            arguments[0].accept(this)
+            if (arguments[0] is RsDynamicExpression) {
+                outputType = RsPrimitiveType.lookupReferencableOrNull(arguments[0].text) ?: RsErrorType
+            }
+        }
+        var inputType: RsType? = null
+        if (arguments.size >= 2) {
+            arguments[1].typeHint = RsTypeType
+            arguments[1].accept(this)
+            if (arguments[1] is RsDynamicExpression) {
+                inputType = RsPrimitiveType.lookupReferencableOrNull(arguments[1].text) ?: RsErrorType
+            }
+        }
+        val parameterTypes = arrayOf(
+            RsTypeType,
+            RsTypeType,
+            RsPrimitiveType.ENUM,
+            outputType ?: RsErrorType,
+            RsPrimitiveType.INT,
+        )
+        checkArgumentList(o.argumentList, parameterTypes)
+        o.type = inputType ?: RsErrorType
+    }
+}

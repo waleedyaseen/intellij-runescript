@@ -685,6 +685,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 private fun RsScript.findCommandHandler(): CommandHandler {
     return when (nameLiteralList[1].text) {
         "enum" -> EnumCommandHandler
+        "enum_getreverseindex" -> EnumGetReverseIndexCommandHandler
         "struct_param" -> ParamCommandHandler.STRUCT_PARAM
         "lc_param" -> ParamCommandHandler.LC_PARAM
         "nc_param" -> ParamCommandHandler.NC_PARAM
