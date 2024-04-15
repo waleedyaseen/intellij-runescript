@@ -17,7 +17,7 @@ class RsMergeIfAndIntention : BaseElementAtCaretIntentionAction() {
         return RsBundle.message("intention.merge.if.and.name")
     }
 
-    override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+    override fun invoke(project: Project, editor: Editor, element: PsiElement) {
         val ifStmt = element.parent as RsIfStatement
         val trueStmt = ifStmt.trueStatement.toSingleStatement() as RsIfStatement
         val leftParen = (ifStmt.expression?.precedence ?: 0) > PRECEDENCE_LOGICAL_AND
@@ -45,7 +45,7 @@ class RsMergeIfAndIntention : BaseElementAtCaretIntentionAction() {
 
     }
 
-    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+    override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
         val ifStmt = element.parent
         if (ifStmt !is RsIfStatement) {
             return false

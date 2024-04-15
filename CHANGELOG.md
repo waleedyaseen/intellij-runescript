@@ -7,6 +7,9 @@
 - Add inspection and quick fix for unused local variables.
 - Add varchook to valid types.
 
+### Changed
+- Update to IntelliJ 2024.1.
+
 ## [1.5.0] - 2023-11-27
 
 ### Added
