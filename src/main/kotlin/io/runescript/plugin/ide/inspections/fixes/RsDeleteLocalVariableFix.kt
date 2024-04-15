@@ -24,13 +24,19 @@ class RsDeleteLocalVariableFix : LocalQuickFix {
 }
 
 private fun RsExpression.isSimpleToRemove(): Boolean {
+    if (this is RsStringLiteralExpression) {
+       return stringLiteralContent.stringInterpolationExpressionList.all { it.isSimpleToRemove() }
+    }
     return when (this) {
         is RsNullLiteralExpression,
         is RsIntegerLiteralExpression,
         is RsCoordLiteralExpression,
         is RsBooleanLiteralExpression,
-        is RsLongLiteralExpression -> true
-
+        is RsLongLiteralExpression,
+        is RsLocalVariableExpression,
+        is RsConstantExpression,
+        is RsArrayAccessExpression -> true
+        is RsStringInterpolationExpression -> expression.isSimpleToRemove()
         is RsParExpression -> expression.isSimpleToRemove()
         is RsCalcExpression -> expression.isSimpleToRemove()
         is RsBinaryExpression -> left.isSimpleToRemove() && right.isSimpleToRemove()
