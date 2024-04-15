@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.1] - 2024-04-15
+
 ### Added
 
 - Add inspection and quick fix for unused local variables.
@@ -101,7 +103,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.3.0...v1.4.0
