@@ -659,38 +659,28 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NameLiteral (ArgumentList HookTransmitList?)?
+  // NameLiteral ArgumentList? HookTransmitList?
   public static boolean HookFragment(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "HookFragment")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, HOOK_FRAGMENT, "<hook fragment>");
     r = NameLiteral(b, l + 1);
     r = r && HookFragment_1(b, l + 1);
+    r = r && HookFragment_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // (ArgumentList HookTransmitList?)?
+  // ArgumentList?
   private static boolean HookFragment_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "HookFragment_1")) return false;
-    HookFragment_1_0(b, l + 1);
+    ArgumentList(b, l + 1);
     return true;
   }
 
-  // ArgumentList HookTransmitList?
-  private static boolean HookFragment_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "HookFragment_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = ArgumentList(b, l + 1);
-    r = r && HookFragment_1_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
   // HookTransmitList?
-  private static boolean HookFragment_1_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "HookFragment_1_0_1")) return false;
+  private static boolean HookFragment_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "HookFragment_2")) return false;
     HookTransmitList(b, l + 1);
     return true;
   }

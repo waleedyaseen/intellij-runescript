@@ -287,7 +287,7 @@ HookRoot ::= HookFragment {
     extraRoot=true
 }
 
-HookFragment ::= NameLiteral (ArgumentList HookTransmitList?)? {
+HookFragment ::= NameLiteral ArgumentList? HookTransmitList? {
     mixin="io.runescript.plugin.lang.psi.mixin.RsHookFragmentMixin"
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
