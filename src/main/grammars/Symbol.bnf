@@ -21,7 +21,7 @@
   ]
 }
 
-File ::= Symbol*
+File ::= (Symbol | '\n' | '\t')*
 Symbol ::= Field '\t' Field ('\t' Field)* '\t'* '\n' {
     mixin="io.runescript.plugin.symbollang.psi.mixin.RsSymSymbolMixin"
     stubClass="io.runescript.plugin.symbollang.psi.stub.RsSymSymbolStub"

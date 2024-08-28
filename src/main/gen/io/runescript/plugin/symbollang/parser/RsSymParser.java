@@ -49,15 +49,25 @@ public class RsSymParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Symbol*
+  // (Symbol | '\n' | '\t')*
   static boolean File(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "File")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!Symbol(b, l + 1)) break;
+      if (!File_0(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "File", c)) break;
     }
     return true;
+  }
+
+  // Symbol | '\n' | '\t'
+  private static boolean File_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "File_0")) return false;
+    boolean r;
+    r = Symbol(b, l + 1);
+    if (!r) r = consumeToken(b, NEW_LINE);
+    if (!r) r = consumeToken(b, TAB);
+    return r;
   }
 
   /* ********************************************************** */

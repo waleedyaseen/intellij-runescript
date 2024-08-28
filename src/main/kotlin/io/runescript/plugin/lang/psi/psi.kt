@@ -1,6 +1,7 @@
 package io.runescript.plugin.lang.psi
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
@@ -72,7 +73,7 @@ fun RsLocalVariableExpression.isForArrayAccess(): Boolean {
 }
 
 fun Project.isRsProject(): Boolean {
-    val file = baseDir.findChild("neptune.toml")
+    val file = guessProjectDir()?.findChild("neptune.toml")
     return file != null
 }
 

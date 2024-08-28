@@ -32,8 +32,8 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
             return null
         }
 
-        log.info("JVM Arguments: ${settings.jvmArguments?.toTypedArray()?.contentToString()}")
-        log.info("Environment Variables: ${settings.env?.toMap()?.entries?.joinToString(", ") { "${it.key}=${it.value}" }}")
+        log.info("JVM Arguments: ${settings.jvmArguments.toTypedArray().contentToString()}")
+        log.info("Environment Variables: ${settings.env.toMap().entries.joinToString(", ") { "${it.key}=${it.value}" }}")
         log.info("Execution Name: ${settings.arguments}")
 
         val projectRoot = File(projectPath)

@@ -7,10 +7,11 @@ import org.jetbrains.annotations.PropertyKey
 
 
 object RsBundle {
-    private const val BUNDLE_FQN: @NonNls String = "messages.RsBundle"
+    @NonNls private const val BUNDLE_FQN: String = "messages.RsBundle"
     private val BUNDLE = DynamicBundle(RsBundle::class.java, BUNDLE_FQN)
 
-    fun message(@PropertyKey(resourceBundle = BUNDLE_FQN) key: String, vararg params: Any): @Nls String {
+    @Nls
+    fun message(@PropertyKey(resourceBundle = BUNDLE_FQN) key: String, vararg params: Any): String {
         return BUNDLE.getMessage(key, *params)
     }
 

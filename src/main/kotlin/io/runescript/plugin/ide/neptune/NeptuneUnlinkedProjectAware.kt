@@ -18,6 +18,11 @@ class NeptuneUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
         return project.service<NeptuneSettings>().linkedProjectsSettings.isNotEmpty()
     }
 
+    override fun linkAndLoadProject(project: Project, externalProjectPath: String) {
+        // TODO: Convert to async upon upgrading
+        NeptuneOpenProjectProvider.linkToExistingProject(externalProjectPath, project)
+    }
+
     override fun subscribe(
         project: Project,
         listener: ExternalSystemProjectLinkListener,
@@ -33,9 +38,5 @@ class NeptuneUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
                 linkedProjectPaths.forEach { listener.onProjectUnlinked(it) }
             }
         }, parentDisposable)
-    }
-
-    override suspend fun linkAndLoadProjectAsync(project: Project, externalProjectPath: String) {
-        NeptuneOpenProjectProvider.linkToExistingProjectAsync(externalProjectPath, project)
     }
 }
