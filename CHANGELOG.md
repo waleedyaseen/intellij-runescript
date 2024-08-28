@@ -8,6 +8,7 @@
 - Icons for cs2 and sym files.
 - Import functionality for Neptune modules.
 - Local/system settings to manage launcher JRE and Neptune home.
+- Icons for script declarations.
 
 ### Changed
 

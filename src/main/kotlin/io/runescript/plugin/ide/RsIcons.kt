@@ -10,7 +10,8 @@ object RsIcons {
     val RuneScript: Icon = IconLoader.getIcon("/icons/runescript.svg", RsIcons::class.java)
     val Cs2FileType: Icon = IconLoader.getIcon("/icons/fileTypes/cs2.svg", RsIcons::class.java)
     val SymFileType: Icon = IconLoader.getIcon("/icons/fileTypes/sym.svg", RsIcons::class.java)
-    val Cs2: Icon = AllIcons.Nodes.AbstractMethod
-    val Proc: Icon = AllIcons.Nodes.Method
-
+    val GutterClientScript: Icon = IconLoader.getIcon("/icons/gutter/clientscript.svg", RsIcons::class.java)
+    val GutterProc: Icon = IconLoader.getIcon("/icons/gutter/proc.svg", RsIcons::class.java)
+    val GutterCommand: Icon = IconLoader.getIcon("/icons/gutter/command.svg", RsIcons::class.java)
+    val GutterOther: Icon = IconLoader.getIcon("/icons/gutter/other.svg", RsIcons::class.java)
 }

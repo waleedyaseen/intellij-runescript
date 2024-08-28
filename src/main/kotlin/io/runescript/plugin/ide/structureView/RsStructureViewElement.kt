@@ -7,6 +7,7 @@ import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.util.childrenOfType
 import io.runescript.plugin.lang.psi.RsFile
 import io.runescript.plugin.lang.psi.RsScript
+import javax.swing.Icon
 
 class RsStructureViewElement(val element: NavigatablePsiElement) : PsiTreeElementBase<NavigatablePsiElement>(element) {
 

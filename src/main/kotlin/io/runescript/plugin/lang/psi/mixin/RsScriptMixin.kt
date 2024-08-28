@@ -46,9 +46,10 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
 
     override fun getPresentation(): ItemPresentation? {
         val icon = when (triggerName) {
-            "proc" -> RsIcons.Proc
-            "clientscript" -> RsIcons.Cs2
-            else -> null
+            "proc" -> RsIcons.GutterProc
+            "clientscript" -> RsIcons.GutterClientScript
+            "command" -> RsIcons.GutterCommand
+            else -> RsIcons.GutterOther
         }
         return PresentationData(qualifiedName, containingFile.name, icon, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
     }
