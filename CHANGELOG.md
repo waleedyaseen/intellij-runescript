@@ -20,6 +20,7 @@
 - Symbols can now be resolved from sub directories.
 - Allow for clientscript/command to be looked up in "Search Everywhere".
 - Fixed namedobj vs obj when type checking multiple args.
+- Allow '<' to be escaped in string literals.
 
 ## [1.5.1] - 2024-04-15
 
