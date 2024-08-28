@@ -7,7 +7,7 @@ import io.runescript.plugin.ide.RsIcons
 class RsRunConfigurationType : ConfigurationTypeBase(ID,
     "RuneScript Build",
     "Run RuneScript build",
-    RsIcons.RuneScript) {
+    RsIcons.Neptune) {
 
     init {
         addFactory(RsRunConfigurationFactory(this))

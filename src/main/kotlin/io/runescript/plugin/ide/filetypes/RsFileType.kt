@@ -14,5 +14,5 @@ object RsFileType : LanguageFileType(RuneScript) {
 
     override fun getDefaultExtension() = "cs2"
 
-    override fun getIcon() = RsIcons.ClientScript
+    override fun getIcon() = RsIcons.Cs2FileType
 }

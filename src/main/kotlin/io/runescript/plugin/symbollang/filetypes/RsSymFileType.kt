@@ -15,5 +15,5 @@ object RsSymFileType : LanguageFileType(RuneScriptSymbol) {
 
     override fun getDefaultExtension() = "sym"
 
-    override fun getIcon() = RsIcons.ClientScript
+    override fun getIcon() = RsIcons.SymFileType
 }

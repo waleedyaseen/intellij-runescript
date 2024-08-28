@@ -25,7 +25,7 @@ class RsColorSettingsPage : ColorSettingsPage {
     }
 
     override fun getIcon(): Icon {
-        return RsIcons.ClientScript
+        return RsIcons.RuneScript
     }
 
     override fun getHighlighter(): SyntaxHighlighter {

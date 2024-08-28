@@ -16,7 +16,7 @@ class RsNewFileAction :
     CreateFileFromTemplateAction(
         RsBundle.message("action.new.file.text"),
         RsBundle.message("action.new.file.description"),
-        RsIcons.ClientScript
+        RsIcons.Cs2FileType
     ), DumbAware {
     override fun isAvailable(dataContext: DataContext): Boolean {
         if (!super.isAvailable(dataContext)) return false
@@ -33,7 +33,7 @@ class RsNewFileAction :
         builder.setTitle(RsBundle.message("action.new.file.dialog.title"))
         builder.addKind(
             RsBundle.message("action.new.file.dialog.clientscript.title"),
-            RsIcons.ClientScript,
+            RsIcons.Cs2FileType,
             "ClientScript"
         )
     }

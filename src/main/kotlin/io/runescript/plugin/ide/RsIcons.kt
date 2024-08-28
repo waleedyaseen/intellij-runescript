@@ -8,8 +8,9 @@ object RsIcons {
 
     val Neptune: Icon = AllIcons.FileTypes.Unknown
     val RuneScript: Icon = AllIcons.FileTypes.Unknown
-    val ClientScript: Icon = AllIcons.FileTypes.Unknown
-    val Cs2: Icon = IconLoader.getIcon("/icons/fileTypes/cs2.svg", RsIcons::class.java)
-    val Proc: Icon = IconLoader.getIcon("/icons/fileTypes/proc.svg", RsIcons::class.java)
+    val Cs2FileType: Icon = IconLoader.getIcon("/icons/fileTypes/cs2.svg", RsIcons::class.java)
+    val SymFileType: Icon = IconLoader.getIcon("/icons/fileTypes/sym.svg", RsIcons::class.java)
+    val Cs2: Icon = AllIcons.Nodes.AbstractMethod
+    val Proc: Icon = AllIcons.Nodes.Method
 
 }
