@@ -44,7 +44,11 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     PLAYER_UID("player_uid"),
     STRINGVECTOR("stringvector"),
     STYLESHEET("stylesheet"),
-
+    SHIFTOPNPC("shiftopnpc"),
+    SHIFTOPLOC("shiftoploc"),
+    SHIFTOPOBJ("shiftopobj"),
+    SHIFTOPPLAYER("shiftopplayer"),
+    SHIFTOPTILE("shiftoptile"),
     // Non-Referencable types
     PARAM("param", referencable = false),
     FLO("flo", referencable = false),

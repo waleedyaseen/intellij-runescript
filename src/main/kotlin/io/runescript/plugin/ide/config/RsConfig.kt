@@ -54,6 +54,11 @@ object RsConfig {
         "player_uid",
         "stringvector",
         "stylesheet",
+        "shiftopnpc",
+        "shiftoploc",
+        "shiftopobj",
+        "shiftopplayer",
+        "shiftoptile",
         // Types only for the .op file
         "hook",
         "varphook",
