@@ -24,7 +24,16 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
             val lookupType = if (type == RsPrimitiveType.NAMEDOBJ) RsPrimitiveType.OBJ else type
             val scope = GlobalSearchScope.allScope(project)
             val configs = StubIndex.getElements(KEY, name, project, scope, RsSymSymbol::class.java)
-            return configs.singleOrNull { it.containingFile.nameWithoutExtension == lookupType.literal }
+            return configs.singleOrNull {
+                // TODO: Only include if the file is within the symbols directory.
+                val containingFile = it.containingFile
+                val parent = containingFile.parent
+                if (parent != null && parent.name == lookupType.literal) {
+                    true
+                } else {
+                    containingFile.nameWithoutExtension == lookupType.literal
+                }
+            }
         }
 
         val PsiFile.nameWithoutExtension: String

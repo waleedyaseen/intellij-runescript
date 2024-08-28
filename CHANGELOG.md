@@ -15,6 +15,7 @@
 - Reworked project model, removing the old SDK model.
 - Updated to IntelliJ 2024.2.
 - Allowed empty lines in sym files.
+- Symbols can now be resolved from sub directories.
 
 ## [1.5.1] - 2024-04-15
 
