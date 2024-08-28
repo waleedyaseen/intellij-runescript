@@ -10,6 +10,7 @@
 - Local/system settings to manage launcher JRE and Neptune home.
 - Icons for script declarations.
 - Support for varclan and varclansetting.
+- Trigger support for shiftop and onclick variants.
 
 ### Changed
 
