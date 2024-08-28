@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
+import io.runescript.plugin.symbollang.psi.isSymbolFileOfTypeLiteral
 import io.runescript.plugin.symbollang.psi.stub.types.RsSymFileStubType
 
 
@@ -25,14 +26,7 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
             val scope = GlobalSearchScope.allScope(project)
             val configs = StubIndex.getElements(KEY, name, project, scope, RsSymSymbol::class.java)
             return configs.singleOrNull {
-                // TODO: Only include if the file is within the symbols directory.
-                val containingFile = it.containingFile
-                val parent = containingFile.parent
-                if (parent != null && parent.name == lookupType.literal) {
-                    true
-                } else {
-                    containingFile.nameWithoutExtension == lookupType.literal
-                }
+                it.containingFile.virtualFile.isSymbolFileOfTypeLiteral(lookupType.literal)
             }
         }
 
