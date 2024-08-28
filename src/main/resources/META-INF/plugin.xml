@@ -14,6 +14,7 @@
         <fileType name="RuneScript" language="RuneScript"
                   implementationClass="io.runescript.plugin.ide.filetypes.RsFileType" fieldName="INSTANCE"
                   extensions="cs2"/>
+        <fileIconProvider order="first" implementation="io.runescript.plugin.ide.icons.NeptuneIconProvider" />
 
         <!-- Project & Modules -->
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.NeptuneModuleBuilder"/>
