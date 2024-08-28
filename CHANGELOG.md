@@ -16,6 +16,7 @@
 - Updated to IntelliJ 2024.2.
 - Allowed empty lines in sym files.
 - Symbols can now be resolved from sub directories.
+- Allow for clientscript/command to be looked up in "Search Everywhere".
 
 ## [1.5.1] - 2024-04-15
 

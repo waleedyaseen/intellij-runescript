@@ -11,29 +11,46 @@ import com.intellij.util.indexing.IdFilter
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.qualifiedName
+import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
 class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
+
+    private val keys = arrayOf(
+        RsProcScriptIndex.KEY,
+        RsClientScriptIndex.KEY,
+        RsCommandScriptIndex.KEY
+    )
+
     override fun processNames(processor: Processor<in String>, scope: GlobalSearchScope, filter: IdFilter?) {
-        StubIndex.getInstance().processAllKeys(
-                RsProcScriptIndex.KEY,
+        for (key in keys) {
+            StubIndex.getInstance().processAllKeys(
+                key,
                 processor,
                 scope,
                 null
-        )
+            )
+        }
     }
 
-    override fun processElementsWithName(name: String, processor: Processor<in NavigationItem>, parameters: FindSymbolParameters) {
+    override fun processElementsWithName(
+        name: String,
+        processor: Processor<in NavigationItem>,
+        parameters: FindSymbolParameters
+    ) {
         val originScope = parameters.searchScope
-        StubIndex.getInstance().processElements(
-                RsProcScriptIndex.KEY,
+        for (key in keys) {
+            StubIndex.getInstance().processElements(
+                key,
                 name,
                 parameters.project,
                 originScope,
                 null,
                 RsScript::class.java
-        ) { element ->
-            processor.process(element)
+            ) { element ->
+                processor.process(element)
+            }
         }
     }
 
