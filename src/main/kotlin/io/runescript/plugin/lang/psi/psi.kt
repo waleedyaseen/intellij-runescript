@@ -1,10 +1,9 @@
 package io.runescript.plugin.lang.psi
 
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
+import io.runescript.plugin.ide.neptune.findNeptuneProjectRoot
 
 val RsStatement.controlFlowHolder: RsControlFlowHolder?
     get() = parentOfType<RsControlFlowHolder>()
@@ -72,19 +71,7 @@ fun RsLocalVariableExpression.isForArrayAccess(): Boolean {
     return parent is RsArrayAccessExpression && this === parent.expressionList[0]
 }
 
-fun Project.isRsProject(): Boolean {
-    val file = guessProjectDir()?.findChild("neptune.toml")
-    return file != null
-}
-
 fun PsiElement.isSourceFile(): Boolean {
-    if (!project.isRsProject()) {
-        return false
-    }
-    val containingFile = containingFile?.virtualFile ?: return false
-    val fileIndex = ProjectFileIndex.getInstance(project)
-    if (fileIndex.isExcluded(containingFile)) {
-        return false
-    }
-    return fileIndex.isInContent(containingFile)
+    val module = ModuleUtil.findModuleForFile(containingFile) ?: return false
+    return module.findNeptuneProjectRoot() != null
 }
