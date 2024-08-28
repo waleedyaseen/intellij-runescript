@@ -10,6 +10,8 @@ object RsConfig {
         "varp",
         "varbit",
         "varc",
+        "varclan",
+        "varclansetting",
         "null",
         "int",
         "string",

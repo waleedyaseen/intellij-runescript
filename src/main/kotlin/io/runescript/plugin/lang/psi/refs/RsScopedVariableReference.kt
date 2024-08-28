@@ -29,7 +29,9 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
         private val scopedVarTypes = arrayOf(
             RsPrimitiveType.VARP,
             RsPrimitiveType.VARC,
-            RsPrimitiveType.VARBIT
+            RsPrimitiveType.VARBIT,
+            RsPrimitiveType.VARCLAN,
+            RsPrimitiveType.VARCLANSETTING
         )
     }
 }
