@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.findParentOfType
 import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.suggested.startOffset
+import com.intellij.util.SmartList
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
@@ -107,6 +108,20 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         return this
     }
 
+    private fun RsType?.flatten(): SmartList<RsType> {
+        if (this == null) {
+            return SmartList()
+        }
+        if (this is RsTupleType) {
+            val result = SmartList<RsType>()
+            types.forEach {
+                result.addAll(it.flatten())
+            }
+            return result
+        }
+        return SmartList(this)
+    }
+
     private fun Collection<RsType>?.fold(): RsType {
         if (this == null) {
             return RsUnitType
@@ -115,10 +130,6 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             return first()
         }
         return RsTupleType(flatten())
-    }
-
-    private fun checkTypeMismatchAll(context: PsiElement, actualType: RsType?, expectedTypes: List<RsType>): Boolean {
-        return expectedTypes.all { checkTypeMismatch(context, actualType, it, false) }
     }
 
     private fun checkTypeMismatch(
@@ -138,6 +149,26 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         if (unfoldedExpectedType is RsTupleType && RsErrorType in unfoldedExpectedType.types) {
             return false
         }
+        val flattenedActualType = unfoldedActualType.flatten()
+        val flattenedExpectedType = unfoldedExpectedType.flatten()
+        if (flattenedActualType.size != flattenedExpectedType.size
+            || !flattenedActualType.zip(flattenedExpectedType).all { isSingleTypeMatch(it.second, it.first) }
+        ) {
+            if (reportError) {
+                context.error(
+                    TYPE_MISMATCH_ERROR.format(
+                        unfoldedActualType.representation,
+                        unfoldedExpectedType.representation
+                    )
+                )
+            }
+            return false
+        }
+        return true
+    }
+
+    private fun isSingleTypeMatch(unfoldedExpectedType: RsType, unfoldedActualType: RsType): Boolean {
+        check(unfoldedActualType !is RsTupleType && unfoldedExpectedType !is RsTupleType)
         if (unfoldedExpectedType == RsPrimitiveType.OBJ && unfoldedActualType == RsPrimitiveType.NAMEDOBJ) {
             // namedobj extends obj
             return true
@@ -150,18 +181,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             // hooks are just strings that are parsed different.
             return true
         }
-        if (unfoldedActualType != unfoldedExpectedType) {
-            if (reportError) {
-                context.error(
-                    TYPE_MISMATCH_ERROR.format(
-                        unfoldedActualType.representation,
-                        unfoldedExpectedType.representation
-                    )
-                )
-            }
-            return false
-        }
-        return true
+        return unfoldedActualType == unfoldedExpectedType
     }
 
     override fun visitGosubExpression(o: RsGosubExpression) {
@@ -598,6 +618,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                     o.error("Could not convert constant value '${value}' to a long number.")
                 }
             }
+
             else -> {
                 val configReference = RsSymbolIndex.lookup(o.project, type, value)
                 if (configReference == null) {
@@ -676,6 +697,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             ?.toTypedArray<RsType>()
         checkExpressionList(o, o.expressionList, expectedReturnList ?: emptyArray<RsType>())
     }
+
     companion object {
         private const val TYPE_MISMATCH_ERROR = "Type mismatch: '%s' was given but '%s' was expected"
         private const val INVALID_OPERATOR_ERROR = "Operator '%s' cannot be applied to '%s', '%s'"
