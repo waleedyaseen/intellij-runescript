@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support for "shiftop" variant types.
+- Icons for cs2 and sym files.
+- Import functionality for Neptune modules.
+- Local/system settings to manage launcher JRE and Neptune home.
+
+### Changed
+
+- Reworked project model, removing the old SDK model.
+- Updated to IntelliJ 2024.2.
+- Allowed empty lines in sym files.
+
 ## [1.5.1] - 2024-04-15
 
 ### Added
