@@ -1,27 +1,31 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("java")
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.gradleIntelliJPlugin)
+    alias(libs.plugins.intelliJPlatform)
     alias(libs.plugins.changelog)
     alias(libs.plugins.qodana)
+    alias(libs.plugins.kover)
 }
 
-group = properties("pluginGroup").get()
-version = properties("pluginVersion").get()
-
-repositories {
-    mavenCentral()
-}
+group = providers.gradleProperty("pluginGroup").get()
+version = providers.gradleProperty("pluginVersion").get()
 
 kotlin {
     jvmToolchain(17)
+}
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 sourceSets {
@@ -31,51 +35,41 @@ sourceSets {
     }
 }
 
-intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
+dependencies {
+    testImplementation(libs.junit)
 
-    plugins.set(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
-}
+    intellijPlatform {
+        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
 
-changelog {
-    groups.empty()
-    repositoryUrl.set(properties("pluginRepositoryUrl"))
-}
+        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
 
-qodana {
-    cachePath.set(provider { file(".qodana").canonicalPath })
-    reportPath.set(provider { file("build/reports/inspections").canonicalPath })
-    saveReport.set(true)
-    showReport.set(environment("QODANA_SHOW_REPORT").map { it.toBoolean() }.getOrElse(false))
-}
+        plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
-
-tasks {
-    wrapper {
-        gradleVersion = properties("gradleVersion").get()
+        instrumentationTools()
+        pluginVerifier()
+        zipSigner()
+        testFramework(TestFrameworkType.Platform)
     }
+}
 
-    patchPluginXml {
-        version.set(properties("pluginVersion"))
-        sinceBuild.set(properties("pluginSinceBuild"))
-        untilBuild.set(properties("pluginUntilBuild"))
+intellijPlatform {
+    pluginConfiguration {
+        version = providers.gradleProperty("pluginVersion")
 
-        pluginDescription.set(providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+        description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
             val start = "<!-- Plugin description -->"
             val end = "<!-- Plugin description end -->"
 
-            with (it.lines()) {
+            with(it.lines()) {
                 if (!containsAll(listOf(start, end))) {
                     throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
                 }
                 subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
             }
-        })
+        }
 
         val changelog = project.changelog
-        changeNotes.set(properties("pluginVersion").map { pluginVersion ->
+        changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
                     (getOrNull(pluginVersion) ?: getUnreleased())
@@ -84,25 +78,74 @@ tasks {
                     Changelog.OutputType.HTML,
                 )
             }
-        })
+        }
+
+        ideaVersion {
+            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            untilBuild = providers.gradleProperty("pluginUntilBuild")
+        }
     }
 
-    runIdeForUiTests {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
+    signing {
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
     }
 
-    signPlugin {
-        certificateChain.set(environment("CERTIFICATE_CHAIN"))
-        privateKey.set(environment("PRIVATE_KEY"))
-        password.set(environment("PRIVATE_KEY_PASSWORD"))
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+        channels = providers.gradleProperty("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+    }
+
+    pluginVerification {
+        ides {
+            recommended()
+        }
+    }
+}
+
+changelog {
+    groups.empty()
+    repositoryUrl = providers.gradleProperty("pluginRepositoryUrl")
+}
+
+kover {
+    reports {
+        total {
+            xml {
+                onCheck = true
+            }
+        }
+    }
+}
+
+tasks {
+    wrapper {
+        gradleVersion = providers.gradleProperty("gradleVersion").get()
     }
 
     publishPlugin {
-        dependsOn("patchChangelog")
-        token.set(environment("PUBLISH_TOKEN"))
-        channels.set(properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) })
+        dependsOn(patchChangelog)
+    }
+}
+
+intellijPlatformTesting {
+    runIde {
+        register("runIdeForUiTests") {
+            task {
+                jvmArgumentProviders += CommandLineArgumentProvider {
+                    listOf(
+                        "-Drobot-server.port=8082",
+                        "-Dide.mac.message.dialogs.as.sheets=false",
+                        "-Djb.privacy.policy.text=<!--999.999-->",
+                        "-Djb.consents.confirmation.enabled=false",
+                    )
+                }
+            }
+
+            plugins {
+                robotServerPlugin()
+            }
+        }
     }
 }

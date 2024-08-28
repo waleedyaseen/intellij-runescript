@@ -2,7 +2,6 @@ package io.runescript.plugin.ide.config
 
 object RsConfig {
 
-    private const val PRIMITIVE_TYPES_KEY = "runescript.settings.primitivetypes"
     private val PRIMITIVE_TYPES_DEFAULT = listOf(
         "type",
         "param",

@@ -80,11 +80,11 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
 
     companion object {
 
-        private val LOOKUP_REFERENCABLE_BY_LITERAL = RsPrimitiveType.values()
+        private val LOOKUP_REFERENCABLE_BY_LITERAL = RsPrimitiveType.entries
             .associateBy { it.literal }
             .filterValues { it.referencable }
 
-        private val LOOKUP_BY_LITERAL = RsPrimitiveType.values()
+        private val LOOKUP_BY_LITERAL = RsPrimitiveType.entries
             .associateBy { it.literal }
 
         fun lookupReferencableOrNull(literal: String) = LOOKUP_REFERENCABLE_BY_LITERAL[literal]

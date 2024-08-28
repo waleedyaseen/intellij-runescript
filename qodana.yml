@@ -1,10 +1,9 @@
 version: 1.0
 linter: jetbrains/qodana-jvm-community:latest
-projectJDK: 17
+projectJDK: "17"
 profile:
   name: qodana.recommended
 exclude:
   - name: All
     paths:
       - .qodana
-      - ./src/main/gen/
