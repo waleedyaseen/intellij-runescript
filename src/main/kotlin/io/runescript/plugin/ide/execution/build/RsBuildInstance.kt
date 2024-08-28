@@ -15,7 +15,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessModuleDir
 import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.wm.ToolWindow
@@ -28,7 +27,7 @@ class RsBuildInstance(
     val buildId: Any,
     val module: Module,
     val workDirectory: String,
-    private val sdk: Sdk,
+    private val neptuneHome: File,
     private val javaSdk: Sdk
 ) {
     val project: Project
@@ -79,22 +78,11 @@ class RsBuildInstance(
     }
 
     private fun createCommandLine(): GeneralCommandLine {
-        val homeDirectory = sdk.homePath!!
+        val homeDirectory = neptuneHome
         val parameters = mutableListOf<String>()
         parameters += "-classpath"
         parameters += "$homeDirectory${File.separator}lib${File.separator}*"
         parameters += "me.filby.neptune.clientscript.compiler.ClientScriptCompilerApplicationKt"
-        val moduleDirectory = module.guessModuleDir()!!
-        val srcDir = moduleDirectory.findChild("src")
-            ?: moduleDirectory.createChildDirectory(moduleDirectory, "src")
-        val packDir = moduleDirectory.findChild("pack")
-            ?: moduleDirectory.createChildDirectory(moduleDirectory, "pack")
-        val clientDir = packDir.findChild("client")
-            ?: packDir.createChildDirectory(packDir, "client")
-        val cs2Dir = clientDir.findChild("cs2")
-            ?: clientDir.createChildDirectory(clientDir, "cs2")
-        parameters += srcDir.path
-        parameters += cs2Dir.path
         val path = JavaSdk.getInstance().getVMExecutablePath(javaSdk)
         return GeneralCommandLine()
             .withExePath(path)

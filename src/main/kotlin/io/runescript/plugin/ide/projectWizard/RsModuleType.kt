@@ -4,10 +4,10 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.module.ModuleType
 import javax.swing.Icon
 
-class RsModuleType : ModuleType<RsModuleBuilder>(ID) {
+class RsModuleType : ModuleType<NeptuneModuleBuilder>(ID) {
 
-    override fun createModuleBuilder(): RsModuleBuilder {
-        return RsModuleBuilder()
+    override fun createModuleBuilder(): NeptuneModuleBuilder {
+        return NeptuneModuleBuilder()
     }
 
     override fun getName(): String {
@@ -15,7 +15,7 @@ class RsModuleType : ModuleType<RsModuleBuilder>(ID) {
     }
 
     override fun getDescription(): String {
-        return "Empty project for developing apps using RuneScript languages."
+        return "Empty module for developing content using RuneScript language."
     }
 
     override fun getNodeIcon(isOpened: Boolean): Icon {
@@ -24,5 +24,7 @@ class RsModuleType : ModuleType<RsModuleBuilder>(ID) {
 
     companion object {
         const val ID = "RUNESCRIPT_MODULE"
+        @JvmField
+        val INSTANCE = RsModuleType()
     }
 }

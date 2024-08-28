@@ -4,6 +4,7 @@
     <vendor email="walied.developer@hotmail.com">Waleed Yaseen</vendor>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
+    <depends>org.toml.lang</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
@@ -13,7 +14,14 @@
         <fileType name="RuneScript" language="RuneScript"
                   implementationClass="io.runescript.plugin.ide.filetypes.RsFileType" fieldName="INSTANCE"
                   extensions="cs2"/>
-        <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.RsModuleBuilder"/>
+
+        <!-- Project & Modules -->
+        <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.NeptuneModuleBuilder"/>
+
+        <externalSystemManager implementation="io.runescript.plugin.ide.neptune.NeptuneManager"/>
+        <externalSystemUnlinkedProjectAware implementation="io.runescript.plugin.ide.neptune.NeptuneUnlinkedProjectAware"/>
+        <projectConfigurable groupId="build.tools" bundle="messages.RsBundle" key="neptune.name" instance="io.runescript.plugin.ide.neptune.NeptuneSystemConfigurable"/>
+
         <lang.syntaxHighlighterFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="io.runescript.plugin.ide.highlight.RsColorSettingsPage"/>
         <annotator language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
@@ -38,9 +46,10 @@
         <lang.elementManipulator forClass="io.runescript.plugin.lang.doc.psi.impl.RsDocName" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsDocNameManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
-        <sdkType implementation="io.runescript.plugin.ide.sdk.RsSdkType"/>
-        <projectSdkSetupValidator implementation="io.runescript.plugin.ide.sdk.RsSdkSetupValidator"/>
         <colorProvider implementation="io.runescript.plugin.ide.RsElementColorProvider"/>
+
+        <projectImportProvider implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportProvider"/>
+        <projectImportBuilder implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportBuilder"/>
 
         <!-- Notifications -->
         <notificationGroup displayType="TOOL_WINDOW" id="RuneScript Build"/>

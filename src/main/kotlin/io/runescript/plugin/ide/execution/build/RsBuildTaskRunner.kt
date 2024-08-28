@@ -11,17 +11,14 @@ import com.intellij.ide.impl.isTrusted
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessModuleDir
-import com.intellij.openapi.projectRoots.JavaSdkType
-import com.intellij.openapi.projectRoots.JavaSdkVersion
 import com.intellij.openapi.projectRoots.ProjectJdkTable
 import com.intellij.openapi.projectRoots.Sdk
-import com.intellij.openapi.projectRoots.ex.JavaSdkUtil
-import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.task.ModuleBuildTask
 import com.intellij.task.ProjectTask
 import com.intellij.task.ProjectTaskContext
@@ -29,11 +26,12 @@ import com.intellij.task.ProjectTaskRunner
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.execution.run.RsProgramRunner
 import io.runescript.plugin.ide.execution.run.RsRunConfigurationType
+import io.runescript.plugin.ide.neptune.NeptuneSettings
 import io.runescript.plugin.ide.projectWizard.RsModuleType
-import io.runescript.plugin.ide.sdk.RsSdkType
 import org.jetbrains.concurrency.AsyncPromise
 import org.jetbrains.concurrency.Promise
 import org.jetbrains.concurrency.rejectedPromise
+import java.io.File
 import kotlin.io.path.absolutePathString
 
 
@@ -65,27 +63,9 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
 
     private fun runTask(project: Project, task: ProjectTask, promise: AsyncPromise<Result>) {
         require(task is ModuleBuildTask)
-        val moduleRootManager = ModuleRootManager.getInstance(task.module)
-        val sdk = moduleRootManager.sdk
-        if (sdk == null) {
-            val notification = buildNotificationGroup().createNotification(
-                RsBundle.message("module.sdk.not.defined"),
-                NotificationType.ERROR
-            )
-            notification.notify(project)
-            return
-        }
-        if (sdk.sdkType != RsSdkType.find()) {
-            val notification = buildNotificationGroup().createNotification(
-                RsBundle.message("module.sdk.misconfigured"),
-                NotificationType.ERROR
-            )
-            notification.notify(project)
-            return
-        }
+        val settings = project.service<NeptuneSettings>()
         val javaSdk = ProjectJdkTable.getInstance()
-            .allJdks
-            .firstOrNull { it.sdkType is JavaSdkType && JavaSdkUtil.isJdkAtLeast(it, JavaSdkVersion.JDK_17) }
+            .findJdk(settings.launcherJre)
         if (javaSdk == null) {
             val notification = buildNotificationGroup().createNotification(
                 RsBundle.message("build.notification.jdk.not.found.title"),
@@ -96,11 +76,27 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
             promise.setError("Could not find JDK 17")
             return
         }
-        val buildingTask = createBuildTask(project, task, sdk, javaSdk)
+        val neptuneHome = File(settings.neptuneHome)
+        if (!neptuneHome.exists() || !neptuneHome.isDirectory) {
+            val notification = buildNotificationGroup().createNotification(
+                RsBundle.message("build.notification.neptune.home.not.found.title"),
+                RsBundle.message("build.notification.neptune.home.not.found.content"),
+                NotificationType.ERROR
+            )
+            notification.notify(project)
+            promise.setError("Could not find Neptune home")
+            return
+        }
+        val buildingTask = createBuildTask(project, task, neptuneHome, javaSdk)
         buildingTask.queue()
     }
 
-    private fun createBuildTask(project: Project, task: ModuleBuildTask, sdk: Sdk, javaSdk: Sdk): Task.Backgroundable {
+    private fun createBuildTask(
+        project: Project,
+        task: ModuleBuildTask,
+        neptuneHome: File,
+        javaSdk: Sdk
+    ): Task.Backgroundable {
         return object : Task.Backgroundable(project, "Building", false) {
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = "Building..."
@@ -116,7 +112,8 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
                         .guessModuleDir()!!
                         .toNioPath()
                         .absolutePathString()
-                    val buildInstance = RsBuildInstance(environment, Any(), task.module, workDirectory, sdk, javaSdk)
+                    val buildInstance =
+                        RsBuildInstance(environment, Any(), task.module, workDirectory, neptuneHome, javaSdk)
                     buildInstance.build().get()
                 } catch (e: Throwable) {
                     e.printStackTrace()
@@ -130,10 +127,8 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
         val factory = type.configurationFactories.single()
         return runManager.createConfiguration("build", factory)
     }
+}
 
-    companion object {
-        fun buildNotificationGroup(): NotificationGroup {
-            return NotificationGroupManager.getInstance().getNotificationGroup("RuneScript Build")
-        }
-    }
+fun buildNotificationGroup(): NotificationGroup {
+    return NotificationGroupManager.getInstance().getNotificationGroup("RuneScript Build")
 }
