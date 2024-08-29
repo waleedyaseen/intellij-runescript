@@ -486,12 +486,21 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         when (val reference = RsDynamicExpressionReference.resolveElement(o, type).singleOrNull()?.element) {
             null -> o.type = RsErrorType
             is RsScript -> {
-                val returnTypes = reference
-                    .returnList
-                    ?.typeNameList
-                    ?.map { RsPrimitiveType.lookupReferencable(it.text) }
-                    ?: emptyList()
-                o.type = RsTupleType(returnTypes.flatten())
+                if (reference.triggerName == "command") {
+                    val returnTypes = reference
+                        .returnList
+                        ?.typeNameList
+                        ?.map { RsPrimitiveType.lookupReferencable(it.text) }
+                        ?: emptyList()
+                    o.type = RsTupleType(returnTypes.flatten())
+                } else {
+                    check(type == RsPrimitiveType.SHIFTOPNPC || type == RsPrimitiveType.SHIFTOPLOC
+                            || type == RsPrimitiveType.SHIFTOPOBJ || type == RsPrimitiveType.SHIFTOPPLAYER
+                            || type == RsPrimitiveType.SHIFTOPTILE) {
+                        "Invalid type for dynamic expression: ${type.representation}"
+                    }
+                    o.type = type
+                }
             }
 
             is RsSymSymbol -> {

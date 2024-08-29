@@ -41,6 +41,7 @@
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsProcScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsClientScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex"/>
+        <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsScriptIndex"/>
         <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>

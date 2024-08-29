@@ -12,12 +12,14 @@ import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.lang.psi.type.RsType
+import io.runescript.plugin.lang.psi.type.trigger.RsTriggerType
 import io.runescript.plugin.lang.psi.type.type
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
-import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsScriptIndex
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
-class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
+class RsDynamicExpressionReference(element: RsDynamicExpression) :
+    PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         return resolveElement(element, element.type)
@@ -41,6 +43,21 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVarian
                 return arrayOf(PsiElementResolveResult(localArray))
             }
 
+            // Try to resolve the element as a script reference.
+            val triggerType = getScriptTriggerForType(type)
+            if (triggerType != null) {
+                val project = element.project
+                val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
+                val searchScope = GlobalSearchScope.moduleScope(module)
+                return StubIndex.getElements(
+                    RsScriptIndex.KEY,
+                    "[${triggerType.literal},$elementName]",
+                    project,
+                    searchScope,
+                    RsScript::class.java
+                ).map { PsiElementResolveResult(it) }.toTypedArray()
+            }
+
             // Try to resolve the element as a config reference.
             val project = element.project
             if (type is RsPrimitiveType) {
@@ -54,9 +71,24 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVarian
             val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
             val searchScope = GlobalSearchScope.moduleScope(module)
 
-            return StubIndex.getElements(RsCommandScriptIndex.KEY, elementName, project, searchScope, RsScript::class.java)
-                    .map { PsiElementResolveResult(it) }
-                    .toTypedArray()
+            return StubIndex.getElements(
+                RsCommandScriptIndex.KEY,
+                elementName,
+                project,
+                searchScope,
+                RsScript::class.java
+            ).map { PsiElementResolveResult(it) }.toTypedArray()
+        }
+
+        private fun getScriptTriggerForType(type: RsType): RsTriggerType? {
+            return when (type) {
+                RsPrimitiveType.SHIFTOPNPC -> RsTriggerType.SHIFTOPNPC
+                RsPrimitiveType.SHIFTOPLOC -> RsTriggerType.SHIFTOPLOC
+                RsPrimitiveType.SHIFTOPOBJ -> RsTriggerType.SHIFTOPOBJ
+                RsPrimitiveType.SHIFTOPPLAYER -> RsTriggerType.SHIFTOPPLAYER
+                RsPrimitiveType.SHIFTOPTILE -> RsTriggerType.SHIFTOPTILE
+                else -> null
+            }
         }
     }
 }
