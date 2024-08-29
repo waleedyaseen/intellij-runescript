@@ -1,5 +1,7 @@
 package io.runescript.plugin.ide.neptune
 
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.externalSystem.importing.ProjectResolverPolicy
 import com.intellij.openapi.externalSystem.model.DataNode
 import com.intellij.openapi.externalSystem.model.ProjectKeys
@@ -10,6 +12,7 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
+import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
 import io.runescript.plugin.ide.projectWizard.RsModuleType
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -26,23 +29,13 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         resolverPolicy: ProjectResolverPolicy?,
         listener: ExternalSystemTaskNotificationListener
     ): DataNode<ProjectData>? {
-
-        if (settings == null) {
-            check(false) { "NeptuneExecutionSettings is null" }
-            return null
-        }
-
-        log.info("JVM Arguments: ${settings.jvmArguments.toTypedArray().contentToString()}")
-        log.info("Environment Variables: ${settings.env.toMap().entries.joinToString(", ") { "${it.key}=${it.value}" }}")
-        log.info("Execution Name: ${settings.arguments}")
+        check(settings != null) { "Neptune settings must not be null" }
 
         val projectRoot = File(projectPath)
         check(projectRoot.isDirectory)
 
-        val neptuneData = extractNeptuneProjectMetadata(projectRoot)
+        val neptuneData = extractNeptuneProjectMetadata(settings, projectRoot) ?: return null
         val projectName = neptuneData.name
-
-        log.info("Extracted project name: {}", projectName)
 
         val projectData = ProjectData(
             Neptune.SYSTEM_ID,
@@ -53,11 +46,16 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
         val moduleNode = projectNode.createModuleNode(projectName, projectRoot.absolutePath)
 
+        val outputPath = neptuneData.writers?.binary?.outputPath
+        var excludedPaths = neptuneData.excludePaths
+        if (outputPath != null) {
+            excludedPaths = excludedPaths + outputPath
+        }
         moduleNode.createContentRootNode(
             projectRoot.absolutePath,
-            listOf("src"),
-            listOf("symbols"),
-            listOf("pack")
+            neptuneData.sourcePaths,
+            neptuneData.symbolPaths,
+            excludedPaths,
         )
 
         return projectNode
@@ -102,20 +100,52 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         return false
     }
 
-    private fun extractNeptuneProjectMetadata(projectRoot: File): NeptuneProjectData {
+    private fun extractNeptuneProjectMetadata(
+        settings: NeptuneExecutionSettings,
+        projectRoot: File
+    ): NeptuneProjectData? {
         val neptuneFile = projectRoot.resolve("neptune.toml")
         check(neptuneFile.exists())
 
-        val fileText = neptuneFile.readText()
+        val commandLine = createNeptuneJvmCommand(
+            settings.jvmExecutablePath,
+            File(settings.neptuneSdkHome),
+            projectRoot.absolutePath
+        )
+        commandLine.addParameter("--config-path")
+        commandLine.addParameter(neptuneFile.absolutePath)
 
-        val regex = Regex("name\\s*=\\s*['\"](.*)['\"]")
-        val match = regex.find(fileText)
-        val projectName = match?.groupValues?.get(1) ?: projectRoot.name
+        commandLine.addParameter("--print")
 
-        return NeptuneProjectData(projectName)
+        // Turn off logging.
+        commandLine.addParameter("--log-level")
+        commandLine.addParameter("off")
+
+        val process = commandLine.createProcess()
+        val output = process.inputStream.bufferedReader().readText()
+        try {
+            return Gson().fromJson(output, NeptuneProjectData::class.java)
+        } catch (e: Throwable) {
+            log.error("Failed to parse Neptune project data", e)
+            return null
+        }
     }
 
     private data class NeptuneProjectData(
-        val name: String
+        @SerializedName("name")
+        val name: String,
+        @SerializedName("sourcePaths")
+        val sourcePaths: List<String>,
+        @SerializedName("symbolPaths")
+        val symbolPaths: List<String>,
+        @SerializedName("libraryPaths")
+        val libraryPaths: List<String>,
+        @SerializedName("excludePaths")
+        val excludePaths: List<String>,
+        @SerializedName("writers")
+        val writers: ClientScriptWriterConfig?,
     )
+    data class ClientScriptWriterConfig(val binary: BinaryFileWriterConfig? = null)
+    data class BinaryFileWriterConfig(val outputPath: String)
+
 }

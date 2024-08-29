@@ -12,6 +12,8 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.projectRoots.JavaSdk
+import com.intellij.openapi.projectRoots.ProjectJdkTable
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Pair
 import com.intellij.util.Function
@@ -40,11 +42,14 @@ class NeptuneManager :
         return Function { pair ->
             val project = pair.first
             val systemSettings = project.service<NeptuneSettings>()
-            val settings = NeptuneExecutionSettings(
+            val javaSdk = ProjectJdkTable.getInstance()
+                .findJdk(systemSettings.launcherJre)
+                ?: error("Java SDK not found")
+            val jvmExecutablePath = JavaSdk.getInstance().getVMExecutablePath(javaSdk)
+            NeptuneExecutionSettings(
+                jvmExecutablePath,
                 systemSettings.neptuneHome,
-                systemSettings.neptuneHome
             )
-            settings
         }
     }
 

@@ -15,9 +15,9 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.wm.ToolWindow
+import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
 import java.io.File
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicInteger
@@ -78,16 +78,6 @@ class RsBuildInstance(
     }
 
     private fun createCommandLine(): GeneralCommandLine {
-        val homeDirectory = neptuneHome
-        val parameters = mutableListOf<String>()
-        parameters += "-classpath"
-        parameters += "$homeDirectory${File.separator}lib${File.separator}*"
-        parameters += "me.filby.neptune.clientscript.compiler.ClientScriptCompilerApplicationKt"
-        val path = JavaSdk.getInstance().getVMExecutablePath(javaSdk)
-        return GeneralCommandLine()
-            .withExePath(path)
-            .withParameters(parameters)
-            .withWorkDirectory(workDirectory)
-            .withEnvironment(System.getenv())
+        return createNeptuneJvmCommand(javaSdk, neptuneHome, workDirectory)
     }
 }
