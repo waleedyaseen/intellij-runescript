@@ -11,6 +11,7 @@
 - Icons for script declarations.
 - Support for varclan and varclansetting.
 - Trigger support for shiftop and onclick variants.
+- Support for "midi" type.
 
 ### Changed
 

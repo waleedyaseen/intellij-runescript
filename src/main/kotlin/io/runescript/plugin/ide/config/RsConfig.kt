@@ -19,6 +19,7 @@ object RsConfig {
         "seq",
         "stat",
         "synth",
+        "midi",
         "coord",
         "char",
         "fontmetrics",

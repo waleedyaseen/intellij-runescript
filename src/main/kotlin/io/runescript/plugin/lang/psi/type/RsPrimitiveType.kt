@@ -8,6 +8,7 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     SEQ("seq"),
     STAT("stat"),
     SYNTH("synth"),
+    MIDI("midi"),
     COORD("coord"),
     CHAR("char"),
     FONTMETRICS("fontmetrics"),
