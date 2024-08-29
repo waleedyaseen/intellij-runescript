@@ -32,7 +32,6 @@ To install the plugin, follow the following steps:
 ## Notes
 
 1) The plugin utilizes the [Neptune](https://gitlab.com/neptune-ps/neptune) compiler for the build system.
-2) Due to SDK limitations, the plugin does not currently support modules.
 
 ## Acknowledgements
 
