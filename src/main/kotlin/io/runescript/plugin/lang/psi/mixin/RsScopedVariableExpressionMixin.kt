@@ -2,6 +2,7 @@ package io.runescript.plugin.lang.psi.mixin
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.search.GlobalSearchScope
@@ -21,7 +22,8 @@ abstract class RsScopedVariableExpressionMixin : StubBasedPsiElementBase<RsScope
     constructor(stub: RsScopedVariableExpressionStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
     override fun getUseScope(): SearchScope {
-        return GlobalSearchScope.projectScope(project)
+        val module = ModuleUtil.findModuleForPsiElement(this) ?: return super.getUseScope()
+        return GlobalSearchScope.moduleScope(module)
     }
 
     override fun getReference(): PsiReference? {

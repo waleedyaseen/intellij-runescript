@@ -35,7 +35,6 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         }
         val subjectExpression = o.scriptNameExpression
         if (triggerType.subjectType != null) {
-            val project = subjectExpression.project
             var subjectType = triggerType.subjectType
             var subjectName = subjectExpression.text
             if (subjectName != "_") {
@@ -43,7 +42,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                     subjectName = subjectName.substring(1)
                     subjectType = RsPrimitiveType.CATEGORY
                 }
-                val reference = RsSymbolIndex.lookup(project, subjectType, subjectName)
+                val reference = RsSymbolIndex.lookup(subjectExpression, subjectType, subjectName)
                 if (reference == null) {
                     subjectExpression.error(
                         RsBundle.message(
@@ -620,7 +619,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             }
 
             else -> {
-                val configReference = RsSymbolIndex.lookup(o.project, type, value)
+                val configReference = RsSymbolIndex.lookup(o, type, value)
                 if (configReference == null) {
                     o.error("Could not resolve constant value '${value} to a reference.'")
                 }

@@ -7,6 +7,7 @@ import com.intellij.lang.documentation.DocumentationMarkup.DEFINITION_START
 import com.intellij.lang.documentation.DocumentationSettings
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.richcopy.HtmlSyntaxInfoUtil
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.*
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
@@ -150,13 +151,14 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
         }
         val typeName = parts[0]
         val elementName = parts[1]
+        val module = ModuleUtil.findModuleForPsiElement(context) ?: return null
         if (typeName == "parameter") {
             // TODO(Walied): Find a better way to do this
             val doc = context.containingFile.findElementAt(parts[2].toInt())?.parentOfType<RsDoc>() ?: return null
             val owner = doc.owner
-            return RsDocReference.resolve(context.project, owner, null, elementName).singleOrNull()
+            return RsDocReference.resolve(context.project, module, owner, null, elementName).singleOrNull()
         } else {
-            return RsDocReference.resolve(context.project, null, typeName, elementName).singleOrNull()
+            return RsDocReference.resolve(context.project, module, null, typeName, elementName).singleOrNull()
         }
     }
 }

@@ -15,7 +15,7 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         return scopedVarTypes
-            .mapNotNull { RsSymbolIndex.lookup(element.project, it, element.name!!) }
+            .mapNotNull { RsSymbolIndex.lookup(element, it, element.name!!) }
             .map { PsiElementResolveResult(it) }
             .toTypedArray()
     }

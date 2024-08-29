@@ -1,6 +1,7 @@
 package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
@@ -13,6 +14,7 @@ import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.lang.psi.type.RsType
 import io.runescript.plugin.lang.psi.type.type
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
+import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
@@ -42,14 +44,16 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) : PsiPolyVarian
             // Try to resolve the element as a config reference.
             val project = element.project
             if (type is RsPrimitiveType) {
-                val resolvedConfig = RsSymbolIndex.lookup(project, type, elementName)
+                val resolvedConfig = RsSymbolIndex.lookup(element, type, elementName)
                 if (resolvedConfig != null) {
                     return arrayOf(PsiElementResolveResult(resolvedConfig))
                 }
             }
 
             // Try to resolve the element as a command reference.
-            val searchScope = GlobalSearchScope.allScope(project)
+            val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
+            val searchScope = GlobalSearchScope.moduleScope(module)
+
             return StubIndex.getElements(RsCommandScriptIndex.KEY, elementName, project, searchScope, RsScript::class.java)
                     .map { PsiElementResolveResult(it) }
                     .toTypedArray()

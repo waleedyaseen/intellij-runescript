@@ -22,7 +22,7 @@ class RuneScriptMissingScriptSymbolInspection : LocalInspectionTool() {
                 val name = o.qualifiedName
                 val length = o.rbracket.endOffset - o.lbracket.startOffset
                 val range = TextRange.from(o.lbracket.startOffsetInParent, length)
-                if (RsSymbolIndex.lookup(o.project, RsPrimitiveType.CLIENTSCRIPT, name) == null) {
+                if (RsSymbolIndex.lookup(o, RsPrimitiveType.CLIENTSCRIPT, name) == null) {
                     holder.registerProblem(
                         o,
                         RsBundle.message("inspection.error.script.symbol.not.found", name),

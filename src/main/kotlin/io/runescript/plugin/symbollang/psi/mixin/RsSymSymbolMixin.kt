@@ -2,6 +2,7 @@ package io.runescript.plugin.symbollang.psi.mixin
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
@@ -20,7 +21,8 @@ abstract class RsSymSymbolMixin : StubBasedPsiElementBase<RsSymSymbolStub>, RsSy
     constructor(stub: RsSymSymbolStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
     override fun getUseScope(): SearchScope {
-        return GlobalSearchScope.projectScope(project)
+        val module = ModuleUtil.findModuleForPsiElement(this) ?: return super.getUseScope()
+        return GlobalSearchScope.moduleScope(module)
     }
 
     override fun setName(name: String) = RsSymPsiImplUtil.setName(fieldList[getNameFieldIndex()], name)

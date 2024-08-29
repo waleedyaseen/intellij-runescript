@@ -21,6 +21,7 @@
 - Allow for clientscript/command to be looked up in "Search Everywhere".
 - Fixed namedobj vs obj when type checking multiple args.
 - Allow '<' to be escaped in string literals.
+- Only search within the same module when looking up symbols.
 
 ## [1.5.1] - 2024-04-15
 

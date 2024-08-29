@@ -32,9 +32,8 @@ class RsStringLiteralReference(element: RsStringLiteralExpression) :
             }
             val elementName = element.stringLiteralContent.text
 
-            val project = element.project
             if (type is RsPrimitiveType) {
-                val resolvedConfig = RsSymbolIndex.lookup(project, type, elementName)
+                val resolvedConfig = RsSymbolIndex.lookup(element, type, elementName)
                 if (resolvedConfig != null) {
                     return arrayOf(PsiElementResolveResult(resolvedConfig))
                 }

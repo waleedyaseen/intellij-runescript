@@ -45,7 +45,7 @@ class ParamCommandHandler(private val subjectType: RsPrimitiveType) : CommandHan
             arguments[1].accept(this)
             if (arguments[1] is RsDynamicExpression) {
                 val parameterSymbol =
-                    RsSymbolIndex.lookup(arguments[1].project, RsPrimitiveType.PARAM, arguments[1].text)
+                    RsSymbolIndex.lookup(arguments[1], RsPrimitiveType.PARAM, arguments[1].text)
                 if (parameterSymbol == null || parameterSymbol.fieldList.size < 3) {
                     arguments[1].error("Reference to a parameter with an invalid definition.")
                 } else {
@@ -80,7 +80,7 @@ class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
         val arguments = o.argumentList.expressionList
         var keyType: RsType? = null
         if (arguments[0] is RsDynamicExpression) {
-            val dbTableSym = RsSymbolIndex.lookup(arguments[0].project, RsPrimitiveType.DBCOLUMN, arguments[0].text)
+            val dbTableSym = RsSymbolIndex.lookup(arguments[0], RsPrimitiveType.DBCOLUMN, arguments[0].text)
             if (dbTableSym == null || dbTableSym.fieldList.size < 3) {
                 arguments[0].error("Reference to a dbtable with an invalid definition.")
             } else {
@@ -127,7 +127,7 @@ data object DbGetFieldCommandHandler : CommandHandler {
         val arguments = o.argumentList.expressionList
         var outputType: RsType? = null
         if (arguments[1] is RsDynamicExpression) {
-            val dbTableSym = RsSymbolIndex.lookup(arguments[1].project, RsPrimitiveType.DBCOLUMN, arguments[1].text)
+            val dbTableSym = RsSymbolIndex.lookup(arguments[1], RsPrimitiveType.DBCOLUMN, arguments[1].text)
             if (dbTableSym == null || dbTableSym.fieldList.size < 3) {
                 arguments[1].error("Reference to a dbtable with an invalid definition.")
             } else {

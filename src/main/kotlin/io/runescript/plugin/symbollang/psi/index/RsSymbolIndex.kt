@@ -1,6 +1,8 @@
 package io.runescript.plugin.symbollang.psi.index
 
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StringStubIndexExtension
@@ -21,10 +23,11 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
     companion object {
         val KEY = StubIndexKey.createIndexKey<String, RsSymSymbol>("io.runescript.plugin.symbollang.psi.index.RsSymbolIndex")
 
-        fun lookup(project: Project, type: RsPrimitiveType, name: String): RsSymSymbol? {
+        fun lookup(context: PsiElement, type: RsPrimitiveType, name: String): RsSymSymbol? {
             val lookupType = if (type == RsPrimitiveType.NAMEDOBJ) RsPrimitiveType.OBJ else type
-            val scope = GlobalSearchScope.allScope(project)
-            val configs = StubIndex.getElements(KEY, name, project, scope, RsSymSymbol::class.java)
+            val module = ModuleUtil.findModuleForPsiElement(context) ?: return null
+            val scope = GlobalSearchScope.moduleScope(module)
+            val configs = StubIndex.getElements(KEY, name, context.project, scope, RsSymSymbol::class.java)
             return configs.singleOrNull {
                 it.containingFile.virtualFile.isSymbolFileOfTypeLiteral(lookupType.literal)
             }

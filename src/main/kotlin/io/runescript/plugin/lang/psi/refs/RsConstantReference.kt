@@ -14,7 +14,7 @@ class RsConstantReference(element: RsConstantExpression) :
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val symbol = RsSymbolIndex.lookup(element.project, RsPrimitiveType.CONSTANT, element.name!!)
+        val symbol = RsSymbolIndex.lookup(element, RsPrimitiveType.CONSTANT, element.name!!)
             ?: return emptyArray()
         return arrayOf(PsiElementResolveResult(symbol))
     }

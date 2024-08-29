@@ -4,6 +4,7 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.lang.ASTNode
 import com.intellij.navigation.ItemPresentation
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.ResolveState
 import com.intellij.psi.scope.PsiScopeProcessor
@@ -55,7 +56,8 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
     }
 
     override fun getUseScope(): SearchScope {
-        return GlobalSearchScope.projectScope(project)
+        val module = ModuleUtil.findModuleForPsiElement(this) ?: return super.getUseScope()
+        return GlobalSearchScope.moduleScope(module)
     }
 
     override fun setName(name: String): PsiElement {

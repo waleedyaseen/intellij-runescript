@@ -1,6 +1,7 @@
 package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiPolyVariantReferenceBase
@@ -14,7 +15,8 @@ import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 class RsCommandExpressionReference(element: RsCommandExpression) : PsiPolyVariantReferenceBase<RsCommandExpression>(element, element.nameLiteral.textRangeInParent) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val elements = StubIndex.getElements(RsCommandScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.allScope(element.project), RsScript::class.java)
+        val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
+        val elements = StubIndex.getElements(RsCommandScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.moduleScope(module), RsScript::class.java)
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 

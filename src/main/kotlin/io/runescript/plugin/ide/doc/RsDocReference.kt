@@ -1,5 +1,8 @@
 package io.runescript.plugin.ide.doc
 
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleUtil
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
@@ -22,7 +25,8 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val typeName = (element.firstChild as? RsDocName)?.text
         val elementName = element.lastChild.text
-        return resolve(element.project, element.getContainingDoc().owner, typeName, elementName)
+        val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
+        return resolve(element.project, module, element.getContainingDoc().owner, typeName, elementName)
             .map { PsiElementResolveResult(it) }
             .toTypedArray()
     }
@@ -40,7 +44,7 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
     }
 
     companion object {
-        fun resolve(project: Project, owner: RsScript?, typeName: String?, elementName: String): Array<PsiElement> {
+        fun resolve(project: Project, module: Module, owner: RsScript?, typeName: String?, elementName: String): Array<PsiElement> {
             if (typeName == null) {
                 return owner
                     ?.parameterList
@@ -61,7 +65,7 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
                     scriptIndexKey,
                     elementName,
                     project,
-                    GlobalSearchScope.allScope(project),
+                    GlobalSearchScope.moduleScope(module),
                     RsScript::class.java
                 )
                 return scripts.toTypedArray()
@@ -70,7 +74,7 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
                 RsSymbolIndex.KEY,
                 elementName,
                 project,
-                GlobalSearchScope.allScope(project),
+                GlobalSearchScope.moduleScope(module),
                 RsSymSymbol::class.java
             )
             return configs
