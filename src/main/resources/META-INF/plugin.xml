@@ -15,6 +15,7 @@
                   implementationClass="io.runescript.plugin.ide.filetypes.RsFileType" fieldName="INSTANCE"
                   extensions="cs2"/>
         <fileIconProvider order="first" implementation="io.runescript.plugin.ide.icons.NeptuneIconProvider" />
+        <iconProvider implementation="io.runescript.plugin.ide.icons.RsIconProvider" />
 
         <!-- Project & Modules -->
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.NeptuneModuleBuilder"/>
@@ -42,7 +43,7 @@
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsClientScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsScriptIndex"/>
-        <gotoClassContributor implementation="io.runescript.plugin.ide.RsGotoClassContributor"/>
+        <searchEverywhereContributor implementation="io.runescript.plugin.ide.searchEverywhere.RsSearchEverywhereContributor$Factory"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.doc.psi.impl.RsDocName" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsDocNameManipulator"/>

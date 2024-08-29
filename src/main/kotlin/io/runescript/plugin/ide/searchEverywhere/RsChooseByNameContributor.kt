@@ -1,21 +1,18 @@
-package io.runescript.plugin.ide
+package io.runescript.plugin.ide.searchEverywhere
 
 import com.intellij.navigation.ChooseByNameContributorEx
-import com.intellij.navigation.GotoClassContributor
 import com.intellij.navigation.NavigationItem
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.util.Processor
 import com.intellij.util.indexing.FindSymbolParameters
 import com.intellij.util.indexing.IdFilter
-import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.psi.RsScript
-import io.runescript.plugin.lang.psi.qualifiedName
 import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
-class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
+class RsChooseByNameContributor : ChooseByNameContributorEx {
 
     private val keys = arrayOf(
         RsProcScriptIndex.KEY,
@@ -53,24 +50,4 @@ class RsGotoClassContributor : ChooseByNameContributorEx, GotoClassContributor {
             }
         }
     }
-
-    override fun getQualifiedName(item: NavigationItem): String? {
-        return (item as? RsScript)?.qualifiedName
-    }
-
-    override fun getQualifiedNameSeparator(): String {
-        return "|"
-    }
-
-    // These are only effective if we override the IdeLanguageCustomization
-
-    override fun getElementKind(): String {
-        return RsBundle.message("go.to.script.kind.text")
-    }
-
-    override fun getElementKindsPluralized(): List<String> {
-        return listOf(RsBundle.message("go.to.script.kind.text.pluralized"))
-    }
-
-    override fun getElementLanguage() = RuneScript
 }

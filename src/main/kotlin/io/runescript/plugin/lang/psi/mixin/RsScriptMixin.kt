@@ -21,6 +21,7 @@ import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowBuilder
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.stubs.RsScriptStub
+import javax.swing.Icon
 
 abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
 
@@ -36,7 +37,12 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
             CachedValueProvider.Result(controlFlow, this)
         }
 
-    override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement
+    ): Boolean {
         parameterList?.let {
             if (!it.processDeclarations(processor, state, lastParent, place)) {
                 return false
@@ -46,12 +52,7 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
     }
 
     override fun getPresentation(): ItemPresentation? {
-        val icon = when (triggerName) {
-            "proc" -> RsIcons.GutterProc
-            "clientscript" -> RsIcons.GutterClientScript
-            "command" -> RsIcons.GutterCommand
-            else -> RsIcons.GutterOther
-        }
+        val icon = getIconForTriggerName(triggerName)
         return PresentationData(qualifiedName, containingFile.name, icon, RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
     }
 
@@ -74,5 +75,14 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
 
     override fun getTextOffset(): Int {
         return scriptNameExpression.startOffset
+    }
+}
+
+fun getIconForTriggerName(triggerName: String): Icon {
+    return when (triggerName) {
+        "proc" -> RsIcons.GutterProc
+        "clientscript" -> RsIcons.GutterClientScript
+        "command" -> RsIcons.GutterCommand
+        else -> RsIcons.GutterOther
     }
 }
