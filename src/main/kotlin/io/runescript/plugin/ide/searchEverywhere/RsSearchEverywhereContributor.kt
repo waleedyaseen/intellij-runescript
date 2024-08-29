@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.Project
+import com.intellij.util.containers.ContainerUtil
 
 class RsSearchEverywhereContributor(event: AnActionEvent) : AbstractGotoSEContributor(event),
     SearchFieldActionsContributor {
@@ -56,6 +57,16 @@ class RsSearchEverywhereContributor(event: AnActionEvent) : AbstractGotoSEContri
         override fun isAvailable(project: Project): Boolean {
             return true
         }
+    }
+
+    override fun createRightActions(pattern: String, onChanged: Runnable): List<AnAction> {
+        return ContainerUtil.emptyList();
+    }
+
+    @Suppress("unused")
+    fun createRightActions(registerShortcut: (AnAction) -> Unit, onChanged: Runnable): List<AnAction> {
+        // For compatability with 241
+        return ContainerUtil.emptyList();
     }
 
     companion object {
