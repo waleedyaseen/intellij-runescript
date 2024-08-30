@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-08-30
+
 ### Added
 
 - Support for "shiftop" variant types.
@@ -126,7 +128,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.4.0...v1.4.1
