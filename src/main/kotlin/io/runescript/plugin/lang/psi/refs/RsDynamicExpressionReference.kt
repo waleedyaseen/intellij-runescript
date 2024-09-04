@@ -10,6 +10,7 @@ import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
 import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
+import io.runescript.plugin.lang.psi.type.RsAnyType
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.lang.psi.type.RsType
 import io.runescript.plugin.lang.psi.type.trigger.RsTriggerType
@@ -62,6 +63,11 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
             val project = element.project
             if (type is RsPrimitiveType) {
                 val resolvedConfig = RsSymbolIndex.lookup(element, type, elementName)
+                if (resolvedConfig != null) {
+                    return arrayOf(PsiElementResolveResult(resolvedConfig))
+                }
+            } else if (type == RsAnyType) {
+                val resolvedConfig = RsSymbolIndex.lookupAny(element, elementName)
                 if (resolvedConfig != null) {
                     return arrayOf(PsiElementResolveResult(resolvedConfig))
                 }
