@@ -221,3 +221,29 @@ data object EnumGetReverseIndexCommandHandler : CommandHandler {
         o.type = inputType ?: RsErrorType
     }
 }
+
+data object DumpCommandHandler : CommandHandler {
+    override fun RsTypeInferenceVisitor.inferTypes(
+        reference: RsScript,
+        o: RsCommandExpression
+    ) {
+        val arguments = o.argumentList.expressionList
+        if (arguments.isEmpty()) {
+            o.error("Type mismatch: '<unit>' was given but 'any...' was expected.")
+        } else {
+            for (argument in arguments) {
+                argument.typeHint = RsAnyType
+                argument.accept(this)
+
+                val type = argument.type
+                if (type is RsTupleType) {
+                    argument.error("Unable to dump multi-value types: %s".format(type.representation))
+                } else if (type == RsUnitType) {
+                    argument.error("Unable to debug expression with no return value.")
+                }
+            }
+        }
+
+        o.type = RsPrimitiveType.STRING
+    }
+}

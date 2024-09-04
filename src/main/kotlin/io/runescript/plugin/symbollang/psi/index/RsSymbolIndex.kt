@@ -33,6 +33,13 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
             }
         }
 
+        fun lookupAny(context: PsiElement, name: String): RsSymSymbol? {
+            val module = ModuleUtil.findModuleForPsiElement(context) ?: return null
+            val scope = GlobalSearchScope.moduleScope(module)
+            val configs = StubIndex.getElements(KEY, name, context.project, scope, RsSymSymbol::class.java)
+            return configs.firstOrNull()
+        }
+
         val PsiFile.nameWithoutExtension: String
             get() {
                 val dot = name.lastIndexOf('.')
