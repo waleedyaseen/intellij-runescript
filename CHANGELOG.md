@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix project opening not working as expected in IntelliJ 2023 builds.
+
 ## [1.6.0] - 2024-08-30
 
 ### Added

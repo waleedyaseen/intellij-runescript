@@ -13,7 +13,7 @@ object NeptuneOpenProjectProvider : AbstractOpenProjectProvider() {
         return file.isNeptuneBuildFile
     }
 
-    override suspend fun linkToExistingProjectAsync(projectFile: VirtualFile, project: Project) {
+    override fun linkToExistingProject(projectFile: VirtualFile, project: Project) {
         val projectRoot = if (projectFile.isDirectory) projectFile else projectFile.parent
 
         val settings = NeptuneProjectSettings()
