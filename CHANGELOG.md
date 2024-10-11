@@ -7,7 +7,7 @@
 - Fix project opening not working as expected in IntelliJ 2023 builds.
 - Fix name validation when renaming symbols.
 
-## Changed
+### Changed
 
 - Do not apply spell checking inspection for RuneScript keywords.
 
