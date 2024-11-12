@@ -5,6 +5,7 @@
 ### Added
 
 - Add an inspection for checking duplicate local variables and parameters.
+- Add conflicts detecting for local variables and parameters.
 
 ### Fixed
 
