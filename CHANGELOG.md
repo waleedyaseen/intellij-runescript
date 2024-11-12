@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add an inspection for checking duplicate local variables and parameters.
+
 ### Fixed
 
 - Fix project opening not working as expected in IntelliJ 2023 builds.
