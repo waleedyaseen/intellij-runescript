@@ -37,6 +37,7 @@
 
         <!-- Rename Handler -->
         <renameHandler implementation="io.runescript.plugin.ide.refactoring.RsMemberInplaceRenameHandler"/>
+        <renamePsiElementProcessor implementation="io.runescript.plugin.ide.refactoring.RsRenameProcessor"/>
         <lang.namesValidator language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
         <lang.namesValidator language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
 
