@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 2024-12-16
+
 ### Added
 
 - Add an inspection for checking duplicate local variables and parameters.
@@ -142,7 +144,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.4.1...v1.5.0
