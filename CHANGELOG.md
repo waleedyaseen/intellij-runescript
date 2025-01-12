@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.7.1] - 2025-01-12
+
 ### Changed
 
 - Update required IntelliJ version to 2024.3.
@@ -148,7 +150,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.5.0...v1.5.1
