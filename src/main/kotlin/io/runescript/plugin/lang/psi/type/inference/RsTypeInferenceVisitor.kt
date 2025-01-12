@@ -4,7 +4,7 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.findParentOfType
 import com.intellij.psi.util.parentOfType
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import com.intellij.util.SmartList
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.*

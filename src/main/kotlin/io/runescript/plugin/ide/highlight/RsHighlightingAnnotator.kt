@@ -6,8 +6,8 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.endOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 

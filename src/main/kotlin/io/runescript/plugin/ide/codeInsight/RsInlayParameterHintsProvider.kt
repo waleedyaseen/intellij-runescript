@@ -3,7 +3,7 @@ package io.runescript.plugin.ide.codeInsight
 import com.intellij.codeInsight.hints.InlayInfo
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider
 import com.intellij.psi.PsiElement
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.*
 
 @Suppress("UnstableApiUsage")

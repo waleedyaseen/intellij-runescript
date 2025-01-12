@@ -3,7 +3,7 @@ package io.runescript.plugin.lang.psi.mixin
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.isHookExpression

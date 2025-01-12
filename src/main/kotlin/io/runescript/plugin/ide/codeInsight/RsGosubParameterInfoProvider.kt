@@ -6,7 +6,7 @@ import com.intellij.lang.parameterInfo.ParameterInfoUIContext
 import com.intellij.lang.parameterInfo.UpdateParameterInfoContext
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.parentOfType
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.*
 
 class RsGosubParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgumentList, CallInfo, RsExpression> {

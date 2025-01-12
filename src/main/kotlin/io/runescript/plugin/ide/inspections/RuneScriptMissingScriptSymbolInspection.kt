@@ -5,8 +5,8 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.refactoring.suggested.endOffset
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.endOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.type.RsPrimitiveType

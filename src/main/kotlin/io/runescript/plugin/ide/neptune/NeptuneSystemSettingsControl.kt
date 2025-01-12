@@ -79,9 +79,12 @@ class NeptuneSystemSettingsControl(private val settings: NeptuneSettings) :
                 val fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
                     .withPathToTextConvertor(::getPresentablePath)
                     .withTextToPathConvertor(::getCanonicalPath)
-                @Suppress("UnstableApiUsage")
-                textFieldWithBrowseButton("Neptune Home:", null, fileChooserDescriptor)
-                    .bindText(neptuneHomeProperty.toUiPathProperty())
+                    .withTitle("Neptune Home:")
+                textFieldWithBrowseButton(
+                    fileChooserDescriptor = fileChooserDescriptor,
+                    project = null,
+                    fileChosen = null
+                ).bindText(neptuneHomeProperty.toUiPathProperty())
                     .trimmedTextValidation(CHECK_NON_EMPTY, CHECK_DIRECTORY)
                     .validationInfo { validateNeptuneHome() }
                     .align(AlignX.FILL)

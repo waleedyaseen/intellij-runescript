@@ -14,7 +14,7 @@ import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlow
 import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowBuilder

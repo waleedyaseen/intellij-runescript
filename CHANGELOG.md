@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Update required IntelliJ version to 2024.3.
+
 ## [1.7.0] - 2024-12-16
 
 ### Added

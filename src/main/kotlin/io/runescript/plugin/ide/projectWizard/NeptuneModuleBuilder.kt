@@ -68,7 +68,7 @@ class NeptuneModuleBuilder :
         RsProjectTemplate.generateTemplate(module, moduleContentEntry, modelContentRootDir)
     }
 
-    override fun createProject(name: String?, path: String?): Project? {
+    override fun createProject(name: String, path: String): Project? {
         creatingNewProject = true
         return super.createProject(name, path)
     }

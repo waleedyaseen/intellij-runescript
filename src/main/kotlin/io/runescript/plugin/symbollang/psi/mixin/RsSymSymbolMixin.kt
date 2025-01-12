@@ -8,7 +8,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.symbollang.psi.RsSymPsiImplUtil
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.isConstantFile

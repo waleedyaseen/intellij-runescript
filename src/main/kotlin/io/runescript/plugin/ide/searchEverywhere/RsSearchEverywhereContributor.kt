@@ -33,7 +33,7 @@ class RsSearchEverywhereContributor(event: AnActionEvent) : AbstractGotoSEContri
     }
 
     override fun getActions(onChanged: Runnable): List<AnAction> {
-        return doGetActions(filter, RsTriggerFilterCollector(), onChanged)
+        return doGetActions(filter, null, onChanged)
     }
 
     override fun isEmptyPatternSupported(): Boolean {
@@ -46,7 +46,14 @@ class RsSearchEverywhereContributor(event: AnActionEvent) : AbstractGotoSEContri
     }
 
     override fun createExtendedInfo(): ExtendedInfo {
-        return createPsiExtendedInfo()
+        return createPsiExtendedInfo(psiElement = { null })
+    }
+
+    override fun createRightActions(
+        registerShortcut: (AnAction) -> Unit,
+        onChanged: Runnable
+    ): List<AnAction> {
+        return ContainerUtil.emptyList()
     }
 
     class Factory : SearchEverywhereContributorFactory<Any> {
@@ -57,16 +64,6 @@ class RsSearchEverywhereContributor(event: AnActionEvent) : AbstractGotoSEContri
         override fun isAvailable(project: Project): Boolean {
             return true
         }
-    }
-
-    override fun createRightActions(pattern: String, onChanged: Runnable): List<AnAction> {
-        return ContainerUtil.emptyList();
-    }
-
-    @Suppress("unused")
-    fun createRightActions(registerShortcut: (AnAction) -> Unit, onChanged: Runnable): List<AnAction> {
-        // For compatability with 241
-        return ContainerUtil.emptyList();
     }
 
     companion object {

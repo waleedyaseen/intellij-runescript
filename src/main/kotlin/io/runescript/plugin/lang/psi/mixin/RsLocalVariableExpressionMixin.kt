@@ -9,7 +9,7 @@ import com.intellij.psi.search.SearchScope
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.parentOfType
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.psi.util.startOffset
 import io.runescript.plugin.ide.doc.findDoc
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.refs.RsLocalVariableReference
