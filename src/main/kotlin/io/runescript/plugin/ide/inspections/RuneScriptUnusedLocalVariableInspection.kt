@@ -15,7 +15,7 @@ class RuneScriptUnusedLocalVariableInspection : LocalInspectionTool() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitLocalVariableDeclarationStatement(o: RsLocalVariableDeclarationStatement) {
-                val expr = o.expressionList[0]
+                val expr = o.expressionList.getOrNull(0) ?: return
                 val references = ReferencesSearch.search(expr, GlobalSearchScope.fileScope(expr.containingFile)).findAll()
                 if (references.isEmpty()) {
                     holder.registerProblem(o,
