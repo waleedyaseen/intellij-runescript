@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add breadcrumbs and sticky lines support
+
 ## [1.7.1] - 2025-01-12
 
 ### Changed
