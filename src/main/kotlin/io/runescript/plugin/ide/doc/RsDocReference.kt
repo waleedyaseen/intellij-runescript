@@ -49,7 +49,7 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
                 return owner
                     ?.parameterList
                     ?.parameterList
-                    ?.map { it.localVariableExpression }
+                    ?.mapNotNull { it.localVariableExpression }
                     ?.filter { it.nameLiteral.text == elementName }
                     ?.toTypedArray()
                     ?: emptyArray()

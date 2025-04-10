@@ -991,12 +991,13 @@ public class RsParser implements PsiParser, LightPsiParser {
   public static boolean Parameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Parameter")) return false;
     if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_LITERAL, TYPE_LITERAL)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
     r = Parameter_0(b, l + 1);
+    p = r; // pin = 1
     r = r && LocalVariableExpression(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // TypeName | ARRAY_TYPE_LITERAL
@@ -1059,6 +1060,26 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, COMMA);
     r = r && Parameter(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // !(COMMA | RPAREN)
+  static boolean Parameter_Recover(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Parameter_Recover")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !Parameter_Recover_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // COMMA | RPAREN
+  private static boolean Parameter_Recover_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Parameter_Recover_0")) return false;
+    boolean r;
+    r = consumeToken(b, COMMA);
+    if (!r) r = consumeToken(b, RPAREN);
     return r;
   }
 

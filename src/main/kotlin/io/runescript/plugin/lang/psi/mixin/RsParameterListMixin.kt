@@ -18,7 +18,8 @@ abstract class RsParameterListMixin : StubBasedPsiElementBase<RsParameterListStu
 
     override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
         parameterList.forEach {
-            if (lastParent != it && !processor.execute(it.localVariableExpression, state)) {
+            val expr = it.localVariableExpression
+            if (lastParent != it && expr != null && !processor.execute(expr, state)) {
                 return false
             }
         }

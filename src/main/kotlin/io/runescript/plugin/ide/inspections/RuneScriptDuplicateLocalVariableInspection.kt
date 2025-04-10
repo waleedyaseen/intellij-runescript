@@ -21,14 +21,14 @@ class RuneScriptDuplicateLocalVariableInspection : LocalInspectionTool() {
         return object : RsVisitor() {
 
             override fun visitParameter(o: RsParameter) {
-                val name = o.localVariableExpression.name ?: return
+                val name = o.localVariableExpression?.name ?: return
                 var prev = o.prevSibling
                 while (prev != null) {
                     if (prev is RsParameter) {
-                        val prevName = prev.localVariableExpression.name
+                        val prevName = prev.localVariableExpression?.name
                         if (name == prevName) {
                             holder.registerProblem(
-                                o.localVariableExpression,
+                                o.localVariableExpression!!,
                                 RsBundle.message("inspection.error.duplicate.parameter", name),
                                 ProblemHighlightType.GENERIC_ERROR
                             )

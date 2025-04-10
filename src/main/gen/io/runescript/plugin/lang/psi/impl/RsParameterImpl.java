@@ -39,9 +39,9 @@ public class RsParameterImpl extends StubBasedPsiElementBase<RsParameterStub> im
   }
 
   @Override
-  @NotNull
+  @Nullable
   public RsLocalVariableExpression getLocalVariableExpression() {
-    return notNullChild(PsiTreeUtil.getStubChildOfType(this, RsLocalVariableExpression.class));
+    return PsiTreeUtil.getStubChildOfType(this, RsLocalVariableExpression.class);
   }
 
   @Override

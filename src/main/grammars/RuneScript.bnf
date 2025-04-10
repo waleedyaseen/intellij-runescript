@@ -80,7 +80,11 @@ ParameterList ::= '(' (Parameter (',' Parameter)*)? ')' {
 Parameter ::= (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression {
     stubClass="io.runescript.plugin.lang.stubs.RsParameterStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
+    pin=1
+    recoverWhile=Parameter_Recover
 }
+
+private Parameter_Recover ::= !(COMMA | RPAREN)
 
 ReturnList ::= '(' (TypeName (',' TypeName)*)? ')' {
     stubClass="io.runescript.plugin.lang.stubs.RsReturnListStub"

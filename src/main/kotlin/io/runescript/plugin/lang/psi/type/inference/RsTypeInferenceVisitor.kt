@@ -58,7 +58,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         val expectedParameterTypes = triggerType.parameterTypes
         if (expectedParameterTypes != null) {
             val actualParametersType = o.parameterList?.parameterList
-                ?.map { it.localVariableExpression.type!! }
+                ?.map { it.localVariableExpression?.type ?: RsErrorType }
                 .fold()
             val expectedParametersType = expectedParameterTypes.toList().fold()
             checkTypeMismatch(o.scriptNameExpression, actualParametersType, expectedParametersType)
@@ -70,7 +70,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     override fun visitParameter(o: RsParameter) {
-        o.localVariableExpression.type = findParameterType(o)
+        o.localVariableExpression?.type = findParameterType(o)
     }
 
     override fun visitBlockStatement(o: RsBlockStatement) {

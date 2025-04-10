@@ -107,7 +107,7 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
             }
             appendKeyword((it.typeName ?: it.arrayTypeLiteral)!!.text)
             appendHighlighted(
-                " ${it.localVariableExpression.text}",
+                " ${it.localVariableExpression?.text ?: "<unknown-parameter>" }",
                 RsSyntaxHighlighterColors.LOCAL_VARIABLE
             )
         }
@@ -143,7 +143,7 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
     override fun getDocumentationElementForLink(
         psiManager: PsiManager,
         link: String,
-        context: PsiElement
+        context: PsiElement,
     ): PsiElement? {
         val parts = link.split("/")
         if (parts.size < 2) {

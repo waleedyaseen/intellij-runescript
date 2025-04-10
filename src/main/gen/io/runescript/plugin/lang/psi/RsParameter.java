@@ -9,7 +9,7 @@ import io.runescript.plugin.lang.stubs.RsParameterStub;
 
 public interface RsParameter extends PsiElement, StubBasedPsiElement<RsParameterStub> {
 
-  @NotNull
+  @Nullable
   RsLocalVariableExpression getLocalVariableExpression();
 
   @Nullable
