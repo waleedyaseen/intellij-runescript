@@ -726,6 +726,7 @@ private fun RsScript.findCommandHandler(): CommandHandler {
         "db_find_refine_with_count" -> DbFindCommandHandler.DB_FIND_REFINE_WITH_COUNT
         "db_getfield" -> DbGetFieldCommandHandler
         "dump" -> DumpCommandHandler
+        "cc_create", ".cc_create" -> CcCreateCommandHandler
         else -> DefaultCommandHandler
     }
 }

@@ -247,3 +247,28 @@ data object DumpCommandHandler : CommandHandler {
         o.type = RsPrimitiveType.STRING
     }
 }
+
+data object CcCreateCommandHandler : CommandHandler {
+    override fun RsTypeInferenceVisitor.inferTypes(
+        reference: RsScript,
+        o: RsCommandExpression
+    ) {
+        val arguments = o.argumentList.expressionList
+        val parameterTypes = if (arguments.size == 4) {
+            arrayOf<RsType>(
+                RsPrimitiveType.COMPONENT,
+                RsPrimitiveType.INT,
+                RsPrimitiveType.INT,
+                RsPrimitiveType.BOOLEAN
+            )
+        } else {
+            arrayOf<RsType>(
+                RsPrimitiveType.COMPONENT,
+                RsPrimitiveType.INT,
+                RsPrimitiveType.INT
+            )
+        }
+        checkArgumentList(o.argumentList, parameterTypes)
+        o.type = RsUnitType
+    }
+}

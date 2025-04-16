@@ -4,6 +4,7 @@
 
 - Add breadcrumbs and sticky lines support
 - Add support for IntelliJ 2025.
+- Add support for optional boolean argument in cc_create
 
 ## [1.7.1] - 2025-01-12
 
