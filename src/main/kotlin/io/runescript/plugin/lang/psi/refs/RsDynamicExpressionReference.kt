@@ -88,11 +88,11 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
 
         private fun getScriptTriggerForType(type: RsType): RsTriggerType? {
             return when (type) {
-                RsPrimitiveType.SHIFTOPNPC -> RsTriggerType.SHIFTOPNPC
-                RsPrimitiveType.SHIFTOPLOC -> RsTriggerType.SHIFTOPLOC
-                RsPrimitiveType.SHIFTOPOBJ -> RsTriggerType.SHIFTOPOBJ
-                RsPrimitiveType.SHIFTOPPLAYER -> RsTriggerType.SHIFTOPPLAYER
-                RsPrimitiveType.SHIFTOPTILE -> RsTriggerType.SHIFTOPTILE
+                RsPrimitiveType.CLIENTOPNPC -> RsTriggerType.CLIENTOPNPC
+                RsPrimitiveType.CLIENTOPLOC -> RsTriggerType.CLIENTOPLOC
+                RsPrimitiveType.CLIENTOPOBJ -> RsTriggerType.CLIENTOPOBJ
+                RsPrimitiveType.CLIENTOPPLAYER -> RsTriggerType.CLIENTOPPLAYER
+                RsPrimitiveType.CLIENTOPTILE -> RsTriggerType.CLIENTOPTILE
                 else -> null
             }
         }

@@ -494,9 +494,9 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
                         ?: emptyList()
                     o.type = RsTupleType(returnTypes.flatten())
                 } else {
-                    check(type == RsPrimitiveType.SHIFTOPNPC || type == RsPrimitiveType.SHIFTOPLOC
-                            || type == RsPrimitiveType.SHIFTOPOBJ || type == RsPrimitiveType.SHIFTOPPLAYER
-                            || type == RsPrimitiveType.SHIFTOPTILE) {
+                    check(type == RsPrimitiveType.CLIENTOPNPC || type == RsPrimitiveType.CLIENTOPLOC
+                            || type == RsPrimitiveType.CLIENTOPOBJ || type == RsPrimitiveType.CLIENTOPPLAYER
+                            || type == RsPrimitiveType.CLIENTOPTILE) {
                         "Invalid type for dynamic expression: ${type.representation}"
                     }
                     o.type = type
