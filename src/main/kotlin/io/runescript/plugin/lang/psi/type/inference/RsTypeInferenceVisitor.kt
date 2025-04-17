@@ -472,6 +472,30 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         o.type = o.expression.type
     }
 
+    override fun visitPrefixExpression(o: RsPrefixExpression) {
+        visitUnaryExpression(o)
+    }
+
+    override fun visitPostfixExpression(o: RsPostfixExpression) {
+        visitUnaryExpression(o)
+    }
+
+    private fun visitUnaryExpression(o: RsUnaryExpression) {
+        o.expression.typeHint = o.typeHint
+        o.expression.accept(this)
+        val type = o.expression.type
+        if (type == null || type is RsErrorType) {
+            o.type = RsErrorType
+            return
+        }
+        if (type == RsPrimitiveType.INT || type == RsPrimitiveType.LONG) {
+            o.type = type
+        } else {
+            o.error(INVALID_UNARY_OPERATOR_ERROR.format(o.unaryOp.text, type.representation))
+            o.type = RsErrorType
+        }
+    }
+
     override fun visitDynamicExpression(o: RsDynamicExpression) {
         val type = o.typeHint.unfold() ?: RsErrorType
         if (type is RsTypeType) {
@@ -709,6 +733,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     companion object {
         private const val TYPE_MISMATCH_ERROR = "Type mismatch: '%s' was given but '%s' was expected"
         private const val INVALID_OPERATOR_ERROR = "Operator '%s' cannot be applied to '%s', '%s'"
+        private const val INVALID_UNARY_OPERATOR_ERROR = "Operator '%s' cannot be applied to '%s'"
     }
 }
 

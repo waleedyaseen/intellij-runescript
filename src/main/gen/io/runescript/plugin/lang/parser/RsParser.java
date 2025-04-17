@@ -51,8 +51,8 @@ public class RsParser implements PsiParser, LightPsiParser {
       CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
       COORD_LITERAL_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION,
       INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, LONG_LITERAL_EXPRESSION, NULL_LITERAL_EXPRESSION,
-      PAR_EXPRESSION, RELATIONAL_VALUE_EXPRESSION, SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION,
-      STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
+      PAR_EXPRESSION, POSTFIX_EXPRESSION, PREFIX_EXPRESSION, RELATIONAL_VALUE_EXPRESSION,
+      SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -551,6 +551,8 @@ public class RsParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // ParExpression
+  //              | PostfixExpression
+  //              | PrefixExpression
   //              | ArrayAccessExpression
   //              | LocalVariableExpression
   //              | ScopedVariableExpression
@@ -565,6 +567,8 @@ public class RsParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _COLLAPSE_, EXPRESSION, "<Expression>");
     r = ParExpression(b, l + 1);
+    if (!r) r = PostfixExpression(b, l + 1);
+    if (!r) r = PrefixExpression(b, l + 1);
     if (!r) r = ArrayAccessExpression(b, l + 1);
     if (!r) r = LocalVariableExpression(b, l + 1);
     if (!r) r = ScopedVariableExpression(b, l + 1);
@@ -635,6 +639,18 @@ public class RsParser implements PsiParser, LightPsiParser {
       if (!empty_element_parsed_guard_(b, "File", c)) break;
     }
     return true;
+  }
+
+  /* ********************************************************** */
+  // ArrayAccessExpression | LocalVariableExpression | ScopedVariableExpression
+  static boolean FixExprOperand(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FixExprOperand")) return false;
+    if (!nextTokenIs(b, "", DOLLAR, PERCENT)) return false;
+    boolean r;
+    r = ArrayAccessExpression(b, l + 1);
+    if (!r) r = LocalVariableExpression(b, l + 1);
+    if (!r) r = ScopedVariableExpression(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
@@ -990,13 +1006,12 @@ public class RsParser implements PsiParser, LightPsiParser {
   // (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression
   public static boolean Parameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Parameter")) return false;
-    if (!nextTokenIs(b, "<parameter>", ARRAY_TYPE_LITERAL, TYPE_LITERAL)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
     r = Parameter_0(b, l + 1);
     p = r; // pin = 1
     r = r && LocalVariableExpression(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
+    exit_section_(b, l, m, r, p, RsParser::Parameter_Recover);
     return r || p;
   }
 
@@ -1080,6 +1095,55 @@ public class RsParser implements PsiParser, LightPsiParser {
     boolean r;
     r = consumeToken(b, COMMA);
     if (!r) r = consumeToken(b, RPAREN);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // FixExprOperand PostfixOperator
+  public static boolean PostfixExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PostfixExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", DOLLAR, PERCENT)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _COLLAPSE_, POSTFIX_EXPRESSION, "<Expression>");
+    r = FixExprOperand(b, l + 1);
+    r = r && PostfixOperator(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '++' | '--'
+  public static boolean PostfixOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PostfixOperator")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, UNARY_OP, "<postfix operator>");
+    r = consumeToken(b, "++");
+    if (!r) r = consumeToken(b, "--");
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // PrefixOperator FixExprOperand
+  public static boolean PrefixExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PrefixExpression")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, PREFIX_EXPRESSION, "<Expression>");
+    r = PrefixOperator(b, l + 1);
+    r = r && FixExprOperand(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // '++' | '--'
+  public static boolean PrefixOperator(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PrefixOperator")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, UNARY_OP, "<prefix operator>");
+    r = consumeToken(b, "++");
+    if (!r) r = consumeToken(b, "--");
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

@@ -150,6 +150,16 @@ public class RsVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitPostfixExpression(@NotNull RsPostfixExpression o) {
+    visitExpression(o);
+    // visitUnaryExpression(o);
+  }
+
+  public void visitPrefixExpression(@NotNull RsPrefixExpression o) {
+    visitExpression(o);
+    // visitUnaryExpression(o);
+  }
+
   public void visitRelationalValueExpression(@NotNull RsRelationalValueExpression o) {
     visitExpression(o);
   }
@@ -208,6 +218,10 @@ public class RsVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeName(@NotNull RsTypeName o) {
+    visitPsiElement(o);
+  }
+
+  public void visitUnaryOp(@NotNull RsUnaryOp o) {
     visitPsiElement(o);
   }
 

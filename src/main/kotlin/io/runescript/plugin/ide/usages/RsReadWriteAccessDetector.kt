@@ -24,6 +24,7 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
         require(element is RsLocalVariableExpression || element is RsSymSymbol)
         val parent = element.parent
         return element is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement
+                || parent is RsPrefixExpression || parent is RsPostfixExpression
     }
 
     override fun getReferenceAccess(referencedElement: PsiElement, reference: PsiReference): Access {
@@ -36,7 +37,8 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
                 || expression is RsDynamicExpression
                 || expression is RsDocName)
         val parent = expression.parent
-        if (parent is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement) {
+        if (parent is RsAssignmentStatement || parent is RsLocalVariableDeclarationStatement
+            || parent is RsPrefixExpression || parent is RsPostfixExpression) {
             return Access.Write
         }
         return Access.Read

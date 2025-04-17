@@ -21,6 +21,7 @@
   elementType("Arithmetic(BitwiseOr|BitwiseAnd|Additive|Multiplicative)Operator")=ArithmeticOp
   elementType("(LogicalAnd|LogicalOr|Compare)Expression")=ConditionExpression
   elementType("(LogicalAnd|LogicalOr|Compare)Operator")=ConditionOp
+  elementType("(Prefix|Postfix)Operator")=UnaryOp
 
   implements("Script")="io.runescript.plugin.lang.psi.RsControlFlowHolder"
   implements("Script")="io.runescript.plugin.lang.psi.RsNamedElement"
@@ -212,9 +213,31 @@ left CompareExpression ::= CompareOperator RelationalValueExpression
 CompareOperator ::= '!' | '>' | '<' | '>=' | '<=' | '='
 
 RelationalValueExpression ::= ('(' LogicalOrWrapper ')') | Expression
+
+// Unary Expressions
+
+//noinspection BnfUnusedRule
+
+fake UnaryOp ::= '++' | '--'
+PrefixOperator ::= '++' | '--'
+PostfixOperator ::= '++' | '--'
+
+private FixExprOperand::= ArrayAccessExpression | LocalVariableExpression | ScopedVariableExpression
+
+PrefixExpression ::= PrefixOperator FixExprOperand {
+    implements="RsUnaryExpression"
+}
+
+PostfixExpression ::= FixExprOperand PostfixOperator {
+    implements="RsUnaryExpression"
+}
+
+
 // General Expressions
 
 Expression ::= ParExpression
+             | PostfixExpression
+             | PrefixExpression
              | ArrayAccessExpression
              | LocalVariableExpression
              | ScopedVariableExpression

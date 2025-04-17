@@ -42,6 +42,8 @@ public interface RsElementTypes {
   IElementType PARAMETER = StubElementTypeFactory.create("PARAMETER");
   IElementType PARAMETER_LIST = StubElementTypeFactory.create("PARAMETER_LIST");
   IElementType PAR_EXPRESSION = new RsElementType("PAR_EXPRESSION");
+  IElementType POSTFIX_EXPRESSION = new RsElementType("POSTFIX_EXPRESSION");
+  IElementType PREFIX_EXPRESSION = new RsElementType("PREFIX_EXPRESSION");
   IElementType RELATIONAL_VALUE_EXPRESSION = new RsElementType("RELATIONAL_VALUE_EXPRESSION");
   IElementType RETURN_LIST = StubElementTypeFactory.create("RETURN_LIST");
   IElementType RETURN_STATEMENT = new RsElementType("RETURN_STATEMENT");
@@ -56,6 +58,7 @@ public interface RsElementTypes {
   IElementType SWITCH_CASE_DEFAULT_EXPRESSION = new RsElementType("SWITCH_CASE_DEFAULT_EXPRESSION");
   IElementType SWITCH_STATEMENT = new RsElementType("SWITCH_STATEMENT");
   IElementType TYPE_NAME = StubElementTypeFactory.create("TYPE_NAME");
+  IElementType UNARY_OP = new RsElementType("UNARY_OP");
   IElementType WHILE_STATEMENT = new RsElementType("WHILE_STATEMENT");
 
   IElementType AMPERSAND = new RsElementType("&");
@@ -207,6 +210,12 @@ public interface RsElementTypes {
       else if (type == PAR_EXPRESSION) {
         return new RsParExpressionImpl(node);
       }
+      else if (type == POSTFIX_EXPRESSION) {
+        return new RsPostfixExpressionImpl(node);
+      }
+      else if (type == PREFIX_EXPRESSION) {
+        return new RsPrefixExpressionImpl(node);
+      }
       else if (type == RELATIONAL_VALUE_EXPRESSION) {
         return new RsRelationalValueExpressionImpl(node);
       }
@@ -245,6 +254,9 @@ public interface RsElementTypes {
       }
       else if (type == TYPE_NAME) {
         return new RsTypeNameImpl(node);
+      }
+      else if (type == UNARY_OP) {
+        return new RsUnaryOpImpl(node);
       }
       else if (type == WHILE_STATEMENT) {
         return new RsWhileStatementImpl(node);

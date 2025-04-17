@@ -83,6 +83,14 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             o.expression.accept(this)
         }
 
+        override fun visitPrefixExpression(o: RsPrefixExpression) {
+            o.expression.accept(this)
+        }
+
+        override fun visitPostfixExpression(o: RsPostfixExpression) {
+            o.expression.accept(this)
+        }
+
         override fun visitGosubExpression(o: RsGosubExpression) {
             o.argumentList?.accept(this)
             o.nameLiteral.accept(this)

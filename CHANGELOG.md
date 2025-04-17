@@ -6,6 +6,7 @@
 - Add support for IntelliJ 2025.
 - Add support for optional boolean argument in cc_create
 - Update types and trigger names to match the latest decompiler output
+- Add prefix and postfix expression support
 
 ## [1.7.1] - 2025-01-12
 

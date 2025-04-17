@@ -55,6 +55,8 @@ INTEGER = ([-+]?)(({DECIMAL_INTEGER})|({HEX_INTEGER}))
 LONG = ([-+]?)(({LONG_DECIMAL_INTEGER})|({LONG_HEX_INTEGER}))
 STRING_ESCAPE_SEQUENCE=\\([abfnrtv\'\"\\<])
 STRING_PART = [^\"\r\n<\\]+
+INCREMENT = "++"
+DECREMENT = "--"
 
 COLOR_TAG = "<"(shad|col|str|u)"="([0-9a-fA-F]+)">"
 OTHER_TAG = "<"(str|u|br|lt|gt)">"
