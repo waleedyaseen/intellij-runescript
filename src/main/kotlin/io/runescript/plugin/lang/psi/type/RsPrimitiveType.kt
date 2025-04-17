@@ -51,11 +51,11 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     CLIENTOPOBJ("clientopobj"),
     CLIENTOPPLAYER("clientopplayer"),
     CLIENTOPTILE("clientoptile"),
+    VARP("varp"),
     // Non-Referencable types
     PARAM("param", referencable = false),
     FLO("flo", referencable = false),
     FLU("flu", referencable = false),
-    VARP("varp", referencable = false),
     VARBIT("varbit", referencable = false),
     VARCLAN("varclan", referencable = false),
     VARCLANSETTING("varclansetting", referencable = false),
