@@ -68,7 +68,8 @@ object RsConfig {
         "stathook",
         "invhook",
         "varchook",
-        "any"
+        "any",
+        "array",
     )
 
     fun getPrimitiveTypes(): List<String> {

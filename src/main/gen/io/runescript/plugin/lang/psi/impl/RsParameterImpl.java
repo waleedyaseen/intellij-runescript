@@ -50,15 +50,9 @@ public class RsParameterImpl extends StubBasedPsiElementBase<RsParameterStub> im
   }
 
   @Override
-  @Nullable
+  @NotNull
   public RsTypeName getTypeName() {
-    return PsiTreeUtil.getStubChildOfType(this, RsTypeName.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getArrayTypeLiteral() {
-    return findChildByType(ARRAY_TYPE_LITERAL);
+    return notNullChild(PsiTreeUtil.getStubChildOfType(this, RsTypeName.class));
   }
 
 }

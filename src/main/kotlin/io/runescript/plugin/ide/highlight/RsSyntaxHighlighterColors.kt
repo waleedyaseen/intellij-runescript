@@ -10,7 +10,6 @@ object RsSyntaxHighlighterColors {
     private const val RUNESCRIPT_NUMBER = "RUNESCRIPT_NUMBER"
     private const val RUNESCRIPT_KEYWORD = "RUNESCRIPT_KEYWORD"
     private const val RUNESCRIPT_TYPE_LITERAL = "RUNESCRIPT_TYPE_LITERAL"
-    private const val RUNESCRIPT_ARRAY_TYPE_LITERAL = "RUNESCRIPT_ARRAY_TYPE_LITERAL"
     private const val RUNESCRIPT_STRING = "RUNESCRIPT_STRING"
     private const val RUNESCRIPT_STRING_TAG = "RUNESCRIPT_STRING_TAG"
     private const val RUNESCRIPT_BLOCK_COMMENT = "RUNESCRIPT_BLOCK_COMMENT"
@@ -42,7 +41,6 @@ object RsSyntaxHighlighterColors {
     val NUMBER = createTextAttributesKey(RUNESCRIPT_NUMBER, DefaultLanguageHighlighterColors.NUMBER)
     val KEYWORD = createTextAttributesKey(RUNESCRIPT_KEYWORD, DefaultLanguageHighlighterColors.KEYWORD)
     val TYPE_LITERAL = createTextAttributesKey(RUNESCRIPT_TYPE_LITERAL, DefaultLanguageHighlighterColors.KEYWORD)
-    val ARRAY_TYPE_LITERAL = createTextAttributesKey(RUNESCRIPT_ARRAY_TYPE_LITERAL, DefaultLanguageHighlighterColors.KEYWORD)
     val STRING = createTextAttributesKey(RUNESCRIPT_STRING, DefaultLanguageHighlighterColors.STRING)
     val STRING_TAG = createTextAttributesKey(RUNESCRIPT_STRING_TAG, DefaultLanguageHighlighterColors.MARKUP_ENTITY)
     val BLOCK_COMMENT = createTextAttributesKey(RUNESCRIPT_BLOCK_COMMENT, DefaultLanguageHighlighterColors.BLOCK_COMMENT)

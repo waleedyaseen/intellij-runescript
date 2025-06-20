@@ -40,7 +40,7 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
                     builder.append(DEFINITION_START)
                 }
                 val type = when (val parent = element.parent) {
-                    is RsParameter -> (parent.typeName ?: parent.arrayTypeLiteral)!!.text
+                    is RsParameter -> parent.typeName.text
                     is RsLocalVariableDeclarationStatement -> parent.defineType.text.substring(4)
                     is RsArrayVariableDeclarationStatement -> "${parent.defineType.text.substring(4)}array"
                     else -> return null
@@ -105,7 +105,7 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
             } else {
                 appendComma = true
             }
-            appendKeyword((it.typeName ?: it.arrayTypeLiteral)!!.text)
+            appendKeyword(it.typeName.text)
             appendHighlighted(
                 " ${it.localVariableExpression?.text ?: "<unknown-parameter>" }",
                 RsSyntaxHighlighterColors.LOCAL_VARIABLE

@@ -10,9 +10,6 @@ import io.runescript.plugin.lang.stubs.RsNameLiteralStub;
 public interface RsNameLiteral extends PsiElement, StubBasedPsiElement<RsNameLiteralStub> {
 
   @Nullable
-  PsiElement getArrayTypeLiteral();
-
-  @Nullable
   PsiElement getDefineType();
 
   @Nullable

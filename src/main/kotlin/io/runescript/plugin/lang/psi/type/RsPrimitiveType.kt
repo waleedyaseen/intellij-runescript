@@ -53,6 +53,9 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
     CLIENTOPTILE("clientoptile"),
     VARP("varp"),
     // Non-Referencable types
+    ANY("any", referencable = false),
+    ARRAY("array", referencable = false),
+    TYPE("type", referencable = false),
     PARAM("param", referencable = false),
     FLO("flo", referencable = false),
     FLU("flu", referencable = false),

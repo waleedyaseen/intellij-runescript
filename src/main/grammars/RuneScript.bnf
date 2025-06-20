@@ -78,7 +78,7 @@ ParameterList ::= '(' (Parameter (',' Parameter)*)? ')' {
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }
 
-Parameter ::= (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression {
+Parameter ::= TypeName LocalVariableExpression {
     stubClass="io.runescript.plugin.lang.stubs.RsParameterStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
     pin=1
@@ -309,7 +309,7 @@ DynamicExpression ::= NameLiteral {
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
-NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH {
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH {
     stubClass="io.runescript.plugin.lang.stubs.RsNameLiteralStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }

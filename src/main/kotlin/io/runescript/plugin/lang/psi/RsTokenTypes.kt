@@ -10,7 +10,6 @@ object RsTokenTypes {
         RsElementTypes.IDENTIFIER,
         RsElementTypes.DEFINE_TYPE,
         RsElementTypes.TYPE_LITERAL,
-        RsElementTypes.ARRAY_TYPE_LITERAL,
         RsElementTypes.WHILE,
         RsElementTypes.IF,
         RsElementTypes.TRUE,

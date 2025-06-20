@@ -704,21 +704,22 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
         set(value) = myInferenceData.typeHintInferred(this, value)
 
     private fun findParameterType(o: RsParameter): RsType {
-        return if (o.arrayTypeLiteral != null) {
-            val definitionLiteral = o.arrayTypeLiteral!!.text
-            val typeLiteral = definitionLiteral.substring(0, definitionLiteral.length - "array".length)
-            val elementType = RsPrimitiveType.lookupReferencable(typeLiteral)
-            RsArrayType(elementType)
-        } else if (o.typeName != null) {
-            val typeLiteral = o.typeName!!.text
-            if (o.parentOfType<RsScript>()?.triggerName == "command") {
-                RsPrimitiveType.lookup(typeLiteral)
+        // TODO probably should return null and handle the invalid type in caller
+        val typeText = o.typeName.text
+        val type = if (typeText.length > ARRAY_SUFFIX_LENGTH && typeText.endsWith(ARRAY_SUFFIX)) {
+            val baseType = typeText.substringBeforeLast(ARRAY_SUFFIX)
+            val elementType = RsPrimitiveType.lookupReferencableOrNull(baseType)
+            if (elementType != null) {
+                RsArrayType(elementType)
             } else {
-                RsPrimitiveType.lookupReferencable(typeLiteral)
+                null
             }
+        } else if (o.parentOfType<RsScript>()?.triggerName == "command") {
+            RsPrimitiveType.lookupOrNull(typeText)
         } else {
-            RsErrorType
+            RsPrimitiveType.lookupReferencableOrNull(typeText)
         }
+        return type ?: RsErrorType
     }
 
     override fun visitReturnStatement(o: RsReturnStatement) {
@@ -731,6 +732,8 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     }
 
     companion object {
+        private const val ARRAY_SUFFIX = "array"
+        private const val ARRAY_SUFFIX_LENGTH = ARRAY_SUFFIX.length
         private const val TYPE_MISMATCH_ERROR = "Type mismatch: '%s' was given but '%s' was expected"
         private const val INVALID_OPERATOR_ERROR = "Operator '%s' cannot be applied to '%s', '%s'"
         private const val INVALID_UNARY_OPERATOR_ERROR = "Operator '%s' cannot be applied to '%s'"

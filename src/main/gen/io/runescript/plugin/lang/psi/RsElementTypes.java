@@ -62,7 +62,6 @@ public interface RsElementTypes {
   IElementType WHILE_STATEMENT = new RsElementType("WHILE_STATEMENT");
 
   IElementType AMPERSAND = new RsElementType("&");
-  IElementType ARRAY_TYPE_LITERAL = new RsElementType("ARRAY_TYPE_LITERAL");
   IElementType BAR = new RsElementType("|");
   IElementType CALC = new RsElementType("CALC");
   IElementType CARET = new RsElementType("^");

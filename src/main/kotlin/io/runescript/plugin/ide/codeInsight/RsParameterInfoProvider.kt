@@ -130,7 +130,7 @@ data class CallInfo(
     companion object {
 
         fun of(parameters: List<RsParameter>) = CallInfo(parameters.map {
-            val typeName = it.arrayTypeLiteral?.text ?: it.typeName?.text ?: "unknown"
+            val typeName = it.typeName.text ?: "unknown"
             val parameterName = it.localVariableExpression?.name ?: return@map CallParameterInfo(typeName, "<unknown-parameter>")
             CallParameterInfo(typeName, parameterName)
         })

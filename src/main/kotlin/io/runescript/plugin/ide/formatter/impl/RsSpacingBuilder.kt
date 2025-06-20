@@ -200,7 +200,7 @@ class RsSpacingBuilder(
                 }
             }
         }
-        if (type1 == DEFINE_TYPE || type1 == TYPE_NAME || type1 == ARRAY_TYPE_LITERAL) {
+        if (type1 == DEFINE_TYPE || type1 == TYPE_NAME) {
             return spaceIf(true)
         }
         return null
