@@ -732,7 +732,7 @@ public void popState() {
           case 14:
             { CharSequence lexeme = yytext();
   for (String typeName: getTypeNames()) {
-      if (typeName.contentEquals(lexeme)) {
+      if (typeName.contentEquals(lexeme) || (typeName + "array").contentEquals(lexeme)) {
           return TYPE_LITERAL;
       }
        if (lexeme.length() > 4
@@ -753,16 +753,6 @@ public void popState() {
               && lexeme.charAt(6) == '_'
               && typeName.contentEquals(lexeme.subSequence(7, lexeme.length()))) {
           return SWITCH;
-      }
-       int length = typeName.length();
-       if (lexeme.length() == length + 5
-              && lexeme.charAt(length) == 'a'
-              && lexeme.charAt(length + 1) == 'r'
-              && lexeme.charAt(length + 2) == 'r'
-              && lexeme.charAt(length + 3) == 'a'
-              && lexeme.charAt(length + 4) == 'y'
-              && typeName.contentEquals(lexeme.subSequence(0, length))) {
-          return ARRAY_TYPE_LITERAL;
       }
   }
   return IDENTIFIER;

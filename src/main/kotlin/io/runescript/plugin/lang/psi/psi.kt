@@ -54,7 +54,7 @@ fun RsLocalVariableExpression.isForArrayDeclaration(): Boolean {
     if (parent is RsArrayVariableDeclarationStatement && this === parent.expressionList[0]) {
         return true
     }
-    return parent is RsParameter && parent.arrayTypeLiteral != null
+    return parent is RsParameter && parent.typeName.text.endsWith("array")
 }
 
 fun RsLocalVariableExpression.isForVariableDeclaration(): Boolean {
@@ -63,7 +63,7 @@ fun RsLocalVariableExpression.isForVariableDeclaration(): Boolean {
     if (parent is RsLocalVariableDeclarationStatement && this === parent.expressionList[0]) {
         return true
     }
-    return parent is RsParameter && parent.typeName != null
+    return parent is RsParameter && !parent.typeName.text.endsWith("array")
 }
 
 fun RsLocalVariableExpression.isForArrayAccess(): Boolean {

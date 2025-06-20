@@ -12,10 +12,7 @@ public interface RsParameter extends PsiElement, StubBasedPsiElement<RsParameter
   @Nullable
   RsLocalVariableExpression getLocalVariableExpression();
 
-  @Nullable
+  @NotNull
   RsTypeName getTypeName();
-
-  @Nullable
-  PsiElement getArrayTypeLiteral();
 
 }

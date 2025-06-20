@@ -135,7 +135,7 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         if (type2 == ARGUMENT_LIST && (elementType == GOSUB_EXPRESSION || elementType == COMMAND_EXPRESSION)) {
             return spaceIf(settings.SPACE_BEFORE_METHOD_CALL_PARENTHESES)
         }
-        if (type1 == DEFINE_TYPE || type1 == TYPE_NAME || type1 == ARRAY_TYPE_LITERAL) {
+        if (type1 == DEFINE_TYPE || type1 == TYPE_NAME) {
             return spaceIf(true)
         }
         return null

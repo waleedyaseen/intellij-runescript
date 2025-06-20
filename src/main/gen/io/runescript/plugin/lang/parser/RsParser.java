@@ -957,7 +957,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | ARRAY_TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH
+  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH
   public static boolean NameLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NameLiteral")) return false;
     boolean r;
@@ -965,7 +965,6 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, IDENTIFIER);
     if (!r) r = consumeToken(b, DEFINE_TYPE);
     if (!r) r = consumeToken(b, TYPE_LITERAL);
-    if (!r) r = consumeToken(b, ARRAY_TYPE_LITERAL);
     if (!r) r = consumeToken(b, WHILE);
     if (!r) r = consumeToken(b, IF);
     if (!r) r = consumeToken(b, TRUE);
@@ -1003,25 +1002,16 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (TypeName | ARRAY_TYPE_LITERAL) LocalVariableExpression
+  // TypeName LocalVariableExpression
   public static boolean Parameter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Parameter")) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, PARAMETER, "<parameter>");
-    r = Parameter_0(b, l + 1);
+    r = TypeName(b, l + 1);
     p = r; // pin = 1
     r = r && LocalVariableExpression(b, l + 1);
     exit_section_(b, l, m, r, p, RsParser::Parameter_Recover);
     return r || p;
-  }
-
-  // TypeName | ARRAY_TYPE_LITERAL
-  private static boolean Parameter_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Parameter_0")) return false;
-    boolean r;
-    r = TypeName(b, l + 1);
-    if (!r) r = consumeToken(b, ARRAY_TYPE_LITERAL);
-    return r;
   }
 
   /* ********************************************************** */

@@ -15,7 +15,7 @@ data object DefaultCommandHandler : CommandHandler {
         val parameterTypes = reference
             .parameterList
             ?.parameterList
-            ?.map { RsPrimitiveType.lookup(it.typeName!!.text) }
+            ?.map { RsPrimitiveType.lookup(it.typeName.text) }
             ?.flatten()
             ?: emptyArray<RsType>()
         checkArgumentList(o.argumentList, parameterTypes)
@@ -23,7 +23,7 @@ data object DefaultCommandHandler : CommandHandler {
         val returnTypes = reference
             .returnList
             ?.typeNameList
-            ?.map { RsPrimitiveType.lookupReferencable(it.text) }
+            ?.map { RsPrimitiveType.lookup(it.text) }
             ?: emptyList()
 
         if (returnTypes.isEmpty()) {
