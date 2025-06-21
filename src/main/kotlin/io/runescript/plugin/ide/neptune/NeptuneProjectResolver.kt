@@ -57,6 +57,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
             neptuneData.symbolPaths,
             excludedPaths,
         )
+        moduleNode.createChild(NeptuneProjectDataService.Keys.DATA_KEY, neptuneData.toPersistentData())
 
         return projectNode
     }
@@ -103,7 +104,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
     private fun extractNeptuneProjectMetadata(
         settings: NeptuneExecutionSettings,
         projectRoot: File
-    ): NeptuneProjectData? {
+    ): JsonNeptuneProjectData? {
         val neptuneFile = projectRoot.resolve("neptune.toml")
         check(neptuneFile.exists())
 
@@ -124,14 +125,14 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val process = commandLine.createProcess()
         val output = process.inputStream.bufferedReader().readText()
         try {
-            return Gson().fromJson(output, NeptuneProjectData::class.java)
+            return Gson().fromJson(output, JsonNeptuneProjectData::class.java)
         } catch (e: Throwable) {
             log.error("Failed to parse Neptune project data", e)
             return null
         }
     }
 
-    private data class NeptuneProjectData(
+    class JsonNeptuneProjectData(
         @SerializedName("name")
         val name: String,
         @SerializedName("sourcePaths")
@@ -143,9 +144,14 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         @SerializedName("excludePaths")
         val excludePaths: List<String>,
         @SerializedName("writers")
-        val writers: ClientScriptWriterConfig?,
-    )
-    data class ClientScriptWriterConfig(val binary: BinaryFileWriterConfig? = null)
-    data class BinaryFileWriterConfig(val outputPath: String)
+        val writers: JsonClientScriptWriterConfig?,
+    ) {
 
+        fun toPersistentData(): NeptuneProjectData {
+            return NeptuneProjectData(name)
+        }
+    }
+
+    data class JsonClientScriptWriterConfig(val binary: JsonBinaryFileWriterConfig? = null)
+    data class JsonBinaryFileWriterConfig(val outputPath: String)
 }
