@@ -1,5 +1,6 @@
 package io.runescript.plugin.ide.neptune
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.externalSystem.model.DataNode
 import com.intellij.openapi.externalSystem.model.Key
 import com.intellij.openapi.externalSystem.model.ProjectKeys
@@ -9,11 +10,11 @@ import com.intellij.openapi.externalSystem.service.project.manage.AbstractProjec
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.project.Project
 
-class NeptuneProjectDataService : AbstractProjectDataService<NeptuneProjectData, Module>() {
-    override fun getTargetDataKey(): Key<NeptuneProjectData> = Keys.DATA_KEY
+class NeptuneProjectImportDataService : AbstractProjectDataService<NeptuneProjectImportData, Module>() {
+    override fun getTargetDataKey(): Key<NeptuneProjectImportData> = Keys.DATA_KEY
 
     override fun importData(
-        toImport: Collection<DataNode<NeptuneProjectData>>,
+        toImport: Collection<DataNode<NeptuneProjectImportData>>,
         projectData: ProjectData?,
         project: Project,
         modelsProvider: IdeModifiableModelsProvider
@@ -22,13 +23,12 @@ class NeptuneProjectDataService : AbstractProjectDataService<NeptuneProjectData,
         for (dataNode in toImport) {
             val moduleData = ExternalSystemApiUtil.findParent(dataNode, ProjectKeys.MODULE)?.data ?: continue
             val module = modelsProvider.findIdeModule(moduleData) ?: continue
-            val data = dataNode.data
-            module.putUserData(NeptuneProjectKeys.NEPTUNE_PROJECT_DATA, data)
+            val data = module.service<NeptuneModuleData>()
+            data.updateFromImportData(dataNode.data)
         }
-
     }
 
     object Keys {
-        val DATA_KEY = Key.create(NeptuneProjectData::class.java, ProjectKeys.MODULE.processingWeight + 1)
+        val DATA_KEY = Key.create(NeptuneProjectImportData::class.java, ProjectKeys.MODULE.processingWeight + 1)
     }
 }

@@ -57,7 +57,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
             neptuneData.symbolPaths,
             excludedPaths,
         )
-        moduleNode.createChild(NeptuneProjectDataService.Keys.DATA_KEY, neptuneData.toPersistentData())
+        moduleNode.createChild(NeptuneProjectImportDataService.Keys.DATA_KEY, neptuneData.toPersistentData())
 
         return projectNode
     }
@@ -147,8 +147,8 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val writers: JsonClientScriptWriterConfig?,
     ) {
 
-        fun toPersistentData(): NeptuneProjectData {
-            return NeptuneProjectData(name)
+        fun toPersistentData(): NeptuneProjectImportData {
+            return NeptuneProjectImportData(name)
         }
     }
 
