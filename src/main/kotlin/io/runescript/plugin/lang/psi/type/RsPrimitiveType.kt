@@ -94,12 +94,36 @@ enum class RsPrimitiveType(val literal: String, val referencable: Boolean = true
         private val LOOKUP_BY_LITERAL = RsPrimitiveType.values()
             .associateBy { it.literal }
 
-        fun lookupReferencableOrNull(literal: String) = LOOKUP_REFERENCABLE_BY_LITERAL[literal]
+        fun lookupReferencableOrNull(literal: String): RsType? {
+            val type = LOOKUP_REFERENCABLE_BY_LITERAL[literal]
+            if (type != null) {
+                return type
+            }
+            if (literal.length > "array".length && literal.endsWith("array")) {
+                val baseType = LOOKUP_REFERENCABLE_BY_LITERAL[literal.removeSuffix("array")]
+                if (baseType != null) {
+                    return RsArrayType(baseType)
+                }
+            }
+            return null
+        }
 
         fun lookupReferencable(literal: String) = lookupReferencableOrNull(literal)
             ?: error("No primitive type could be found for literal: `$literal`")
 
-        fun lookupOrNull(literal: String) = LOOKUP_BY_LITERAL[literal]
+        fun lookupOrNull(literal: String): RsType? {
+            val type = LOOKUP_BY_LITERAL[literal]
+            if (type != null) {
+                return type
+            }
+            if (literal.length > "array".length && literal.endsWith("array")) {
+                val baseType = LOOKUP_BY_LITERAL[literal.removeSuffix("array")]
+                if (baseType != null) {
+                    return RsArrayType(baseType)
+                }
+            }
+            return null
+        }
 
         fun lookup(literal: String) = lookupOrNull(literal)
             ?: error("No primitive type could be found for literal: `$literal`")

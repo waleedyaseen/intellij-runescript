@@ -5,8 +5,8 @@ import io.runescript.plugin.lang.psi.type.RsTupleType
 import io.runescript.plugin.lang.psi.type.RsType
 import io.runescript.plugin.lang.psi.type.RsUnitType
 
-val RsTypeName.type: RsPrimitiveType
-    get() = RsPrimitiveType.lookupReferencableOrNull(text)!!
+val RsTypeName.type: RsType
+    get() = RsPrimitiveType.lookup(text)
 
 val RsReturnList?.type: RsType
     get() {

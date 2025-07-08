@@ -5,12 +5,16 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.util.xmlb.XmlSerializerUtil
+import okio.withLock
+import java.util.concurrent.locks.ReentrantLock
 
 @State(
     name = "NeptuneModuleData",
     storages = [Storage(StoragePathMacros.MODULE_FILE)]
 )
 class NeptuneModuleData : PersistentStateComponent<NeptuneModuleData> {
+    var arraysV2 = false
+        private set
 
     override fun getState() = this
 
@@ -18,8 +22,8 @@ class NeptuneModuleData : PersistentStateComponent<NeptuneModuleData> {
         XmlSerializerUtil.copyBean(state, this)
     }
 
-    fun updateFromImportData(@Suppress("unused") importData: NeptuneProjectImportData) {
-
+    fun updateFromImportData(importData: NeptuneProjectImportData) {
+        arraysV2 = importData.arraysV2
     }
 }
 

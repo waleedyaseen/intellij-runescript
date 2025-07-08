@@ -1,5 +1,7 @@
 package io.runescript.plugin.ide.config
 
+import io.runescript.plugin.lang.psi.type.RsPrimitiveType
+
 object RsConfig {
 
     private val PRIMITIVE_TYPES_DEFAULT = listOf(
@@ -73,6 +75,11 @@ object RsConfig {
     )
 
     fun getPrimitiveTypes(): List<String> {
-        return PRIMITIVE_TYPES_DEFAULT
+        val arrayTypes = buildList {
+            for (type in RsPrimitiveType.entries) {
+                add("${type.literal}array")
+            }
+        }
+        return PRIMITIVE_TYPES_DEFAULT + arrayTypes
     }
 }

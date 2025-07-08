@@ -145,13 +145,22 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val excludePaths: List<String>,
         @SerializedName("writers")
         val writers: JsonClientScriptWriterConfig?,
+        @SerializedName("features")
+        val features: JsonCompilerFeatureSet = JsonCompilerFeatureSet(),
     ) {
 
         fun toPersistentData(): NeptuneProjectImportData {
-            return NeptuneProjectImportData(name)
+            return NeptuneProjectImportData(name, features.arraysV2)
         }
     }
 
     data class JsonClientScriptWriterConfig(val binary: JsonBinaryFileWriterConfig? = null)
     data class JsonBinaryFileWriterConfig(val outputPath: String)
+    data class JsonCompilerFeatureSet(
+        val dbFindReturnsCount: Boolean = false,
+        val ccCreateAssertNewArg: Boolean = false,
+        val prefixPostfixExpressions: Boolean = false,
+        val arraysV2: Boolean = false,
+        val simplifiedTypeCodes: Boolean = false,
+    )
 }
