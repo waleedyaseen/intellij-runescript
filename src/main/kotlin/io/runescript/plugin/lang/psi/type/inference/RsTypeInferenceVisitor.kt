@@ -7,6 +7,7 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.startOffset
 import com.intellij.util.SmartList
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
 import io.runescript.plugin.lang.psi.type.*
@@ -168,6 +169,14 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
     private fun isSingleTypeMatch(unfoldedExpectedType: RsType, unfoldedActualType: RsType): Boolean {
         check(unfoldedActualType !is RsTupleType && unfoldedExpectedType !is RsTupleType)
+        if (unfoldedExpectedType == RsPrimitiveType.ANY) {
+            // everything extends any
+            return true
+        }
+        if (unfoldedExpectedType == RsPrimitiveType.ARRAY && unfoldedActualType is RsArrayType) {
+            // {type}array extends array
+            return true
+        }
         if (unfoldedExpectedType == RsPrimitiveType.OBJ && unfoldedActualType == RsPrimitiveType.NAMEDOBJ) {
             // namedobj extends obj
             return true
@@ -359,7 +368,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
 
 
     override fun visitLocalVariableDeclarationStatement(o: RsLocalVariableDeclarationStatement) {
-        val type = RsPrimitiveType.lookupReferencable(o.defineType.text.substring("def_".length))
+        val typeText = o.defineType.text.substring("def_".length)
+        val type = RsPrimitiveType.lookupReferencableOrNull(typeText)
+        if (type == null) {
+            o.defineType.error("'$typeText' is not a valid type.")
+            return
+        }
         if (o.expressionList.isEmpty()) {
             return
         }
@@ -667,6 +681,12 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
             o.type = RsErrorType
             return
         }
+        val neptuneConfig = o.neptuneModuleData
+        if (neptuneConfig != null && neptuneConfig.arraysV2 && typeHint is RsArrayType) {
+            // allow arrays to be assigned to null
+            o.type = typeHint
+            return
+        }
         if (typeHint !is RsPrimitiveType || (typeHint != RsPrimitiveType.STRING && typeHint.baseType != RsBaseType.INT && typeHint.baseType != RsBaseType.LONG)) {
             // TODO(Walied): We allow strings for now to bypass hooks error in cc_setontimer(null)
             o.error("Cannot convert <null> to ${typeHint.representation}")
@@ -706,15 +726,7 @@ class RsTypeInferenceVisitor(private val myInferenceData: RsTypeInference) : RsV
     private fun findParameterType(o: RsParameter): RsType {
         // TODO probably should return null and handle the invalid type in caller
         val typeText = o.typeName.text
-        val type = if (typeText.length > ARRAY_SUFFIX_LENGTH && typeText.endsWith(ARRAY_SUFFIX)) {
-            val baseType = typeText.substringBeforeLast(ARRAY_SUFFIX)
-            val elementType = RsPrimitiveType.lookupReferencableOrNull(baseType)
-            if (elementType != null) {
-                RsArrayType(elementType)
-            } else {
-                null
-            }
-        } else if (o.parentOfType<RsScript>()?.triggerName == "command") {
+        val type = if (o.parentOfType<RsScript>()?.triggerName == "command") {
             RsPrimitiveType.lookupOrNull(typeText)
         } else {
             RsPrimitiveType.lookupReferencableOrNull(typeText)
@@ -748,6 +760,10 @@ private fun RsScript.findCommandHandler(): CommandHandler {
         "lc_param" -> ParamCommandHandler.LC_PARAM
         "nc_param" -> ParamCommandHandler.NC_PARAM
         "oc_param" -> ParamCommandHandler.OC_PARAM
+        "if_param" -> IfParamCommandHandler.IF_PARAM
+        "cc_param", ".cc_param" -> IfParamCommandHandler.CC_PARAM
+        "if_setparam" -> IfSetParamCommandHandler.IF_SETPARAM
+        "cc_setparam", ".cc_setparam" -> IfSetParamCommandHandler.CC_SETPARAM
         "db_find" -> DbFindCommandHandler.DB_FIND
         "db_find_with_count" -> DbFindCommandHandler.DB_FIND_WITH_COUNT
         "db_find_refine" -> DbFindCommandHandler.DB_FIND_REFINE
@@ -755,6 +771,7 @@ private fun RsScript.findCommandHandler(): CommandHandler {
         "db_getfield" -> DbGetFieldCommandHandler
         "dump" -> DumpCommandHandler
         "cc_create", ".cc_create" -> CcCreateCommandHandler
+        "array_push" -> ArrayPushCommandHandler
         else -> DefaultCommandHandler
     }
 }

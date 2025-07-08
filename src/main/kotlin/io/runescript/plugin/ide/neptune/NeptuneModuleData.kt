@@ -12,14 +12,14 @@ import com.intellij.psi.PsiElement
 class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
 
     data class State(
-        var dummy: Int = 0
+        var arraysV2: Boolean = false
     )
 
-    val dummy: Int
-        get() = state.dummy
+    val arraysV2: Boolean
+        get() = state.arraysV2
 
     fun updateFromImportData(importData: NeptuneProjectImportData) = updateState {
-        it.dummy = 0
+        it.arraysV2 = importData.arraysV2
         it
     }
 }

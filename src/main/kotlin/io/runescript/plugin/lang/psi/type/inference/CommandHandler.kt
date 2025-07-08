@@ -75,6 +75,122 @@ class ParamCommandHandler(private val subjectType: RsPrimitiveType) : CommandHan
     }
 }
 
+class IfParamCommandHandler(private val cc: Boolean) : CommandHandler {
+    override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
+        val arguments = o.argumentList.expressionList
+        var outputType: RsType? = null
+
+        // Handle param reference (first argument)
+        if (arguments.isNotEmpty()) {
+            arguments[0].typeHint = RsPrimitiveType.PARAM
+            arguments[0].accept(this)
+            if (arguments[0] is RsDynamicExpression) {
+                val parameterSymbol = RsSymbolIndex.lookup(arguments[0], RsPrimitiveType.PARAM, arguments[0].text)
+                if (parameterSymbol == null || parameterSymbol.fieldList.size < 3) {
+                    arguments[0].error("Reference to a parameter with an invalid definition.")
+                } else {
+                    val parameterType = RsPrimitiveType.lookupReferencableOrNull(parameterSymbol.fieldList[2].text)
+                    if (parameterType == null) {
+                        arguments[0].error("Reference to a parameter with an invalid definition.")
+                    }
+                    outputType = parameterType
+                }
+            } else {
+                arguments[0].error("Non-constant param references are not allowed in here.")
+            }
+        }
+
+        // Define parameter types based on whether it's cc or if_param
+        val parameterTypes: Array<RsType> = if (!cc) {
+            arrayOf(
+                RsPrimitiveType.PARAM,
+                RsPrimitiveType.COMPONENT,
+                RsPrimitiveType.INT
+            )
+        } else {
+            arrayOf(RsPrimitiveType.PARAM)
+        }
+
+        // Check argument types
+        checkArgumentList(o.argumentList, parameterTypes)
+
+        // Set the output type
+        o.type = outputType ?: RsErrorType
+    }
+
+    companion object {
+        val IF_PARAM = IfParamCommandHandler(false)
+        val CC_PARAM = IfParamCommandHandler(true)
+    }
+}
+
+class IfSetParamCommandHandler(private val cc: Boolean) : CommandHandler {
+    override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
+        val arguments = o.argumentList.expressionList
+
+        // Check first argument (param reference)
+        if (arguments.isEmpty()) {
+            o.error("Missing parameter reference")
+            o.type = RsUnitType
+            return
+        }
+
+        // Handle param reference
+        arguments[0].typeHint = RsPrimitiveType.PARAM
+        arguments[0].accept(this)
+        var parameterType: RsType? = null
+
+        if (arguments[0] is RsDynamicExpression) {
+            val parameterSymbol = RsSymbolIndex.lookup(arguments[0], RsPrimitiveType.PARAM, arguments[0].text)
+            if (parameterSymbol == null || parameterSymbol.fieldList.size < 3) {
+                arguments[0].error("Reference to a parameter with an invalid definition.")
+            } else {
+                parameterType = RsPrimitiveType.lookupReferencableOrNull(parameterSymbol.fieldList[2].text)
+                if (parameterType == null) {
+                    arguments[0].error("Reference to a parameter with an invalid definition.")
+                }
+            }
+        } else {
+            arguments[0].error("Non-constant param references are not allowed in here.")
+        }
+
+        // Check second argument (value to set) against the parameter type
+        if (arguments.size > 1 && parameterType != null) {
+            arguments[1].typeHint = parameterType
+            arguments[1].accept(this)
+            if (arguments[1].type != parameterType) {
+                arguments[1].error("Type mismatch: expected ${parameterType.representation}, got ${arguments[1].type?.representation}")
+            }
+        }
+
+        // Define and check parameter types based on whether it's cc or if_setparam
+        val parameterTypes = if (!cc) {
+            arrayOf(
+                RsPrimitiveType.PARAM,
+                parameterType ?: RsErrorType,
+                RsPrimitiveType.COMPONENT,
+                RsPrimitiveType.INT
+            )
+        } else {
+            arrayOf(
+                RsPrimitiveType.PARAM,
+                parameterType ?: RsErrorType
+            )
+        }
+
+        // Check all arguments
+        checkArgumentList(o.argumentList, parameterTypes)
+
+        // Set return type to Unit as this is a setter
+        o.type = RsUnitType
+    }
+
+    companion object {
+        val IF_SETPARAM = IfSetParamCommandHandler(false)
+        val CC_SETPARAM = IfSetParamCommandHandler(true)
+    }
+}
+
 class DbFindCommandHandler(private val withCount: Boolean) : CommandHandler {
     override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
         val arguments = o.argumentList.expressionList
@@ -269,6 +385,42 @@ data object CcCreateCommandHandler : CommandHandler {
             )
         }
         checkArgumentList(o.argumentList, parameterTypes)
+        o.type = RsUnitType
+    }
+}
+
+data object ArrayPushCommandHandler : CommandHandler {
+    override fun RsTypeInferenceVisitor.inferTypes(reference: RsScript, o: RsCommandExpression) {
+        val arguments = o.argumentList.expressionList
+        if (arguments.size != 2) {
+            o.error("Array push requires exactly 2 arguments: array and value")
+            o.type = RsUnitType
+            return
+        }
+
+        // First check array argument with Any type hint to get its real type
+        val arrayArg = arguments[0]
+        arrayArg.typeHint = RsArrayType(RsAnyType)
+        arrayArg.accept(this)
+
+        // Verify it's an array type
+        val arrayType = arrayArg.type
+        if (arrayType !is RsArrayType) {
+            arrayArg.error("First argument must be an array")
+            o.type = RsUnitType
+            return
+        }
+
+        // Get the inner type of the array and use it to check the value argument
+        val elementType = arrayType.elementType
+        val valueArg = arguments[1]
+        valueArg.typeHint = elementType
+        valueArg.accept(this)
+
+        if (valueArg.type != elementType) {
+            valueArg.error("Type mismatch: expected ${elementType.representation}, got ${valueArg.type?.representation}")
+        }
+
         o.type = RsUnitType
     }
 }
