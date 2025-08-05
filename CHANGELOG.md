@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Updated to support IntelliJ 2025.2.
+
 ## [1.8.0] - 2025-04-17
 
 - Add breadcrumbs and sticky lines support
