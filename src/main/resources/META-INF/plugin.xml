@@ -37,6 +37,8 @@
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
 
+        <lang.floatingToolbar language="RuneScript" />
+
         <!-- Rename Handler -->
         <renameHandler implementation="io.runescript.plugin.ide.refactoring.RsMemberInplaceRenameHandler"/>
         <renamePsiElementProcessor implementation="io.runescript.plugin.ide.refactoring.RsRenameProcessor"/>

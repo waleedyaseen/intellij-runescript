@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add floating toolbar support.
+
 ## [1.8.1] - 2025-08-18
 
 - Updated to support IntelliJ 2025.2.
