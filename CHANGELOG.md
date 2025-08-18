@@ -5,6 +5,7 @@
 - Add floating toolbar support.
 - Add introduce variable refactoring.
 - Improve code formatting and make it more configurable.
+- Allow parameter info to work for other than gosub.
 
 ## [1.8.1] - 2025-08-18
 

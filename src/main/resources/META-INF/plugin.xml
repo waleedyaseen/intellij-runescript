@@ -84,7 +84,7 @@
         <!-- Code Insights -->
         <codeInsight.lineMarkerProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.lineMarker.RsLineMarkerProvider"/>
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
-        <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsGosubParameterInfoProvider"/>
+        <codeInsight.parameterInfo language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsParameterInfoProvider"/>
 
         <!-- Spell Checking -->
         <spellchecker.support language="RuneScript" implementationClass="io.runescript.plugin.ide.spellchecker.RsSpellcheckingStrategy"/>

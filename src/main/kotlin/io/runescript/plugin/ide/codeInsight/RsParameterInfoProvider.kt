@@ -9,19 +9,18 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.*
 
-class RsGosubParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgumentList, CallInfo, RsExpression> {
+class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgumentList, CallInfo, RsExpression> {
 
     override fun findElementForParameterInfo(context: CreateParameterInfoContext): RsArgumentList? {
         val file = context.file as? RsFile ?: return null
         val element = file.findElementAt(context.offset) ?: return null
         val argumentList = element.parentOfType<RsArgumentList>() ?: return null
-        val gosub = argumentList.parentOfType<RsGosubExpression>() ?: return null
-        val reference = gosub.reference?.resolve() ?: return null
-        reference as RsScript
+        val reference = argumentList.parent?.reference?.resolve() as? RsScript ?: return null
         val parameters = reference.parameterList?.parameterList ?: emptyList()
         context.itemsToShow = arrayOf(CallInfo.of(parameters))
         return argumentList
     }
+
 
     override fun findElementForUpdatingParameterInfo(context: UpdateParameterInfoContext): RsArgumentList? {
         val element = context.file.findElementAt(context.offset) ?: return null
