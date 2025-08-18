@@ -6,6 +6,7 @@
 - Add introduce variable refactoring.
 - Improve code formatting and make it more configurable.
 - Allow parameter info to work for other than gosub.
+- Add auto-completion for keywords, local variables, procs and commands.
 
 ## [1.8.1] - 2025-08-18
 

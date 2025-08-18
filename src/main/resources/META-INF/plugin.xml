@@ -90,6 +90,9 @@
         <spellchecker.support language="RuneScript" implementationClass="io.runescript.plugin.ide.spellchecker.RsSpellcheckingStrategy"/>
         <spellchecker.bundledDictionaryProvider implementation="io.runescript.plugin.ide.spellchecker.RsBundledDictionaryProvider"/>
 
+        <!-- Code Completion -->
+        <completion.contributor language="RuneScript" implementationClass="io.runescript.plugin.ide.completion.RsCompletionContributor"/>
+
         <intentionAction>
             <language>RuneScript</language>
             <className>io.runescript.plugin.ide.codeInsight.intention.RsNumberConversionIntention</className>
