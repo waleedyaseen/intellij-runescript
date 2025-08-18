@@ -35,7 +35,6 @@
         <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
-        <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
 
         <lang.floatingToolbar language="RuneScript" />
 
@@ -44,6 +43,7 @@
         <renamePsiElementProcessor implementation="io.runescript.plugin.ide.refactoring.RsRenameProcessor"/>
         <lang.namesValidator language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
         <lang.namesValidator language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
+        <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
 
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>

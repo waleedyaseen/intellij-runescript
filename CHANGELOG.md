@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Add floating toolbar support.
+- Add introduce variable refactoring.
 
 ## [1.8.1] - 2025-08-18
 

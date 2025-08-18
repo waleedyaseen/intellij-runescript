@@ -15,6 +15,24 @@ import io.runescript.plugin.lang.doc.psi.impl.RsDocLink
 
 object RsElementGenerator {
 
+    fun createLocalVariableDeclaration(
+        project: Project,
+        type: String,
+        name: String,
+        initializer: String
+    ): RsLocalVariableDeclarationStatement {
+        val element = createDummyFile(project, "[proc,dummy]()()def_$type $$name = $initializer;")
+        return PsiTreeUtil.findChildOfType(
+            element,
+            RsLocalVariableDeclarationStatement::class.java
+        ) as RsLocalVariableDeclarationStatement
+    }
+
+    fun createLocalVariableExpression(project: Project, name: String): RsLocalVariableExpression {
+        val element = createDummyFile(project, "[proc,dummy]()()$$name;")
+        return PsiTreeUtil.findChildOfType(element, RsLocalVariableExpression::class.java) as RsLocalVariableExpression
+    }
+
     fun createConditionExpression(project: Project, expression: String): RsExpression {
         val element = createDummyFile(project, "[proc,dummy]()()if ($expression){}")
         return PsiTreeUtil.findChildOfType(element, RsExpression::class.java) as RsExpression
