@@ -9,9 +9,10 @@ import io.runescript.plugin.ide.formatter.style.RsCodeStyleSettings
 import io.runescript.plugin.lang.psi.RsArgumentList
 import io.runescript.plugin.lang.psi.RsElementTypes.*
 
-
-class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
-                       private val rsSettings: RsCodeStyleSettings) {
+class RsSpacingBuilder(
+    private val settings: CommonCodeStyleSettings,
+    private val rsSettings: RsCodeStyleSettings
+) {
 
     fun getSpacing(parent: RsBlock, child1: Block?, child2: Block): Spacing? {
         if (child1 !is RsBlock || child2 !is RsBlock) {
@@ -75,6 +76,9 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
             if (type1 == CALC) {
                 return spaceIf(rsSettings.SPACE_BEFORE_CALC_PARENTHESES)
             }
+            if (type1 == RETURN) {
+                return spaceIf(rsSettings.SPACE_BEFORE_RETURN_PARENTHESES)
+            }
         }
         // Space before left brace
         if (type2 == LBRACE && elementType == SWITCH_STATEMENT) {
@@ -84,10 +88,35 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
             return spaceIf(settings.SPACE_BEFORE_WHILE_LBRACE)
         }
         if (elementType == IF_STATEMENT && type2 == BLOCK_STATEMENT) {
-            return spaceIf(settings.SPACE_BEFORE_IF_LBRACE)
+            return if (type1 == ELSE) {
+                spaceIf(settings.SPACE_BEFORE_ELSE_LBRACE)
+            } else {
+                spaceIf(settings.SPACE_BEFORE_IF_LBRACE)
+            }
+        }
+        if (elementType == BLOCK_STATEMENT) {
+            if (type1 == LBRACE && type2 == STATEMENT_LIST) {
+                val listEmpty = child2.isLeaf
+                return if (listEmpty) null else lineBreak()
+            }
+            if (type1 == STATEMENT_LIST && type2 == RBRACE) {
+                val listEmpty = child1.isLeaf
+                return if (listEmpty) null else lineBreak()
+            }
+        }
+        if (elementType == SWITCH_STATEMENT) {
+            if (type1 == LBRACE && (type2 == SWITCH_CASE || type2 == RBRACE)) {
+                return lineBreak()
+            }
+            if (type1 == SWITCH_CASE && type2 == SWITCH_CASE) {
+                return lineBreak()
+            }
+            if ((type1 == SWITCH_CASE || type1 == STATEMENT_LIST) && type2 == RBRACE) {
+                return lineBreak()
+            }
         }
         // Space before keywords
-        if (elementType == ELSE) {
+        if (type2 == ELSE) {
             return spaceIf(settings.SPACE_BEFORE_ELSE_KEYWORD)
         }
         // Space within
@@ -110,6 +139,9 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
         if (elementType == RETURN_LIST && (type1 == LPAREN || type2 == RPAREN)) {
             return spaceIf(rsSettings.SPACE_WITHIN_RETURN_LIST_PARENTHESES)
         }
+        if (elementType == RETURN_STATEMENT && (type1 == LPAREN || type2 == RPAREN)) {
+            return spaceIf(rsSettings.SPACE_WITHIN_RETURN_ARGUMENTS_PARENTHESES)
+        }
         if (elementType == ARGUMENT_LIST && (type1 == LPAREN || type2 == RPAREN)) {
             val superType = parent.node.treeParent.elementType
             if (superType == GOSUB_EXPRESSION || superType == COMMAND_EXPRESSION) {
@@ -125,6 +157,21 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
                 return spaceIf(settings.SPACE_AFTER_COMMA)
             }
         }
+        // Script signature
+        if (elementType == SCRIPT) {
+            if (type1 == COMMA || type2 == COMMA || type1 == LBRACKET || type2 == RBRACKET) {
+                return spaceIf(false)
+            }
+        }
+        // Switch case and colon
+        if (elementType == SWITCH_CASE) {
+            if (type2 == COLON) {
+                return spaceIf(true)
+            }
+            if (type1 == COLON && type2 == STATEMENT_LIST) {
+                return lineBreak()
+            }
+        }
         if (elementType == RETURN_LIST) {
             if (type2 == COMMA) {
                 return spaceIf(rsSettings.SPACE_BEFORE_COMMA_IN_RETURN_LIST)
@@ -132,8 +179,26 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
                 return spaceIf(rsSettings.SPACE_AFTER_COMMA_IN_RETURN_LIST)
             }
         }
+        if (elementType == RETURN_STATEMENT) {
+            if (type2 == COMMA) {
+                return spaceIf(rsSettings.SPACE_BEFORE_COMMA_IN_RETURN_ARGUMENTS)
+            } else if (type1 == COMMA) {
+                return spaceIf(rsSettings.SPACE_AFTER_COMMA_IN_RETURN_ARGUMENTS)
+            }
+        }
         if (type2 == ARGUMENT_LIST && (elementType == GOSUB_EXPRESSION || elementType == COMMAND_EXPRESSION)) {
             return spaceIf(settings.SPACE_BEFORE_METHOD_CALL_PARENTHESES)
+        }
+        if (type1 == ELSE) {
+            if (type2 == IF || type2 == IF_STATEMENT) {
+                return spaceIf(true)
+            }
+            if (type2 == STATEMENT) {
+                val first = child2.node.firstChildNode
+                if (first != null && first.elementType == IF_STATEMENT) {
+                    return spaceIf(true)
+                }
+            }
         }
         if (type1 == DEFINE_TYPE || type1 == TYPE_NAME || type1 == ARRAY_TYPE_LITERAL) {
             return spaceIf(true)
@@ -144,5 +209,9 @@ class RsSpacingBuilder(private val settings: CommonCodeStyleSettings,
     private fun spaceIf(condition: Boolean): Spacing? {
         val spaces = if (condition) 1 else 0
         return Spacing.createSpacing(spaces, spaces, 0, settings.KEEP_LINE_BREAKS, settings.KEEP_BLANK_LINES_IN_CODE)
+    }
+
+    private fun lineBreak(lines: Int = 1): Spacing {
+        return Spacing.createSpacing(0, 0, lines, settings.KEEP_LINE_BREAKS, settings.KEEP_BLANK_LINES_IN_CODE)
     }
 }

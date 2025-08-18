@@ -4,6 +4,7 @@
 
 - Add floating toolbar support.
 - Add introduce variable refactoring.
+- Improve code formatting and make it more configurable.
 
 ## [1.8.1] - 2025-08-18
 
