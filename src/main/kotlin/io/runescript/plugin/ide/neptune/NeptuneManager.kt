@@ -72,7 +72,7 @@ class NeptuneManager :
         return autoImport.getAffectedExternalProjectPath(changedFileOrDirPath, project)
     }
 
-    override fun getAffectedExternalProjectFiles(projectPath: String, project: Project): MutableList<File>? {
+    override fun getAffectedExternalProjectFiles(projectPath: String, project: Project): MutableList<File> {
         return autoImport.getAffectedExternalProjectFiles(projectPath, project)
     }
 
