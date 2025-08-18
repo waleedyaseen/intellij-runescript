@@ -4,26 +4,27 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
-import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(
     name = "NeptuneModuleData",
     storages = [Storage(StoragePathMacros.MODULE_FILE)]
 )
-class NeptuneModuleData : PersistentStateComponent<NeptuneModuleData> {
+class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
 
-    override fun getState() = this
+    data class State(
+        var dummy: Int = 0
+    )
 
-    override fun loadState(state: NeptuneModuleData) {
-        XmlSerializerUtil.copyBean(state, this)
-    }
+    val dummy: Int
+        get() = state.dummy
 
-    fun updateFromImportData(@Suppress("unused") importData: NeptuneProjectImportData) {
-
+    fun updateFromImportData(importData: NeptuneProjectImportData) = updateState {
+        it.dummy = 0
+        it
     }
 }
 
-val Module.neptuneModuleData: NeptuneModuleData?
+val Module.neptuneModuleData: NeptuneModuleData
     get() = service<NeptuneModuleData>()
 
 val PsiElement.neptuneModuleData: NeptuneModuleData?
