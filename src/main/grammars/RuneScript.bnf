@@ -139,6 +139,10 @@ ReturnStatement ::= RETURN ('(' ExpressionList? ')')? ';' {
 LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' Expression)? ';' {
     pin=1
     mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableDeclarationStatementMixin"
+    methods=[
+        variable="/LocalVariableExpression"
+        initializer="/Expression[1]"
+    ]
 }
 
 ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';' {

@@ -12,11 +12,16 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import io.runescript.plugin.lang.stubs.RsParameterStub;
 import io.runescript.plugin.lang.psi.*;
 import com.intellij.psi.stubs.IStubElementType;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 import com.intellij.psi.tree.IElementType;
 
 public class RsParameterImpl extends StubBasedPsiElementBase<RsParameterStub> implements RsParameter {
 
   public RsParameterImpl(@NotNull RsParameterStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
+
+  public RsParameterImpl(@NotNull RsParameterStub stub, @NotNull IElementType type) {
     super(stub, type);
   }
 

@@ -51,4 +51,11 @@ public class RsLocalVariableDeclarationStatementImpl extends RsLocalVariableDecl
     return findChildByType(SEMICOLON);
   }
 
+  @Override
+  @Nullable
+  public RsExpression getInitializer() {
+    List<RsExpression> p1 = getExpressionList();
+    return p1.size() < 2 ? null : p1.get(1);
+  }
+
 }
