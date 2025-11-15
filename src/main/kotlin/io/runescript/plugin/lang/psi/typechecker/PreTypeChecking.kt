@@ -16,6 +16,7 @@ import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerManager
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
 import io.runescript.plugin.lang.psi.typechecker.type.*
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
+import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class PreTypeChecking(
     private val triggerManager: TriggerManager,
@@ -226,11 +227,11 @@ class PreTypeChecking(
      * Attempts to find a reference to the subject of a script.
      */
     private fun resolveSubjectSymbol(script: RsScript, subject: String, type: Type) {
-//        val symbol = script.scriptNameExpression.reference TODO(Walied): Reference
-//        if (symbol == null) {
-//            script.scriptNameExpression.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, subject)
-//            return
-//        }
+        val symbol = RsSymbolIndex.lookup(script.scriptNameExpression, type, subject)
+        if (symbol == null) {
+            script.scriptNameExpression.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, subject)
+            return
+        }
     }
 
     /**
