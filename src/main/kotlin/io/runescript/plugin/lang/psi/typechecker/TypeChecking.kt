@@ -287,6 +287,8 @@ class TypeChecking(
             declarationStatement.variable.reportError(DiagnosticMessage.SCRIPT_LOCAL_REDECLARATION, name)
         }
 
+        declarationStatement.variable.type = symbol.type
+
         // visit the initializer if it exists to resolve references in it
         val initializer = declarationStatement.initializer
         if (initializer != null) {
@@ -327,6 +329,8 @@ class TypeChecking(
             // type doesn't exist so give it error type
             MetaType.Error
         }
+
+        arrayDeclarationStatement.variable.type = type
 
         // visit the initializer if it exists to resolve references in it
         val initializer = arrayDeclarationStatement.initializer
