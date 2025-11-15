@@ -10,7 +10,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.ide.neptune.typeManagerOrDefault
+import io.runescript.plugin.ide.neptune.DEFAULT_TYPE_MANAGER
 import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 import io.runescript.plugin.lang.doc.parser.RsDocElementType
 import io.runescript.plugin.lang.doc.psi.impl.RsDocLink
@@ -24,8 +24,7 @@ import io.runescript.plugin.lang.stubs.types.RsFileStubType
 class RsParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project): Lexer {
-        val typeManager = project.typeManagerOrDefault
-        return RsLexerAdapter(RsLexerInfo(typeManager))
+        return RsLexerAdapter(RsLexerInfo(DEFAULT_TYPE_MANAGER))
     }
 
     override fun createParser(project: Project): PsiParser {

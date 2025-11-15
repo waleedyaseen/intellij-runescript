@@ -6,9 +6,7 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
-import com.intellij.openapi.project.modules
 import com.intellij.psi.PsiElement
 import com.intellij.util.FileContentUtilCore
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
@@ -369,12 +367,7 @@ val Module.neptuneModuleData: NeptuneModuleData
     get() = service<NeptuneModuleData>()
 
 val PsiElement.neptuneModuleData: NeptuneModuleData?
-    get() = ModuleUtil.findModuleForFile(containingFile)?.neptuneModuleData
+    get() = ModuleUtil.findModuleForPsiElement(this)?.neptuneModuleData
 
 val PsiElement.typeManagerOrDefault: TypeManager
     get() = neptuneModuleData?.types ?: DEFAULT_TYPE_MANAGER
-
-val Project?.typeManagerOrDefault: TypeManager
-    get() = this?.modules?.firstNotNullOfOrNull {
-        it.serviceOrNull<NeptuneModuleData>()
-    }?.types ?: DEFAULT_TYPE_MANAGER
