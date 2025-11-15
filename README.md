@@ -35,5 +35,6 @@ To install the plugin, follow the following steps:
 
 ## Acknowledgements
 
-The [IntelliJ Rust](https://github.com/intellij-rust/intellij-rust) plugin was used for reference.
-The [Kotlin Compiler](https://github.com/JetBrains/Kotlin) plugin was used for reference.
+- The [IntelliJ Rust](https://github.com/intellij-rust/intellij-rust) plugin was used for reference.
+- The [Kotlin Compiler](https://github.com/JetBrains/Kotlin) plugin was used for reference.
+- Type checking code was taken and adapted from [Neptune](https://gitlab.com/neptune-ps/neptune).
