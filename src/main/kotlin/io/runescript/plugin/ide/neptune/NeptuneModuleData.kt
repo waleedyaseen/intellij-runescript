@@ -1,12 +1,16 @@
 package io.runescript.plugin.ide.neptune
 
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.*
-import com.intellij.openapi.components.serviceOrNull
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.modules
 import com.intellij.psi.PsiElement
+import com.intellij.util.FileContentUtilCore
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.*
 import io.runescript.plugin.lang.psi.typechecker.command.impl.array.*
@@ -63,6 +67,13 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
     override fun loadState(state: State) {
         super.loadState(state)
         registerDefaultTypesAndTriggers()
+        ApplicationManager.getApplication().invokeLater {
+            ProjectManager.getInstance().openProjects.forEach { project ->
+                DaemonCodeAnalyzer.getInstance(project).restart()
+            }
+            val files = EditorFactory.getInstance().allEditors.mapNotNull { editor -> editor.virtualFile }
+            FileContentUtilCore.reparseFiles(files)
+        }
     }
 
     fun updateFromImportData(importData: NeptuneProjectImportData) {
