@@ -2,7 +2,6 @@ package io.runescript.plugin.ide.doc
 
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
-import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
@@ -18,7 +17,7 @@ import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
-import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex.Companion.nameWithoutExtension
+import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 
 class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName>(element) {
 
@@ -44,7 +43,13 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
     }
 
     companion object {
-        fun resolve(project: Project, module: Module, owner: RsScript?, typeName: String?, elementName: String): Array<PsiElement> {
+        fun resolve(
+            project: Project,
+            module: Module,
+            owner: RsScript?,
+            typeName: String?,
+            elementName: String
+        ): Array<PsiElement> {
             if (typeName == null) {
                 return owner
                     ?.parameterList
@@ -78,7 +83,7 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
                 RsSymSymbol::class.java
             )
             return configs
-                .filter { it.containingFile.nameWithoutExtension == typeName }
+                .filter { resolveToSymTypeName(it.containingFile) == typeName }
                 .toTypedArray()
         }
     }

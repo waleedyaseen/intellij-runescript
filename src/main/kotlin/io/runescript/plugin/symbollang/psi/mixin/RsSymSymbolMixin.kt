@@ -33,5 +33,5 @@ abstract class RsSymSymbolMixin : StubBasedPsiElementBase<RsSymSymbolStub>, RsSy
 
     override fun getTextOffset() = nameIdentifier.startOffset
 
-    private fun getNameFieldIndex() = if (containingFile.virtualFile.isConstantFile()) 0 else 1
+    private fun getNameFieldIndex() = if (containingFile.isConstantFile()) 0 else 1
 }

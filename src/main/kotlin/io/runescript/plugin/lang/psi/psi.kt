@@ -1,15 +1,19 @@
 package io.runescript.plugin.lang.psi
 
 import com.intellij.openapi.module.ModuleUtil
+import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.openapi.project.guessModuleDir
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.util.parentOfType
 import io.runescript.plugin.ide.neptune.findNeptuneProjectRoot
+import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 import io.runescript.plugin.lang.psi.typechecker.type.Type
 import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
-import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex.Companion.nameWithoutExtension
 
 val RsStatement.controlFlowHolder: RsControlFlowHolder?
     get() = parentOfType<RsControlFlowHolder>()
@@ -52,7 +56,7 @@ val RsScript.scriptNameExpression: RsNameLiteral
     get() = nameLiteralList[1]
 
 val RsScript.scriptName: String
-    get() =  if (star != null) "${scriptNameExpression.text}*" else scriptNameExpression.text
+    get() = if (star != null) "${scriptNameExpression.text}*" else scriptNameExpression.text
 
 fun RsLocalVariableExpression.isForArrayDeclaration(): Boolean {
     // Either a parameter "intarray $array" or declaration "def_int $array(...)"
@@ -80,21 +84,4 @@ fun RsLocalVariableExpression.isForArrayAccess(): Boolean {
 fun PsiElement.isSourceFile(): Boolean {
     val module = ModuleUtil.findModuleForFile(containingFile) ?: return false
     return module.findNeptuneProjectRoot() != null
-}
-
-fun rawSymToType(
-    symbol: RsSymSymbol,
-    typeManager: TypeManager,
-    loaders: Map<String, (subTypes: Type) -> Type>
-): Type {
-    val typeName = symbol.containingFile?.nameWithoutExtension
-    val typeSupplier = loaders[typeName] ?: return MetaType.Error
-    val subTypes = if (symbol.fieldList.size >= 3 && symbol.fieldList[2].text.isNotBlank()) {
-        val typeSplit = symbol.fieldList[2].text.split(',')
-        val types = typeSplit.map { typeName -> typeManager.find(typeName, allowArray = true) }
-        TupleType.fromList(types)
-    } else {
-        MetaType.Unit
-    }
-    return typeSupplier(subTypes)
 }

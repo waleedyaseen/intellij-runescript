@@ -22,6 +22,8 @@ import io.runescript.plugin.lang.psi.typechecker.type.wrapped.*
 class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
 
     data class State(
+        var sourcePaths: List<String> = emptyList(),
+        var symbolPaths: List<String> = emptyList(),
         var dbFindReturnsCount: Boolean = false,
         var ccCreateAssertNewArg: Boolean = false,
         var prefixPostfixExpressions: Boolean = false,
@@ -29,6 +31,10 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
         var simplifiedTypeCodes: Boolean = false,
     )
 
+    val sourcePaths: List<String>
+        get() = state.sourcePaths
+    val symbolPaths: List<String>
+        get() = state.symbolPaths
     val dbFindReturnsCount: Boolean
         get() = state.dbFindReturnsCount
     val ccCreateAssertNewArg: Boolean
@@ -64,6 +70,8 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
 
     fun updateFromImportData(importData: NeptuneProjectImportData) {
         updateState {
+            it.sourcePaths = importData.sourcePaths
+            it.symbolPaths = importData.symbolPaths
             it.dbFindReturnsCount = importData.dbFindReturnsCount
             it.ccCreateAssertNewArg = importData.ccCreateAssertNewArg
             it.prefixPostfixExpressions = importData.prefixPostfixExpressions

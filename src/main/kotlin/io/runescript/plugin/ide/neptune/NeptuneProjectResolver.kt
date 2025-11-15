@@ -17,6 +17,8 @@ import io.runescript.plugin.ide.projectWizard.RsModuleType
 import org.slf4j.LoggerFactory
 import java.io.File
 import kotlin.Boolean
+import kotlin.String
+import kotlin.collections.List
 
 class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSettings> {
 
@@ -151,7 +153,10 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
     ) {
 
         fun toPersistentData(): NeptuneProjectImportData {
-            return NeptuneProjectImportData(name,
+            return NeptuneProjectImportData(
+                name,
+                sourcePaths = sourcePaths,
+                symbolPaths = symbolPaths,
                 dbFindReturnsCount = features.dbFindReturnsCount,
                 ccCreateAssertNewArg = features.ccCreateAssertNewArg,
                 prefixPostfixExpressions = features.prefixPostfixExpressions,

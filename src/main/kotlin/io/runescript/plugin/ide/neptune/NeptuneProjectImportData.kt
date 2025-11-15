@@ -4,6 +4,8 @@ import com.intellij.openapi.externalSystem.model.project.AbstractExternalEntityD
 
 class NeptuneProjectImportData(
     val name: String,
+    val sourcePaths: List<String>,
+    val symbolPaths: List<String>,
     val dbFindReturnsCount: Boolean,
     val ccCreateAssertNewArg: Boolean,
     val prefixPostfixExpressions: Boolean,

@@ -24,6 +24,7 @@ import io.runescript.plugin.lang.psi.typechecker.type.wrapped.GameVarType
 import io.runescript.plugin.symbollang.psi.RsSymField
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
+import io.runescript.plugin.symbollang.psi.rawSymToType
 import org.toml.lang.psi.ext.elementType
 
 class TypeChecking(
@@ -168,6 +169,7 @@ class TypeChecking(
                 expression.expression
             }
         }
+
         else -> expression
     }
 
@@ -908,10 +910,13 @@ class TypeChecking(
         val symbol = when (node) {
             is RsDynamicExpression -> RsDynamicExpressionReference.resolveElement(node, hint ?: MetaType.Any)
                 .singleOrNull()?.element
+
             is RsStringLiteralExpression -> RsStringLiteralReference.resolveElement(node, hint ?: MetaType.Any)
                 .singleOrNull()?.element
+
             is RsIntegerLiteralExpression -> RsIntegerLiteralReference.resolveElement(node, hint ?: MetaType.Any)
                 .singleOrNull()?.element
+
             else -> null
         }
         if (symbol == null) {

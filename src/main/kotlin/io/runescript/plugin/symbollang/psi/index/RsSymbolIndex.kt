@@ -2,20 +2,18 @@ package io.runescript.plugin.symbollang.psi.index
 
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
-import io.runescript.plugin.ide.neptune.typeManagerOrDefault
 import io.runescript.plugin.lang.psi.typechecker.type.DbColumnType
 import io.runescript.plugin.lang.psi.typechecker.type.IfScriptType
 import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
 import io.runescript.plugin.lang.psi.typechecker.type.Type
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
-import io.runescript.plugin.symbollang.psi.isSymbolFileOfTypeLiteral
+import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 import io.runescript.plugin.symbollang.psi.stub.types.RsSymFileStubType
-import java.util.Collections
+import java.util.*
 
 
 class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
@@ -43,7 +41,7 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
             val scope = GlobalSearchScope.moduleScope(module)
             val configs = StubIndex.getElements(KEY, name, context.project, scope, RsSymSymbol::class.java)
             return configs.singleOrNull {
-                it.containingFile.virtualFile.isSymbolFileOfTypeLiteral(literal)
+                resolveToSymTypeName(it.containingFile) == literal
             }
         }
 
@@ -52,14 +50,5 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
             val scope = GlobalSearchScope.moduleScope(module)
             return StubIndex.getElements(KEY, name, context.project, scope, RsSymSymbol::class.java)
         }
-
-        val PsiFile.nameWithoutExtension: String
-            get() {
-                val dot = name.lastIndexOf('.')
-                if (dot == -1) {
-                    return name
-                }
-                return name.substring(0, dot)
-            }
     }
 }

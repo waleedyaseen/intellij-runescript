@@ -8,6 +8,7 @@
 - Allow parameter info to work for other than gosub.
 - Add auto-completion for keywords, local variables, procs and commands.
 - Redo type checking to be based on Neptune instead.
+- Improve symbol files detection to allow multiple directories with nesting.
 
 ## [1.8.1] - 2025-08-18
 

@@ -3,9 +3,9 @@ package io.runescript.plugin.lang.psi.refs
 import com.intellij.psi.*
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
-import io.runescript.plugin.lang.psi.rawSymToType
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.GameVarType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
+import io.runescript.plugin.symbollang.psi.rawSymToType
 
 class RsScopedVariableReference(element: RsScopedVariableExpression) :
     PsiReferenceBase<RsScopedVariableExpression>(element, element.nameLiteral.textRangeInParent),

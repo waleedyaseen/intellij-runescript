@@ -31,7 +31,7 @@ object RsSymSymbolStubType
     }
 
     override fun indexStub(stub: RsSymSymbolStub, sink: IndexSink) {
-        val nameField = if (stub.psi.containingFile.virtualFile.isConstantFile()) {
+        val nameField = if (stub.psi.containingFile.isConstantFile()) {
             stub.childrenStubs[0] as RsSymFieldStub
         } else {
             stub.childrenStubs[1] as RsSymFieldStub

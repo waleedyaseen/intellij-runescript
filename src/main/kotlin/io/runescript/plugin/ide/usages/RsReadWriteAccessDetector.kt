@@ -15,7 +15,7 @@ class RsReadWriteAccessDetector : ReadWriteAccessDetector() {
 
     override fun isReadWriteAccessible(element: PsiElement): Boolean {
         if (element is RsSymSymbol) {
-            return element.containingFile?.virtualFile?.isVarFile() ?: false
+            return element.containingFile?.isVarFile() ?: false
         }
         return element is RsLocalVariableExpression
     }
