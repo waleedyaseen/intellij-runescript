@@ -63,6 +63,11 @@ object RsElementGenerator {
         return PsiTreeUtil.findChildOfType(element, RsNameLiteral::class.java) as RsNameLiteral
     }
 
+    fun createExpression(project: Project, text: String): RsExpression {
+        val element = createDummyFile(project, "[proc,dummy]()()$text;")
+        return PsiTreeUtil.findChildOfType(element, RsExpressionStatement::class.java)?.expression as RsExpression
+    }
+
     fun createStringLiteralContent(project: Project, content: String): RsStringLiteralContent {
         val element = createDummyFile(project, "[proc,dummy]()()\"$content\";")
         val literal =

@@ -283,7 +283,10 @@ private LiteralExpression ::= IntegerLiteralExpression
                              | BooleanLiteralExpression
                              | NullLiteralExpression
                              | StringLiteralExpression
-IntegerLiteralExpression ::= INTEGER
+IntegerLiteralExpression ::= INTEGER {
+    mixin=" io.runescript.plugin.lang.psi.mixin.RsIntegerLiteralExpressionMixin"
+    implements="io.runescript.plugin.lang.psi.RsNamedElement"
+}
 LongLiteralExpression ::= LONG
 CoordLiteralExpression ::= COORDGRID
 BooleanLiteralExpression ::= TRUE | FALSE

@@ -7,6 +7,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
+import io.runescript.plugin.ide.neptune.typeManagerOrDefault
 import io.runescript.plugin.lang.psi.typechecker.type.DbColumnType
 import io.runescript.plugin.lang.psi.typechecker.type.IfScriptType
 import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType

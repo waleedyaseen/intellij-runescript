@@ -1,6 +1,7 @@
 package io.runescript.plugin.lang.psi.typechecker.type
 
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
+import org.mozilla.javascript.Token.typeToName
 import kotlin.reflect.KClass
 
 typealias TypeChecker = (left: Type, right: Type) -> Boolean
@@ -14,6 +15,11 @@ class TypeManager {
      * A map of type names to the [Type].
      */
     private val nameToType = mutableMapOf<String, Type>()
+
+    /**
+     * A map of [Type] to the type name.
+     */
+    private val typeToName = mutableMapOf<Type, String>()
 
     /**
      * A list of possible checkers to run against types.
@@ -51,6 +57,7 @@ class TypeManager {
         if (existingType != null) {
             error("Type '$name' is already registered.")
         }
+        typeToName[type] = name
         cacheDirty = true
     }
 
@@ -208,6 +215,8 @@ class TypeManager {
         }
         return keywords
     }
+
+    fun findName(type: Type) = typeToName[type]
 
     private companion object {
         private const val ARRAY_SUFFIX = "array"

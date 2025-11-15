@@ -6,6 +6,7 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.*
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
+import io.runescript.plugin.lang.psi.refs.RsIntegerLiteralReference
 import io.runescript.plugin.lang.psi.refs.RsStringLiteralReference
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
@@ -901,8 +902,12 @@ class TypeChecking(
 
     private fun resolveSymbol(node: RsExpression, name: String, hint: Type?): PsiElement? {
         val symbol = when (node) {
-            is RsDynamicExpression -> RsDynamicExpressionReference.resolveElement(node, hint ?: MetaType.Any).singleOrNull()?.element
-            is RsStringLiteralExpression -> RsStringLiteralReference.resolveElement(node, hint ?: MetaType.Any).singleOrNull()?.element
+            is RsDynamicExpression -> RsDynamicExpressionReference.resolveElement(node, hint ?: MetaType.Any)
+                .singleOrNull()?.element
+            is RsStringLiteralExpression -> RsStringLiteralReference.resolveElement(node, hint ?: MetaType.Any)
+                .singleOrNull()?.element
+            is RsIntegerLiteralExpression -> RsIntegerLiteralReference.resolveElement(node, hint ?: MetaType.Any)
+                .singleOrNull()?.element
             else -> null
         }
         if (symbol == null) {

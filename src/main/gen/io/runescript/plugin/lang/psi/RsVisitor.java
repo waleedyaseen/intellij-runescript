@@ -120,6 +120,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitIntegerLiteralExpression(@NotNull RsIntegerLiteralExpression o) {
     visitExpression(o);
+    // visitNamedElement(o);
     // visitLiteralExpression(o);
   }
 
