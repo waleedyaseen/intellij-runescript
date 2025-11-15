@@ -51,11 +51,13 @@ object RsScopesUtil {
         return true
     }
 
-    fun parentScript(element: PsiElement): RsScript? {
+    fun parentScript(element: PsiElement) = parentOfTypeWithInjection<RsScript>(element)
+
+    inline fun <reified T> parentOfTypeWithInjection(element: PsiElement): T? {
         val ilm = InjectedLanguageManager.getInstance(element.project)
         var parent: PsiElement? = element
         while (parent != null) {
-            if (parent is RsScript) {
+            if (parent is T) {
                 return parent
             }
             if (parent is RsHookFragment) {
