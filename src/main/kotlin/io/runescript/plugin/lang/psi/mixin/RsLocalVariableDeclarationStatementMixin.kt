@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.ResolveState
 import com.intellij.psi.scope.PsiScopeProcessor
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 
 abstract class RsLocalVariableDeclarationStatementMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsLocalVariableDeclarationStatement {
 
@@ -15,5 +16,9 @@ abstract class RsLocalVariableDeclarationStatementMixin(node: ASTNode) : ASTWrap
             return processor.execute(declaredVariable, state)
         }
         return true
+    }
+
+    override fun getVariable(): RsLocalVariableExpression {
+        return expressionList[0] as RsLocalVariableExpression
     }
 }

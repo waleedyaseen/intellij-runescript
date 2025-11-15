@@ -1,3 +1,5 @@
 package io.runescript.plugin.lang.lexer
 
-class RsLexerInfo(val typeNames: List<String>)
+import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
+
+class RsLexerInfo(val typeManager: TypeManager)

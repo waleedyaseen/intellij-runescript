@@ -1,9 +1,12 @@
 package io.runescript.plugin.lang.psi.scope
 
+import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.progress.ProgressIndicatorProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.ResolveState
 import com.intellij.psi.scope.PsiScopeProcessor
+import io.runescript.plugin.lang.psi.RsHookFragment
+import io.runescript.plugin.lang.psi.RsScript
 
 object RsScopesUtil {
 
@@ -22,7 +25,13 @@ object RsScopesUtil {
     }
 
     // Based on PsiScopesUtil from intellij-community repository
-    fun walkChildrenScopes(thisElement: PsiElement, processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
+    fun walkChildrenScopes(
+        thisElement: PsiElement,
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement
+    ): Boolean {
         var child: PsiElement? = null
         if (lastParent != null && lastParent.parent === thisElement) {
             child = lastParent.prevSibling
@@ -42,4 +51,20 @@ object RsScopesUtil {
         return true
     }
 
+    fun parentScript(element: PsiElement): RsScript? {
+        val ilm = InjectedLanguageManager.getInstance(element.project)
+        var parent: PsiElement? = element
+        while (parent != null) {
+            if (parent is RsScript) {
+                return parent
+            }
+            if (parent is RsHookFragment) {
+                val host = ilm.getInjectionHost(parent)
+                parent = host ?: parent.parent
+            } else {
+                parent = parent.parent
+            }
+        }
+        return parent
+    }
 }

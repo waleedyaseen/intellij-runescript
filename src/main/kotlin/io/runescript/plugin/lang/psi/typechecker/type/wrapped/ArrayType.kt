@@ -1,0 +1,42 @@
+package io.runescript.plugin.lang.psi.typechecker.type.wrapped
+
+import com.google.common.base.MoreObjects
+import io.runescript.plugin.lang.psi.typechecker.type.BaseVarType
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.Type
+
+/**
+ * A [Type] that represents an array of another type.
+ */
+data class ArrayType(val inner: Type) : Type {
+    init {
+        assert(inner !is ArrayType)
+    }
+
+    override val representation: String = when (inner) {
+        MetaType.Any -> "array"
+        else -> "${inner.representation}array"
+    }
+
+    override val code: Char = when (inner.baseType) {
+        BaseVarType.INTEGER -> INTARRAY_CHAR
+        BaseVarType.STRING -> STRINGARRAY_CHAR
+        else -> error("Invalid type: $inner")
+    }
+
+    override val baseType: BaseVarType = BaseVarType.ARRAY
+
+    override val defaultValue: Any? = null
+
+    override fun toString(): String = MoreObjects.toStringHelper(this)
+        .add("inner", inner)
+        .toString()
+
+    private companion object {
+        // these two values actually refer to intarray and componentarray characters,
+        // but with the array rework their char codes were repurposed for type encoding
+        // to signify "int-based" and "string-based" arrays.
+        const val INTARRAY_CHAR = 'W'
+        const val STRINGARRAY_CHAR = 'X'
+    }
+}

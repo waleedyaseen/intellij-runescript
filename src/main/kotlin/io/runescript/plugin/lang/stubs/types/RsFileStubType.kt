@@ -8,7 +8,7 @@ import com.intellij.psi.stubs.StubElement
 import com.intellij.psi.stubs.StubInputStream
 import com.intellij.psi.stubs.StubOutputStream
 import com.intellij.psi.tree.IStubFileElementType
-import io.runescript.plugin.ide.config.RsConfig
+import io.runescript.plugin.ide.neptune.typeManagerOrDefault
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
@@ -21,7 +21,7 @@ object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
     override fun doParseContents(chameleon: ASTNode, psi: PsiElement): ASTNode? {
         val project = psi.project
         val languageForParser = getLanguageForParser(psi)
-        val lexer = RsLexerAdapter(RsLexerInfo(RsConfig.getPrimitiveTypes()))
+        val lexer = RsLexerAdapter(RsLexerInfo(project.typeManagerOrDefault))
         val builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, lexer, languageForParser, chameleon.chars)
         val host = InjectedLanguageManager.getInstance(project).getInjectionHost(psi)
         val node = if (host != null) {
@@ -32,7 +32,7 @@ object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
         return node.firstChildNode
     }
 
-    override fun getStubVersion() = 3
+    override fun getStubVersion() = 4
 
     override fun serialize(stub: RsFileStub, dataStream: StubOutputStream) {
 

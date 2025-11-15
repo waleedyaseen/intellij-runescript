@@ -11,7 +11,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenamer
 import com.intellij.refactoring.util.CommonRefactoringUtil
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.lang.psi.type.*
+import io.runescript.plugin.lang.psi.typechecker.type
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 
 class RsIntroduceVariableHandler : RsRefactoringActionBase() {
 
@@ -28,20 +30,16 @@ class RsIntroduceVariableHandler : RsRefactoringActionBase() {
         val parentBlock = PsiTreeUtil.getParentOfType(parent, RsStatementList::class.java) ?: return
         val name = DEFAULT_VAR_NAME
         val suggestedType = expression.type
-        if (suggestedType is RsTupleType) {
+        if (suggestedType is TupleType) {
             showErrorHint(project, editor, "The expression does not have a specific type.")
             return
         }
-        if (suggestedType is RsErrorType) {
+        if (suggestedType is MetaType.Error) {
             showErrorHint(project, editor, "The expression does not have a valid type.")
             return
         }
-        if (suggestedType is RsUnitType) {
+        if (suggestedType is MetaType.Unit) {
             showErrorHint(project, editor, "Cannot introduce a variable of type 'unit'.")
-            return
-        }
-        if (suggestedType !is RsPrimitiveType) {
-            showErrorHint(project, editor, "Cannot introduce a variable of type '${suggestedType.representation}'.")
             return
         }
         WriteCommandAction.runWriteCommandAction(project) {

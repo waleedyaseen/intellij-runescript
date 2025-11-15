@@ -443,14 +443,37 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NameLiteral ArgumentList
+  // NameLiteral (ArgumentList | (STAR ArgumentList ArgumentList))
   public static boolean CommandExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, COMMAND_EXPRESSION, "<Expression>");
     r = NameLiteral(b, l + 1);
-    r = r && ArgumentList(b, l + 1);
+    r = r && CommandExpression_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // ArgumentList | (STAR ArgumentList ArgumentList)
+  private static boolean CommandExpression_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "CommandExpression_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ArgumentList(b, l + 1);
+    if (!r) r = CommandExpression_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // STAR ArgumentList ArgumentList
+  private static boolean CommandExpression_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "CommandExpression_1_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, STAR);
+    r = r && ArgumentList(b, l + 1);
+    r = r && ArgumentList(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -1270,7 +1293,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '[' NameLiteral ',' NameLiteral ']' ParameterList? ReturnList? StatementList
+  // '[' NameLiteral ',' NameLiteral STAR? ']' ParameterList? ReturnList? StatementList
   public static boolean Script(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Script")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
@@ -1280,9 +1303,10 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = r && NameLiteral(b, l + 1);
     r = r && consumeToken(b, COMMA);
     r = r && NameLiteral(b, l + 1);
+    r = r && Script_4(b, l + 1);
     r = r && consumeToken(b, RBRACKET);
-    r = r && Script_5(b, l + 1);
     r = r && Script_6(b, l + 1);
+    r = r && Script_7(b, l + 1);
     r = r && StatementList(b, l + 1);
     register_hook_(b, LEFT_BINDER, SCRIPT_LEFT_BINDER);
     register_hook_(b, RIGHT_BINDER, SCRIPT_RIGHT_BINDER);
@@ -1290,16 +1314,23 @@ public class RsParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  // STAR?
+  private static boolean Script_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Script_4")) return false;
+    consumeToken(b, STAR);
+    return true;
+  }
+
   // ParameterList?
-  private static boolean Script_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Script_5")) return false;
+  private static boolean Script_6(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Script_6")) return false;
     ParameterList(b, l + 1);
     return true;
   }
 
   // ReturnList?
-  private static boolean Script_6(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Script_6")) return false;
+  private static boolean Script_7(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Script_7")) return false;
     ReturnList(b, l + 1);
     return true;
   }

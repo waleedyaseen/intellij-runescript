@@ -109,7 +109,8 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitCommandExpression(o: RsCommandExpression) {
-            o.argumentList.accept(this)
+            o.args2?.accept(this)
+            o.args.accept(this)
             o.nameLiteral.accept(this)
             addInstruction(o)
         }

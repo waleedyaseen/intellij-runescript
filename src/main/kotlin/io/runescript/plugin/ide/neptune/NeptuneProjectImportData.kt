@@ -4,5 +4,9 @@ import com.intellij.openapi.externalSystem.model.project.AbstractExternalEntityD
 
 class NeptuneProjectImportData(
     val name: String,
-    val arraysV2: Boolean
+    val dbFindReturnsCount: Boolean,
+    val ccCreateAssertNewArg: Boolean,
+    val prefixPostfixExpressions: Boolean,
+    val arraysV2: Boolean,
+    val simplifiedTypeCodes: Boolean,
 ) : AbstractExternalEntityData(Neptune.SYSTEM_ID)

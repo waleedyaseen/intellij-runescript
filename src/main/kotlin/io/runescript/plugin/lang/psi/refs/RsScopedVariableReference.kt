@@ -1,8 +1,8 @@
 package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.psi.*
+import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
-import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsScopedVariableReference(element: RsScopedVariableExpression) :
@@ -14,6 +14,10 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        val types = element.neptuneModuleData?.types
+        val scopedVarTypes = scopedVarTypeLiterals.mapNotNull {
+            types?.findOrNull(it)
+        }
         return scopedVarTypes
             .mapNotNull { RsSymbolIndex.lookup(element, it, element.name!!) }
             .map { PsiElementResolveResult(it) }
@@ -26,12 +30,12 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
     }
 
     companion object {
-        private val scopedVarTypes = arrayOf(
-            RsPrimitiveType.VARP,
-            RsPrimitiveType.VARC,
-            RsPrimitiveType.VARBIT,
-            RsPrimitiveType.VARCLAN,
-            RsPrimitiveType.VARCLANSETTING
+        private val scopedVarTypeLiterals = arrayOf(
+            "varp",
+            "varc",
+            "varbit",
+            "varclan",
+            "varclansetting"
         )
     }
 }

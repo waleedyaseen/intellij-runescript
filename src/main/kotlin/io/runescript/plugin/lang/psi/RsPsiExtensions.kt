@@ -2,8 +2,8 @@ package io.runescript.plugin.lang.psi
 
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
-import io.runescript.plugin.lang.psi.type.RsPrimitiveType
-import io.runescript.plugin.lang.psi.type.RsType
+import io.runescript.plugin.ide.neptune.neptuneModuleData
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 
 fun RsStringLiteralContent.isBasicContent(): Boolean {
     val first = node.firstChildNode ?: return true
@@ -23,22 +23,14 @@ fun RsStringLiteralContent.isHookExpression(): Boolean = CachedValuesManager.get
                     val parameterList = reference.parameterList?.parameterList ?: emptyList()
                     if (argumentIndex < parameterList.size) {
                         val hookParameter = parameterList[argumentIndex]
-                        val isHookType = RsPrimitiveType.lookupOrNull(hookParameter.typeName!!.text)?.isHookType()
-                        return@getCachedValue CachedValueProvider.Result(isHookType ?: false, this)
+                        val typeName = hookParameter.typeName.text
+                        val type = hookParameter.neptuneModuleData?.types?.findOrNull(typeName)
+                        val isHookType = type is MetaType.Hook
+                        return@getCachedValue CachedValueProvider.Result(isHookType, this)
                     }
                 }
             }
         }
     }
     return@getCachedValue CachedValueProvider.Result(false, this)
-}
-
-fun RsType.isHookType() = when (this) {
-    RsPrimitiveType.HOOK,
-    RsPrimitiveType.VARPHOOK,
-    RsPrimitiveType.VARCHOOK,
-    RsPrimitiveType.STATHOOK,
-    RsPrimitiveType.INVHOOK -> true
-
-    else -> false
 }

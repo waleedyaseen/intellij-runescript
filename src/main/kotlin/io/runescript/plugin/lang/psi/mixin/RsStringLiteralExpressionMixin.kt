@@ -8,8 +8,8 @@ import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.isHookExpression
 import io.runescript.plugin.lang.psi.refs.RsStringLiteralReference
-import io.runescript.plugin.lang.psi.type.RsPrimitiveType
-import io.runescript.plugin.lang.psi.type.type
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.typeCheckedType
 
 abstract class RsStringLiteralExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsStringLiteralExpression {
 
@@ -17,7 +17,7 @@ abstract class RsStringLiteralExpressionMixin(node: ASTNode) : ASTWrapperPsiElem
         if (stringLiteralContent.isHookExpression()) {
             return null
         }
-        if (type is RsPrimitiveType && type != RsPrimitiveType.STRING) {
+        if (typeCheckedType != PrimitiveType.STRING) {
             return RsStringLiteralReference(this)
         }
         return null

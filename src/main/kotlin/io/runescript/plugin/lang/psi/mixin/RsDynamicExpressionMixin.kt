@@ -7,14 +7,13 @@ import com.intellij.psi.PsiReference
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsPsiImplUtil
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
-import io.runescript.plugin.lang.psi.type.RsTypeType
-import io.runescript.plugin.lang.psi.type.type
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.typeHint
 
 abstract class RsDynamicExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsDynamicExpression {
 
     override fun getReference(): PsiReference? {
-        // Currently there are no references for type literals.
-        if (type is RsTypeType) {
+        if (typeHint is MetaType.Type) {
             return null
         }
         return RsDynamicExpressionReference(this)

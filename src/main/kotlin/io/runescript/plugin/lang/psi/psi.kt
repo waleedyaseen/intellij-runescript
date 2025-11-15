@@ -46,7 +46,7 @@ val RsScript.scriptNameExpression: RsNameLiteral
     get() = nameLiteralList[1]
 
 val RsScript.scriptName: String
-    get() = scriptNameExpression.text
+    get() =  if (star != null) "${scriptNameExpression.text}*" else scriptNameExpression.text
 
 fun RsLocalVariableExpression.isForArrayDeclaration(): Boolean {
     // Either a parameter "intarray $array" or declaration "def_int $array(...)"

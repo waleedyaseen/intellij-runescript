@@ -5,7 +5,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.NavigatablePsiElement;
-import io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder;
+import io.runescript.plugin.lang.psi.typechecker.RsInferenceDataHolder;
 import com.intellij.psi.PsiLanguageInjectionHost;
 
 public class RsVisitor extends PsiElementVisitor {
@@ -45,6 +45,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitBooleanLiteralExpression(@NotNull RsBooleanLiteralExpression o) {
     visitExpression(o);
+    // visitLiteralExpression(o);
   }
 
   public void visitCalcExpression(@NotNull RsCalcExpression o) {
@@ -54,6 +55,7 @@ public class RsVisitor extends PsiElementVisitor {
   public void visitCommandExpression(@NotNull RsCommandExpression o) {
     visitExpression(o);
     // visitNavigatablePsiElement(o);
+    // visitCallExpression(o);
   }
 
   public void visitConditionExpression(@NotNull RsConditionExpression o) {
@@ -72,6 +74,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitCoordLiteralExpression(@NotNull RsCoordLiteralExpression o) {
     visitExpression(o);
+    // visitLiteralExpression(o);
   }
 
   public void visitDynamicExpression(@NotNull RsDynamicExpression o) {
@@ -94,11 +97,13 @@ public class RsVisitor extends PsiElementVisitor {
   public void visitGosubExpression(@NotNull RsGosubExpression o) {
     visitExpression(o);
     // visitNamedElement(o);
+    // visitCallExpression(o);
   }
 
   public void visitHookFragment(@NotNull RsHookFragment o) {
     visitNamedElement(o);
     // visitInferenceDataHolder(o);
+    // visitCallExpression(o);
   }
 
   public void visitHookRoot(@NotNull RsHookRoot o) {
@@ -115,6 +120,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitIntegerLiteralExpression(@NotNull RsIntegerLiteralExpression o) {
     visitExpression(o);
+    // visitLiteralExpression(o);
   }
 
   public void visitLocalVariableDeclarationStatement(@NotNull RsLocalVariableDeclarationStatement o) {
@@ -128,6 +134,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitLongLiteralExpression(@NotNull RsLongLiteralExpression o) {
     visitExpression(o);
+    // visitLiteralExpression(o);
   }
 
   public void visitNameLiteral(@NotNull RsNameLiteral o) {
@@ -136,6 +143,7 @@ public class RsVisitor extends PsiElementVisitor {
 
   public void visitNullLiteralExpression(@NotNull RsNullLiteralExpression o) {
     visitExpression(o);
+    // visitLiteralExpression(o);
   }
 
   public void visitParExpression(@NotNull RsParExpression o) {
@@ -203,6 +211,7 @@ public class RsVisitor extends PsiElementVisitor {
   public void visitStringLiteralExpression(@NotNull RsStringLiteralExpression o) {
     visitExpression(o);
     // visitNamedElement(o);
+    // visitLiteralExpression(o);
   }
 
   public void visitSwitchCase(@NotNull RsSwitchCase o) {

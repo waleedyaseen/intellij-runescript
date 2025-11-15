@@ -16,7 +16,7 @@ class RsCommandExpressionReference(element: RsCommandExpression) : PsiPolyVarian
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
-        val elements = StubIndex.getElements(RsCommandScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.moduleScope(module), RsScript::class.java)
+        val elements = StubIndex.getElements(RsCommandScriptIndex.KEY, element.nameString, element.project, GlobalSearchScope.moduleScope(module), RsScript::class.java)
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 

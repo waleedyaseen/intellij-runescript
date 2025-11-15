@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.NavigatablePsiElement;
-import io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder;
+import io.runescript.plugin.lang.psi.typechecker.RsInferenceDataHolder;
 import com.intellij.psi.StubBasedPsiElement;
 import io.runescript.plugin.lang.stubs.RsScriptStub;
 
@@ -31,5 +31,8 @@ public interface RsScript extends NavigatablePsiElement, RsControlFlowHolder, Rs
 
   @NotNull
   PsiElement getRbracket();
+
+  @Nullable
+  PsiElement getStar();
 
 }

@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.isSourceFile
-import io.runescript.plugin.lang.psi.type.typeErrors
+import io.runescript.plugin.lang.psi.typechecker.TypeCheckingUtil
 
 class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
 
@@ -15,8 +15,14 @@ class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
 
             override fun visitElement(element: PsiElement) {
                 if (!element.isSourceFile()) return
-                element.typeErrors.forEach {
-                    holder.registerProblem(it.element, it.message)
+                val diagnostics = TypeCheckingUtil.getErrors(element)
+                if (diagnostics.isEmpty()) return
+                for (diagnostic in diagnostics) {
+                    val message = diagnostic.message.format(*diagnostic.messageArgs.toTypedArray())
+                    holder.registerProblem(
+                        diagnostic.element,
+                        message
+                    )
                 }
             }
         }

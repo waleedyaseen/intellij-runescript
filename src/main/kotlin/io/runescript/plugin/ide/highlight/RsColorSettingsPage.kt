@@ -8,6 +8,7 @@ import com.intellij.openapi.options.colors.ColorSettingsPage
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.lang.lexer.RsLexerInfo
+import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
 import javax.swing.Icon
 
 class RsColorSettingsPage : ColorSettingsPage {
@@ -125,6 +126,6 @@ class RsColorSettingsPage : ColorSettingsPage {
             "RUNESCRIPT_CONFIG_REFERENCE" to RsSyntaxHighlighterColors.CONFIG_REFERENCE,
         )
 
-        private val LEXER_INFO = RsLexerInfo(mutableListOf("int", "component", "string"))
+        private val LEXER_INFO = RsLexerInfo(TypeManager())
     }
 }

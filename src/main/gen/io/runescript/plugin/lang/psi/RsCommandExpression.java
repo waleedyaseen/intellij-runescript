@@ -6,12 +6,25 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.NavigatablePsiElement;
 
-public interface RsCommandExpression extends RsExpression, NavigatablePsiElement {
+public interface RsCommandExpression extends RsExpression, NavigatablePsiElement, RsCallExpression {
 
   @NotNull
-  RsArgumentList getArgumentList();
+  List<RsArgumentList> getArgumentListList();
 
   @NotNull
   RsNameLiteral getNameLiteral();
+
+  @Nullable
+  PsiElement getStar();
+
+  @NotNull
+  RsArgumentList getArgs();
+
+  @Nullable
+  RsArgumentList getArgs2();
+
+  boolean isStar();
+
+  @NotNull String getNameString();
 
 }

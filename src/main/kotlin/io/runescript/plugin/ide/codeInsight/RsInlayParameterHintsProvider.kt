@@ -71,7 +71,7 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
 
     private fun getArgumentsList(element: PsiElement) = when (element) {
         is RsGosubExpression -> element.argumentList?.expressionList
-        is RsCommandExpression -> element.argumentList.expressionList
+        is RsCommandExpression -> element.args.expressionList
         else -> null
     }
 

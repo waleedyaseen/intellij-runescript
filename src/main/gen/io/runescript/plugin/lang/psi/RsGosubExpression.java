@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RsGosubExpression extends RsExpression, RsNamedElement {
+public interface RsGosubExpression extends RsExpression, RsNamedElement, RsCallExpression {
 
   @Nullable
   RsArgumentList getArgumentList();

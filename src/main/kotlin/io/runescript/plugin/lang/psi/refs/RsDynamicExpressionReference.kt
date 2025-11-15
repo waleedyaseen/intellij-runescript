@@ -10,11 +10,10 @@ import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
 import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
-import io.runescript.plugin.lang.psi.type.RsAnyType
-import io.runescript.plugin.lang.psi.type.RsPrimitiveType
-import io.runescript.plugin.lang.psi.type.RsType
-import io.runescript.plugin.lang.psi.type.trigger.RsTriggerType
-import io.runescript.plugin.lang.psi.type.type
+import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.Type
+import io.runescript.plugin.lang.psi.typechecker.typeCheckedType
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsScriptIndex
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
@@ -23,7 +22,7 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
     PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        return resolveElement(element, element.type)
+        return resolveElement(element, element.typeCheckedType)
     }
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
@@ -33,7 +32,7 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
     }
 
     companion object {
-        fun resolveElement(element: RsDynamicExpression, type: RsType): Array<ResolveResult> {
+        fun resolveElement(element: RsDynamicExpression, type: Type): Array<ResolveResult> {
             val elementName = element.nameLiteral.text
 
             // Try to resolve the element as a local array reference.
@@ -52,7 +51,7 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
                 val searchScope = GlobalSearchScope.moduleScope(module)
                 return StubIndex.getElements(
                     RsScriptIndex.KEY,
-                    "[${triggerType.literal},$elementName]",
+                    "[${triggerType.identifier},$elementName]",
                     project,
                     searchScope,
                     RsScript::class.java
@@ -61,16 +60,9 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
 
             // Try to resolve the element as a config reference.
             val project = element.project
-            if (type is RsPrimitiveType) {
-                val resolvedConfig = RsSymbolIndex.lookup(element, type, elementName)
-                if (resolvedConfig != null) {
-                    return arrayOf(PsiElementResolveResult(resolvedConfig))
-                }
-            } else if (type == RsAnyType) {
-                val resolvedConfig = RsSymbolIndex.lookupAny(element, elementName)
-                if (resolvedConfig != null) {
-                    return arrayOf(PsiElementResolveResult(resolvedConfig))
-                }
+            val resolvedConfig = RsSymbolIndex.lookup(element, type, elementName)
+            if (resolvedConfig != null) {
+                return arrayOf(PsiElementResolveResult(resolvedConfig))
             }
 
             // Try to resolve the element as a command reference.
@@ -86,13 +78,9 @@ class RsDynamicExpressionReference(element: RsDynamicExpression) :
             ).map { PsiElementResolveResult(it) }.toTypedArray()
         }
 
-        private fun getScriptTriggerForType(type: RsType): RsTriggerType? {
+        private fun getScriptTriggerForType(type: Type): TriggerType? {
             return when (type) {
-                RsPrimitiveType.CLIENTOPNPC -> RsTriggerType.CLIENTOPNPC
-                RsPrimitiveType.CLIENTOPLOC -> RsTriggerType.CLIENTOPLOC
-                RsPrimitiveType.CLIENTOPOBJ -> RsTriggerType.CLIENTOPOBJ
-                RsPrimitiveType.CLIENTOPPLAYER -> RsTriggerType.CLIENTOPPLAYER
-                RsPrimitiveType.CLIENTOPTILE -> RsTriggerType.CLIENTOPTILE
+                is MetaType.Script -> type.trigger
                 else -> null
             }
         }

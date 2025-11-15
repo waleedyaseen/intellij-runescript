@@ -7,7 +7,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.guessModuleDir
 import com.intellij.psi.PsiFile
-import io.runescript.plugin.lang.psi.type.RsPrimitiveType
+import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.symbollang.psi.RsSymFile
 
 class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
@@ -24,12 +24,13 @@ class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
             return null
         }
         val name = file.containingFile.name
-        val typeName = name.substring(0, name.indexOf('.'))
+        val typeName = name.substringBefore('.')
         if (typeName == "commands") {
             // Technically this is not a type, but is required by the compiler.
             return null
         }
-        if (RsPrimitiveType.lookupOrNull(typeName) == null) {
+        val types = module.neptuneModuleData.types
+        if (types.findOrNull(typeName) == null) {
             return arrayOf(
                 manager.createProblemDescriptor(
                     file,

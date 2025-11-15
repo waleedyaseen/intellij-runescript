@@ -393,10 +393,6 @@ class _RsLexer implements FlexLexer {
 private final RsLexerInfo lexerInfo;
 private final IntStack statesStack = new IntArrayList();
 
-public List<String> getTypeNames() {
-    return lexerInfo.getTypeNames();
-}
-
 public void pushState(int state) {
     statesStack.push(yystate());
     yybegin(state);
@@ -731,29 +727,14 @@ public void popState() {
           case 65: break;
           case 14:
             { CharSequence lexeme = yytext();
-  for (String typeName: getTypeNames()) {
-      if (typeName.contentEquals(lexeme) || (typeName + "array").contentEquals(lexeme)) {
-          return TYPE_LITERAL;
-      }
-       if (lexeme.length() > 4
-              && lexeme.charAt(0) == 'd'
-              && lexeme.charAt(1) == 'e'
-              && lexeme.charAt(2) == 'f'
-              && lexeme.charAt(3) == '_'
-              && typeName.contentEquals(lexeme.subSequence(4, lexeme.length()))) {
-          return DEFINE_TYPE;
-      }
-       if (lexeme.length() > 7
-              && lexeme.charAt(0) == 's'
-              && lexeme.charAt(1) == 'w'
-              && lexeme.charAt(2) == 'i'
-              && lexeme.charAt(3) == 't'
-              && lexeme.charAt(4) == 'c'
-              && lexeme.charAt(5) == 'h'
-              && lexeme.charAt(6) == '_'
-              && typeName.contentEquals(lexeme.subSequence(7, lexeme.length()))) {
-          return SWITCH;
-      }
+  if (lexerInfo.getTypeManager().getTypeKeywords().contains(lexeme)) {
+    return TYPE_LITERAL;
+  }
+  if (lexerInfo.getTypeManager().getDefineKeywords().contains(lexeme)) {
+    return DEFINE_TYPE;
+  }
+  if (lexerInfo.getTypeManager().getSwitchKeywords().contains(lexeme)) {
+    return SWITCH;
   }
   return IDENTIFIER;
             }

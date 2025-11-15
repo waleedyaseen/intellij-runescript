@@ -25,7 +25,10 @@
 
   implements("Script")="io.runescript.plugin.lang.psi.RsControlFlowHolder"
   implements("Script")="io.runescript.plugin.lang.psi.RsNamedElement"
-  implements("Script|HookFragment")="io.runescript.plugin.lang.psi.type.inference.RsInferenceDataHolder"
+  implements("Script|HookFragment")="io.runescript.plugin.lang.psi.typechecker.RsInferenceDataHolder"
+  implements("GosubExpression|CommandExpression|HookFragment")="io.runescript.plugin.lang.psi.RsCallExpression"
+  implements(".*LiteralExpression")="io.runescript.plugin.lang.psi.RsLiteralExpression"
+
   classHeader="// This class is automatically generated. Do not edit."
   parserImports=[
     "static com.intellij.lang.WhitespacesBinders.*"
@@ -61,7 +64,7 @@
 
 File ::= Script*
 
-Script ::= '[' NameLiteral ',' NameLiteral ']' ParameterList? ReturnList? StatementList {
+Script ::= '[' NameLiteral ',' NameLiteral STAR? ']' ParameterList? ReturnList? StatementList {
     hooks=[
         leftBinder="SCRIPT_LEFT_BINDER"
         rightBinder="SCRIPT_RIGHT_BINDER"
@@ -140,7 +143,7 @@ LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' E
     pin=1
     mixin="io.runescript.plugin.lang.psi.mixin.RsLocalVariableDeclarationStatementMixin"
     methods=[
-        variable="/LocalVariableExpression"
+        getVariable
         initializer="/Expression[1]"
     ]
 }
@@ -148,6 +151,10 @@ LocalVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression ('=' E
 ArrayVariableDeclarationStatement ::= DEFINE_TYPE LocalVariableExpression '(' Expression ')' ';' {
     pin=3
     mixin="io.runescript.plugin.lang.psi.mixin.RsArrayVariableDeclarationStatementMixin"
+    methods=[
+        getVariable
+        initializer="/Expression[1]"
+    ]
 }
 
 AssignmentStatement ::= AssignableExpression (',' AssignableExpression)* '=' Expression (',' Expression)* ';' {
@@ -291,9 +298,15 @@ StringLiteralContent ::= (STRING_PART | STRING_TAG | StringInterpolationExpressi
 }
 
 StringInterpolationExpression ::= STRING_INTERPOLATION_START Expression STRING_INTERPOLATION_END
-CommandExpression ::= NameLiteral ArgumentList {
+CommandExpression ::= NameLiteral (ArgumentList | (STAR ArgumentList ArgumentList)) {
     implements="com.intellij.psi.NavigatablePsiElement"
     mixin=" io.runescript.plugin.lang.psi.mixin.RsCommandExpressionMixin"
+    methods=[
+        args="/ArgumentList[0]"
+        args2="/ArgumentList[1]"
+        isStar
+        getNameString
+    ]
 }
 GosubExpression ::= '~' NameLiteral ArgumentList? {
     mixin="io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin"

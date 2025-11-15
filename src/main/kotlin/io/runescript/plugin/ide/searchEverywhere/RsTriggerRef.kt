@@ -3,35 +3,45 @@ package io.runescript.plugin.ide.searchEverywhere
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.util.text.StringUtil
 import io.runescript.plugin.ide.RsIcons
+import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.triggerName
-import io.runescript.plugin.lang.psi.type.trigger.RsTriggerType
+import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
 import javax.swing.Icon
 
 data class RsTriggerRef(val displayName: String, val icon: Icon?) {
 
     companion object {
+        private val triggerTypes = arrayListOf(
+            "proc",
+            "clientscript"
+        )
+
         @JvmStatic
-        fun forTrigger(trigger: RsTriggerType): RsTriggerRef = RsTriggerRef(
-            trigger.literal,
+        fun forTrigger(trigger: TriggerType): RsTriggerRef = forTrigger(trigger.identifier)
+
+        @JvmStatic
+        fun forTrigger(trigger: String): RsTriggerRef = RsTriggerRef(
+            trigger,
             when (trigger) {
-                RsTriggerType.PROC -> RsIcons.GutterProc
-                RsTriggerType.CLIENTSCRIPT -> RsIcons.GutterClientScript
-                RsTriggerType.COMMAND -> RsIcons.GutterCommand
+                "proc" -> RsIcons.GutterProc
+                "clientscript" -> RsIcons.GutterClientScript
+                "command" -> RsIcons.GutterCommand
                 else -> RsIcons.GutterOther
             }
         )
 
         @JvmStatic
         fun forNavigationItem(item: NavigationItem): RsTriggerRef? {
-            val trigger = RsTriggerType.lookup((item as RsScript).triggerName) ?: return null
+            val triggerName = (item as RsScript).triggerName
+            val trigger = item.neptuneModuleData?.triggers?.findOrNull(triggerName) ?: return null
             return forTrigger(trigger)
         }
 
         @JvmStatic
         fun forAllTriggers(): List<RsTriggerRef> {
-            return RsTriggerType.values()
-                .sortedWith { a, b -> StringUtil.naturalCompare(a.literal, b.literal) }
+            return triggerTypes
+                .sortedWith { a, b -> StringUtil.naturalCompare(a, b) }
                 .map { forTrigger(it) }
         }
     }

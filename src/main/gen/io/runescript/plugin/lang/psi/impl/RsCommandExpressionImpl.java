@@ -29,14 +29,44 @@ public class RsCommandExpressionImpl extends  RsCommandExpressionMixin implement
 
   @Override
   @NotNull
-  public RsArgumentList getArgumentList() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, RsArgumentList.class));
+  public List<RsArgumentList> getArgumentListList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, RsArgumentList.class);
   }
 
   @Override
   @NotNull
   public RsNameLiteral getNameLiteral() {
     return notNullChild(PsiTreeUtil.getChildOfType(this, RsNameLiteral.class));
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStar() {
+    return findChildByType(STAR);
+  }
+
+  @Override
+  @NotNull
+  public RsArgumentList getArgs() {
+    List<RsArgumentList> p1 = getArgumentListList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public RsArgumentList getArgs2() {
+    List<RsArgumentList> p1 = getArgumentListList();
+    return p1.size() < 2 ? null : p1.get(1);
+  }
+
+  @Override
+  public boolean isStar() {
+    return RsPsiImplUtil.isStar(this);
+  }
+
+  @Override
+  public @NotNull String getNameString() {
+    return RsPsiImplUtil.getNameString(this);
   }
 
 }

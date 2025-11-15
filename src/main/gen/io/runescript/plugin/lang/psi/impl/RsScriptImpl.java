@@ -80,4 +80,10 @@ public class RsScriptImpl extends RsScriptMixin implements RsScript {
     return notNullChild(findChildByType(RBRACKET));
   }
 
+  @Override
+  @Nullable
+  public PsiElement getStar() {
+    return findChildByType(STAR);
+  }
+
 }

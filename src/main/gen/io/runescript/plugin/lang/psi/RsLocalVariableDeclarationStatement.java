@@ -19,6 +19,8 @@ public interface RsLocalVariableDeclarationStatement extends RsStatement {
   @Nullable
   PsiElement getSemicolon();
 
+  @NotNull RsLocalVariableExpression getVariable();
+
   @Nullable
   RsExpression getInitializer();
 

@@ -9,7 +9,6 @@ import com.intellij.psi.util.endOffset
 import com.intellij.psi.util.startOffset
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.lang.psi.type.RsPrimitiveType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RuneScriptMissingScriptSymbolInspection : LocalInspectionTool() {
@@ -22,14 +21,14 @@ class RuneScriptMissingScriptSymbolInspection : LocalInspectionTool() {
                 val name = o.qualifiedName
                 val length = o.rbracket.endOffset - o.lbracket.startOffset
                 val range = TextRange.from(o.lbracket.startOffsetInParent, length)
-                if (RsSymbolIndex.lookup(o, RsPrimitiveType.CLIENTSCRIPT, name) == null) {
-                    holder.registerProblem(
-                        o,
-                        RsBundle.message("inspection.error.script.symbol.not.found", name),
-                        ProblemHighlightType.ERROR,
-                        range
-                    )
-                }
+//                if (RsSymbolIndex.lookup(o, RsPrimitiveType.CLIENTSCRIPT, name) == null) {
+//                    holder.registerProblem(
+//                        o,
+//                        RsBundle.message("inspection.error.script.symbol.not.found", name),
+//                        ProblemHighlightType.ERROR,
+//                        range
+//                    )
+//                } TODO(NOPUSH):
             }
         }
     }
