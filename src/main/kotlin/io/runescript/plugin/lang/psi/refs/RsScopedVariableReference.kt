@@ -3,10 +3,13 @@ package io.runescript.plugin.lang.psi.refs
 import com.intellij.psi.*
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
+import io.runescript.plugin.lang.psi.rawSymToType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.GameVarType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsScopedVariableReference(element: RsScopedVariableExpression) :
-        PsiReferenceBase<RsScopedVariableExpression>(element, element.nameLiteral.textRangeInParent), PsiPolyVariantReference {
+    PsiReferenceBase<RsScopedVariableExpression>(element, element.nameLiteral.textRangeInParent),
+    PsiPolyVariantReference {
 
     override fun resolve(): PsiElement? {
         val result = multiResolve(false)
@@ -14,12 +17,10 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val types = element.neptuneModuleData?.types
-        val scopedVarTypes = scopedVarTypeLiterals.mapNotNull {
-            types?.findOrNull(it)
-        }
-        return scopedVarTypes
-            .mapNotNull { RsSymbolIndex.lookup(element, it, element.name!!) }
+        val name = element.name ?: return emptyArray()
+        val moduleData = element.neptuneModuleData ?: return emptyArray()
+        return RsSymbolIndex.lookupAll(element, name)
+            .filter { rawSymToType(it, moduleData.types, moduleData.symbolLoaders) is GameVarType}
             .map { PsiElementResolveResult(it) }
             .toTypedArray()
     }
@@ -27,15 +28,5 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
     override fun handleElementRename(newElementName: String): PsiElement {
         element.setName(newElementName)
         return element
-    }
-
-    companion object {
-        private val scopedVarTypeLiterals = arrayOf(
-            "varp",
-            "varc",
-            "varbit",
-            "varclan",
-            "varclansetting"
-        )
     }
 }

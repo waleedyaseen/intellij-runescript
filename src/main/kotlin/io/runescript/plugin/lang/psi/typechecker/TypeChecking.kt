@@ -23,7 +23,6 @@ import io.runescript.plugin.lang.psi.typechecker.type.wrapped.GameVarType
 import io.runescript.plugin.symbollang.psi.RsSymField
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
-import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex.Companion.nameWithoutExtension
 import org.toml.lang.psi.ext.elementType
 
 class TypeChecking(
@@ -31,8 +30,8 @@ class TypeChecking(
     private val typeManager: TypeManager,
     private val diagnostics: Diagnostics,
     private val rootTable: LocalVariableTable,
-    private val dynamicCommands: MutableMap<String, DynamicCommandHandler>,
-    private val symbolLoaders: MutableMap<String, (subTypes: Type) -> Type>,
+    private val dynamicCommands: Map<String, DynamicCommandHandler>,
+    private val symbolLoaders: Map<String, (subTypes: Type) -> Type>,
     private val arraysV2: Boolean,
 ) : RsVisitor() {
     /**
@@ -936,21 +935,8 @@ class TypeChecking(
         }
 
         is RsLocalVariableExpression -> symbol.type as? ArrayType
-        is RsSymSymbol -> rawSymToType(symbol, hint)
+        is RsSymSymbol -> rawSymToType(symbol, typeManager, symbolLoaders)
         else -> error("Invalid symbol type: ${symbol::class.simpleName} for symbol: $symbol")
-    }
-
-    private fun rawSymToType(symbol: RsSymSymbol, hint: Type?): Type {
-        val typeName = symbol.containingFile?.nameWithoutExtension
-        val typeSupplier = symbolLoaders[typeName] ?: return MetaType.Error
-        val subTypes = if (symbol.fieldList.size >= 3 && symbol.fieldList[2].text.isNotBlank()) {
-            val typeSplit = symbol.fieldList[2].text.split(',')
-            val types = typeSplit.map { typeName -> typeManager.find(typeName, allowArray = true) }
-            TupleType.fromList(types)
-        } else {
-            MetaType.Unit
-        }
-        return typeSupplier(subTypes)
     }
 
     private fun RsSymField.parseAsType(): Type? {
