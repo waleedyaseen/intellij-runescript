@@ -28,6 +28,9 @@ class NeptuneSettings(project: Project) :
     ) {
         val adapter = object : DelegatingExternalSystemSettingsListener<NeptuneProjectSettings>(listener),
             NeptuneSettingsListener {
+            override fun onProjectsUnlinked(linkedProjectPaths: Set<String?>) {
+                listener.onProjectsUnlinked(linkedProjectPaths)
+            }
         }
         doSubscribe(adapter, parentDisposable)
     }
