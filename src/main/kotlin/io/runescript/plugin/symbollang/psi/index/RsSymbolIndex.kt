@@ -6,10 +6,9 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
-import io.runescript.plugin.lang.psi.typechecker.type.DbColumnType
-import io.runescript.plugin.lang.psi.typechecker.type.IfScriptType
-import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
-import io.runescript.plugin.lang.psi.typechecker.type.Type
+import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarBitType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarPlayerType
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 import io.runescript.plugin.symbollang.psi.stub.types.RsSymFileStubType
@@ -28,10 +27,14 @@ class RsSymbolIndex : StringStubIndexExtension<RsSymSymbol>() {
 
         fun lookup(context: PsiElement, type: Type, name: String): RsSymSymbol? {
             val literal = when (type) {
+                ScriptVarType.NAMEDOBJ -> "obj"
                 is IfScriptType -> "if_script"
                 is DbColumnType -> "dbcolumn"
-                ScriptVarType.NAMEDOBJ -> "obj"
-                else -> type.representation
+                is VarPlayerType -> "varp"
+                is VarBitType -> "varbit"
+                is ParamType -> "param"
+                is PrimitiveType, is ScriptVarType -> type.representation
+                else -> return null
             }
             return lookup(context, literal, name)
         }
