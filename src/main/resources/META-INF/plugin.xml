@@ -57,6 +57,7 @@
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.doc.psi.impl.RsDocName" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsDocNameManipulator"/>
+        <lang.elementManipulator forClass="io.runescript.plugin.symbollang.psi.RsSymSymbol" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsSymSymbolManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
         <colorProvider implementation="io.runescript.plugin.ide.RsElementColorProvider"/>

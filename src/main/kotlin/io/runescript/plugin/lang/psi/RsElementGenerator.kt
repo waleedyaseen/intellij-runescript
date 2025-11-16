@@ -12,6 +12,8 @@ import io.runescript.plugin.ide.filetypes.RsFileType
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.doc.findDescendantOfType
 import io.runescript.plugin.lang.doc.psi.impl.RsDocLink
+import io.runescript.plugin.symbollang.filetypes.RsSymFileType
+import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 object RsElementGenerator {
 
@@ -75,6 +77,12 @@ object RsElementGenerator {
         return PsiTreeUtil.findChildOfType(literal, RsStringLiteralContent::class.java) as RsStringLiteralContent
     }
 
+    fun createSymSymbol(project: Project, content: String): RsSymSymbol {
+        val element = createDummySymFile(project, content)
+        val symbol = PsiTreeUtil.findChildOfType(element, RsSymSymbol::class.java) as RsSymSymbol
+        return symbol
+    }
+
     fun createDocIdentifier(project: Project, name: String): PsiElement {
         val element = createDummyFile(project, "/** [$name] */[proc,dummy]()()")
         return element.findDescendantOfType<RsDocLink>()!!.firstChild.nextSibling
@@ -89,6 +97,13 @@ object RsElementGenerator {
         val factory = PsiFileFactory.getInstance(project) as PsiFileFactoryImpl
         val name = "dummy.${RsFileType.defaultExtension}"
         val virtualFile = LightVirtualFile(name, RsFileType, StringUtil.convertLineSeparators(text))
+        return factory.trySetupPsiForFile(virtualFile, RuneScript, false, true)!!
+    }
+
+    private fun createDummySymFile(project: Project, text: String): PsiFile {
+        val factory = PsiFileFactory.getInstance(project) as PsiFileFactoryImpl
+        val name = "dummy.${RsSymFileType.defaultExtension}"
+        val virtualFile = LightVirtualFile(name, RsSymFileType, StringUtil.convertLineSeparators(text))
         return factory.trySetupPsiForFile(virtualFile, RuneScript, false, true)!!
     }
 
