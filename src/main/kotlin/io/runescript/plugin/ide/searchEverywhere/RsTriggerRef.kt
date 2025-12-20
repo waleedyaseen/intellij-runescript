@@ -3,7 +3,7 @@ package io.runescript.plugin.ide.searchEverywhere
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.util.text.StringUtil
 import io.runescript.plugin.ide.RsIcons
-import io.runescript.plugin.ide.neptune.neptuneModuleData
+import io.runescript.plugin.ide.neptune.triggerManager
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.triggerName
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
@@ -34,7 +34,7 @@ data class RsTriggerRef(val displayName: String, val icon: Icon?) {
         @JvmStatic
         fun forNavigationItem(item: NavigationItem): RsTriggerRef? {
             val triggerName = (item as RsScript).triggerName
-            val trigger = item.neptuneModuleData?.triggers?.findOrNull(triggerName) ?: return null
+            val trigger = item.triggerManager.findOrNull(triggerName) ?: return null
             return forTrigger(trigger)
         }
 

@@ -1,6 +1,5 @@
 package io.runescript.plugin.ide.neptune
 
-import ai.grazie.utils.emptyLinkedSet
 import com.intellij.openapi.components.service
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
 import com.intellij.openapi.project.Project

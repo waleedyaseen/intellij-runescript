@@ -27,8 +27,8 @@ object TypeCheckingUtil {
                     typeCheckerRoot.typeCheckerData = TypeCheckerDataHolder()
                     val diagnostics = Diagnostics()
                     val preTypeChecking = PreTypeChecking(
-                        moduleData.triggers,
-                        moduleData.types,
+                        moduleData.resolvedData.triggers,
+                        moduleData.resolvedData.types,
                         diagnostics,
                         rootTable,
                         moduleData.arraysV2
@@ -36,12 +36,12 @@ object TypeCheckingUtil {
                     typeCheckerRoot.accept(preTypeChecking)
 
                     val typeChecking = TypeChecking(
-                        moduleData.triggers,
-                        moduleData.types,
+                        moduleData.resolvedData.triggers,
+                        moduleData.resolvedData.types,
                         diagnostics,
                         rootTable,
-                        moduleData.dynamicCommandHandlers,
-                        moduleData.symbolLoaders,
+                        moduleData.resolvedData.dynamicCommandHandlers,
+                        moduleData.resolvedData.symbolLoaders,
                         moduleData.arraysV2
                     )
                     typeCheckerRoot.accept(typeChecking)

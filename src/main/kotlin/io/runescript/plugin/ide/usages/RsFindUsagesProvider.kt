@@ -5,17 +5,21 @@ import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
-import io.runescript.plugin.ide.neptune.DEFAULT_TYPE_MANAGER
+import io.runescript.plugin.ide.neptune.DEFAULT_RESOLVED_DATA
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsTokenTypesSets
+import io.runescript.plugin.lang.psi.scriptName
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 class RsFindUsagesProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner {
         return DefaultWordsScanner(
-                RsLexerAdapter(RsLexerInfo(DEFAULT_TYPE_MANAGER)),
+                RsLexerAdapter(RsLexerInfo(DEFAULT_RESOLVED_DATA.types)),
                 TokenSet.create(RsElementTypes.IDENTIFIER),
                 RsTokenTypesSets.COMMENTS,
                 TokenSet.create(RsElementTypes.TYPE_LITERAL),

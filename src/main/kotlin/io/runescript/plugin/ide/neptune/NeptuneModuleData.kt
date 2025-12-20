@@ -15,37 +15,15 @@ import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerManager
 import io.runescript.plugin.lang.psi.typechecker.type.*
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.*
 
-@State(
-    name = "NeptuneModuleData",
-    storages = [Storage(StoragePathMacros.MODULE_FILE)]
-)
-class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
-
-    data class State(
-        var sourcePaths: List<String> = emptyList(),
-        var symbolPaths: List<String> = emptyList(),
-        var dbFindReturnsCount: Boolean = false,
-        var ccCreateAssertNewArg: Boolean = false,
-        var prefixPostfixExpressions: Boolean = false,
-        var arraysV2: Boolean = false,
-        var simplifiedTypeCodes: Boolean = false,
-    )
-
-    val sourcePaths: List<String>
-        get() = state.sourcePaths
-    val symbolPaths: List<String>
-        get() = state.symbolPaths
-    val dbFindReturnsCount: Boolean
-        get() = state.dbFindReturnsCount
-    val ccCreateAssertNewArg: Boolean
-        get() = state.ccCreateAssertNewArg
-    val prefixPostfixExpressions: Boolean
-        get() = state.prefixPostfixExpressions
-    val arraysV2: Boolean
-        get() = state.arraysV2
-    val simplifiedTypeCodes: Boolean
-        get() = state.simplifiedTypeCodes
-
+data class NeptuneResolvedData(
+    val sourcePaths: List<String> = emptyList(),
+    val symbolPaths: List<String> = emptyList(),
+    val dbFindReturnsCount: Boolean = true,
+    val ccCreateAssertNewArg: Boolean = true,
+    val prefixPostfixExpressions: Boolean = true,
+    val arraysV2: Boolean = true,
+    val simplifiedTypeCodes: Boolean = true,
+) {
     /**
      * The [TypeManager] for the compiler that is used for registering and looking up types.
      */
@@ -63,22 +41,8 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
 
     var symbolLoaders = mutableMapOf<String, (subTypes: Type) -> Type>()
 
-    override fun loadState(state: State) {
-        super.loadState(state)
-        registerDefaultTypesAndTriggers()
-    }
 
-    fun updateFromImportData(importData: NeptuneProjectImportData) {
-        updateState {
-            it.sourcePaths = importData.sourcePaths
-            it.symbolPaths = importData.symbolPaths
-            it.dbFindReturnsCount = importData.dbFindReturnsCount
-            it.ccCreateAssertNewArg = importData.ccCreateAssertNewArg
-            it.prefixPostfixExpressions = importData.prefixPostfixExpressions
-            it.arraysV2 = importData.arraysV2
-            it.simplifiedTypeCodes = importData.simplifiedTypeCodes
-            it
-        }
+    init {
         registerDefaultTypesAndTriggers()
     }
 
@@ -357,7 +321,67 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
     }
 }
 
-val DEFAULT_TYPE_MANAGER = TypeManager()
+@State(
+    name = "NeptuneModuleData",
+    storages = [Storage(StoragePathMacros.MODULE_FILE)]
+)
+class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
+
+    data class State(
+        var sourcePaths: List<String> = emptyList(),
+        var symbolPaths: List<String> = emptyList(),
+        var dbFindReturnsCount: Boolean = false,
+        var ccCreateAssertNewArg: Boolean = false,
+        var prefixPostfixExpressions: Boolean = false,
+        var arraysV2: Boolean = false,
+        var simplifiedTypeCodes: Boolean = false,
+    )
+
+    val sourcePaths: List<String>
+        get() = state.sourcePaths
+    val symbolPaths: List<String>
+        get() = state.symbolPaths
+    val dbFindReturnsCount: Boolean
+        get() = state.dbFindReturnsCount
+    val ccCreateAssertNewArg: Boolean
+        get() = state.ccCreateAssertNewArg
+    val prefixPostfixExpressions: Boolean
+        get() = state.prefixPostfixExpressions
+    val arraysV2: Boolean
+        get() = state.arraysV2
+    val simplifiedTypeCodes: Boolean
+        get() = state.simplifiedTypeCodes
+
+    var resolvedData = NeptuneResolvedData()
+
+    override fun loadState(state: State) {
+        super.loadState(state)
+    }
+
+    fun updateFromImportData(importData: NeptuneProjectImportData) {
+        updateState {
+            it.sourcePaths = importData.sourcePaths
+            it.symbolPaths = importData.symbolPaths
+            it.dbFindReturnsCount = importData.dbFindReturnsCount
+            it.ccCreateAssertNewArg = importData.ccCreateAssertNewArg
+            it.prefixPostfixExpressions = importData.prefixPostfixExpressions
+            it.arraysV2 = importData.arraysV2
+            it.simplifiedTypeCodes = importData.simplifiedTypeCodes
+            it
+        }
+        resolvedData = NeptuneResolvedData(
+            sourcePaths = importData.sourcePaths,
+            symbolPaths = importData.symbolPaths,
+            dbFindReturnsCount = importData.dbFindReturnsCount,
+            ccCreateAssertNewArg = importData.ccCreateAssertNewArg,
+            prefixPostfixExpressions = importData.prefixPostfixExpressions,
+            arraysV2 = importData.arraysV2,
+            simplifiedTypeCodes = importData.simplifiedTypeCodes,
+        )
+    }
+}
+
+val DEFAULT_RESOLVED_DATA = NeptuneResolvedData()
 
 val Module.neptuneModuleData: NeptuneModuleData
     get() = service<NeptuneModuleData>()
@@ -365,5 +389,12 @@ val Module.neptuneModuleData: NeptuneModuleData
 val PsiElement.neptuneModuleData: NeptuneModuleData?
     get() = ModuleUtil.findModuleForPsiElement(this)?.neptuneModuleData
 
-val PsiElement.typeManagerOrDefault: TypeManager
-    get() = neptuneModuleData?.types ?: DEFAULT_TYPE_MANAGER
+val PsiElement.neptuneResolvedData: NeptuneResolvedData
+    get() = neptuneModuleData?.resolvedData ?: DEFAULT_RESOLVED_DATA
+
+val PsiElement.typeManager: TypeManager
+    get() = neptuneResolvedData.types
+
+val PsiElement.triggerManager: TriggerManager
+    get() = neptuneResolvedData.triggers
+

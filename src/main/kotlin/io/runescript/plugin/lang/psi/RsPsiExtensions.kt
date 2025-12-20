@@ -2,7 +2,7 @@ package io.runescript.plugin.lang.psi
 
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
-import io.runescript.plugin.ide.neptune.neptuneModuleData
+import io.runescript.plugin.ide.neptune.typeManager
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 
 fun RsStringLiteralContent.isBasicContent(): Boolean {
@@ -24,7 +24,7 @@ fun RsStringLiteralContent.isHookExpression(): Boolean = CachedValuesManager.get
                     if (argumentIndex < parameterList.size) {
                         val hookParameter = parameterList[argumentIndex]
                         val typeName = hookParameter.typeName.text
-                        val type = hookParameter.neptuneModuleData?.types?.findOrNull(typeName)
+                        val type = hookParameter.typeManager.findOrNull(typeName)
                         val isHookType = type is MetaType.Hook
                         return@getCachedValue CachedValueProvider.Result(isHookType, this)
                     }

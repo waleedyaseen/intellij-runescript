@@ -20,7 +20,7 @@ import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiBuilderFactory
 import com.intellij.lang.PsiParser
 import com.intellij.psi.tree.IElementType
-import io.runescript.plugin.ide.neptune.typeManagerOrDefault
+import io.runescript.plugin.ide.neptune.typeManager
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsElementTypes
@@ -38,7 +38,7 @@ class RsDocLinkParser : PsiParser {
             val builder = PsiBuilderFactory.getInstance().createBuilder(
                 project,
                 chameleon,
-                RsLexerAdapter(RsLexerInfo(parentElement.typeManagerOrDefault)),
+                RsLexerAdapter(RsLexerInfo(parentElement.typeManager)),
                 root.language,
                 chameleon.text
             )

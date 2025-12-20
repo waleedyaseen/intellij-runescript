@@ -20,7 +20,7 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
         val name = element.name ?: return emptyArray()
         val moduleData = element.neptuneModuleData ?: return emptyArray()
         return RsSymbolIndex.lookupAll(element, name)
-            .filter { rawSymToType(it, moduleData.types, moduleData.symbolLoaders) is GameVarType}
+            .filter { rawSymToType(it, moduleData.resolvedData.types, moduleData.resolvedData.symbolLoaders) is GameVarType}
             .map { PsiElementResolveResult(it) }
             .toTypedArray()
     }
