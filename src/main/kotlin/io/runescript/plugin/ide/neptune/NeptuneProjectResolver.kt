@@ -34,7 +34,10 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
     ): DataNode<ProjectData>? {
         check(settings != null) { "Neptune settings must not be null" }
 
-        val projectRoot = File(projectPath)
+        var projectRoot = File(projectPath)
+        if (projectRoot.isFile && projectRoot.name == "neptune.toml") {
+            projectRoot = projectRoot.parentFile
+        }
         check(projectRoot.isDirectory)
 
         val neptuneData = extractNeptuneProjectMetadata(settings, projectRoot) ?: return null
