@@ -1,6 +1,8 @@
 package io.runescript.plugin.ide.neptune
 
+import com.google.gson.Gson
 import com.intellij.execution.configurations.SimpleJavaParameters
+import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
 import com.intellij.openapi.externalSystem.ExternalSystemConfigurableAware
@@ -26,6 +28,7 @@ class NeptuneManager :
     private val autoImport = NeptuneAutoImportAware()
 
     override fun enhanceRemoteProcessing(parameters: SimpleJavaParameters) {
+        parameters.classPath.add(PathManager.getJarPathForClass(Gson::class.java))
     }
 
     override fun getSystemId() = Neptune.SYSTEM_ID
