@@ -350,6 +350,13 @@ class TypeChecking(
     }
 
     override fun visitConstantExpression(o: RsConstantExpression) {
+        val text = o.name
+        if (text != null) {
+            val symbol = RsSymbolIndex.lookup(o, "constant", text)
+            if (symbol == null) {
+                o.nameLiteral.reportError(DiagnosticMessage.CONSTANT_REFERENCE_UNRESOLVED, text)
+            }
+        }
         o.type = o.typeHint ?: MetaType.Error
     }
 
