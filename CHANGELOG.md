@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-01-28
+
 - Add floating toolbar support.
 - Add introduce variable refactoring.
 - Improve code formatting and make it more configurable.
@@ -10,7 +12,8 @@
 - Redo type checking to be based on Neptune instead.
 - Improve symbol files detection to allow multiple directories with nesting.
 - Update to support IntellIJ 2025.3.
-- 
+-
+
 ## [1.8.1] - 2025-08-18
 
 - Updated to support IntelliJ 2025.2.
@@ -173,7 +176,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.1...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.1...v1.8.0
 [1.7.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.0...v1.7.1
