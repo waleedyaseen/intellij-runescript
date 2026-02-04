@@ -3,16 +3,16 @@ package io.runescript.plugin.ide.execution.build
 import com.intellij.build.BuildContentDescriptor
 import com.intellij.build.BuildProgressListener
 import com.intellij.build.DefaultBuildDescriptor
+import com.intellij.build.events.BuildEvents
 import com.intellij.build.events.EventResult
+import com.intellij.build.events.FinishBuildEvent
 import com.intellij.build.events.impl.FailureResultImpl
-import com.intellij.build.events.impl.FinishBuildEventImpl
-import com.intellij.build.events.impl.StartBuildEventImpl
 import com.intellij.build.events.impl.SuccessResultImpl
 import com.intellij.build.output.BuildOutputInstantReaderImpl
 import com.intellij.execution.actions.StopProcessAction
 import com.intellij.execution.process.AnsiEscapeDecoder
-import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessListener
 import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.openapi.util.Key
 import com.intellij.util.ThreeState
@@ -24,7 +24,7 @@ class RsBuildProcessAdapter(
     private val instance: RsBuildInstance,
     private val buildProgressListener: BuildProgressListener,
     private val future: CompletableFuture<Any>
-) : ProcessAdapter() {
+) : ProcessListener {
     private val instantReader = BuildOutputInstantReaderImpl(
         instance.buildId,
         instance.buildId,
@@ -42,10 +42,20 @@ class RsBuildProcessAdapter(
         buildContentDescriptor.isNavigateToError = ThreeState.UNSURE
 
         @Suppress("UnstableApiUsage")
-        val buildDescriptor = DefaultBuildDescriptor(instance.buildId, instance.project.name, instance.workDirectory, System.currentTimeMillis())
+        val buildDescriptor = DefaultBuildDescriptor(
+            instance.buildId,
+            instance.project.name,
+            instance.workDirectory,
+            System.currentTimeMillis()
+        )
             .withContentDescriptor { buildContentDescriptor }
             .withRestartAction(StopProcessAction("Stop", "Stop", instance.processHandler))
-        val buildStarted = StartBuildEventImpl(buildDescriptor, RsBundle.message("build.status.running"))
+
+        val buildStarted = BuildEvents.getInstance()
+            .startBuild()
+            .withBuildDescriptor(buildDescriptor)
+            .withMessage(RsBundle.message("build.status.running"))
+            .build()
         buildProgressListener.onEvent(instance.buildId, buildStarted)
     }
 
@@ -71,18 +81,23 @@ class RsBuildProcessAdapter(
             }
             // createFinishEvent(RsBundle.message("build.status.cancelled"), SkippedResultImpl())
             buildProgressListener.onEvent(instance.buildId, finishEvent)
-            instance.executionPublisher.processTerminated(instance.executorId, instance.environment, event.processHandler, event.exitCode)
+            instance.executionPublisher.processTerminated(
+                instance.executorId,
+                instance.environment,
+                event.processHandler,
+                event.exitCode
+            )
             future.complete(Any())
         }
     }
 
-    private fun createFinishEvent(message: String, result: EventResult): FinishBuildEventImpl {
-        return FinishBuildEventImpl(
-            instance.buildId,
-            null,
-            System.currentTimeMillis(),
-            message,
-            result
-        )
+    private fun createFinishEvent(message: String, result: EventResult): FinishBuildEvent {
+        return BuildEvents.getInstance()
+            .finishBuild()
+            .withStartBuildId(instance.buildId)
+            .withMessage(message)
+            .withResult(result)
+            .withTime(System.currentTimeMillis())
+            .build()
     }
 }

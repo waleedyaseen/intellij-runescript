@@ -8,6 +8,7 @@ import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.ide.impl.isTrusted
+import com.intellij.ide.trustedProjects.TrustedProjects
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
@@ -50,8 +51,7 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
         if (project.isDisposed) {
             return rejectedPromise("Project is already disposed")
         }
-        @Suppress("UnstableApiUsage")
-        if (!project.isTrusted()) {
+        if (!TrustedProjects.isProjectTrusted(project)) {
             return rejectedPromise("Project is untrusted")
         }
         val promise = AsyncPromise<Result>()

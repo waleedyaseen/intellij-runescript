@@ -65,7 +65,7 @@ open class RsCompletionProviderScriptBase(
                     if (index > 0) {
                         append(", ")
                     }
-                    append(parameter.typeName?.text ?: "???")
+                    append(parameter.typeName.text ?: "???")
                     append(' ')
                     append(parameter.localVariableExpression?.name ?: "???")
                 }

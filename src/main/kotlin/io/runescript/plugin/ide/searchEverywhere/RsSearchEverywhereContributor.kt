@@ -12,7 +12,7 @@ import com.intellij.util.containers.ContainerUtil
 class RsSearchEverywhereContributor(event: AnActionEvent) : AbstractGotoSEContributor(event),
     SearchFieldActionsContributor {
 
-    private val filter = createTriggerFilter(event.getRequiredData(CommonDataKeys.PROJECT))
+    private val filter = createTriggerFilter(event.getData(CommonDataKeys.PROJECT)!!)
 
     override fun getGroupName(): String {
         return "Scripts"

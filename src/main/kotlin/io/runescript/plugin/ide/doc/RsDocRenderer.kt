@@ -5,10 +5,12 @@ package io.runescript.plugin.ide.doc
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType
 import com.intellij.codeInsight.documentation.DocumentationManagerUtil
-import com.intellij.lang.Language
 import com.intellij.lang.documentation.DocumentationMarkup.*
-import com.intellij.lang.documentation.DocumentationSettings
-import com.intellij.lang.documentation.DocumentationSettings.InlineCodeHighlightingMode
+import com.intellij.lang.documentation.QuickDocHighlightingHelper
+import com.intellij.lang.documentation.QuickDocHighlightingHelper.appendStyledCodeBlock
+import com.intellij.lang.documentation.QuickDocHighlightingHelper.appendStyledFragment
+import com.intellij.lang.documentation.QuickDocHighlightingHelper.appendStyledInlineCode
+import com.intellij.lang.documentation.QuickDocHighlightingHelper.appendStyledLinkFragment
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors
@@ -16,18 +18,13 @@ import com.intellij.openapi.editor.colors.CodeInsightColors
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.markup.TextAttributes
-import com.intellij.openapi.editor.richcopy.HtmlSyntaxInfoUtil
 import com.intellij.openapi.project.DumbService
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.parentOfType
 import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.doc.findDescendantOfType
 import io.runescript.plugin.lang.doc.getChildrenOfType
-import io.runescript.plugin.lang.doc.psi.api.RsDoc
 import io.runescript.plugin.lang.doc.psi.impl.RsDocLink
 import io.runescript.plugin.lang.doc.psi.impl.RsDocName
 import io.runescript.plugin.lang.doc.psi.impl.RsDocSection
@@ -99,14 +96,16 @@ object RsDocRenderer {
                 linkText,
                 highlightQualifiedName(linkText, getTargetLinkElementAttributes(rsDocLink.getTargetElement())),
                 false,
-                true
             )
         }
     }
 
+    private fun RsDocReference.resolveToElement(): PsiElement? =
+        multiResolve(incompleteCode = false).firstOrNull()?.element
+
     private fun getTargetLinkElementAttributes(element: PsiElement?): TextAttributes {
         return element
-            ?.let { textAttributesKeyForKtElement(it)?.attributesKey }
+            ?.let { textAttributesKeyForRsElement(it)?.attributesKey }
             ?.let { getTargetLinkElementAttributes(it) }
             ?: TextAttributes().apply {
                 foregroundColor =
@@ -122,16 +121,13 @@ object RsDocRenderer {
         val linkComponents = qualifiedName.split("/")
         val elementName = linkComponents.last()
         return buildString {
-            appendStyledSpan(
-                DocumentationSettings.isSemanticHighlightingOfLinksEnabled(),
-                lastSegmentAttributes,
-                elementName
-            )
+            appendStyledLinkFragment(elementName, lastSegmentAttributes)
         }
     }
 
     private fun RsDocLink.getTargetElement(): PsiElement? {
-        return getChildrenOfType<RsDocName>().last().references.firstOrNull { it is RsDocReference }?.resolve()
+        return getChildrenOfType<RsDocName>().last().references.firstIsInstanceOrNull<RsDocReference>()
+            ?.resolveToElement()
     }
 
     private fun PsiElement.extractExampleText() = text
@@ -158,27 +154,16 @@ object RsDocRenderer {
                 it.getSubjectLink()?.let { subjectLink ->
                     append("<p>")
                     this@appendSamplesList.appendHyperlink(subjectLink)
-                    wrapTag("pre") {
-                        wrapTag("code") {
-                            if (DumbService.isDumb(subjectLink.project)) {
-                                append("// " + RsBundle.message("rsdoc.comment.unresolved"))
-                            } else {
-                                val codeSnippet = when (val target = subjectLink.getTargetElement()) {
-                                    null -> "// " + RsBundle.message("rsdoc.comment.unresolved")
-                                    else -> trimCommonIndent(target.extractExampleText()).htmlEscape()
-                                }
-                                this@appendSamplesList.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-                                    when (DocumentationSettings.isHighlightingOfCodeBlocksEnabled()) {
-                                        true -> InlineCodeHighlightingMode.SEMANTIC_HIGHLIGHTING
-                                        false -> InlineCodeHighlightingMode.NO_HIGHLIGHTING
-                                    },
-                                    subjectLink.project,
-                                    RuneScript,
-                                    codeSnippet
-                                )
-                            }
+                    this@appendSamplesList.appendStyledCodeBlock(
+                        subjectLink.project,
+                        RuneScript,
+                        if (DumbService.isDumb(subjectLink.project))
+                            "// " + RsBundle.message("rsdoc.comment.unresolved")
+                        else when (val target = subjectLink.getTargetElement()) {
+                            null -> "// " + RsBundle.message("rsdoc.comment.unresolved")
+                            else -> trimCommonIndent(target.extractExampleText()).htmlEscape()
                         }
-                    }
+                    )
                 }
             }
         }
@@ -200,8 +185,7 @@ object RsDocRenderer {
                         this,
                         subjectName,
                         subjectName,
-                        false,
-                        true
+                        false
                     )
 
                     else -> append(tag.getContent())
@@ -243,12 +227,7 @@ object RsDocRenderer {
 
                 append("<p><code>")
                 when (val link = it.getChildrenOfType<RsDocLink>().firstOrNull()) {
-                    null -> appendStyledSpan(
-                        DocumentationSettings.isSemanticHighlightingOfLinksEnabled(),
-                        titleAttributes,
-                        subjectName
-                    )
-
+                    null -> appendStyledLinkFragment(subjectName, titleAttributes)
                     else -> appendHyperlink(link)
                 }
 
@@ -298,7 +277,7 @@ object RsDocRenderer {
 
     class MarkdownNode(val node: ASTNode, val parent: MarkdownNode?, val comment: RsDocTag) {
         val children: List<MarkdownNode> = node.children.map { MarkdownNode(it, this, comment) }
-        private val endOffset: Int get() = node.endOffset
+        val endOffset: Int get() = node.endOffset
         val startOffset: Int get() = node.startOffset
         val type: IElementType get() = node.type
         val text: String get() = comment.getContent().substring(startOffset, endOffset)
@@ -317,8 +296,6 @@ object RsDocRenderer {
         if (node.type == MarkdownTokenTypes.WHITE_SPACE) {
             return text   // do not trim trailing whitespace
         }
-
-        var currentCodeFenceLang = "RuneScript"
 
         val sb = StringBuilder()
         visit { node, processChildren ->
@@ -354,27 +331,33 @@ object RsDocRenderer {
                     val startDelimiter = node.child(MarkdownTokenTypes.BACKTICK)?.text
                     if (startDelimiter != null) {
                         val text = node.text.substring(startDelimiter.length).removeSuffix(startDelimiter)
-                        sb.append("<code style='font-size:${DocumentationSettings.getMonospaceFontSizeCorrection(true)}%;'>")
-                        sb.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-                            DocumentationSettings.getInlineCodeHighlightingMode(),
-                            comment.project,
-                            RuneScript,
-                            text
-                        )
-                        sb.append("</code>")
+                        sb.appendStyledInlineCode(comment.project, RuneScript, text)
                     }
                 }
 
                 MarkdownElementTypes.CODE_BLOCK,
                 MarkdownElementTypes.CODE_FENCE -> {
                     sb.trimEnd()
-                    sb.append("<pre><code style='font-size:${DocumentationSettings.getMonospaceFontSizeCorrection(true)}%;'>")
-                    processChildren()
-                    sb.append("</code></pre>")
+                    var language: String? = null
+                    val contents = StringBuilder()
+                    node.children.forEach { child ->
+                        when (child.type) {
+                            MarkdownTokenTypes.CODE_FENCE_CONTENT, MarkdownTokenTypes.CODE_LINE, MarkdownTokenTypes.EOL ->
+                                contents.append(child.text)
+
+                            MarkdownTokenTypes.FENCE_LANG ->
+                                language = child.text.trim().split(' ')[0]
+                        }
+                    }
+                    sb.appendStyledCodeBlock(
+                        project = comment.project,
+                        language = QuickDocHighlightingHelper.guessLanguage(language) ?: RuneScript,
+                        code = contents
+                    )
                 }
 
-                MarkdownTokenTypes.FENCE_LANG -> {
-                    currentCodeFenceLang = nodeText
+                MarkdownTokenTypes.FENCE_LANG, MarkdownTokenTypes.CODE_LINE, MarkdownTokenTypes.CODE_FENCE_CONTENT -> {
+                    // skip
                 }
 
                 MarkdownElementTypes.SHORT_REFERENCE_LINK,
@@ -386,36 +369,25 @@ object RsDocRenderer {
                     if (linkLabelContent != null) {
                         val label = linkLabelContent.joinToString(separator = "") { it.text }
                         val linkText = node.child(MarkdownElementTypes.LINK_TEXT)?.toHtml() ?: label
-                        val filteredLabel = label.split("/").last()
                         if (DumbService.isDumb(comment.project)) {
-                            sb.append(filteredLabel)
+                            sb.append(linkText)
                         } else {
-                            comment.findDescendantOfType<RsDocName> { it.text == linkText }
+                            comment.findDescendantOfType<RsDocName> { it.text == label }
                                 ?.references
-                                ?.firstOrNull { it is RsDocReference }
-                                ?.resolve()
+                                ?.firstIsInstanceOrNull<RsDocReference>()
+                                ?.resolveToElement()
                                 ?.let { resolvedLinkElement ->
-                                    val link = if (resolvedLinkElement is RsLocalVariableExpression) {
-                                        "parameter/${label}/${comment.parentOfType<RsDoc>()!!.startOffsetInParent}"
-                                    } else {
-                                        label
-                                    }
                                     DocumentationManagerUtil.createHyperlink(
                                         sb,
-                                        link,
+                                        label,
                                         highlightQualifiedName(
                                             linkText,
                                             getTargetLinkElementAttributes(resolvedLinkElement)
                                         ),
                                         false,
-                                        true
                                     )
                                 }
-                                ?: sb.appendStyledSpan(
-                                    true,
-                                    CodeInsightColors.RUNTIME_ERROR,
-                                    filteredLabel
-                                )
+                                ?: sb.appendStyledFragment(label, CodeInsightColors.RUNTIME_ERROR)
                         }
                     } else {
                         sb.append(node.text)
@@ -443,30 +415,13 @@ object RsDocRenderer {
                 MarkdownTokenTypes.RBRACKET,
                 MarkdownTokenTypes.EXCLAMATION_MARK,
                 GFMTokenTypes.CHECK_BOX,
-                GFMTokenTypes.GFM_AUTOLINK -> {
+                GFMTokenTypes.GFM_AUTOLINK,
+                GFMTokenTypes.DOLLAR -> {
                     sb.append(nodeText)
                 }
 
-                MarkdownTokenTypes.CODE_LINE,
-                MarkdownTokenTypes.CODE_FENCE_CONTENT -> {
-                    sb.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-                        when (DocumentationSettings.isHighlightingOfCodeBlocksEnabled()) {
-                            true -> InlineCodeHighlightingMode.SEMANTIC_HIGHLIGHTING
-                            false -> InlineCodeHighlightingMode.NO_HIGHLIGHTING
-                        },
-                        comment.project,
-                        guessLanguage(currentCodeFenceLang) ?: RuneScript,
-                        nodeText
-                    )
-                }
-
                 MarkdownTokenTypes.EOL -> {
-                    val parentType = node.parent?.type
-                    if (parentType == MarkdownElementTypes.CODE_BLOCK || parentType == MarkdownElementTypes.CODE_FENCE) {
-                        sb.append("\n")
-                    } else {
-                        sb.append(" ")
-                    }
+                    sb.append(" ")
                 }
 
                 MarkdownTokenTypes.GT -> sb.append("&gt;")
@@ -561,73 +516,6 @@ object RsDocRenderer {
         }
     }
 
-    private fun StringBuilder.appendStyledSpan(
-        doHighlighting: Boolean,
-        attributesKey: TextAttributesKey,
-        value: String?
-    ): StringBuilder {
-        if (doHighlighting) {
-            HtmlSyntaxInfoUtil.appendStyledSpan(
-                this,
-                attributesKey,
-                value,
-                DocumentationSettings.getHighlightingSaturation(true)
-            )
-        } else {
-            append(value)
-        }
-        return this
-    }
-
-    private fun StringBuilder.appendStyledSpan(
-        doHighlighting: Boolean,
-        attributes: TextAttributes,
-        value: String?
-    ): StringBuilder {
-        if (doHighlighting) {
-            HtmlSyntaxInfoUtil.appendStyledSpan(
-                this,
-                attributes,
-                value,
-                DocumentationSettings.getHighlightingSaturation(true)
-            )
-        } else {
-            append(value)
-        }
-        return this
-    }
-
-    private fun StringBuilder.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-        highlightingMode: InlineCodeHighlightingMode,
-        project: Project,
-        language: Language,
-        codeSnippet: String
-    ): StringBuilder {
-        val codeSnippetBuilder = StringBuilder()
-        if (highlightingMode == InlineCodeHighlightingMode.SEMANTIC_HIGHLIGHTING) { // highlight code by lexer
-            HtmlSyntaxInfoUtil.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-                codeSnippetBuilder,
-                project,
-                language,
-                codeSnippet,
-                false,
-                DocumentationSettings.getHighlightingSaturation(true)
-            )
-        } else {
-            codeSnippetBuilder.append(StringUtil.escapeXmlEntities(codeSnippet))
-        }
-        if (highlightingMode != InlineCodeHighlightingMode.NO_HIGHLIGHTING) {
-            // set code text color as editor default code color instead of doc component text color
-            val codeAttributes =
-                EditorColorsManager.getInstance().globalScheme.getAttributes(HighlighterColors.TEXT).clone()
-            codeAttributes.backgroundColor = null
-            appendStyledSpan(true, codeAttributes, codeSnippetBuilder.toString())
-        } else {
-            append(codeSnippetBuilder.toString())
-        }
-        return this
-    }
-
     /**
      * If highlighted links has the same color as highlighted inline code blocks they will be indistinguishable.
      * In this case we should change link color to standard hyperlink color which we believe is apriori different.
@@ -649,42 +537,31 @@ object RsDocRenderer {
         return attributes
     }
 
-    private fun guessLanguage(name: String): Language? {
-        val lower = StringUtil.toLowerCase(name)
-        return Language.findLanguageByID(lower)
-            ?: Language.getRegisteredLanguages().firstOrNull { StringUtil.toLowerCase(it.id) == lower }
+    private fun textAttributesKeyForRsElement(element: PsiElement): HighlightInfoType? {
+        if (element is RsSymSymbol) {
+            return RsHighlightInfoTypeSemanticNames.CONFIG_REFERENCE
+        }
+        if (element is RsScript) {
+            return RsHighlightInfoTypeSemanticNames.SCRIPT_DECLARATION
+        }
+        if (element is RsLocalVariableExpression) {
+            return RsHighlightInfoTypeSemanticNames.LOCAL_VARIABLE
+        }
+        return null
+    }
+
+    object RsHighlightInfoTypeSemanticNames {
+        val CONFIG_REFERENCE: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.CONFIG_REFERENCE)
+        val SCRIPT_DECLARATION: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
+        val LOCAL_VARIABLE: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.LOCAL_VARIABLE)
+
+        private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {
+            return HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, attributesKey)
+        }
     }
 }
 
-private inline fun StringBuilder.wrap(prefix: String, postfix: String, crossinline body: () -> Unit) {
-    append(prefix)
-    body()
-    append(postfix)
-}
-
-private inline fun StringBuilder.wrapTag(tag: String, crossinline body: () -> Unit) {
-    wrap("<$tag>", "</$tag>", body)
-}
-
-private fun textAttributesKeyForKtElement(element: PsiElement): HighlightInfoType? {
-    if (element is RsSymSymbol) {
-        return RsHighlightInfoTypeSemanticNames.CONFIG_REFERENCE
-    }
-    if (element is RsScript) {
-        return RsHighlightInfoTypeSemanticNames.SCRIPT_DECLARATION
-    }
-    if (element is RsLocalVariableExpression) {
-        return RsHighlightInfoTypeSemanticNames.LOCAL_VARIABLE
-    }
+inline fun <reified T : Any> Array<*>.firstIsInstanceOrNull(): T? {
+    for (element in this) if (element is T) return element
     return null
-}
-
-object RsHighlightInfoTypeSemanticNames {
-    val CONFIG_REFERENCE: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.CONFIG_REFERENCE)
-    val SCRIPT_DECLARATION: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
-    val LOCAL_VARIABLE: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.LOCAL_VARIABLE)
-
-    private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {
-        return HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, attributesKey, false)
-    }
 }
