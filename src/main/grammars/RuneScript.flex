@@ -23,7 +23,7 @@ public void pushState(int state) {
 }
 
 public void popState() {
-    yybegin(statesStack.pop());
+    yybegin(statesStack.popInt());
 }
 %}
 

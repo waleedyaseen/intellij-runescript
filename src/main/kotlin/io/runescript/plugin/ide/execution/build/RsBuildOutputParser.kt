@@ -6,6 +6,8 @@ import com.intellij.build.events.BuildEvents
 import com.intellij.build.events.MessageEvent
 import com.intellij.build.output.BuildOutputInstantReader
 import com.intellij.build.output.BuildOutputParser
+import com.intellij.openapi.components.service
+import com.intellij.util.application
 import java.io.File
 import java.util.function.Consumer
 
@@ -27,7 +29,7 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
             if (detailsCount == 0) {
                 val filePath = File(fileMessageContext.path)
                 val filePosition = FilePosition(filePath, fileMessageContext.line, fileMessageContext.column)
-                val fileMessage = BuildEvents.getInstance()
+                val fileMessage = application.service<BuildEvents>()
                     .fileMessage()
                     .withId(instance.buildId)
                     .withKind(MessageEvent.Kind.ERROR)
@@ -54,7 +56,7 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
         }
         if (collectingStackTrace) {
             if (line.startsWith("Process finished")) {
-                val fileMessage = BuildEvents.getInstance()
+                val fileMessage = application.service<BuildEvents>()
                     .message()
                     .withId(instance.buildId)
                     .withKind(MessageEvent.Kind.ERROR)

@@ -5,7 +5,6 @@ import io.runescript.plugin.lang.psi.RsCallExpression
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsExpression
-import io.runescript.plugin.lang.psi.RsNameLiteral
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticMessage
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticType
