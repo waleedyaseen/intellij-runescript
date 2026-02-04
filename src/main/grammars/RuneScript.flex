@@ -37,7 +37,7 @@ this.lexerInfo =  lexerInfo;
 %unicode
 %function advance
 %type IElementType
-LINE_COMMENT = "//"([^\r\n]*)(\r|\n|\r\n)
+LINE_COMMENT = "//"[^\r\n]*
 IDENTIFIER_PART = [a-zA-Z0-9_\.:]
 IDENTIFIER = ({IDENTIFIER_PART})+
 DECIMAL_DIGIT = [0-9]

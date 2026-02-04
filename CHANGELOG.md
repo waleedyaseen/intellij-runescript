@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fix trailing EOL comments parsing
+
 ## [1.9.0] - 2026-01-28
 
 - Add floating toolbar support.
