@@ -10,20 +10,25 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsScript
-import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
-class RsGosubReference(element: RsGosubExpression) : PsiPolyVariantReferenceBase<RsGosubExpression>(element, element.nameLiteral.textRangeInParent) {
-
+class RsGosubReference(
+    element: RsGosubExpression,
+) : PsiPolyVariantReferenceBase<RsGosubExpression>(element, element.nameLiteral.textRangeInParent) {
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
-        val elements = StubIndex.getElements(RsProcScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.moduleScope(module), RsScript::class.java)
+        val elements =
+            StubIndex.getElements(
+                RsProcScriptIndex.KEY,
+                element.nameLiteral.text,
+                element.project,
+                GlobalSearchScope.moduleScope(module),
+                RsScript::class.java,
+            )
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 
-    override fun handleElementRename(newElementName: String): PsiElement {
-        return element.setName(newElementName)
-    }
+    override fun handleElementRename(newElementName: String): PsiElement = element.setName(newElementName)
 }

@@ -17,30 +17,30 @@ import io.runescript.plugin.lang.doc.psi.api.RsDoc
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsTokenTypes
 
-class RsDocImpl(buffer: CharSequence?) : LazyParseablePsiElement(RsDocTokens.RSDOC, buffer), RsDoc {
-
+class RsDocImpl(
+    buffer: CharSequence?,
+) : LazyParseablePsiElement(RsDocTokens.RSDOC, buffer),
+    RsDoc {
     override fun getLanguage(): Language = RuneScript
 
     override fun toString(): String = node.elementType.toString()
 
     override fun getTokenType(): IElementType = RsTokenTypes.DOC_COMMENT
 
-    override fun getOwner(): RsScript? {
-        return parentOfType<RsScript>()
-    }
+    override fun getOwner(): RsScript? = parentOfType<RsScript>()
 
     override fun getDefaultSection(): RsDocSection = getChildOfType()!!
 
-    override fun getAllSections(): List<RsDocSection> =
-        getChildrenOfType<RsDocSection>().toList()
+    override fun getAllSections(): List<RsDocSection> = getChildrenOfType<RsDocSection>().toList()
 
-    override fun findSectionByName(name: String): RsDocSection? =
-        getChildrenOfType<RsDocSection>().firstOrNull { it.name == name }
+    override fun findSectionByName(name: String): RsDocSection? = getChildrenOfType<RsDocSection>().firstOrNull { it.name == name }
 
-    override fun findSectionByTag(tag: RsDocKnownTag): RsDocSection? =
-        findSectionByName(tag.name.lowercase())
+    override fun findSectionByTag(tag: RsDocKnownTag): RsDocSection? = findSectionByName(tag.name.lowercase())
 
-    override fun findSectionByTag(tag: RsDocKnownTag, subjectName: String): RsDocSection? =
+    override fun findSectionByTag(
+        tag: RsDocKnownTag,
+        subjectName: String,
+    ): RsDocSection? =
         getChildrenOfType<RsDocSection>().firstOrNull {
             it.name == tag.name.lowercase() && it.getSubjectName() == subjectName
         }

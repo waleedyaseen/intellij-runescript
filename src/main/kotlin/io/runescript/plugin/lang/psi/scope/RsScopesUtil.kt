@@ -9,8 +9,11 @@ import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsScript
 
 object RsScopesUtil {
-
-    fun walkUpScopes(processor: PsiScopeProcessor, state: ResolveState, element: PsiElement): Boolean {
+    fun walkUpScopes(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        element: PsiElement,
+    ): Boolean {
         var scope: PsiElement? = element
         var lastParent: PsiElement? = element
         while (scope != null) {
@@ -30,7 +33,7 @@ object RsScopesUtil {
         processor: PsiScopeProcessor,
         state: ResolveState,
         lastParent: PsiElement?,
-        place: PsiElement
+        place: PsiElement,
     ): Boolean {
         var child: PsiElement? = null
         if (lastParent != null && lastParent.parent === thisElement) {

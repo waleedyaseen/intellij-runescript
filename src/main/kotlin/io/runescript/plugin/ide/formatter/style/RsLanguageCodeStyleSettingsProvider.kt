@@ -6,12 +6,13 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizableOptions
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
 import io.runescript.plugin.lang.RuneScript
 
-
 class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
-
     override fun getLanguage() = RuneScript
 
-    override fun customizeSettings(consumer: CodeStyleSettingsCustomizable, settingsType: SettingsType) {
+    override fun customizeSettings(
+        consumer: CodeStyleSettingsCustomizable,
+        settingsType: SettingsType,
+    ) {
         if (settingsType == SettingsType.SPACING_SETTINGS) {
             val spacesWithin = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_WITHIN
             val spacesBeforeParen = CodeStyleSettingsCustomizableOptions.getInstance().SPACES_BEFORE_PARENTHESES
@@ -24,8 +25,6 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "SPACE_BEFORE_CALC_PARENTHESES",
                 "SPACE_BEFORE_RETURN_PARENTHESES",
                 "SPACE_BEFORE_METHOD_CALL_PARENTHESES",
-
-
                 // Around operators
                 "SPACE_AROUND_ASSIGNMENT_OPERATORS",
                 "SPACE_AROUND_LOGICAL_OPERATORS",
@@ -34,15 +33,12 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "SPACE_AROUND_BITWISE_OPERATORS",
                 "SPACE_AROUND_MULTIPLICATIVE_OPERATORS",
                 "SPACE_AROUND_ADDITIVE_OPERATORS",
-
                 // Before keywords
                 "SPACE_BEFORE_ELSE_KEYWORD",
-
                 // Before left brace
                 "SPACE_BEFORE_SWITCH_LBRACE",
                 "SPACE_BEFORE_WHILE_LBRACE",
                 "SPACE_BEFORE_IF_LBRACE",
-
                 // Within
                 "SPACE_WITHIN_IF_PARENTHESES",
                 "SPACE_WITHIN_SWITCH_PARENTHESES",
@@ -50,12 +46,11 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "SPACE_WITHIN_PARENTHESES",
                 "SPACE_WITHIN_METHOD_CALL_PARENTHESES",
                 "SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES",
-
                 // Others
                 "SPACE_BEFORE_COMMA",
                 "SPACE_AFTER_COMMA",
                 "SPACE_AFTER_SEMICOLON",
-                "SPACE_BEFORE_SEMICOLON"
+                "SPACE_BEFORE_SEMICOLON",
             )
             consumer.renameStandardOption("SPACE_BEFORE_METHOD_CALL_PARENTHESES", "Call parentheses")
             consumer.renameStandardOption("SPACE_AROUND_ASSIGNMENT_OPERATORS", "Assignment operators (=)")
@@ -67,53 +62,52 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
             consumer.renameStandardOption("SPACE_BEFORE_SEMICOLON", "Before semicolon")
             consumer.renameStandardOption("SPACE_AFTER_SEMICOLON", "After semicolon")
 
-
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_BEFORE_CALC_PARENTHESES",
                 "'calc' parentheses",
-                spacesBeforeParen
+                spacesBeforeParen,
             )
 
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_BEFORE_RETURN_PARENTHESES",
                 "'return' parentheses",
-                spacesBeforeParen
+                spacesBeforeParen,
             )
 
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_WITHIN_CALC_PARENTHESES",
                 "'calc' parentheses",
-                spacesWithin
+                spacesWithin,
             )
 
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_WITHIN_RETURN_LIST_PARENTHESES",
                 "Return list parentheses",
-                spacesWithin
+                spacesWithin,
             )
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_WITHIN_RETURN_ARGUMENTS_PARENTHESES",
                 "Return arguments parentheses",
-                spacesWithin
+                spacesWithin,
             )
 
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_WITHIN_ARRAY_BOUNDS",
                 "Array bounds",
-                spacesWithin
+                spacesWithin,
             )
 
             consumer.showCustomOption(
                 RsCodeStyleSettings::class.java,
                 "SPACE_BEFORE_ARRAY_BOUNDS",
                 "Array bounds",
-                spacesBeforeParen
+                spacesBeforeParen,
             )
 
             consumer.showCustomOption(
@@ -122,7 +116,7 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "Before comma in return type",
                 spacesOther,
                 CodeStyleSettingsCustomizable.OptionAnchor.AFTER,
-                "SPACE_AFTER_COMMA"
+                "SPACE_AFTER_COMMA",
             )
 
             consumer.showCustomOption(
@@ -131,7 +125,7 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "After comma in return type",
                 spacesOther,
                 CodeStyleSettingsCustomizable.OptionAnchor.AFTER,
-                "SPACE_AFTER_COMMA"
+                "SPACE_AFTER_COMMA",
             )
 
             consumer.showCustomOption(
@@ -140,7 +134,7 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "Before comma in return arguments",
                 spacesOther,
                 CodeStyleSettingsCustomizable.OptionAnchor.AFTER,
-                "SPACE_AFTER_COMMA"
+                "SPACE_AFTER_COMMA",
             )
 
             consumer.showCustomOption(
@@ -149,14 +143,12 @@ class RsLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() 
                 "After comma in return arguments",
                 spacesOther,
                 CodeStyleSettingsCustomizable.OptionAnchor.AFTER,
-                "SPACE_AFTER_COMMA"
+                "SPACE_AFTER_COMMA",
             )
         }
     }
 
-    override fun getIndentOptionsEditor(): IndentOptionsEditor {
-        return RsIndentOptionsEditor()
-    }
+    override fun getIndentOptionsEditor(): IndentOptionsEditor = RsIndentOptionsEditor()
 
     override fun getCodeSample(settingsType: SettingsType) =
         $$"""

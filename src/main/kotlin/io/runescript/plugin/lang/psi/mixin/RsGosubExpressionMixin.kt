@@ -7,21 +7,15 @@ import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsPsiImplUtil
 import io.runescript.plugin.lang.psi.refs.RsGosubReference
 
-abstract class RsGosubExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsGosubExpression {
+abstract class RsGosubExpressionMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsGosubExpression {
+    override fun getReference(): RsGosubReference = RsGosubReference(this)
 
-    override fun getReference(): RsGosubReference {
-        return RsGosubReference(this)
-    }
+    override fun getNameIdentifier(): PsiElement = nameLiteral
 
-    override fun getNameIdentifier(): PsiElement {
-        return nameLiteral
-    }
+    override fun getName(): String = RsPsiImplUtil.getName(nameLiteral)
 
-    override fun getName(): String {
-        return RsPsiImplUtil.getName(nameLiteral)
-    }
-
-    override fun setName(name: String): PsiElement {
-        return RsPsiImplUtil.setName(nameLiteral, name)
-    }
+    override fun setName(name: String): PsiElement = RsPsiImplUtil.setName(nameLiteral, name)
 }

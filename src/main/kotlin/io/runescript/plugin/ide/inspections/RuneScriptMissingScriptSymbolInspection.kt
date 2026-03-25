@@ -1,21 +1,23 @@
 package io.runescript.plugin.ide.inspections
 
 import com.intellij.codeInspection.LocalInspectionTool
-import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.endOffset
 import com.intellij.psi.util.startOffset
-import io.runescript.plugin.ide.RsBundle
-import io.runescript.plugin.lang.psi.*
-import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsVisitor
+import io.runescript.plugin.lang.psi.isSourceFile
+import io.runescript.plugin.lang.psi.qualifiedName
+import io.runescript.plugin.lang.psi.triggerName
 
 class RuneScriptMissingScriptSymbolInspection : LocalInspectionTool() {
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+    ): PsiElementVisitor {
         return object : RsVisitor() {
-
             override fun visitScript(o: RsScript) {
                 if (!o.isSourceFile() || o.triggerName == "command") return
                 val name = o.qualifiedName

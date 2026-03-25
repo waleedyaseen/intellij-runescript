@@ -10,25 +10,32 @@ import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsLocalVariableExpressionImpl
 import io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub
 
-object RsLocalVariableExpressionStubType : RsStubType<RsLocalVariableExpressionStub, RsLocalVariableExpression>("LOCAL_VARIABLE_EXPRESSION") {
+object RsLocalVariableExpressionStubType : RsStubType<RsLocalVariableExpressionStub, RsLocalVariableExpression>(
+    "LOCAL_VARIABLE_EXPRESSION",
+) {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsLocalVariableExpressionStub = RsLocalVariableExpressionStub(parentStub, this, dataStream.readUTF())
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsLocalVariableExpressionStub {
-        return RsLocalVariableExpressionStub(parentStub, this, dataStream.readUTF())
-    }
-
-    override fun serialize(stub: RsLocalVariableExpressionStub, dataStream: StubOutputStream) {
+    override fun serialize(
+        stub: RsLocalVariableExpressionStub,
+        dataStream: StubOutputStream,
+    ) {
         dataStream.writeUTF(stub.name)
     }
 
-    override fun createStub(psi: RsLocalVariableExpression, parentStub: StubElement<out PsiElement>?): RsLocalVariableExpressionStub {
-        return RsLocalVariableExpressionStub(parentStub, this, psi.name!!)
-    }
+    override fun createStub(
+        psi: RsLocalVariableExpression,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsLocalVariableExpressionStub = RsLocalVariableExpressionStub(parentStub, this, psi.name!!)
 
-    override fun createPsi(stub: RsLocalVariableExpressionStub): RsLocalVariableExpression {
-        return RsLocalVariableExpressionImpl(stub, this)
-    }
+    override fun createPsi(stub: RsLocalVariableExpressionStub): RsLocalVariableExpression = RsLocalVariableExpressionImpl(stub, this)
 
-    override fun indexStub(stub: RsLocalVariableExpressionStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsLocalVariableExpressionStub,
+        sink: IndexSink,
+    ) {
         // TODO
     }
 }

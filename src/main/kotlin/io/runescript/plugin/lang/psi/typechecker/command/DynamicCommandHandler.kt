@@ -6,7 +6,6 @@ import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticType
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostics
 
-
 /**
  * A dynamic command handler allows more complex commands to be implemented.
  * Implementations are able to do custom type checking and code generations,
@@ -32,21 +31,33 @@ interface DynamicCommandHandler {
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.INFO].
      */
-    fun PsiElement.reportInfo(diagnostics: Diagnostics, message: String, vararg args: Any) {
+    fun PsiElement.reportInfo(
+        diagnostics: Diagnostics,
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.INFO, this, message, *args))
     }
 
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.WARNING].
      */
-    fun PsiElement.reportWarning(diagnostics: Diagnostics, message: String, vararg args: Any) {
+    fun PsiElement.reportWarning(
+        diagnostics: Diagnostics,
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.WARNING, this, message, *args))
     }
 
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.ERROR].
      */
-    fun PsiElement.reportError(diagnostics: Diagnostics, message: String, vararg args: Any) {
+    fun PsiElement.reportError(
+        diagnostics: Diagnostics,
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.ERROR, this, message, *args))
     }
 }

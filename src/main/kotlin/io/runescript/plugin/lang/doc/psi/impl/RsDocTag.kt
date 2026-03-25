@@ -23,8 +23,9 @@ import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 import io.runescript.plugin.lang.doc.parser.RsDocElementTypes
 import io.runescript.plugin.lang.doc.parser.RsDocKnownTag
 
-open class RsDocTag(node: ASTNode) : RsDocElementImpl(node) {
-
+open class RsDocTag(
+    node: ASTNode,
+) : RsDocElementImpl(node) {
     /**
      * Returns the name of this tag, not including the leading @ character.
      *
@@ -66,7 +67,8 @@ open class RsDocTag(node: ASTNode) : RsDocElementImpl(node) {
     }
 
     private fun childrenAfterTagName(): List<ASTNode> =
-        node.getChildren(null)
+        node
+            .getChildren(null)
             .dropWhile { it.elementType == RsDocTokens.TAG_NAME }
             .dropWhile { it.elementType == TokenType.WHITE_SPACE }
 
@@ -104,10 +106,11 @@ open class RsDocTag(node: ASTNode) : RsDocElementImpl(node) {
         for (node in children) {
             val type = node.elementType
             if (type == RsDocTokens.CODE_BLOCK_TEXT) {
-                //If first line of code block
-                if (!isCodeBlock())
+                // If first line of code block
+                if (!isCodeBlock()) {
                     indentedCodeBlock =
                         indentedCodeBlock || node.text.startsWith(indentationWhiteSpaces) || node.text.startsWith("\t")
+                }
                 startCodeBlock()
             } else if (RsDocTokens.CONTENT_TOKENS.contains(type)) {
                 flushCodeBlock()
@@ -140,13 +143,17 @@ open class RsDocTag(node: ASTNode) : RsDocElementImpl(node) {
         return builder.toString().trimEnd(' ', '\t')
     }
 
-    private fun trimCommonIndent(builder: StringBuilder, prepend4WhiteSpaces: Boolean = false): String {
+    private fun trimCommonIndent(
+        builder: StringBuilder,
+        prepend4WhiteSpaces: Boolean = false,
+    ): String {
         val lines = builder.toString().split('\n')
         val minIndent = lines.filter { it.trim().isNotEmpty() }.minOfOrNull { it.calcIndent() } ?: 0
         var processedLines = lines.map { it.drop(minIndent) }
-        if (prepend4WhiteSpaces)
+        if (prepend4WhiteSpaces) {
             processedLines =
                 processedLines.map { if (it.isNotBlank()) it.prependIndent(indentationWhiteSpaces) else it }
+        }
         return processedLines.joinToString("\n")
     }
 

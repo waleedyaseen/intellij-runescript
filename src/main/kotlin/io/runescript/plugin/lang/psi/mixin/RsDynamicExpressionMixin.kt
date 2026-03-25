@@ -10,8 +10,10 @@ import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 import io.runescript.plugin.lang.psi.typechecker.typeHint
 
-abstract class RsDynamicExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsDynamicExpression {
-
+abstract class RsDynamicExpressionMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsDynamicExpression {
     override fun getReference(): PsiReference? {
         if (typeHint is MetaType.Type) {
             return null
@@ -19,15 +21,9 @@ abstract class RsDynamicExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(no
         return RsDynamicExpressionReference(this)
     }
 
-    override fun getName(): String? {
-        return RsPsiImplUtil.getName(nameLiteral)
-    }
+    override fun getName(): String? = RsPsiImplUtil.getName(nameLiteral)
 
-    override fun setName(name: String): PsiElement {
-        return RsPsiImplUtil.setName(nameLiteral, name)
-    }
+    override fun setName(name: String): PsiElement = RsPsiImplUtil.setName(nameLiteral, name)
 
-    override fun getNameIdentifier(): PsiElement? {
-        return nameLiteral
-    }
+    override fun getNameIdentifier(): PsiElement? = nameLiteral
 }

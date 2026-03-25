@@ -11,21 +11,20 @@ import io.runescript.plugin.lang.psi.typechecker.type.Type
 import io.runescript.plugin.lang.psi.typechecker.typeCheckedType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
-class RsStringLiteralReference(element: RsStringLiteralExpression) :
-    PsiPolyVariantReferenceBase<RsStringLiteralExpression>(element, element.stringLiteralContent.textRangeInParent) {
-
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        return resolveElement(element, element.typeCheckedType)
-    }
+class RsStringLiteralReference(
+    element: RsStringLiteralExpression,
+) : PsiPolyVariantReferenceBase<RsStringLiteralExpression>(element, element.stringLiteralContent.textRangeInParent) {
+    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> = resolveElement(element, element.typeCheckedType)
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 
-    override fun handleElementRename(newElementName: String): PsiElement {
-        return element.setName(newElementName)
-    }
+    override fun handleElementRename(newElementName: String): PsiElement = element.setName(newElementName)
 
     companion object {
-        fun resolveElement(element: RsStringLiteralExpression, type: Type): Array<ResolveResult> {
+        fun resolveElement(
+            element: RsStringLiteralExpression,
+            type: Type,
+        ): Array<ResolveResult> {
             if (!element.stringLiteralContent.isBasicContent()) {
                 return emptyArray()
             }

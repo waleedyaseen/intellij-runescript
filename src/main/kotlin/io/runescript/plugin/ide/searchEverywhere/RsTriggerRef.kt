@@ -9,27 +9,31 @@ import io.runescript.plugin.lang.psi.triggerName
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
 import javax.swing.Icon
 
-data class RsTriggerRef(val displayName: String, val icon: Icon?) {
-
+data class RsTriggerRef(
+    val displayName: String,
+    val icon: Icon?,
+) {
     companion object {
-        private val triggerTypes = arrayListOf(
-            "proc",
-            "clientscript"
-        )
+        private val triggerTypes =
+            arrayListOf(
+                "proc",
+                "clientscript",
+            )
 
         @JvmStatic
         fun forTrigger(trigger: TriggerType): RsTriggerRef = forTrigger(trigger.identifier)
 
         @JvmStatic
-        fun forTrigger(trigger: String): RsTriggerRef = RsTriggerRef(
-            trigger,
-            when (trigger) {
-                "proc" -> RsIcons.GutterProc
-                "clientscript" -> RsIcons.GutterClientScript
-                "command" -> RsIcons.GutterCommand
-                else -> RsIcons.GutterOther
-            }
-        )
+        fun forTrigger(trigger: String): RsTriggerRef =
+            RsTriggerRef(
+                trigger,
+                when (trigger) {
+                    "proc" -> RsIcons.GutterProc
+                    "clientscript" -> RsIcons.GutterClientScript
+                    "command" -> RsIcons.GutterCommand
+                    else -> RsIcons.GutterOther
+                },
+            )
 
         @JvmStatic
         fun forNavigationItem(item: NavigationItem): RsTriggerRef? {
@@ -39,11 +43,10 @@ data class RsTriggerRef(val displayName: String, val icon: Icon?) {
         }
 
         @JvmStatic
-        fun forAllTriggers(): List<RsTriggerRef> {
-            return triggerTypes
+        fun forAllTriggers(): List<RsTriggerRef> =
+            triggerTypes
                 .sortedWith { a, b -> StringUtil.naturalCompare(a, b) }
                 .map { forTrigger(it) }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -55,7 +58,5 @@ data class RsTriggerRef(val displayName: String, val icon: Icon?) {
         return displayName == other.displayName
     }
 
-    override fun hashCode(): Int {
-        return displayName.hashCode()
-    }
+    override fun hashCode(): Int = displayName.hashCode()
 }

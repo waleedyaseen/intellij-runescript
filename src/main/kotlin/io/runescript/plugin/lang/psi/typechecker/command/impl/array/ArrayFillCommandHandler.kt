@@ -1,7 +1,5 @@
 package io.runescript.plugin.lang.psi.typechecker.command.impl.array
 
-
-
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
@@ -39,11 +37,12 @@ class ArrayFillCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            MetaType.Any,
-            PrimitiveType.INT,
-            PrimitiveType.INT,
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                MetaType.Any,
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+            )
     }
 }

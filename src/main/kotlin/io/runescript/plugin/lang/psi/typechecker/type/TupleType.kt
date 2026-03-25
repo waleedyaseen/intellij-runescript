@@ -1,12 +1,13 @@
 package io.runescript.plugin.lang.psi.typechecker.type
 
 import com.google.common.base.MoreObjects
-import kotlin.collections.plusAssign
 
 /**
  * A single type that combines multiple other types into one while still providing access to the other types.
  */
-class TupleType(vararg children: Type) : Type {
+class TupleType(
+    vararg children: Type,
+) : Type {
     /**
      * A flattened array of types this tuple contains.
      */
@@ -38,9 +39,11 @@ class TupleType(vararg children: Type) : Type {
         return children.contentEquals(other.children)
     }
 
-    override fun toString(): String = MoreObjects.toStringHelper(this)
-        .add("children", children)
-        .toString()
+    override fun toString(): String =
+        MoreObjects
+            .toStringHelper(this)
+            .add("children", children)
+            .toString()
 
     companion object {
         /**
@@ -67,8 +70,8 @@ class TupleType(vararg children: Type) : Type {
          * - If the [type] is `null`, [MetaType.Unit], or [MetaType.Nothing] an empty list is returned.
          * - If the [type] is a singular type, and is not `unit`, a list with just the [type] is returned.
          */
-        // TODO move to a different location?
         fun toList(type: Type?): List<Type> {
+            // TODO move to a different location?
             if (type is TupleType) {
                 // special case for tuples since we can convert the children into a list
                 return type.children.toList()

@@ -12,17 +12,23 @@ import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
 
-class RsHookFragmentReference(element: RsHookFragment) : PsiPolyVariantReferenceBase<RsHookFragment>(element, element.nameLiteral.textRangeInParent) {
-
+class RsHookFragmentReference(
+    element: RsHookFragment,
+) : PsiPolyVariantReferenceBase<RsHookFragment>(element, element.nameLiteral.textRangeInParent) {
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
-        val elements = StubIndex.getElements(RsClientScriptIndex.KEY, element.nameLiteral.text, element.project, GlobalSearchScope.moduleScope(module), RsScript::class.java)
+        val elements =
+            StubIndex.getElements(
+                RsClientScriptIndex.KEY,
+                element.nameLiteral.text,
+                element.project,
+                GlobalSearchScope.moduleScope(module),
+                RsScript::class.java,
+            )
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 
-    override fun handleElementRename(newElementName: String): PsiElement {
-        return element.setName(newElementName)
-    }
+    override fun handleElementRename(newElementName: String): PsiElement = element.setName(newElementName)
 }

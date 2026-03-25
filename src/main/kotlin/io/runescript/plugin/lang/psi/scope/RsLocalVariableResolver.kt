@@ -7,18 +7,24 @@ import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.isForArrayDeclaration
 import io.runescript.plugin.lang.psi.isForVariableDeclaration
 
-class RsLocalVariableResolver(private val name: String, private val mode: RsResolveMode) : PsiScopeProcessor {
-
+class RsLocalVariableResolver(
+    private val name: String,
+    private val mode: RsResolveMode,
+) : PsiScopeProcessor {
     var declaration: RsLocalVariableExpression? = null
 
-    override fun execute(element: PsiElement, state: ResolveState): Boolean {
+    override fun execute(
+        element: PsiElement,
+        state: ResolveState,
+    ): Boolean {
         if (element is RsLocalVariableExpression) {
             if (element.name != name) return true
-            val filterPassed = when (mode) {
-                RsResolveMode.Variables -> element.isForVariableDeclaration()
-                RsResolveMode.Arrays -> element.isForArrayDeclaration()
-                RsResolveMode.Both -> element.isForVariableDeclaration() || element.isForArrayDeclaration()
-            }
+            val filterPassed =
+                when (mode) {
+                    RsResolveMode.Variables -> element.isForVariableDeclaration()
+                    RsResolveMode.Arrays -> element.isForArrayDeclaration()
+                    RsResolveMode.Both -> element.isForVariableDeclaration() || element.isForArrayDeclaration()
+                }
             if (filterPassed) {
                 declaration = element
                 return false

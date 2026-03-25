@@ -6,16 +6,15 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
 
 class RsScriptInsertHandler(
-    private val prefix: String? = null
+    private val prefix: String? = null,
 ) : InsertHandler<LookupElement> {
     override fun handleInsert(
         context: InsertionContext,
-        item: LookupElement
+        item: LookupElement,
     ) {
         val document = context.document
         val editor = context.editor
         var endOffset = context.tailOffset
-
 
         if (prefix != null) {
             val startOffset = context.startOffset

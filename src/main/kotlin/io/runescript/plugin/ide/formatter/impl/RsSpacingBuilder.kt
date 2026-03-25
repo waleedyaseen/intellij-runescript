@@ -3,18 +3,64 @@ package io.runescript.plugin.ide.formatter.impl
 import com.intellij.formatting.Block
 import com.intellij.formatting.Spacing
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings
-import io.runescript.plugin.ide.formatter.*
 import io.runescript.plugin.ide.formatter.blocks.RsBlock
+import io.runescript.plugin.ide.formatter.isAdditiveOperator
+import io.runescript.plugin.ide.formatter.isBitwiseOperator
+import io.runescript.plugin.ide.formatter.isEqualityOperator
+import io.runescript.plugin.ide.formatter.isLogicalOperator
+import io.runescript.plugin.ide.formatter.isMultiplicativeOperator
+import io.runescript.plugin.ide.formatter.isRelationalOperator
 import io.runescript.plugin.ide.formatter.style.RsCodeStyleSettings
 import io.runescript.plugin.lang.psi.RsArgumentList
-import io.runescript.plugin.lang.psi.RsElementTypes.*
+import io.runescript.plugin.lang.psi.RsElementTypes.ARGUMENT_LIST
+import io.runescript.plugin.lang.psi.RsElementTypes.ARITHMETIC_VALUE_EXPRESSION
+import io.runescript.plugin.lang.psi.RsElementTypes.ARRAY_ACCESS_EXPRESSION
+import io.runescript.plugin.lang.psi.RsElementTypes.ARRAY_VARIABLE_DECLARATION_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.ASSIGNMENT_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.BLOCK_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.CALC
+import io.runescript.plugin.lang.psi.RsElementTypes.CALC_EXPRESSION
+import io.runescript.plugin.lang.psi.RsElementTypes.COLON
+import io.runescript.plugin.lang.psi.RsElementTypes.COMMA
+import io.runescript.plugin.lang.psi.RsElementTypes.COMMAND_EXPRESSION
+import io.runescript.plugin.lang.psi.RsElementTypes.DEFINE_TYPE
+import io.runescript.plugin.lang.psi.RsElementTypes.ELSE
+import io.runescript.plugin.lang.psi.RsElementTypes.EQUAL
+import io.runescript.plugin.lang.psi.RsElementTypes.GOSUB_EXPRESSION
+import io.runescript.plugin.lang.psi.RsElementTypes.IF
+import io.runescript.plugin.lang.psi.RsElementTypes.IF_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.LBRACE
+import io.runescript.plugin.lang.psi.RsElementTypes.LBRACKET
+import io.runescript.plugin.lang.psi.RsElementTypes.LOCAL_VARIABLE_DECLARATION_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.LPAREN
+import io.runescript.plugin.lang.psi.RsElementTypes.PARAMETER_LIST
+import io.runescript.plugin.lang.psi.RsElementTypes.RBRACE
+import io.runescript.plugin.lang.psi.RsElementTypes.RBRACKET
+import io.runescript.plugin.lang.psi.RsElementTypes.RELATIONAL_VALUE_EXPRESSION
+import io.runescript.plugin.lang.psi.RsElementTypes.RETURN
+import io.runescript.plugin.lang.psi.RsElementTypes.RETURN_LIST
+import io.runescript.plugin.lang.psi.RsElementTypes.RETURN_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.RPAREN
+import io.runescript.plugin.lang.psi.RsElementTypes.SCRIPT
+import io.runescript.plugin.lang.psi.RsElementTypes.SEMICOLON
+import io.runescript.plugin.lang.psi.RsElementTypes.STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.STATEMENT_LIST
+import io.runescript.plugin.lang.psi.RsElementTypes.SWITCH
+import io.runescript.plugin.lang.psi.RsElementTypes.SWITCH_CASE
+import io.runescript.plugin.lang.psi.RsElementTypes.SWITCH_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.TYPE_NAME
+import io.runescript.plugin.lang.psi.RsElementTypes.WHILE
+import io.runescript.plugin.lang.psi.RsElementTypes.WHILE_STATEMENT
 
 class RsSpacingBuilder(
     private val settings: CommonCodeStyleSettings,
-    private val rsSettings: RsCodeStyleSettings
+    private val rsSettings: RsCodeStyleSettings,
 ) {
-
-    fun getSpacing(parent: RsBlock, child1: Block?, child2: Block): Spacing? {
+    fun getSpacing(
+        parent: RsBlock,
+        child1: Block?,
+        child2: Block,
+    ): Spacing? {
         if (child1 !is RsBlock || child2 !is RsBlock) {
             return null
         }
@@ -40,8 +86,9 @@ class RsSpacingBuilder(
         if (child1.isAdditiveOperator() || child2.isAdditiveOperator()) {
             return spaceIf(settings.SPACE_AROUND_ADDITIVE_OPERATORS)
         }
-        if (elementType == ASSIGNMENT_STATEMENT
-                || elementType == LOCAL_VARIABLE_DECLARATION_STATEMENT) {
+        if (elementType == ASSIGNMENT_STATEMENT ||
+            elementType == LOCAL_VARIABLE_DECLARATION_STATEMENT
+        ) {
             if (type1 == EQUAL || type2 == EQUAL) {
                 return spaceIf(settings.SPACE_AROUND_ASSIGNMENT_OPERATORS)
             }
@@ -52,9 +99,10 @@ class RsSpacingBuilder(
         if (type1 == SEMICOLON) {
             return spaceIf(settings.SPACE_AFTER_SEMICOLON)
         }
-        if (elementType == ASSIGNMENT_STATEMENT
-                || elementType == ARRAY_VARIABLE_DECLARATION_STATEMENT
-                || elementType == ARRAY_ACCESS_EXPRESSION) {
+        if (elementType == ASSIGNMENT_STATEMENT ||
+            elementType == ARRAY_VARIABLE_DECLARATION_STATEMENT ||
+            elementType == ARRAY_ACCESS_EXPRESSION
+        ) {
             if (type1 == LPAREN || type2 == RPAREN) {
                 return spaceIf(rsSettings.SPACE_WITHIN_ARRAY_BOUNDS)
             }
@@ -129,8 +177,9 @@ class RsSpacingBuilder(
         if (elementType == WHILE_STATEMENT && (type1 == LPAREN || type2 == RPAREN)) {
             return spaceIf(settings.SPACE_WITHIN_WHILE_PARENTHESES)
         }
-        if ((elementType == ARITHMETIC_VALUE_EXPRESSION || elementType == RELATIONAL_VALUE_EXPRESSION)
-                && (type1 == LPAREN || type2 == RPAREN)) {
+        if ((elementType == ARITHMETIC_VALUE_EXPRESSION || elementType == RELATIONAL_VALUE_EXPRESSION) &&
+            (type1 == LPAREN || type2 == RPAREN)
+        ) {
             return spaceIf(settings.SPACE_WITHIN_PARENTHESES)
         }
         if (elementType == CALC_EXPRESSION && (type1 == LPAREN || type2 == RPAREN)) {
@@ -146,11 +195,18 @@ class RsSpacingBuilder(
             val superType = parent.node.treeParent.elementType
             if (superType == GOSUB_EXPRESSION || superType == COMMAND_EXPRESSION) {
                 val emptyArguments = (parent.node.psi as RsArgumentList).expressionList.isEmpty()
-                return spaceIf(if (emptyArguments) settings.SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES else settings.SPACE_WITHIN_METHOD_CALL_PARENTHESES)
+                return spaceIf(
+                    if (emptyArguments) {
+                        settings.SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES
+                    } else {
+                        settings.SPACE_WITHIN_METHOD_CALL_PARENTHESES
+                    },
+                )
             }
         }
-        if (elementType == ARGUMENT_LIST || elementType == SWITCH_CASE
-                || elementType == PARAMETER_LIST) {
+        if (elementType == ARGUMENT_LIST || elementType == SWITCH_CASE ||
+            elementType == PARAMETER_LIST
+        ) {
             if (type2 == COMMA) {
                 return spaceIf(settings.SPACE_BEFORE_COMMA)
             } else if (type1 == COMMA) {
@@ -211,7 +267,6 @@ class RsSpacingBuilder(
         return Spacing.createSpacing(spaces, spaces, 0, settings.KEEP_LINE_BREAKS, settings.KEEP_BLANK_LINES_IN_CODE)
     }
 
-    private fun lineBreak(lines: Int = 1): Spacing {
-        return Spacing.createSpacing(0, 0, lines, settings.KEEP_LINE_BREAKS, settings.KEEP_BLANK_LINES_IN_CODE)
-    }
+    private fun lineBreak(lines: Int = 1): Spacing =
+        Spacing.createSpacing(0, 0, lines, settings.KEEP_LINE_BREAKS, settings.KEEP_BLANK_LINES_IN_CODE)
 }

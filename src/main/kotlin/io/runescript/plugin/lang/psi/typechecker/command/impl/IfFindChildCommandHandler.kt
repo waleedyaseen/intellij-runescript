@@ -3,7 +3,11 @@ package io.runescript.plugin.lang.psi.typechecker.command.impl
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
-import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.ParamType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 
 class IfFindChildCommandHandler : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
@@ -18,23 +22,24 @@ class IfFindChildCommandHandler : DynamicCommandHandler {
             checkArgument(4, param2ReturnType)
         }
 
-        val expectedTypes = if (expression.arguments.size == 5) {
-            // expect (component, param<T>, T, param<U>, U)
-            TupleType(
-                ScriptVarType.COMPONENT,
-                ParamCommandHandler.PARAM_ANY,
-                param1ReturnType ?: MetaType.Any,
-                ParamCommandHandler.PARAM_ANY,
-                param2ReturnType ?: MetaType.Any,
-            )
-        } else {
-            // expect (component, param<T>, T)
-            TupleType(
-                ScriptVarType.COMPONENT,
-                ParamCommandHandler.PARAM_ANY,
-                param1ReturnType ?: MetaType.Any,
-            )
-        }
+        val expectedTypes =
+            if (expression.arguments.size == 5) {
+                // expect (component, param<T>, T, param<U>, U)
+                TupleType(
+                    ScriptVarType.COMPONENT,
+                    ParamCommandHandler.PARAM_ANY,
+                    param1ReturnType ?: MetaType.Any,
+                    ParamCommandHandler.PARAM_ANY,
+                    param2ReturnType ?: MetaType.Any,
+                )
+            } else {
+                // expect (component, param<T>, T)
+                TupleType(
+                    ScriptVarType.COMPONENT,
+                    ParamCommandHandler.PARAM_ANY,
+                    param1ReturnType ?: MetaType.Any,
+                )
+            }
 
         checkArgumentTypes(expectedTypes)
         expression.type = PrimitiveType.BOOLEAN

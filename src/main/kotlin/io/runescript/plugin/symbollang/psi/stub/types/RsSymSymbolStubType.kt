@@ -12,30 +12,36 @@ import io.runescript.plugin.symbollang.psi.isConstantFile
 import io.runescript.plugin.symbollang.psi.stub.RsSymFieldStub
 import io.runescript.plugin.symbollang.psi.stub.RsSymSymbolStub
 
-object RsSymSymbolStubType
-    : RsSymStubType<RsSymSymbolStub, RsSymSymbol>("SYMBOL") {
+object RsSymSymbolStubType :
+    RsSymStubType<RsSymSymbolStub, RsSymSymbol>("SYMBOL") {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsSymSymbolStub = RsSymSymbolStub(parentStub, this)
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsSymSymbolStub {
-        return RsSymSymbolStub(parentStub, this)
+    override fun serialize(
+        stub: RsSymSymbolStub,
+        dataStream: StubOutputStream,
+    ) {
     }
 
-    override fun serialize(stub: RsSymSymbolStub, dataStream: StubOutputStream) {
-    }
+    override fun createStub(
+        psi: RsSymSymbol,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsSymSymbolStub = RsSymSymbolStub(parentStub, this)
 
-    override fun createStub(psi: RsSymSymbol, parentStub: StubElement<out PsiElement>?): RsSymSymbolStub {
-        return RsSymSymbolStub(parentStub, this)
-    }
+    override fun createPsi(stub: RsSymSymbolStub): RsSymSymbol = RsSymSymbolImpl(stub, this)
 
-    override fun createPsi(stub: RsSymSymbolStub): RsSymSymbol {
-        return RsSymSymbolImpl(stub, this)
-    }
-
-    override fun indexStub(stub: RsSymSymbolStub, sink: IndexSink) {
-        val nameField = if (stub.psi.containingFile.isConstantFile()) {
-            stub.childrenStubs[0] as RsSymFieldStub
-        } else {
-            stub.childrenStubs[1] as RsSymFieldStub
-        }
+    override fun indexStub(
+        stub: RsSymSymbolStub,
+        sink: IndexSink,
+    ) {
+        val nameField =
+            if (stub.psi.containingFile.isConstantFile()) {
+                stub.childrenStubs[0] as RsSymFieldStub
+            } else {
+                stub.childrenStubs[1] as RsSymFieldStub
+            }
         sink.occurrence(RsSymbolIndex.KEY, nameField.value)
     }
 }

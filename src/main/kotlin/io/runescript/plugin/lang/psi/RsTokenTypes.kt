@@ -4,19 +4,19 @@ import com.intellij.psi.tree.ILazyParseableElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 
-
 object RsTokenTypes {
-    val ID_TOKENS = TokenSet.create(
-        RsElementTypes.IDENTIFIER,
-        RsElementTypes.DEFINE_TYPE,
-        RsElementTypes.TYPE_LITERAL,
-        RsElementTypes.WHILE,
-        RsElementTypes.IF,
-        RsElementTypes.TRUE,
-        RsElementTypes.FALSE,
-        RsElementTypes.NULL,
-        RsElementTypes.SWITCH
-    )
+    val ID_TOKENS =
+        TokenSet.create(
+            RsElementTypes.IDENTIFIER,
+            RsElementTypes.DEFINE_TYPE,
+            RsElementTypes.TYPE_LITERAL,
+            RsElementTypes.WHILE,
+            RsElementTypes.IF,
+            RsElementTypes.TRUE,
+            RsElementTypes.FALSE,
+            RsElementTypes.NULL,
+            RsElementTypes.SWITCH,
+        )
 
     @JvmField
     val LINE_COMMENT = RsElementType("LINE_COMMENT")

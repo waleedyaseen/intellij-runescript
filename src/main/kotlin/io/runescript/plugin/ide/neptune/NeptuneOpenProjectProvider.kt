@@ -9,13 +9,11 @@ import kotlin.io.path.absolutePathString
 object NeptuneOpenProjectProvider : AbstractOpenProjectProvider() {
     override val systemId = Neptune.SYSTEM_ID
 
-    override fun isProjectFile(file: VirtualFile): Boolean  {
-        return file.isNeptuneBuildFile
-    }
+    override fun isProjectFile(file: VirtualFile): Boolean = file.isNeptuneBuildFile
 
     override suspend fun linkProject(
         projectFile: VirtualFile,
-        project: Project
+        project: Project,
     ) {
         val projectRoot = if (projectFile.isDirectory) projectFile else projectFile.parent
 

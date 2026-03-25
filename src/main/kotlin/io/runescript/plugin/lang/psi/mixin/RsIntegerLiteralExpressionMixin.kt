@@ -9,8 +9,10 @@ import io.runescript.plugin.lang.psi.refs.RsIntegerLiteralReference
 import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
 import io.runescript.plugin.lang.psi.typechecker.typeCheckedType
 
-abstract class RsIntegerLiteralExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsIntegerLiteralExpression {
-
+abstract class RsIntegerLiteralExpressionMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsIntegerLiteralExpression {
     override fun getReference(): RsIntegerLiteralReference? {
         if (typeCheckedType != PrimitiveType.INT) {
             return RsIntegerLiteralReference(this)
@@ -18,13 +20,9 @@ abstract class RsIntegerLiteralExpressionMixin(node: ASTNode) : ASTWrapperPsiEle
         return null
     }
 
-    override fun getNameIdentifier(): PsiElement? {
-        return this
-    }
+    override fun getNameIdentifier(): PsiElement? = this
 
-    override fun getName(): String? {
-        return text
-    }
+    override fun getName(): String? = text
 
     override fun setName(name: String): PsiElement {
         val replacement = RsElementGenerator.createExpression(project, name)

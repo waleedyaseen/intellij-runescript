@@ -3,7 +3,13 @@ package io.runescript.plugin.lang.psi.typechecker
 import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsBlockStatement
+import io.runescript.plugin.lang.psi.RsExpression
+import io.runescript.plugin.lang.psi.RsParameter
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsStringLiteralExpression
+import io.runescript.plugin.lang.psi.RsSwitchCase
+import io.runescript.plugin.lang.psi.RsSwitchStatement
 import io.runescript.plugin.lang.psi.typechecker.symbol.LocalVariableSymbol
 import io.runescript.plugin.lang.psi.typechecker.symbol.LocalVariableTable
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
@@ -28,19 +34,27 @@ var PsiElement.typeCheckerData: TypeCheckerDataHolder?
  * Returns a [ReadWriteProperty] for accessing attributes through delegation. If the attribute is not found an
  * error is thrown.
  */
-fun <T> attribute(key: String): ReadWriteProperty<PsiElement, T> = object : ReadWriteProperty<PsiElement, T> {
+fun <T> attribute(key: String): ReadWriteProperty<PsiElement, T> =
+    object : ReadWriteProperty<PsiElement, T> {
+        @Suppress("UNCHECKED_CAST")
+        override fun getValue(
+            thisRef: PsiElement,
+            property: KProperty<*>,
+        ): T {
+            val value =
+                thisRef.typeCheckerData?.get<T>(thisRef, key)
+                    ?: throw IllegalStateException("Property '${property.name}' should be initialized before get.")
+            return value
+        }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: PsiElement, property: KProperty<*>): T {
-        val value = thisRef.typeCheckerData?.get<T>(thisRef, key)
-            ?: throw IllegalStateException("Property '${property.name}' should be initialized before get.")
-        return value
+        override fun setValue(
+            thisRef: PsiElement,
+            property: KProperty<*>,
+            value: T,
+        ) {
+            checkNotNull(thisRef.typeCheckerData).set(thisRef, key, value)
+        }
     }
-
-    override fun setValue(thisRef: PsiElement, property: KProperty<*>, value: T) {
-        checkNotNull(thisRef.typeCheckerData).set(thisRef, key, value)
-    }
-}
 
 /**
  * Returns a [ReadWriteProperty] for accessing attributes through delegation, if the attribute is not defined
@@ -48,10 +62,16 @@ fun <T> attribute(key: String): ReadWriteProperty<PsiElement, T> = object : Read
  */
 fun <T : Any> attributeOrNull(key: String): ReadWriteProperty<PsiElement, T?> =
     object : ReadWriteProperty<PsiElement, T?> {
-        override fun getValue(thisRef: PsiElement, property: KProperty<*>): T?
-            = thisRef.typeCheckerData?.get(thisRef, key)
+        override fun getValue(
+            thisRef: PsiElement,
+            property: KProperty<*>,
+        ): T? = thisRef.typeCheckerData?.get(thisRef, key)
 
-        override fun setValue(thisRef: PsiElement, property: KProperty<*>, value: T?) {
+        override fun setValue(
+            thisRef: PsiElement,
+            property: KProperty<*>,
+            value: T?,
+        ) {
             checkNotNull(thisRef.typeCheckerData).set(thisRef, key, value)
         }
     }

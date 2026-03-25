@@ -9,52 +9,32 @@ import com.intellij.ui.IdeUICustomization
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.qualifiedName
 
-class RsGotoScriptModel(project: Project) :
-    FilteringGotoByModel<RsTriggerRef>(project, emptyArray()) {
-
+class RsGotoScriptModel(
+    project: Project,
+) : FilteringGotoByModel<RsTriggerRef>(project, emptyArray()) {
     private val contributor = RsChooseByNameContributor()
     private val separators = emptyArray<String>()
 
-    override fun getPromptText(): String {
-        return "Enter script name"
-    }
+    override fun getPromptText(): String = "Enter script name"
 
-    override fun getNotInMessage(): String {
-        return IdeUICustomization.getInstance().projectMessage("label.no.matches.found.in.project")
-    }
+    override fun getNotInMessage(): String = IdeUICustomization.getInstance().projectMessage("label.no.matches.found.in.project")
 
-    override fun getNotFoundMessage(): String {
-        return IdeBundle.message("label.no.matches.found");
-    }
+    override fun getNotFoundMessage(): String = IdeBundle.message("label.no.matches.found")
 
-    override fun getCheckBoxName(): String? {
-        return null
-    }
+    override fun getCheckBoxName(): String? = null
 
-    override fun loadInitialCheckBoxState(): Boolean {
-        return false
-    }
+    override fun loadInitialCheckBoxState(): Boolean = false
 
     override fun saveInitialCheckBoxState(state: Boolean) {
     }
 
-    override fun getSeparators(): Array<String> {
-        return separators
-    }
+    override fun getSeparators(): Array<String> = separators
 
-    override fun getFullName(item: Any): String? {
-        return (item as? RsScript)?.qualifiedName
-    }
+    override fun getFullName(item: Any): String? = (item as? RsScript)?.qualifiedName
 
-    override fun willOpenEditor(): Boolean {
-        return true
-    }
+    override fun willOpenEditor(): Boolean = true
 
-    override fun filterValueFor(item: NavigationItem): RsTriggerRef? {
-        return RsTriggerRef.forNavigationItem(item)
-    }
+    override fun filterValueFor(item: NavigationItem): RsTriggerRef? = RsTriggerRef.forNavigationItem(item)
 
-    override fun getContributorList(): MutableList<ChooseByNameContributor> {
-        return mutableListOf(contributor)
-    }
+    override fun getContributorList(): MutableList<ChooseByNameContributor> = mutableListOf(contributor)
 }

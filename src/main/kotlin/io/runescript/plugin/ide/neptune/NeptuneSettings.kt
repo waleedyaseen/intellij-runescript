@@ -13,25 +13,28 @@ import com.intellij.util.xmlb.annotations.XCollection
 
 @State(name = "NeptuneSettings", storages = [Storage("neptune.xml")])
 @Service(Service.Level.PROJECT)
-class NeptuneSettings(project: Project) :
-    AbstractExternalSystemSettings<NeptuneSettings, NeptuneProjectSettings, NeptuneSettingsListener>(
+class NeptuneSettings(
+    project: Project,
+) : AbstractExternalSystemSettings<NeptuneSettings, NeptuneProjectSettings, NeptuneSettingsListener>(
         NeptuneSettingsListener.TOPIC,
-        project
-    ), PersistentStateComponent<NeptuneSettingsState> {
-
+        project,
+    ),
+    PersistentStateComponent<NeptuneSettingsState> {
     var launcherJre: String = ""
     var neptuneHome: String = ""
 
     override fun subscribe(
         listener: ExternalSystemSettingsListener<NeptuneProjectSettings>,
-        parentDisposable: Disposable
+        parentDisposable: Disposable,
     ) {
-        val adapter = object : DelegatingExternalSystemSettingsListener<NeptuneProjectSettings>(listener),
-            NeptuneSettingsListener {
-            override fun onProjectsUnlinked(linkedProjectPaths: Set<String?>) {
-                listener.onProjectsUnlinked(linkedProjectPaths)
+        val adapter =
+            object :
+                DelegatingExternalSystemSettingsListener<NeptuneProjectSettings>(listener),
+                NeptuneSettingsListener {
+                override fun onProjectsUnlinked(linkedProjectPaths: Set<String?>) {
+                    listener.onProjectsUnlinked(linkedProjectPaths)
+                }
             }
-        }
         doSubscribe(adapter, parentDisposable)
     }
 
@@ -40,7 +43,10 @@ class NeptuneSettings(project: Project) :
         neptuneHome = settings.neptuneHome
     }
 
-    override fun checkSettings(old: NeptuneProjectSettings, current: NeptuneProjectSettings) {
+    override fun checkSettings(
+        old: NeptuneProjectSettings,
+        current: NeptuneProjectSettings,
+    ) {
     }
 
     override fun getState(): NeptuneSettingsState {
@@ -59,19 +65,15 @@ class NeptuneSettings(project: Project) :
 }
 
 class NeptuneSettingsState : AbstractExternalSystemSettings.State<NeptuneProjectSettings> {
-
     private val settings = HashSet<NeptuneProjectSettings>()
 
     var launcherJre: String = ""
     var neptuneHome: String = ""
 
     @XCollection(elementTypes = [NeptuneProjectSettings::class])
-    override fun getLinkedExternalProjectsSettings(): MutableSet<NeptuneProjectSettings> {
-        return settings
-    }
+    override fun getLinkedExternalProjectsSettings(): MutableSet<NeptuneProjectSettings> = settings
 
     override fun setLinkedExternalProjectsSettings(settings: MutableSet<NeptuneProjectSettings>?) {
         this.settings.addAll(settings ?: return)
     }
-
 }

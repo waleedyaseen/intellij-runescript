@@ -19,9 +19,7 @@ import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class NeptuneModuleBuilder :
-    AbstractExternalModuleBuilder<NeptuneProjectSettings>(Neptune.SYSTEM_ID, NeptuneProjectSettings()) {
-
+class NeptuneModuleBuilder : AbstractExternalModuleBuilder<NeptuneProjectSettings>(Neptune.SYSTEM_ID, NeptuneProjectSettings()) {
     private var creatingNewProject: Boolean = false
     private var rootProjectPath: Path? = null
 
@@ -59,25 +57,27 @@ class NeptuneModuleBuilder :
         val module = modifiableRootModel.module
         val project = module.project
 
-        rootProjectPath = if (creatingNewProject)
-            Paths.get(project.basePath!!)
-        else
-            modelContentRootDir.toNioPath()
-
+        rootProjectPath =
+            if (creatingNewProject) {
+                Paths.get(project.basePath!!)
+            } else {
+                modelContentRootDir.toNioPath()
+            }
 
         RsProjectTemplate.generateTemplate(module, moduleContentEntry, modelContentRootDir)
     }
 
-    override fun createProject(name: String, path: String): Project? {
+    override fun createProject(
+        name: String,
+        path: String,
+    ): Project? {
         creatingNewProject = true
         return super.createProject(name, path)
     }
 
     override fun getModuleType(): ModuleType<*> = RsModuleType.INSTANCE
 
-    override fun isSuitableSdkType(sdkType: SdkTypeId): Boolean {
-        return true
-    }
+    override fun isSuitableSdkType(sdkType: SdkTypeId): Boolean = true
 
     override fun getParentGroup() = "RuneScript"
 

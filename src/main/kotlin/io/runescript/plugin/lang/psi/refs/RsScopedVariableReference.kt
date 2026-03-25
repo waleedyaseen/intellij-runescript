@@ -1,16 +1,20 @@
 package io.runescript.plugin.lang.psi.refs
 
-import com.intellij.psi.*
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiPolyVariantReference
+import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.ResolveResult
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.GameVarType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 import io.runescript.plugin.symbollang.psi.rawSymToType
 
-class RsScopedVariableReference(element: RsScopedVariableExpression) :
-    PsiReferenceBase<RsScopedVariableExpression>(element, element.nameLiteral.textRangeInParent),
+class RsScopedVariableReference(
+    element: RsScopedVariableExpression,
+) : PsiReferenceBase<RsScopedVariableExpression>(element, element.nameLiteral.textRangeInParent),
     PsiPolyVariantReference {
-
     override fun resolve(): PsiElement? {
         val result = multiResolve(false)
         return result.singleOrNull()?.element
@@ -19,8 +23,9 @@ class RsScopedVariableReference(element: RsScopedVariableExpression) :
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val name = element.name ?: return emptyArray()
         val moduleData = element.neptuneModuleData ?: return emptyArray()
-        return RsSymbolIndex.lookupAll(element, name)
-            .filter { rawSymToType(it, moduleData.resolvedData.types, moduleData.resolvedData.symbolLoaders) is GameVarType}
+        return RsSymbolIndex
+            .lookupAll(element, name)
+            .filter { rawSymToType(it, moduleData.resolvedData.types, moduleData.resolvedData.symbolLoaders) is GameVarType }
             .map { PsiElementResolveResult(it) }
             .toTypedArray()
     }

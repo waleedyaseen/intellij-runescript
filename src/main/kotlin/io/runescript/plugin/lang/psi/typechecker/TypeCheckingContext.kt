@@ -39,25 +39,6 @@ data class TypeCheckingContext(
         }
 
     /**
-     * Whether the expression is a constant expression.
-     *
-     * A constant expression is defined as being one of the following:
-     *  - [ConstantVariableExpression]
-     *  - [Literal]
-     *  - [Identifier] (see note below)
-     *
-     * Note: Identifiers that reference symbols other than [io.runescript.plugin.lang.psi.typechecker.symbol.BasicSymbol] do not
-     * quality as a constant expression.
-     */
-//    val RsExpression?.isConstant: Boolean
-//        get() {
-//            if (this == null) {
-//                return false
-//            }
-//            return typeChecker.isConstantExpression(this)
-//        }
-
-    /**
      * Checks the argument at [index]. If the argument exists then the `typeHint` of the
      * expression is set to [typeHint] and the argument is then passed through the visitor like
      * normal. Accessing `type` after this is safe as long as returned value is not `null`. The
@@ -76,7 +57,11 @@ data class TypeCheckingContext(
      *
      * @see checkTypeArgument
      */
-    fun checkArgument(index: Int, typeHint: Type?, args2: Boolean = false): RsExpression? {
+    fun checkArgument(
+        index: Int,
+        typeHint: Type?,
+        args2: Boolean = false,
+    ): RsExpression? {
         val arguments = getArgumentsList(args2)
         if (index !in arguments.indices) {
             return null
@@ -164,7 +149,11 @@ data class TypeCheckingContext(
      * checkArgumentTypes(expected = PrimitiveType.INT)
      * ```
      */
-    fun checkArgumentTypes(expected: Type, reportError: Boolean = true, args2: Boolean = false): Boolean {
+    fun checkArgumentTypes(
+        expected: Type,
+        reportError: Boolean = true,
+        args2: Boolean = false,
+    ): Boolean {
         val arguments = getArgumentsList(args2)
 
         // collect the argument types while visiting any arguments that have no type defined
@@ -180,14 +169,12 @@ data class TypeCheckingContext(
         return typeChecker.checkTypeMatch(expression, expected, actual, reportError)
     }
 
-
     /**
      * Collects all [Expression.type] for the [expressions].
      *
      * @see TupleType.fromList
      */
-    fun collectTypes(vararg expressions: RsExpression?): Type =
-        TupleType.fromList(expressions.mapNotNull { it?.nullableType })
+    fun collectTypes(vararg expressions: RsExpression?): Type = TupleType.fromList(expressions.mapNotNull { it?.nullableType })
 
     /**
      * Passes the node through the type checker if it is not `null`.

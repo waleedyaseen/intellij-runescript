@@ -7,7 +7,9 @@ import io.runescript.plugin.lang.psi.typechecker.type.Type as MainType
 /**
  * A sealed class of types used internally in the compiler.
  */
-open class MetaType(private val name: String) : MainType {
+open class MetaType(
+    private val name: String,
+) : MainType {
     /**
      * A type that is comparable to all other types. This is different to
      * [Error] as it is not meant for expressions that had an error during
@@ -42,13 +44,15 @@ open class MetaType(private val name: String) : MainType {
     /**
      * A special type used when referencing other types.
      */
-    data class Type(override val inner: MainType) :
-        MetaType("type"),
+    data class Type(
+        override val inner: MainType,
+    ) : MetaType("type"),
         WrappedType {
-        override val representation: String = when (inner) {
-            Any -> "type"
-            else -> "type<${inner.representation}>"
-        }
+        override val representation: String =
+            when (inner) {
+                Any -> "type"
+                else -> "type<${inner.representation}>"
+            }
     }
 
     /**
@@ -68,7 +72,9 @@ open class MetaType(private val name: String) : MainType {
      * The [transmitListType] is the type allowed in the transmit list, if transmit list isn't expected,
      * use [Unit].
      */
-    data class Hook(val transmitListType: MainType) : MetaType("hook") {
+    data class Hook(
+        val transmitListType: MainType,
+    ) : MetaType("hook") {
         override val representation: String = "hook<${transmitListType.representation}>"
     }
 
@@ -85,9 +91,10 @@ open class MetaType(private val name: String) : MainType {
     override val defaultValue: kotlin.Any = -1
 
     // all meta types are unable to be accessed in scripts through normal means
-    override val options: TypeOptions = MutableTypeOptions(
-        allowSwitch = false,
-        allowArray = false,
-        allowDeclaration = false,
-    )
+    override val options: TypeOptions =
+        MutableTypeOptions(
+            allowSwitch = false,
+            allowArray = false,
+            allowDeclaration = false,
+        )
 }

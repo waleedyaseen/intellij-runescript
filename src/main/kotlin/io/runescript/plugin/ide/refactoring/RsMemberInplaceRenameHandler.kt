@@ -7,8 +7,9 @@ import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler
 import io.runescript.plugin.lang.psi.RsScript
 
 class RsMemberInplaceRenameHandler : MemberInplaceRenameHandler() {
-
-    override fun isAvailable(element: PsiElement?, editor: Editor, file: PsiFile): Boolean {
-        return element is RsScript
-    }
+    override fun isAvailable(
+        element: PsiElement?,
+        editor: Editor,
+        file: PsiFile,
+    ): Boolean = element is RsScript
 }

@@ -1,6 +1,5 @@
 package io.runescript.plugin.lang.psi.typechecker.command.impl.debug
 
-
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type

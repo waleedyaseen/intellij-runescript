@@ -17,25 +17,30 @@ import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsScriptIndex
 
 object RsScriptStubType : RsStubType<RsScriptStub, RsScript>("SCRIPT") {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsScriptStub = RsScriptStub(parentStub, this, dataStream.readUTF(), dataStream.readUTF())
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsScriptStub {
-        return RsScriptStub(parentStub, this, dataStream.readUTF(), dataStream.readUTF())
-    }
-
-    override fun serialize(stub: RsScriptStub, dataStream: StubOutputStream) {
+    override fun serialize(
+        stub: RsScriptStub,
+        dataStream: StubOutputStream,
+    ) {
         dataStream.writeUTF(stub.triggerName)
         dataStream.writeUTF(stub.scriptName)
     }
 
-    override fun createStub(psi: RsScript, parentStub: StubElement<out PsiElement>?): RsScriptStub {
-        return RsScriptStub(parentStub, this, psi.triggerName, psi.scriptName)
-    }
+    override fun createStub(
+        psi: RsScript,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsScriptStub = RsScriptStub(parentStub, this, psi.triggerName, psi.scriptName)
 
-    override fun createPsi(stub: RsScriptStub): RsScript {
-        return RsScriptImpl(stub, this)
-    }
+    override fun createPsi(stub: RsScriptStub): RsScript = RsScriptImpl(stub, this)
 
-    override fun indexStub(stub: RsScriptStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsScriptStub,
+        sink: IndexSink,
+    ) {
         sink.occurrence(RsScriptIndex.KEY, "[${stub.triggerName},${stub.scriptName}]")
         when (stub.triggerName) {
             "proc" -> sink.occurrence(RsProcScriptIndex.KEY, stub.scriptName)

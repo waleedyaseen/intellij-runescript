@@ -1,19 +1,57 @@
 package io.runescript.plugin.ide.neptune
 
-import com.intellij.openapi.components.*
+import com.intellij.openapi.components.SerializablePersistentStateComponent
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
+import com.intellij.openapi.components.StoragePathMacros
+import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
-import io.runescript.plugin.lang.psi.typechecker.command.impl.*
-import io.runescript.plugin.lang.psi.typechecker.command.impl.array.*
+import io.runescript.plugin.lang.psi.typechecker.command.impl.CcCreateCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.DbFindCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.DbGetFieldCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.EnumCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.EnumGetInputsOutputsCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.IfChildrenFilterCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.IfFindChildCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.IfParamCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.IfRunScriptCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.IfSetParamCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.ParamCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.PlaceholderCommand
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayCompareCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayCopyCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayCreateCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayDeleteCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayFillCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayInsertCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayInsertallCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayMinMaxCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayPushCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArrayPushallCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.array.ArraySearchCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.debug.DumpCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.debug.ScriptCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.trigger.ClientTriggerType
 import io.runescript.plugin.lang.psi.typechecker.trigger.CommandTrigger
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerManager
-import io.runescript.plugin.lang.psi.typechecker.type.*
-import io.runescript.plugin.lang.psi.typechecker.type.wrapped.*
+import io.runescript.plugin.lang.psi.typechecker.type.DbColumnType
+import io.runescript.plugin.lang.psi.typechecker.type.IfScriptType
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.ParamType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
+import io.runescript.plugin.lang.psi.typechecker.type.Type
+import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarBitType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarClanSettingsType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarClanType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarClientType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.VarPlayerType
+import io.runescript.plugin.lang.psi.typechecker.type.wrapped.WrappedType
 
 data class NeptuneResolvedData(
     val sourcePaths: List<String> = emptyList(),
@@ -40,7 +78,6 @@ data class NeptuneResolvedData(
     val dynamicCommandHandlers = mutableMapOf<String, DynamicCommandHandler>()
 
     var symbolLoaders = mutableMapOf<String, (subTypes: Type) -> Type>()
-
 
     init {
         registerDefaultTypesAndTriggers()
@@ -107,7 +144,7 @@ data class NeptuneResolvedData(
         // treat varp as alias of varp<int>
         types.addTypeChecker { left, right ->
             (left is VarPlayerType && left.inner == PrimitiveType.INT && right == ScriptVarType.VARP) ||
-                    (left == ScriptVarType.VARP && right is VarPlayerType && right.inner == PrimitiveType.INT)
+                (left == ScriptVarType.VARP && right is VarPlayerType && right.inner == PrimitiveType.INT)
         }
 
         // register the dynamic command handlers
@@ -256,33 +293,33 @@ data class NeptuneResolvedData(
         // checker for Script types that compares parameter and return types
         types.addTypeChecker { left, right ->
             left is MetaType.Script &&
-                    right is MetaType.Script &&
-                    left.trigger == right.trigger &&
-                    types.check(left.parameterType, right.parameterType) &&
-                    types.check(left.returnType, right.returnType)
+                right is MetaType.Script &&
+                left.trigger == right.trigger &&
+                types.check(left.parameterType, right.parameterType) &&
+                types.check(left.returnType, right.returnType)
         }
 
         // checker for Hook types that compares the trigger list type.
         types.addTypeChecker { left, right ->
             left is MetaType.Hook &&
-                    right is MetaType.Hook &&
-                    types.check(left.transmitListType, right.transmitListType)
+                right is MetaType.Hook &&
+                types.check(left.transmitListType, right.transmitListType)
         }
 
         // checker for ArrayType which requires exact match on inner types, with a special case to
         // allow anyarray <- typearray
         types.addTypeChecker { left, right ->
             left is ArrayType &&
-                    right is ArrayType &&
-                    (left.inner == right.inner || left.inner == MetaType.Any)
+                right is ArrayType &&
+                (left.inner == right.inner || left.inner == MetaType.Any)
         }
 
         // checker for WrappedType that compares the inner types
         types.addTypeChecker { left, right ->
             left is WrappedType &&
-                    right is WrappedType &&
-                    left::class == right::class &&
-                    types.check(left.inner, right.inner)
+                right is WrappedType &&
+                left::class == right::class &&
+                types.check(left.inner, right.inner)
         }
     }
 
@@ -294,7 +331,11 @@ data class NeptuneResolvedData(
      *
      * If a handler was registered for the [name] already an error is thrown.
      */
-    fun addDynamicCommandHandler(name: String, handler: DynamicCommandHandler, dot: Boolean = false) {
+    fun addDynamicCommandHandler(
+        name: String,
+        handler: DynamicCommandHandler,
+        dot: Boolean = false,
+    ) {
         val existing = dynamicCommandHandlers.putIfAbsent(name, handler)
         if (existing != null) {
             error("A dynamic command handler with the name of '$name' already exists.")
@@ -308,14 +349,20 @@ data class NeptuneResolvedData(
     /**
      * Helper for loading external symbols from `sym` files with a specific [type].
      */
-    private fun addSymLoader(name: String, type: Type) {
+    private fun addSymLoader(
+        name: String,
+        type: Type,
+    ) {
         addSymLoader(name) { type }
     }
 
     /**
      * Helper for loading external symbols from `sym` files with subtypes.
      */
-    private fun addSymLoader(name: String, typeSuppler: (subTypes: Type) -> Type) {
+    private fun addSymLoader(
+        name: String,
+        typeSuppler: (subTypes: Type) -> Type,
+    ) {
         check(name !in symbolLoaders)
         symbolLoaders[name] = typeSuppler
     }
@@ -323,10 +370,9 @@ data class NeptuneResolvedData(
 
 @State(
     name = "NeptuneModuleData",
-    storages = [Storage(StoragePathMacros.MODULE_FILE)]
+    storages = [Storage(StoragePathMacros.MODULE_FILE)],
 )
 class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
-
     data class State(
         var sourcePaths: List<String> = emptyList(),
         var symbolPaths: List<String> = emptyList(),
@@ -369,15 +415,16 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
             it.simplifiedTypeCodes = importData.simplifiedTypeCodes
             it
         }
-        resolvedData = NeptuneResolvedData(
-            sourcePaths = importData.sourcePaths,
-            symbolPaths = importData.symbolPaths,
-            dbFindReturnsCount = importData.dbFindReturnsCount,
-            ccCreateAssertNewArg = importData.ccCreateAssertNewArg,
-            prefixPostfixExpressions = importData.prefixPostfixExpressions,
-            arraysV2 = importData.arraysV2,
-            simplifiedTypeCodes = importData.simplifiedTypeCodes,
-        )
+        resolvedData =
+            NeptuneResolvedData(
+                sourcePaths = importData.sourcePaths,
+                symbolPaths = importData.symbolPaths,
+                dbFindReturnsCount = importData.dbFindReturnsCount,
+                ccCreateAssertNewArg = importData.ccCreateAssertNewArg,
+                prefixPostfixExpressions = importData.prefixPostfixExpressions,
+                arraysV2 = importData.arraysV2,
+                simplifiedTypeCodes = importData.simplifiedTypeCodes,
+            )
     }
 }
 
@@ -397,4 +444,3 @@ val PsiElement.typeManager: TypeManager
 
 val PsiElement.triggerManager: TriggerManager
     get() = neptuneResolvedData.triggers
-

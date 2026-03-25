@@ -19,7 +19,9 @@ import io.runescript.plugin.lang.psi.typechecker.type.TupleType
  * def_int $j = cc_param(some_int_param);
  * ```
  */
-class IfParamCommandHandler(private val cc: Boolean) : DynamicCommandHandler {
+class IfParamCommandHandler(
+    private val cc: Boolean,
+) : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
         // check param reference
         val paramExpr = checkArgument(0, ParamCommandHandler.PARAM_ANY)
@@ -30,11 +32,12 @@ class IfParamCommandHandler(private val cc: Boolean) : DynamicCommandHandler {
         }
 
         // define the expected types based on what is currently known
-        val expectedTypes = if (!cc) {
-            IF_BASE_EXPECTED_TYPES
-        } else {
-            CC_BASE_EXPECTED_TYPES
-        }
+        val expectedTypes =
+            if (!cc) {
+                IF_BASE_EXPECTED_TYPES
+            } else {
+                CC_BASE_EXPECTED_TYPES
+            }
 
         // compare the expected types with the actual types
         if (!checkArgumentTypes(expectedTypes)) {
@@ -53,11 +56,12 @@ class IfParamCommandHandler(private val cc: Boolean) : DynamicCommandHandler {
     }
 
     private companion object {
-        val IF_BASE_EXPECTED_TYPES = TupleType(
-            ParamCommandHandler.PARAM_ANY,
-            ScriptVarType.COMPONENT,
-            PrimitiveType.INT,
-        )
+        val IF_BASE_EXPECTED_TYPES =
+            TupleType(
+                ParamCommandHandler.PARAM_ANY,
+                ScriptVarType.COMPONENT,
+                PrimitiveType.INT,
+            )
         val CC_BASE_EXPECTED_TYPES = ParamCommandHandler.PARAM_ANY
     }
 }

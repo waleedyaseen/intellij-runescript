@@ -10,21 +10,26 @@ import com.intellij.openapi.vfs.VirtualFile
 class NeptuneUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
     override val systemId = Neptune.SYSTEM_ID
 
-    override fun isBuildFile(project: Project, buildFile: VirtualFile): Boolean {
-        return buildFile.isNeptuneBuildFile
-    }
+    override fun isBuildFile(
+        project: Project,
+        buildFile: VirtualFile,
+    ): Boolean = buildFile.isNeptuneBuildFile
 
-    override fun isLinkedProject(project: Project, externalProjectPath: String): Boolean {
-        return project.service<NeptuneSettings>().linkedProjectsSettings.isNotEmpty()
-    }
+    override fun isLinkedProject(
+        project: Project,
+        externalProjectPath: String,
+    ): Boolean = project.service<NeptuneSettings>().linkedProjectsSettings.isNotEmpty()
 
-    override suspend fun linkAndLoadProjectAsync(project: Project, externalProjectPath: String) {
+    override suspend fun linkAndLoadProjectAsync(
+        project: Project,
+        externalProjectPath: String,
+    ) {
         NeptuneOpenProjectProvider.linkToExistingProjectAsync(externalProjectPath, project)
     }
 
     override suspend fun unlinkProject(
         project: Project,
-        externalProjectPath: String
+        externalProjectPath: String,
     ) {
         // TODO:
     }
@@ -32,17 +37,20 @@ class NeptuneUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
     override fun subscribe(
         project: Project,
         listener: ExternalSystemProjectLinkListener,
-        parentDisposable: Disposable
+        parentDisposable: Disposable,
     ) {
         val settings = project.service<NeptuneSettings>()
-        settings.subscribe(object: NeptuneSettingsListener {
-            override fun onProjectsLinked(settings: MutableCollection<NeptuneProjectSettings>) {
-                settings.forEach { listener.onProjectLinked(it.externalProjectPath) }
-            }
+        settings.subscribe(
+            object : NeptuneSettingsListener {
+                override fun onProjectsLinked(settings: MutableCollection<NeptuneProjectSettings>) {
+                    settings.forEach { listener.onProjectLinked(it.externalProjectPath) }
+                }
 
-            override fun onProjectsUnlinked(linkedProjectPaths: MutableSet<String>) {
-                linkedProjectPaths.forEach { listener.onProjectUnlinked(it) }
-            }
-        }, parentDisposable)
+                override fun onProjectsUnlinked(linkedProjectPaths: MutableSet<String>) {
+                    linkedProjectPaths.forEach { listener.onProjectUnlinked(it) }
+                }
+            },
+            parentDisposable,
+        )
     }
 }

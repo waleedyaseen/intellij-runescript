@@ -8,7 +8,11 @@ import io.runescript.plugin.ide.neptune.isNeptuneBuildFile
 import javax.swing.Icon
 
 class NeptuneIconProvider : FileIconProvider {
-    override fun getIcon(file: VirtualFile, flags: Int, project: Project?): Icon? {
+    override fun getIcon(
+        file: VirtualFile,
+        flags: Int,
+        project: Project?,
+    ): Icon? {
         if (file.isNeptuneBuildFile) {
             return RsIcons.Neptune
         }

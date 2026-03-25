@@ -16,32 +16,17 @@ import io.runescript.plugin.symbollang.psi.RsSymFile
 import io.runescript.plugin.symbollang.psi.stub.types.RsSymFileStubType
 
 class RsSymParserDefinition : ParserDefinition {
+    override fun createLexer(project: Project?): Lexer = RsSymLexer()
 
-    override fun createLexer(project: Project?): Lexer {
-        return RsSymLexer()
-    }
+    override fun createParser(project: Project?): PsiParser = RsSymParser()
 
-    override fun createParser(project: Project?): PsiParser {
-        return RsSymParser()
-    }
+    override fun getFileNodeType(): IFileElementType = RsSymFileStubType
 
-    override fun getFileNodeType(): IFileElementType {
-        return RsSymFileStubType
-    }
+    override fun getCommentTokens(): TokenSet = TokenSet.EMPTY
 
-    override fun getCommentTokens(): TokenSet {
-        return TokenSet.EMPTY
-    }
+    override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
 
-    override fun getStringLiteralElements(): TokenSet {
-        return TokenSet.EMPTY
-    }
+    override fun createElement(node: ASTNode?): PsiElement = RsSymElementTypes.Factory.createElement(node)
 
-    override fun createElement(node: ASTNode?): PsiElement {
-        return RsSymElementTypes.Factory.createElement(node)
-    }
-
-    override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return RsSymFile(viewProvider)
-    }
+    override fun createFile(viewProvider: FileViewProvider): PsiFile = RsSymFile(viewProvider)
 }

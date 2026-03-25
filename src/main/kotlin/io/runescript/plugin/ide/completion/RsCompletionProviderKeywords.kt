@@ -6,31 +6,32 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 
 class RsCompletionProviderKeywords : RsCompletionProviderBase() {
-    private val keywords = listOf(
-        "if",
-        "else",
-        "while",
-        "switch",
-        "case",
-        "default",
-        "return",
-        "true",
-        "false",
-        "null",
-        "calc",
+    private val keywords =
+        listOf(
+            "if",
+            "else",
+            "while",
+            "switch",
+            "case",
+            "default",
+            "return",
+            "true",
+            "false",
+            "null",
+            "calc",
 //        *RsPrimitiveType.entries.filter { it.isDeclarable }.map { it.literal }.toTypedArray(),
 //        *RsPrimitiveType.entries.filter { it.isDeclarable }.map { "def_${it.literal}" }.toTypedArray(),
 //        *RsPrimitiveType.entries.filter { it.isDeclarable }.map { "${it.literal}array" }.toTypedArray(),
-    ).map {
-        LookupElementBuilder
-            .create(it)
-            .withBoldness(true)
-    }
+        ).map {
+            LookupElementBuilder
+                .create(it)
+                .withBoldness(true)
+        }
 
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         for (element in keywords) {
             result.addElement(element)

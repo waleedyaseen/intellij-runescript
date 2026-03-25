@@ -24,10 +24,11 @@ class ArrayPushallCommandHandler : DynamicCommandHandler {
 
         // check the base signature matches
         if (checkArgumentTypes(BASE_EXPECTED_TYPES) && array1ExprType is ArrayType) {
-            val expectedTypes = TupleType(
-                array1ExprType,
-                array1ExprType,
-            )
+            val expectedTypes =
+                TupleType(
+                    array1ExprType,
+                    array1ExprType,
+                )
             checkArgumentTypes(expectedTypes)
         }
 
@@ -35,9 +36,10 @@ class ArrayPushallCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            ArrayType(MetaType.Any),
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                ArrayType(MetaType.Any),
+            )
     }
 }

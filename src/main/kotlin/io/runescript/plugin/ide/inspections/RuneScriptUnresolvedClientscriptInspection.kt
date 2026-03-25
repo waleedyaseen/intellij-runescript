@@ -10,8 +10,10 @@ import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.isSourceFile
 
 class RuneScriptUnresolvedClientscriptInspection : LocalInspectionTool() {
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+    ): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitHookFragment(o: RsHookFragment) {
                 if (!o.isSourceFile()) return
@@ -20,7 +22,7 @@ class RuneScriptUnresolvedClientscriptInspection : LocalInspectionTool() {
                     holder.registerProblem(
                         o.nameLiteral,
                         RsBundle.message("inspection.error.unresolved.clientscript", o.nameLiteral.text),
-                        ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
+                        ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
                     )
                 }
             }

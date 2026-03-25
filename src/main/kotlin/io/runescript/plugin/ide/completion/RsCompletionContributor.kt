@@ -12,27 +12,26 @@ import io.runescript.plugin.lang.psi.RsArgumentList
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
 
 class RsCompletionContributor : CompletionContributor() {
-
     init {
         extend(
             CompletionType.BASIC,
             base().and(notCommentOrString()),
-            RsCompletionProviderKeywords()
+            RsCompletionProviderKeywords(),
         )
         extend(
             CompletionType.BASIC,
             base().and(notCommentOrString()),
-            RsCompletionProviderVariables()
+            RsCompletionProviderVariables(),
         )
         extend(
             CompletionType.BASIC,
             base().and(notCommentOrString()),
-            RsCompletionProviderCommand()
+            RsCompletionProviderCommand(),
         )
         extend(
             CompletionType.BASIC,
             base().and(notCommentOrString()),
-            RsCompletionProviderProc()
+            RsCompletionProviderProc(),
         )
     }
 
@@ -50,14 +49,12 @@ class RsCompletionContributor : CompletionContributor() {
         }
     }
 
-    private fun base(): PsiElementPattern.Capture<PsiElement> {
-        return psiElement()
+    private fun base(): PsiElementPattern.Capture<PsiElement> =
+        psiElement()
             .withLanguage(RuneScript)
-    }
 
-    private fun notCommentOrString(): PsiElementPattern.Capture<PsiElement> {
-        return psiElement()
+    private fun notCommentOrString(): PsiElementPattern.Capture<PsiElement> =
+        psiElement()
             .andNot(psiElement().withElementType(RsTokenTypesSets.COMMENTS))
             .andNot(psiElement().withElementType(RsTokenTypesSets.STRING_ELEMENTS))
-    }
 }

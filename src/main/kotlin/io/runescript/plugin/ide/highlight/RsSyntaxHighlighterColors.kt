@@ -3,7 +3,6 @@ package io.runescript.plugin.ide.highlight
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
 
-
 object RsSyntaxHighlighterColors {
     // Lexer based attribute keys
     private const val RUNESCRIPT_IDENTIFIER = "RUNESCRIPT_IDENTIFIER"

@@ -1,7 +1,11 @@
 package io.runescript.plugin.lang.psi.refs
 
-import com.intellij.openapi.diagnostic.logger
-import com.intellij.psi.*
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiPolyVariantReference
+import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.ResolveResult
+import com.intellij.psi.ResolveState
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.isForArrayAccess
@@ -9,9 +13,10 @@ import io.runescript.plugin.lang.psi.scope.RsLocalVariableResolver
 import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
-class RsLocalVariableReference(element: RsLocalVariableExpression) :
-        PsiReferenceBase<RsLocalVariableExpression>(element, element.nameLiteral.textRangeInParent), PsiPolyVariantReference {
-
+class RsLocalVariableReference(
+    element: RsLocalVariableExpression,
+) : PsiReferenceBase<RsLocalVariableExpression>(element, element.nameLiteral.textRangeInParent),
+    PsiPolyVariantReference {
     override fun resolve(): PsiElement? {
         val result = multiResolve(false)
         return result.singleOrNull()?.element
@@ -19,13 +24,14 @@ class RsLocalVariableReference(element: RsLocalVariableExpression) :
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val neptuneConfig = element.neptuneModuleData
-        val resolveMode = if (neptuneConfig != null && neptuneConfig.arraysV2) {
-            RsResolveMode.Both
-        } else if (element.isForArrayAccess()) {
-            RsResolveMode.Arrays
-        } else {
-            RsResolveMode.Variables
-        }
+        val resolveMode =
+            if (neptuneConfig != null && neptuneConfig.arraysV2) {
+                RsResolveMode.Both
+            } else if (element.isForArrayAccess()) {
+                RsResolveMode.Arrays
+            } else {
+                RsResolveMode.Variables
+            }
         val resolver = RsLocalVariableResolver(element.name!!, resolveMode)
         RsScopesUtil.walkUpScopes(resolver, ResolveState.initial(), element)
         return resolver.declaration?.let {

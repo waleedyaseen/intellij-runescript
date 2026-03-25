@@ -17,7 +17,7 @@ class NeptuneProjectImportDataService : AbstractProjectDataService<NeptuneProjec
         toImport: Collection<DataNode<NeptuneProjectImportData>>,
         projectData: ProjectData?,
         project: Project,
-        modelsProvider: IdeModifiableModelsProvider
+        modelsProvider: IdeModifiableModelsProvider,
     ) {
         if (project.isDisposed) return
         for (dataNode in toImport) {

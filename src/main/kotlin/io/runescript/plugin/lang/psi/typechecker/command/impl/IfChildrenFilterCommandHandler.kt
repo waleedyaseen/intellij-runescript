@@ -15,10 +15,11 @@ class IfChildrenFilterCommandHandler : DynamicCommandHandler {
         val paramReturnType = (paramExpr?.type as? ParamType)?.inner
         checkArgument(1, paramReturnType)
 
-        val expectedTypes = TupleType(
-            ParamCommandHandler.PARAM_ANY,
-            paramReturnType ?: MetaType.Any,
-        )
+        val expectedTypes =
+            TupleType(
+                ParamCommandHandler.PARAM_ANY,
+                paramReturnType ?: MetaType.Any,
+            )
         checkArgumentTypes(expectedTypes)
         expression.type = PrimitiveType.INT
     }

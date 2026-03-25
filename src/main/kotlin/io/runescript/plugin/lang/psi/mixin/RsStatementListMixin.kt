@@ -8,9 +8,16 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import io.runescript.plugin.lang.psi.RsStatementList
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
-abstract class RsStatementListMixin(node :ASTNode) : ASTWrapperPsiElement(node), RsStatementList {
-
-    override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
+abstract class RsStatementListMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsStatementList {
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement,
+    ): Boolean {
         processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this)
         if (lastParent == null) {
             return true

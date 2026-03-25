@@ -10,8 +10,10 @@ import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.controlFlowHolder
 
 class RuneScriptUnreachableCodeInspection : LocalInspectionTool() {
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+    ): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitStatement(element: RsStatement) {
                 element.controlFlowHolder?.controlFlow?.let {

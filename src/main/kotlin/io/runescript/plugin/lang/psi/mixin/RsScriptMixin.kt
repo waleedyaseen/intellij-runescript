@@ -19,29 +19,35 @@ import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlow
 import io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowBuilder
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsPsiImplUtil
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.qualifiedName
+import io.runescript.plugin.lang.psi.scriptNameExpression
+import io.runescript.plugin.lang.psi.triggerName
 import io.runescript.plugin.lang.stubs.RsScriptStub
 import javax.swing.Icon
 
-abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
-
+abstract class RsScriptMixin :
+    StubBasedPsiElementBase<RsScriptStub>,
+    RsScript {
     constructor(node: ASTNode) : super(node)
     constructor(stub: RsScriptStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsScriptStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
     override val controlFlow: RsControlFlow
-        get() = CachedValuesManager.getCachedValue(this) {
-            val builder = RsControlFlowBuilder()
-            val result = builder.build(this)
-            val controlFlow = RsControlFlow(result.instructions)
-            CachedValueProvider.Result(controlFlow, this)
-        }
+        get() =
+            CachedValuesManager.getCachedValue(this) {
+                val builder = RsControlFlowBuilder()
+                val result = builder.build(this)
+                val controlFlow = RsControlFlow(result.instructions)
+                CachedValueProvider.Result(controlFlow, this)
+            }
 
     override fun processDeclarations(
         processor: PsiScopeProcessor,
         state: ResolveState,
         lastParent: PsiElement?,
-        place: PsiElement
+        place: PsiElement,
     ): Boolean {
         parameterList?.let {
             if (!it.processDeclarations(processor, state, lastParent, place)) {
@@ -61,28 +67,19 @@ abstract class RsScriptMixin : StubBasedPsiElementBase<RsScriptStub>, RsScript {
         return GlobalSearchScope.moduleScope(module)
     }
 
-    override fun setName(name: String): PsiElement {
-        return RsPsiImplUtil.setName(scriptNameExpression, name)
-    }
+    override fun setName(name: String): PsiElement = RsPsiImplUtil.setName(scriptNameExpression, name)
 
-    override fun getName(): String? {
-        return RsPsiImplUtil.getName(scriptNameExpression)
-    }
+    override fun getName(): String? = RsPsiImplUtil.getName(scriptNameExpression)
 
-    override fun getNameIdentifier(): PsiElement? {
-        return scriptNameExpression
-    }
+    override fun getNameIdentifier(): PsiElement? = scriptNameExpression
 
-    override fun getTextOffset(): Int {
-        return scriptNameExpression.startOffset
-    }
+    override fun getTextOffset(): Int = scriptNameExpression.startOffset
 }
 
-fun getIconForTriggerName(triggerName: String): Icon {
-    return when (triggerName) {
+fun getIconForTriggerName(triggerName: String): Icon =
+    when (triggerName) {
         "proc" -> RsIcons.GutterProc
         "clientscript" -> RsIcons.GutterClientScript
         "command" -> RsIcons.GutterCommand
         else -> RsIcons.GutterOther
     }
-}

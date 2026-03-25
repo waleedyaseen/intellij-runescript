@@ -9,11 +9,21 @@ import io.runescript.plugin.lang.doc.parser.RsDocKnownTag
 import io.runescript.plugin.lang.doc.psi.impl.RsDocSection
 import io.runescript.plugin.lang.psi.RsScript
 
-interface RsDoc : PsiDocCommentBase, RsDocElement {
+interface RsDoc :
+    PsiDocCommentBase,
+    RsDocElement {
     override fun getOwner(): RsScript?
+
     fun getDefaultSection(): RsDocSection
+
     fun getAllSections(): List<RsDocSection>
+
     fun findSectionByName(name: String): RsDocSection?
+
     fun findSectionByTag(tag: RsDocKnownTag): RsDocSection?
-    fun findSectionByTag(tag: RsDocKnownTag, subjectName: String): RsDocSection?
+
+    fun findSectionByTag(
+        tag: RsDocKnownTag,
+        subjectName: String,
+    ): RsDocSection?
 }

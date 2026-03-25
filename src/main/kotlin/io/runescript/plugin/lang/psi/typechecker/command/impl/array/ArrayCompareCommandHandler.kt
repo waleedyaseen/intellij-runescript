@@ -33,9 +33,10 @@ class ArrayCompareCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            ArrayType(MetaType.Any),
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                ArrayType(MetaType.Any),
+            )
     }
 }

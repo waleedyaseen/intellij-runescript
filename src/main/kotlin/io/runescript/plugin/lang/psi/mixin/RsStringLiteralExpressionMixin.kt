@@ -11,8 +11,10 @@ import io.runescript.plugin.lang.psi.refs.RsStringLiteralReference
 import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
 import io.runescript.plugin.lang.psi.typechecker.typeCheckedType
 
-abstract class RsStringLiteralExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsStringLiteralExpression {
-
+abstract class RsStringLiteralExpressionMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsStringLiteralExpression {
     override fun getReference(): RsStringLiteralReference? {
         if (stringLiteralContent.isHookExpression()) {
             return null

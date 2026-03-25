@@ -27,8 +27,9 @@ import io.runescript.plugin.lang.psi.RsElementTypes
 /**
  * A single part of a qualified name in the tag subject or link.
  */
-class RsDocName(node: ASTNode) : ASTWrapperPsiElement(node) {
-
+class RsDocName(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node) {
     override fun getReference(): PsiReference? {
         if (parent !is RsDocName) {
             return RsDocReference(this)

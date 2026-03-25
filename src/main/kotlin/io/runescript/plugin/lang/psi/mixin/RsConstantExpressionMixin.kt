@@ -9,25 +9,17 @@ import io.runescript.plugin.lang.psi.RsConstantExpression
 import io.runescript.plugin.lang.psi.RsPsiImplUtil
 import io.runescript.plugin.lang.psi.refs.RsConstantReference
 
-abstract class RsConstantExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsConstantExpression {
+abstract class RsConstantExpressionMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsConstantExpression {
+    override fun getReference(): PsiReference? = RsConstantReference(this)
 
-    override fun getReference(): PsiReference? {
-        return RsConstantReference(this)
-    }
+    override fun getName(): String? = RsPsiImplUtil.getName(nameLiteral)
 
-    override fun getName(): String? {
-        return RsPsiImplUtil.getName(nameLiteral)
-    }
+    override fun setName(name: String): PsiElement = RsPsiImplUtil.setName(nameLiteral, name)
 
-    override fun setName(name: String): PsiElement {
-        return RsPsiImplUtil.setName(nameLiteral, name)
-    }
+    override fun getTextOffset(): Int = nameLiteral.startOffset
 
-    override fun getTextOffset(): Int {
-        return nameLiteral.startOffset
-    }
-
-    override fun getNameIdentifier(): PsiElement? {
-        return nameLiteral
-    }
+    override fun getNameIdentifier(): PsiElement? = nameLiteral
 }

@@ -5,5 +5,8 @@ import com.intellij.psi.stubs.StubBase
 import com.intellij.psi.stubs.StubElement
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
 
-class RsScopedVariableExpressionStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>, val name: String)
-    : StubBase<RsScopedVariableExpression>(parent, elementType)
+class RsScopedVariableExpressionStub(
+    parent: StubElement<*>?,
+    elementType: IStubElementType<*, *>,
+    val name: String,
+) : StubBase<RsScopedVariableExpression>(parent, elementType)

@@ -11,13 +11,15 @@ import java.awt.Color
 import java.util.regex.Pattern
 
 class RsElementColorProvider : ElementColorProvider {
-
     override fun getColorFrom(element: PsiElement): Color? {
         val color = findColorFromTag(element) ?: return null
         return Color(color)
     }
 
-    override fun setColorTo(element: PsiElement, color: Color) {
+    override fun setColorTo(
+        element: PsiElement,
+        color: Color,
+    ) {
         val tagName = element.text.substring(1, element.text.indexOf('='))
         val document = PsiDocumentManager.getInstance(element.project).getDocument(element.containingFile)
         CommandProcessor.getInstance().executeCommand(element.project, {
@@ -26,7 +28,6 @@ class RsElementColorProvider : ElementColorProvider {
     }
 
     companion object {
-
         private val TAG_WITH_COLOR_PATTERN = Pattern.compile("<(?:col|shad|str|u)=([0-9a-fA-F]+)>")
 
         private fun findColorFromTag(element: PsiElement): Int? {

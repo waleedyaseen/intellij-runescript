@@ -32,23 +32,30 @@ import io.runescript.plugin.lang.psi.RsTokenTypes
 class RsDocLinkParser : PsiParser {
     companion object {
         @JvmStatic
-        fun parseMarkdownLink(root: IElementType, chameleon: ASTNode): ASTNode {
+        fun parseMarkdownLink(
+            root: IElementType,
+            chameleon: ASTNode,
+        ): ASTNode {
             val parentElement = chameleon.treeParent.psi
             val project = parentElement.project
-            val builder = PsiBuilderFactory.getInstance().createBuilder(
-                project,
-                chameleon,
-                RsLexerAdapter(RsLexerInfo(parentElement.typeManager)),
-                root.language,
-                chameleon.text
-            )
+            val builder =
+                PsiBuilderFactory.getInstance().createBuilder(
+                    project,
+                    chameleon,
+                    RsLexerAdapter(RsLexerInfo(parentElement.typeManager)),
+                    root.language,
+                    chameleon.text,
+                )
             val parser = RsDocLinkParser()
 
             return parser.parse(root, builder).firstChildNode
         }
     }
 
-    override fun parse(root: IElementType, builder: PsiBuilder): ASTNode {
+    override fun parse(
+        root: IElementType,
+        builder: PsiBuilder,
+    ): ASTNode {
         val rootMarker = builder.mark()
         val hasLBracket = builder.tokenType == RsElementTypes.LBRACKET
         if (hasLBracket) {

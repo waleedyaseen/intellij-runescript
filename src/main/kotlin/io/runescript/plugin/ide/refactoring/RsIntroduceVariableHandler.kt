@@ -10,18 +10,22 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenamer
 import com.intellij.refactoring.util.CommonRefactoringUtil
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsElementGenerator
+import io.runescript.plugin.lang.psi.RsExpression
+import io.runescript.plugin.lang.psi.RsFile
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsStatement
+import io.runescript.plugin.lang.psi.RsStatementList
 import io.runescript.plugin.lang.psi.typechecker.type
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 
 class RsIntroduceVariableHandler : RsRefactoringActionBase() {
-
     override fun invoke(
         project: Project,
         editor: Editor,
         file: PsiFile,
-        dataContext: DataContext
+        dataContext: DataContext,
     ) {
         if (file !is RsFile || !CommonRefactoringUtil.checkReadOnlyStatus(file)) return
         PsiDocumentManager.getInstance(project).commitDocument(editor.document)
@@ -43,12 +47,13 @@ class RsIntroduceVariableHandler : RsRefactoringActionBase() {
             return
         }
         WriteCommandAction.runWriteCommandAction(project) {
-            val newVarDecl = RsElementGenerator.createLocalVariableDeclaration(
-                project,
-                suggestedType.representation,
-                name,
-                expression.text
-            )
+            val newVarDecl =
+                RsElementGenerator.createLocalVariableDeclaration(
+                    project,
+                    suggestedType.representation,
+                    name,
+                    expression.text,
+                )
 
             val insertedDecl = parentBlock.addBefore(newVarDecl, parent)
             parentBlock.addBefore(RsElementGenerator.createNewLine(project), parent)
@@ -73,17 +78,21 @@ class RsIntroduceVariableHandler : RsRefactoringActionBase() {
     override fun invoke(
         project: Project,
         elements: Array<out PsiElement?>,
-        dataContext: DataContext?
+        dataContext: DataContext?,
     ) {
     }
 
-    private fun showErrorHint(project: Project, editor: Editor, message: String) {
+    private fun showErrorHint(
+        project: Project,
+        editor: Editor,
+        message: String,
+    ) {
         CommonRefactoringUtil.showErrorHint(
             project,
             editor,
             message,
             "Introduce Variable",
-            null
+            null,
         )
     }
 

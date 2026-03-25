@@ -4,10 +4,56 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.startOffset
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsArithmeticExpression
+import io.runescript.plugin.lang.psi.RsArithmeticValueExpression
+import io.runescript.plugin.lang.psi.RsArrayAccessExpression
+import io.runescript.plugin.lang.psi.RsArrayVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsAssignmentStatement
+import io.runescript.plugin.lang.psi.RsBinaryExpression
+import io.runescript.plugin.lang.psi.RsBlockStatement
+import io.runescript.plugin.lang.psi.RsBooleanLiteralExpression
+import io.runescript.plugin.lang.psi.RsCalcExpression
+import io.runescript.plugin.lang.psi.RsCallExpression
+import io.runescript.plugin.lang.psi.RsCommandExpression
+import io.runescript.plugin.lang.psi.RsConditionExpression
+import io.runescript.plugin.lang.psi.RsConditionOp
+import io.runescript.plugin.lang.psi.RsConstantExpression
+import io.runescript.plugin.lang.psi.RsCoordLiteralExpression
+import io.runescript.plugin.lang.psi.RsDynamicExpression
+import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsEmptyStatement
+import io.runescript.plugin.lang.psi.RsExpression
+import io.runescript.plugin.lang.psi.RsExpressionStatement
+import io.runescript.plugin.lang.psi.RsGosubExpression
+import io.runescript.plugin.lang.psi.RsHookFragment
+import io.runescript.plugin.lang.psi.RsHookRoot
+import io.runescript.plugin.lang.psi.RsIfStatement
+import io.runescript.plugin.lang.psi.RsIntegerLiteralExpression
+import io.runescript.plugin.lang.psi.RsLiteralExpression
+import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsNullLiteralExpression
+import io.runescript.plugin.lang.psi.RsParExpression
+import io.runescript.plugin.lang.psi.RsPostfixExpression
+import io.runescript.plugin.lang.psi.RsPrefixExpression
+import io.runescript.plugin.lang.psi.RsRelationalValueExpression
+import io.runescript.plugin.lang.psi.RsReturnStatement
+import io.runescript.plugin.lang.psi.RsScopedVariableExpression
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsStringLiteralContent
+import io.runescript.plugin.lang.psi.RsStringLiteralExpression
+import io.runescript.plugin.lang.psi.RsSwitchCase
+import io.runescript.plugin.lang.psi.RsSwitchCaseDefaultExpression
+import io.runescript.plugin.lang.psi.RsSwitchStatement
+import io.runescript.plugin.lang.psi.RsUnaryExpression
+import io.runescript.plugin.lang.psi.RsVisitor
+import io.runescript.plugin.lang.psi.RsWhileStatement
+import io.runescript.plugin.lang.psi.arguments
+import io.runescript.plugin.lang.psi.isHookExpression
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
 import io.runescript.plugin.lang.psi.refs.RsIntegerLiteralReference
 import io.runescript.plugin.lang.psi.refs.RsStringLiteralReference
+import io.runescript.plugin.lang.psi.triggerNameExpression
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticMessage
@@ -18,7 +64,11 @@ import io.runescript.plugin.lang.psi.typechecker.symbol.LocalVariableTable
 import io.runescript.plugin.lang.psi.typechecker.trigger.CommandTrigger
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerManager
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
-import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
+import io.runescript.plugin.lang.psi.typechecker.type.Type
+import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.GameVarType
 import io.runescript.plugin.symbollang.psi.RsSymField
@@ -64,7 +114,10 @@ class TypeChecking(
     /**
      * Sets the active [table] to [newTable] and runs [block] then sets [table] back to what it was originally.
      */
-    private inline fun scoped(newTable: LocalVariableTable, block: () -> Unit) {
+    private inline fun scoped(
+        newTable: LocalVariableTable,
+        block: () -> Unit,
+    ) {
         val oldTable = table
         table = newTable
         block()
@@ -150,28 +203,36 @@ class TypeChecking(
      * [RsParExpression]. If `null` is returned then that means the whole tree is valid
      * is all valid conditional expressions.
      */
-    private fun findInvalidConditionExpression(expression: RsExpression): PsiElement? = when (expression) {
-        is RsConditionExpression -> if (expression.conditionOp.text == "|" || expression.conditionOp.text == "&") {
-            // check the left side and return it if it isn't null, otherwise return the value
-            // of the right side
-            findInvalidConditionExpression(expression.left) ?: findInvalidConditionExpression(expression.right)
-        } else {
-            // all other operators are valid
-            null
-        }
+    private fun findInvalidConditionExpression(expression: RsExpression): PsiElement? =
+        when (expression) {
+            is RsConditionExpression -> {
+                if (expression.conditionOp.text == "|" || expression.conditionOp.text == "&") {
+                    // check the left side and return it if it isn't null, otherwise return the value
+                    // of the right side
+                    findInvalidConditionExpression(expression.left) ?: findInvalidConditionExpression(expression.right)
+                } else {
+                    // all other operators are valid
+                    null
+                }
+            }
 
-        is RsParExpression -> findInvalidConditionExpression(expression.expression)
-        is RsRelationalValueExpression -> {
-            val expr = expression.expression
-            if (expression.lparen != null && expr != null) {
-                findInvalidConditionExpression(expr)
-            } else {
-                expression.expression
+            is RsParExpression -> {
+                findInvalidConditionExpression(expression.expression)
+            }
+
+            is RsRelationalValueExpression -> {
+                val expr = expression.expression
+                if (expression.lparen != null && expr != null) {
+                    findInvalidConditionExpression(expr)
+                } else {
+                    expression.expression
+                }
+            }
+
+            else -> {
+                expression
             }
         }
-
-        else -> expression
-    }
 
     override fun visitSwitchStatement(switchStatement: RsSwitchStatement) {
         val expectedType = switchStatement.type
@@ -188,9 +249,10 @@ class TypeChecking(
         // visit all the cases, cases will be type checked there.
         var defaultCase: RsSwitchCase? = null
         for (case in switchStatement.switchCaseList) {
-            val isDefault = case.children.any {
-                it.elementType == RsElementTypes.DEFAULT
-            }
+            val isDefault =
+                case.children.any {
+                    it.elementType == RsElementTypes.DEFAULT
+                }
             if (isDefault) {
                 if (defaultCase == null) {
                     defaultCase = case
@@ -238,34 +300,47 @@ class TypeChecking(
     /**
      * Checks if the result of [expression] is known at compile time.
      */
-    internal fun isConstantExpression(expression: RsExpression): Boolean = when (expression) {
-        is RsConstantExpression, is RsSwitchCaseDefaultExpression -> true
-        is RsStringLiteralExpression -> {
-            // we need to special case this since it's possible for a string literal to have been
-            // transformed into another expression type (e.g. graphic or clientscript)
+    internal fun isConstantExpression(expression: RsExpression): Boolean =
+        when (expression) {
+            is RsConstantExpression, is RsSwitchCaseDefaultExpression -> {
+                true
+            }
+
+            is RsStringLiteralExpression -> {
+                // we need to special case this since it's possible for a string literal to have been
+                // transformed into another expression type (e.g. graphic or clientscript)
 //            val sub = expression.subExpression
 //            sub == null || isConstantExpression(sub) TODO(Walied):
-            val stringContent = expression.stringLiteralContent
-            !stringContent.isHookExpression() && stringContent.stringInterpolationExpressionList.isEmpty()
-        }
+                val stringContent = expression.stringLiteralContent
+                !stringContent.isHookExpression() && stringContent.stringInterpolationExpressionList.isEmpty()
+            }
 
-        is RsLiteralExpression -> true
-        is RsDynamicExpression -> {
-            val ref = RsDynamicExpressionReference.resolveElement(expression, expression.type)
-                .firstOrNull()?.element
-            ref == null || isConstantSymbol(ref)
-        }
+            is RsLiteralExpression -> {
+                true
+            }
 
-        else -> false
-    }
+            is RsDynamicExpression -> {
+                val ref =
+                    RsDynamicExpressionReference
+                        .resolveElement(expression, expression.type)
+                        .firstOrNull()
+                        ?.element
+                ref == null || isConstantSymbol(ref)
+            }
+
+            else -> {
+                false
+            }
+        }
 
     /**
      * Checks if the value of [symbol] is known at compile time.
      */
-    private fun isConstantSymbol(symbol: PsiElement?): Boolean = when (symbol) {
-        is RsSymSymbol -> true
-        else -> false
-    }
+    private fun isConstantSymbol(symbol: PsiElement?): Boolean =
+        when (symbol) {
+            is RsSymSymbol -> true
+            else -> false
+        }
 
     override fun visitLocalVariableDeclarationStatement(declarationStatement: RsLocalVariableDeclarationStatement) {
         val typeName = declarationStatement.defineType.text.removePrefix("def_")
@@ -278,7 +353,7 @@ class TypeChecking(
         } else if (!type.options.allowDeclaration) {
             declarationStatement.defineType.reportError(
                 DiagnosticMessage.LOCAL_DECLARATION_INVALID_TYPE,
-                type.representation
+                type.representation,
             )
         }
 
@@ -324,13 +399,14 @@ class TypeChecking(
             )
         }
 
-        type = if (type != null) {
-            // convert type into an array of type
-            ArrayType(type)
-        } else {
-            // type doesn't exist so give it error type
-            MetaType.Error
-        }
+        type =
+            if (type != null) {
+                // convert type into an array of type
+                ArrayType(type)
+            } else {
+                // type doesn't exist so give it error type
+                MetaType.Error
+            }
 
         arrayDeclarationStatement.variable.type = type
 
@@ -456,14 +532,15 @@ class TypeChecking(
     private fun checkBinaryConditionOperation(
         left: RsExpression,
         operator: RsConditionOp,
-        right: RsExpression
+        right: RsExpression,
     ): Boolean {
         // some operators expect a specific type on both sides, specify those type(s) here
-        val allowedTypes = when (operator.text) {
-            "&", "|" -> ALLOWED_LOGICAL_TYPES
-            "<", ">", "<=", ">=" -> ALLOWED_RELATIONAL_TYPES
-            else -> null
-        }
+        val allowedTypes =
+            when (operator.text) {
+                "&", "|" -> ALLOWED_LOGICAL_TYPES
+                "<", ">", "<=", ">=" -> ALLOWED_RELATIONAL_TYPES
+                else -> null
+            }
 
         // if required type is set we should type hint with those, otherwise use the opposite
         // sides type as a hint.
@@ -557,10 +634,11 @@ class TypeChecking(
         val operator = arithmeticExpression.arithmeticOp
 
         // arithmetic expression only expect int or long return types, but just allow
-        val expectedType = when (val hint = arithmeticExpression.typeHint) {
-            null -> PrimitiveType.INT
-            else -> hint
-        }
+        val expectedType =
+            when (val hint = arithmeticExpression.typeHint) {
+                null -> PrimitiveType.INT
+                else -> hint
+            }
 
         // visit left-hand side
         left.typeHint = expectedType
@@ -633,11 +711,13 @@ class TypeChecking(
         checkCallExpression(goSubExpression, procTrigger, DiagnosticMessage.PROC_REFERENCE_UNRESOLVED)
     }
 
-
     /**
      * Runs the type checking for dynamic commands if one exists with [name].
      */
-    private fun checkDynamicCommand(name: String, expression: RsExpression): Boolean {
+    private fun checkDynamicCommand(
+        name: String,
+        expression: RsExpression,
+    ): Boolean {
         val dynamicCommand = dynamicCommands[name] ?: return false
         with(dynamicCommand) {
             // invoke the custom command type checking
@@ -655,7 +735,11 @@ class TypeChecking(
     /**
      * Handles looking up and type checking all call expressions.
      */
-    private fun checkCallExpression(call: RsCallExpression, trigger: TriggerType, unresolvedSymbolMessage: String) {
+    private fun checkCallExpression(
+        call: RsCallExpression,
+        trigger: TriggerType,
+        unresolvedSymbolMessage: String,
+    ) {
         // lookup the symbol using the symbol type and name
         val name = call.nameLiteral?.text ?: ""
         val symbol = call.reference?.resolve()?.let { it as RsScript }
@@ -673,7 +757,11 @@ class TypeChecking(
     /**
      * Verifies that [callExpression] arguments match the parameter types from [symbol].
      */
-    private fun typeCheckArguments(symbol: RsScript?, callExpression: RsCallExpression, name: String) {
+    private fun typeCheckArguments(
+        symbol: RsScript?,
+        callExpression: RsCallExpression,
+        name: String,
+    ) {
         // Type check the parameters, use `unit` if there are no parameters
         // we will display a special message if the parameter ends up having unit
         // as the type but arguments are supplied.
@@ -682,11 +770,12 @@ class TypeChecking(
         // therefore we should specify the parameter types as error, so we can continue
         // analysis on all the arguments without worrying about a type mismatch.
         val parameterTypes = symbol.computeParameterType()
-        val expectedTypes = if (parameterTypes is TupleType) {
-            parameterTypes.children.toList()
-        } else {
-            listOf(parameterTypes)
-        }
+        val expectedTypes =
+            if (parameterTypes is TupleType) {
+                parameterTypes.children.toList()
+            } else {
+                listOf(parameterTypes)
+            }
         val actualTypes = typeHintExpressionList(expectedTypes, callExpression.arguments)
 
         // convert the type lists into a singular type, used for type checking
@@ -695,12 +784,13 @@ class TypeChecking(
 
         // special case for the temporary state of using unit for no arguments
         if (expectedType == MetaType.Unit && actualType != MetaType.Unit) {
-            val errorMessage = when (callExpression) {
-                is RsCommandExpression -> DiagnosticMessage.COMMAND_NOARGS_EXPECTED
-                is RsGosubExpression -> DiagnosticMessage.PROC_NOARGS_EXPECTED
-                is RsHookFragment -> DiagnosticMessage.CLIENTSCRIPT_NOARGS_EXPECTED
-                else -> error(callExpression)
-            }
+            val errorMessage =
+                when (callExpression) {
+                    is RsCommandExpression -> DiagnosticMessage.COMMAND_NOARGS_EXPECTED
+                    is RsGosubExpression -> DiagnosticMessage.PROC_NOARGS_EXPECTED
+                    is RsHookFragment -> DiagnosticMessage.CLIENTSCRIPT_NOARGS_EXPECTED
+                    else -> error(callExpression)
+                }
             callExpression.reportError(
                 errorMessage,
                 name,
@@ -740,9 +830,10 @@ class TypeChecking(
     override fun visitScopedVariableExpression(gameVariableExpression: RsScopedVariableExpression) {
         val name = gameVariableExpression.nameLiteral.text
         val hint = gameVariableExpression.typeHint
-        val symbol = RsSymbolIndex.lookupAll(gameVariableExpression, name).firstOrNull {
-            symbolToType(it, hint) is GameVarType
-        }
+        val symbol =
+            RsSymbolIndex.lookupAll(gameVariableExpression, name).firstOrNull {
+                symbolToType(it, hint) is GameVarType
+            }
         if (symbol == null) {
             gameVariableExpression.type = MetaType.Error
             gameVariableExpression.reportError(DiagnosticMessage.GAME_REFERENCE_UNRESOLVED, name)
@@ -913,19 +1004,38 @@ class TypeChecking(
         fixExpression.type = variable.type
     }
 
-    private fun resolveSymbol(node: RsExpression, name: String, hint: Type?): PsiElement? {
-        val symbol = when (node) {
-            is RsDynamicExpression -> RsDynamicExpressionReference.resolveElement(node, hint ?: MetaType.Any)
-                .singleOrNull()?.element
+    private fun resolveSymbol(
+        node: RsExpression,
+        name: String,
+        hint: Type?,
+    ): PsiElement? {
+        val symbol =
+            when (node) {
+                is RsDynamicExpression -> {
+                    RsDynamicExpressionReference
+                        .resolveElement(node, hint ?: MetaType.Any)
+                        .singleOrNull()
+                        ?.element
+                }
 
-            is RsStringLiteralExpression -> RsStringLiteralReference.resolveElement(node, hint ?: MetaType.Any)
-                .singleOrNull()?.element
+                is RsStringLiteralExpression -> {
+                    RsStringLiteralReference
+                        .resolveElement(node, hint ?: MetaType.Any)
+                        .singleOrNull()
+                        ?.element
+                }
 
-            is RsIntegerLiteralExpression -> RsIntegerLiteralReference.resolveElement(node, hint ?: MetaType.Any)
-                .singleOrNull()?.element
+                is RsIntegerLiteralExpression -> {
+                    RsIntegerLiteralReference
+                        .resolveElement(node, hint ?: MetaType.Any)
+                        .singleOrNull()
+                        ?.element
+                }
 
-            else -> null
-        }
+                else -> {
+                    null
+                }
+            }
         if (symbol == null) {
             node.type = MetaType.Error
             node.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, name)
@@ -933,16 +1043,17 @@ class TypeChecking(
         }
         node.type = symbolToType(symbol, hint) ?: MetaType.Error
         return symbol
-
     }
-
 
     /**
      * Attempts to figure out the return type of [symbol].
      *
      * If the symbol is not valid for direct identifier lookup then `null` is returned.
      */
-    private fun symbolToType(symbol: PsiElement, hint: Type?) = when (symbol) {
+    private fun symbolToType(
+        symbol: PsiElement,
+        hint: Type?,
+    ) = when (symbol) {
         is RsScript -> {
             val trigger = symbol.computeTriggerType()
             val returns = symbol.computeReturnType(trigger)
@@ -955,9 +1066,17 @@ class TypeChecking(
             }
         }
 
-        is RsLocalVariableExpression -> symbol.type as? ArrayType
-        is RsSymSymbol -> rawSymToType(symbol, typeManager, symbolLoaders)
-        else -> error("Invalid symbol type: ${symbol::class.simpleName} for symbol: $symbol")
+        is RsLocalVariableExpression -> {
+            symbol.type as? ArrayType
+        }
+
+        is RsSymSymbol -> {
+            rawSymToType(symbol, typeManager, symbolLoaders)
+        }
+
+        else -> {
+            error("Invalid symbol type: ${symbol::class.simpleName} for symbol: $symbol")
+        }
     }
 
     private fun RsSymField.parseAsType(): Type? {
@@ -981,7 +1100,10 @@ class TypeChecking(
      *
      * This is only useful when the expected types are known ahead of time (e.g. assignments and calls).
      */
-    private fun typeHintExpressionList(expectedTypes: List<Type>, expressions: List<RsExpression>): List<Type> {
+    private fun typeHintExpressionList(
+        expectedTypes: List<Type>,
+        expressions: List<RsExpression>,
+    ): List<Type> {
         val actualTypes = mutableListOf<Type>()
         var typeCounter = 0
         for (expr in expressions) {
@@ -992,11 +1114,12 @@ class TypeChecking(
             actualTypes += expr.type
 
             // increment the counter for type hinting
-            typeCounter += if (expr.type is TupleType) {
-                (expr.type as TupleType).children.size
-            } else {
-                1
-            }
+            typeCounter +=
+                if (expr.type is TupleType) {
+                    (expr.type as TupleType).children.size
+                } else {
+                    1
+                }
         }
         return actualTypes
     }
@@ -1008,7 +1131,12 @@ class TypeChecking(
      *
      * @see TypeManager.check
      */
-    internal fun checkTypeMatch(node: PsiElement, expected: Type, actual: Type, reportError: Boolean = true): Boolean {
+    internal fun checkTypeMatch(
+        node: PsiElement,
+        expected: Type,
+        actual: Type,
+        reportError: Boolean = true,
+    ): Boolean {
         val expectedFlattened = if (expected is TupleType) expected.children else arrayOf(expected)
         val actualFlattened = if (actual is TupleType) actual.children else arrayOf(actual)
 
@@ -1026,11 +1154,12 @@ class TypeChecking(
         }
 
         if (!match && reportError) {
-            val actualRepresentation = if (actual == MetaType.Unit) {
-                "<unit>"
-            } else {
-                actual.representation
-            }
+            val actualRepresentation =
+                if (actual == MetaType.Unit) {
+                    "<unit>"
+                } else {
+                    actual.representation
+                }
             node.reportError(
                 DiagnosticMessage.GENERIC_TYPE_MISMATCH,
                 actualRepresentation,
@@ -1047,7 +1176,11 @@ class TypeChecking(
      *
      * @see TypeManager.check
      */
-    private fun checkTypeMatchAny(node: PsiElement, expected: Array<out Type>, actual: Type): Boolean {
+    private fun checkTypeMatchAny(
+        node: PsiElement,
+        expected: Array<out Type>,
+        actual: Type,
+    ): Boolean {
         for (type in expected) {
             if (checkTypeMatch(node, type, actual, false)) {
                 return true
@@ -1059,21 +1192,30 @@ class TypeChecking(
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.INFO].
      */
-    private fun PsiElement.reportInfo(message: String, vararg args: Any) {
+    private fun PsiElement.reportInfo(
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.INFO, this, message, *args))
     }
 
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.WARNING].
      */
-    private fun PsiElement.reportWarning(message: String, vararg args: Any) {
+    private fun PsiElement.reportWarning(
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.WARNING, this, message, *args))
     }
 
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.ERROR].
      */
-    private fun PsiElement.reportError(message: String, vararg args: Any) {
+    private fun PsiElement.reportError(
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.ERROR, this, message, *args))
     }
 
@@ -1103,10 +1245,10 @@ class TypeChecking(
     /**
      * Finds all [Diagnostic]s that are of type [DiagnosticType.ERROR] and are associated with the given [element].
      */
-    fun findErrors(element: PsiElement) = diagnostics.diagnostics.filter {
-        it.isError() && it.element === element
-    }
-
+    fun findErrors(element: PsiElement) =
+        diagnostics.diagnostics.filter {
+            it.isError() && it.element === element
+        }
 
     /**
      * Computes the [TriggerType] for the given [RsScript] based on its trigger name expression.
@@ -1120,11 +1262,12 @@ class TypeChecking(
      * Computes the parameter types for the given [RsScript] based on its parameter list.
      */
     fun RsScript?.computeParameterType(): Type {
-        val parameters = this?.parameterList?.parameterList?.map {
-            val text = it.typeName.text
-            val type = typeManager.findOrNull(text, allowArray = true)
-            type ?: MetaType.Error
-        }
+        val parameters =
+            this?.parameterList?.parameterList?.map {
+                val text = it.typeName.text
+                val type = typeManager.findOrNull(text, allowArray = true)
+                type ?: MetaType.Error
+            }
         return TupleType.fromList(parameters)
     }
 
@@ -1157,36 +1300,40 @@ class TypeChecking(
         /**
          * Array of valid types allowed in logical conditional expressions.
          */
-        private val ALLOWED_LOGICAL_TYPES = arrayOf(
-            PrimitiveType.BOOLEAN,
-        )
+        private val ALLOWED_LOGICAL_TYPES =
+            arrayOf(
+                PrimitiveType.BOOLEAN,
+            )
 
         /**
          * Array of valid types allowed in relational conditional expressions.
          */
-        private val ALLOWED_RELATIONAL_TYPES = arrayOf(
-            PrimitiveType.INT,
-            PrimitiveType.LONG,
-        )
+        private val ALLOWED_RELATIONAL_TYPES =
+            arrayOf(
+                PrimitiveType.INT,
+                PrimitiveType.LONG,
+            )
 
         /**
          * Array of valid types allowed in arithmetic expressions.
          */
-        private val ALLOWED_ARITHMETIC_TYPES = arrayOf(
-            PrimitiveType.INT,
-            PrimitiveType.LONG,
-        )
+        private val ALLOWED_ARITHMETIC_TYPES =
+            arrayOf(
+                PrimitiveType.INT,
+                PrimitiveType.LONG,
+            )
 
         /**
          * Set of types that have a literal representation.
          */
-        private val LITERAL_TYPES = setOf(
-            PrimitiveType.INT,
-            PrimitiveType.BOOLEAN,
-            PrimitiveType.COORD,
-            PrimitiveType.STRING,
-            PrimitiveType.CHAR,
-            PrimitiveType.LONG,
-        )
+        private val LITERAL_TYPES =
+            setOf(
+                PrimitiveType.INT,
+                PrimitiveType.BOOLEAN,
+                PrimitiveType.COORD,
+                PrimitiveType.STRING,
+                PrimitiveType.CHAR,
+                PrimitiveType.LONG,
+            )
     }
 }

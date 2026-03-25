@@ -28,13 +28,14 @@ class ArrayCopyCommandHandler : DynamicCommandHandler {
 
         // check the base signature matches
         if (checkArgumentTypes(BASE_EXPECTED_TYPES) && array1ExprType is ArrayType) {
-            val expectedTypes = TupleType(
-                array1ExprType,
-                array1ExprType,
-                PrimitiveType.INT,
-                PrimitiveType.INT,
-                PrimitiveType.INT,
-            )
+            val expectedTypes =
+                TupleType(
+                    array1ExprType,
+                    array1ExprType,
+                    PrimitiveType.INT,
+                    PrimitiveType.INT,
+                    PrimitiveType.INT,
+                )
             checkArgumentTypes(expectedTypes)
         }
 
@@ -42,12 +43,13 @@ class ArrayCopyCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            ArrayType(MetaType.Any),
-            PrimitiveType.INT,
-            PrimitiveType.INT,
-            PrimitiveType.INT,
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                ArrayType(MetaType.Any),
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+            )
     }
 }

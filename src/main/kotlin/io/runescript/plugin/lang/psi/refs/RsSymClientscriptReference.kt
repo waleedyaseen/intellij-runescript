@@ -12,21 +12,25 @@ import io.runescript.plugin.lang.stubs.index.RsScriptIndex
 import io.runescript.plugin.symbollang.psi.RsSymField
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
-class RsSymClientscriptReference(element: RsSymSymbol) : PsiPolyVariantReferenceBase<RsSymSymbol>(
-    element,
-    extractRangeInParent(element.fieldList[1]),
-) {
+class RsSymClientscriptReference(
+    element: RsSymSymbol,
+) : PsiPolyVariantReferenceBase<RsSymSymbol>(
+        element,
+        extractRangeInParent(element.fieldList[1]),
+    ) {
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult?> {
         val text = element.fieldList.getOrNull(1)?.text ?: return emptyArray()
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
         val searchScope = GlobalSearchScope.moduleScope(module)
-        return StubIndex.getElements(
-            RsScriptIndex.KEY,
-            text,
-            element.project,
-            searchScope,
-            RsScript::class.java
-        ).map { PsiElementResolveResult(it) }.toTypedArray()
+        return StubIndex
+            .getElements(
+                RsScriptIndex.KEY,
+                text,
+                element.project,
+                searchScope,
+                RsScript::class.java,
+            ).map { PsiElementResolveResult(it) }
+            .toTypedArray()
     }
 
     companion object {
@@ -37,4 +41,3 @@ class RsSymClientscriptReference(element: RsSymSymbol) : PsiPolyVariantReference
         }
     }
 }
-

@@ -17,8 +17,9 @@ import io.runescript.plugin.symbollang.psi.isConstantFile
 import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 import io.runescript.plugin.symbollang.psi.stub.RsSymSymbolStub
 
-abstract class RsSymSymbolMixin : StubBasedPsiElementBase<RsSymSymbolStub>, RsSymSymbol {
-
+abstract class RsSymSymbolMixin :
+    StubBasedPsiElementBase<RsSymSymbolStub>,
+    RsSymSymbol {
     constructor(node: ASTNode) : super(node)
     constructor(stub: RsSymSymbolStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsSymSymbolStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)

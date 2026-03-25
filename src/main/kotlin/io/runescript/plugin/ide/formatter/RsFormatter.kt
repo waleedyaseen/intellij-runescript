@@ -10,7 +10,6 @@ import io.runescript.plugin.ide.formatter.style.RsCodeStyleSettings
 import io.runescript.plugin.lang.RuneScript
 
 class RsFormatter : FormattingModelBuilder {
-
     override fun createModel(formattingContext: FormattingContext): FormattingModel {
         val element = formattingContext.psiElement
         val styleSettings = formattingContext.codeStyleSettings

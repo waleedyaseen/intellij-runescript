@@ -9,7 +9,10 @@ import com.intellij.psi.util.startOffset
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 
 object RsVariableInsertHandler : InsertHandler<LookupElement> {
-    override fun handleInsert(context: InsertionContext, item: LookupElement) {
+    override fun handleInsert(
+        context: InsertionContext,
+        item: LookupElement,
+    ) {
         val element = item.psiElement as? RsLocalVariableExpression ?: return
         val name = element.name ?: return
         val position = context.file.findElementAt(context.startOffset) ?: return

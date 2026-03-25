@@ -5,47 +5,55 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.ide.RsBundle
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.PRECEDENCE_LOGICAL_AND
+import io.runescript.plugin.lang.psi.RsElementGenerator
+import io.runescript.plugin.lang.psi.RsIfStatement
+import io.runescript.plugin.lang.psi.isNullOrEmpty
+import io.runescript.plugin.lang.psi.precedence
+import io.runescript.plugin.lang.psi.toSingleStatement
 
 class RsMergeIfAndIntention : BaseElementAtCaretIntentionAction() {
+    override fun getFamilyName(): String = RsBundle.message("intention.merge.if.and.family.name")
 
-    override fun getFamilyName(): String {
-        return RsBundle.message("intention.merge.if.and.family.name")
-    }
+    override fun getText(): String = RsBundle.message("intention.merge.if.and.name")
 
-    override fun getText(): String {
-        return RsBundle.message("intention.merge.if.and.name")
-    }
-
-    override fun invoke(project: Project, editor: Editor, element: PsiElement) {
+    override fun invoke(
+        project: Project,
+        editor: Editor,
+        element: PsiElement,
+    ) {
         val ifStmt = element.parent as RsIfStatement
         val trueStmt = ifStmt.trueStatement.toSingleStatement() as RsIfStatement
         val leftParen = (ifStmt.expression?.precedence ?: 0) > PRECEDENCE_LOGICAL_AND
         val rightParen = (trueStmt.expression?.precedence ?: 0) > PRECEDENCE_LOGICAL_AND
-        val exprText = buildString {
-            if (leftParen) {
-                append('(')
+        val exprText =
+            buildString {
+                if (leftParen) {
+                    append('(')
+                }
+                append(ifStmt.expression?.text ?: "")
+                if (leftParen) {
+                    append(')')
+                }
+                append('&')
+                if (rightParen) {
+                    append('(')
+                }
+                append(trueStmt.expression?.text ?: "")
+                if (rightParen) {
+                    append(')')
+                }
             }
-            append(ifStmt.expression?.text?:"")
-            if (leftParen) {
-                append(')')
-            }
-            append('&')
-            if (rightParen) {
-                append('(')
-            }
-            append(trueStmt.expression?.text?:"")
-            if (rightParen) {
-                append(')')
-            }
-        }
         val conditionExpr = RsElementGenerator.createConditionExpression(element.project, exprText)
         ifStmt.expression?.replace(conditionExpr)
         trueStmt.trueStatement?.let { ifStmt.trueStatement?.replace(it) }
-
     }
 
-    override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
+    override fun isAvailable(
+        project: Project,
+        editor: Editor,
+        element: PsiElement,
+    ): Boolean {
         val ifStmt = element.parent
         if (ifStmt !is RsIfStatement) {
             return false

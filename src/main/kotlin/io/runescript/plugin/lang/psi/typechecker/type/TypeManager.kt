@@ -1,7 +1,6 @@
 package io.runescript.plugin.lang.psi.typechecker.type
 
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
-import org.mozilla.javascript.Token.typeToName
 import kotlin.reflect.KClass
 
 typealias TypeChecker = (left: Type, right: Type) -> Boolean
@@ -52,7 +51,10 @@ class TypeManager {
     /**
      * Registers [type] using [name] for lookup.
      */
-    fun register(name: String, type: Type) {
+    fun register(
+        name: String,
+        type: Type,
+    ) {
         val existingType = nameToType.putIfAbsent(name, type)
         if (existingType != null) {
             error("Type '$name' is already registered.")
@@ -81,13 +83,14 @@ class TypeManager {
         val options = MutableTypeOptions()
         builder?.invoke(options)
 
-        val newType = object : Type {
-            override val representation = name
-            override val code = code
-            override val baseType = baseType
-            override val defaultValue = defaultValue
-            override val options = options
-        }
+        val newType =
+            object : Type {
+                override val representation = name
+                override val code = code
+                override val baseType = baseType
+                override val defaultValue = defaultValue
+                override val options = options
+            }
         register(newType)
         return newType
     }
@@ -112,7 +115,10 @@ class TypeManager {
      * Searches for [name] and allows changing the [me.filby.neptune.runescript.compiler.type.TypeOptions] for the type. If a
      * type wasn't found with the given name an error is thrown.
      */
-    fun changeOptions(name: String, builder: TypeBuilder) {
+    fun changeOptions(
+        name: String,
+        builder: TypeBuilder,
+    ) {
         val type = nameToType[name] ?: error("$name was not found")
         val options = type.options as MutableTypeOptions
         options.builder()
@@ -125,8 +131,10 @@ class TypeManager {
      *
      * If the type doesn't exist an exception is thrown.
      */
-    fun find(name: String, allowArray: Boolean = false): Type =
-        findOrNull(name, allowArray) ?: error("Unable to find type: '$name'")
+    fun find(
+        name: String,
+        allowArray: Boolean = false,
+    ): Type = findOrNull(name, allowArray) ?: error("Unable to find type: '$name'")
 
     /**
      * Finds a type by [name]. If [allowArray] is enabled, names ending with `array`
@@ -134,7 +142,10 @@ class TypeManager {
      *
      * If the type doesn't exist, `null` is returned.
      */
-    fun findOrNull(name: String, allowArray: Boolean = false): Type? {
+    fun findOrNull(
+        name: String,
+        allowArray: Boolean = false,
+    ): Type? {
         if (allowArray && name.length > ARRAY_SUFFIX_LENGTH && name.endsWith(ARRAY_SUFFIX)) {
             // substring before the last "array" to prevent requesting intarrayarray (or deeper)
             val baseType = name.substringBeforeLast(ARRAY_SUFFIX)
@@ -165,7 +176,10 @@ class TypeManager {
     /**
      * Checks to see if [right] is assignable to [left].
      */
-    fun check(left: Type, right: Type): Boolean = checkers.any { checker -> checker(left, right) }
+    fun check(
+        left: Type,
+        right: Type,
+    ): Boolean = checkers.any { checker -> checker(left, right) }
 
     fun checkCache() {
         if (!cacheDirty) return
@@ -180,7 +194,6 @@ class TypeManager {
         cachedSwitchKeywords.clear()
         cachedSwitchKeywords.addAll(generateSwitchKeyword())
     }
-
 
     private fun generateDefineKeywords(): List<CharSequence> {
         val keywords = mutableListOf<CharSequence>()

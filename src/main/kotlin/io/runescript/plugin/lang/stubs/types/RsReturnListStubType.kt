@@ -11,23 +11,28 @@ import io.runescript.plugin.lang.psi.impl.RsReturnListImpl
 import io.runescript.plugin.lang.stubs.RsReturnListStub
 
 object RsReturnListStubType : RsStubType<RsReturnListStub, RsReturnList>("RETURN_LIST") {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsReturnListStub = RsReturnListStub(parentStub, this)
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsReturnListStub {
-        return RsReturnListStub(parentStub, this)
+    override fun serialize(
+        stub: RsReturnListStub,
+        dataStream: StubOutputStream,
+    ) {
     }
 
-    override fun serialize(stub: RsReturnListStub, dataStream: StubOutputStream) {
-    }
+    override fun createStub(
+        psi: RsReturnList,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsReturnListStub = RsReturnListStub(parentStub, this)
 
-    override fun createStub(psi: RsReturnList, parentStub: StubElement<out PsiElement>?): RsReturnListStub {
-        return RsReturnListStub(parentStub, this)
-    }
+    override fun createPsi(stub: RsReturnListStub): RsReturnList = RsReturnListImpl(stub, this)
 
-    override fun createPsi(stub: RsReturnListStub): RsReturnList {
-        return RsReturnListImpl(stub, this)
-    }
-
-    override fun indexStub(stub: RsReturnListStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsReturnListStub,
+        sink: IndexSink,
+    ) {
         // TODO
     }
 }

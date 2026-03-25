@@ -3,11 +3,13 @@ package io.runescript.plugin.ide.projectWizard
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.roots.ContentEntry
 import com.intellij.openapi.vfs.VirtualFile
-import org.intellij.lang.annotations.Language
 
 object RsProjectTemplate {
-
-    fun generateTemplate(module: Module, contentEntry: ContentEntry, projectDir: VirtualFile) {
+    fun generateTemplate(
+        module: Module,
+        contentEntry: ContentEntry,
+        projectDir: VirtualFile,
+    ) {
         val srcDir = projectDir.findChild("src") ?: projectDir.createChildDirectory(projectDir, "src")
         contentEntry.addSourceFolder(srcDir, false)
 
@@ -29,8 +31,10 @@ object RsProjectTemplate {
         prelude.setBinaryContent(byteArrayOf())
     }
 
-
-    private fun createNeptuneTomlFile(projectDir: VirtualFile, projectName: String) {
+    private fun createNeptuneTomlFile(
+        projectDir: VirtualFile,
+        projectName: String,
+    ) {
         var neptuneToml = projectDir.findChild("neptune.toml")
         if (neptuneToml != null) return
         neptuneToml = projectDir.createChildData(projectDir, "neptune.toml")
@@ -45,7 +49,7 @@ object RsProjectTemplate {
             
             [writer.binary]
             output = "client/cs2"
-            """.trimIndent().toByteArray()
+            """.trimIndent().toByteArray(),
         )
     }
 
@@ -62,7 +66,7 @@ object RsProjectTemplate {
             
             # RuneScript project files
             pack/
-        """.trimIndent().toByteArray()
+            """.trimIndent().toByteArray(),
         )
     }
 
@@ -85,7 +89,7 @@ object RsProjectTemplate {
             [symbols/*.sym]
             indent_style = tab
             trim_trailing_whitespace = false
-        """.trimIndent().toByteArray()
+            """.trimIndent().toByteArray(),
         )
     }
 }

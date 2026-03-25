@@ -5,7 +5,6 @@ import io.runescript.plugin.ide.RsIcons
 import io.runescript.plugin.lang.RuneScript
 
 object RsFileType : LanguageFileType(RuneScript) {
-
     override fun getDisplayName() = "RuneScript"
 
     override fun getName() = "RuneScript"

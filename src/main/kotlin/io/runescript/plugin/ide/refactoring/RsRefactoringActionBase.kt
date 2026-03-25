@@ -9,8 +9,10 @@ import io.runescript.plugin.lang.psi.RsExpression
 import io.runescript.plugin.lang.psi.RsNamedElement
 
 abstract class RsRefactoringActionBase : RefactoringActionHandler {
-
-    protected fun findTargetExpression(file: PsiFile, editor: Editor): RsExpression? {
+    protected fun findTargetExpression(
+        file: PsiFile,
+        editor: Editor,
+    ): RsExpression? {
         val selModel = editor.selectionModel
         if (selModel.hasSelection()) {
             val range = TextRange(selModel.selectionStart, selModel.selectionEnd)
@@ -26,7 +28,10 @@ abstract class RsRefactoringActionBase : RefactoringActionHandler {
         return PsiTreeUtil.getParentOfType(element, RsExpression::class.java, false)
     }
 
-    protected fun moveCaretToName(editor: Editor, namedElement: RsNamedElement) {
+    protected fun moveCaretToName(
+        editor: Editor,
+        namedElement: RsNamedElement,
+    ) {
         val caret = editor.caretModel
         val start = namedElement.textOffset
         caret.moveToOffset(start)

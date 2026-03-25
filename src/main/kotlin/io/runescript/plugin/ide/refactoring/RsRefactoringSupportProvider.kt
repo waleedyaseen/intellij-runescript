@@ -6,12 +6,10 @@ import com.intellij.refactoring.RefactoringActionHandler
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 
 class RsRefactoringSupportProvider : RefactoringSupportProvider() {
+    override fun getIntroduceVariableHandler(): RefactoringActionHandler? = RsIntroduceVariableHandler()
 
-    override fun getIntroduceVariableHandler(): RefactoringActionHandler? {
-        return RsIntroduceVariableHandler()
-    }
-
-    override fun isInplaceRenameAvailable(element: PsiElement, context: PsiElement?): Boolean {
-        return element is RsLocalVariableExpression
-    }
+    override fun isInplaceRenameAvailable(
+        element: PsiElement,
+        context: PsiElement?,
+    ): Boolean = element is RsLocalVariableExpression
 }

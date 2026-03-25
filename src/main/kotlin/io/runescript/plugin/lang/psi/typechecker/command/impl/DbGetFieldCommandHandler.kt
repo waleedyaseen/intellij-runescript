@@ -3,7 +3,11 @@ package io.runescript.plugin.lang.psi.typechecker.command.impl
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
-import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.DbColumnType
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 
 /**
  * Handles the `db_getfield` command that returns a dynamic type
@@ -29,11 +33,12 @@ class DbGetFieldCommandHandler : DynamicCommandHandler {
         val columnReturnType = (columnExpr?.type as? DbColumnType)?.inner
 
         // define the expected types based on what is currently known
-        val expectedTypes = TupleType(
-            ScriptVarType.DBROW,
-            DbColumnType(columnReturnType ?: MetaType.Any),
-            PrimitiveType.INT,
-        )
+        val expectedTypes =
+            TupleType(
+                ScriptVarType.DBROW,
+                DbColumnType(columnReturnType ?: MetaType.Any),
+                PrimitiveType.INT,
+            )
 
         // compare the expected types with the actual types
         if (!checkArgumentTypes(expectedTypes)) {

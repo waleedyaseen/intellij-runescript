@@ -1,11 +1,14 @@
 package io.runescript.plugin.lang.psi.typechecker.command.impl
 
-
 import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
-import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.IfScriptType
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 
 /**
  * Handles the `if_runscript*` command. This command accepts a secondary set of arguments
@@ -26,11 +29,12 @@ class IfRunScriptCommandHandler : DynamicCommandHandler {
         val com = checkArgument(1, ScriptVarType.COMPONENT)
         checkArgument(2, PrimitiveType.INT)
 
-        val expectedTypesList = arrayListOf(
-            IF_SCRIPT_ANY,
-            ScriptVarType.COMPONENT,
-            PrimitiveType.INT,
-        )
+        val expectedTypesList =
+            arrayListOf(
+                IF_SCRIPT_ANY,
+                ScriptVarType.COMPONENT,
+                PrimitiveType.INT,
+            )
 
         if (checkArgumentTypes(TupleType.fromList(expectedTypesList))) {
             // button shouldn't be null here since we're within the block that checks the expected types

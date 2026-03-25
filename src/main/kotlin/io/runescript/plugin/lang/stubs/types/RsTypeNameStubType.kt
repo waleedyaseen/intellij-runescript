@@ -11,23 +11,28 @@ import io.runescript.plugin.lang.psi.impl.RsTypeNameImpl
 import io.runescript.plugin.lang.stubs.RsTypeNameStub
 
 object RsTypeNameStubType : RsStubType<RsTypeNameStub, RsTypeName>("TYPE_NAME") {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsTypeNameStub = RsTypeNameStub(parentStub, this)
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsTypeNameStub {
-        return RsTypeNameStub(parentStub, this)
+    override fun serialize(
+        stub: RsTypeNameStub,
+        dataStream: StubOutputStream,
+    ) {
     }
 
-    override fun serialize(stub: RsTypeNameStub, dataStream: StubOutputStream) {
-    }
+    override fun createStub(
+        psi: RsTypeName,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsTypeNameStub = RsTypeNameStub(parentStub, this)
 
-    override fun createStub(psi: RsTypeName, parentStub: StubElement<out PsiElement>?): RsTypeNameStub {
-        return RsTypeNameStub(parentStub, this)
-    }
+    override fun createPsi(stub: RsTypeNameStub): RsTypeName = RsTypeNameImpl(stub, this)
 
-    override fun createPsi(stub: RsTypeNameStub): RsTypeName {
-        return RsTypeNameImpl(stub, this)
-    }
-
-    override fun indexStub(stub: RsTypeNameStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsTypeNameStub,
+        sink: IndexSink,
+    ) {
         // TODO
     }
 }

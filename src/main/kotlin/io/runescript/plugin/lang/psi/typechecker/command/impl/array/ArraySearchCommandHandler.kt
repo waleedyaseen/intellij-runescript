@@ -1,6 +1,5 @@
 package io.runescript.plugin.lang.psi.typechecker.command.impl.array
 
-
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
@@ -33,12 +32,13 @@ class ArraySearchCommandHandler : DynamicCommandHandler {
         // check the base signature matches
         if (checkArgumentTypes(BASE_EXPECTED_TYPES) && arrayExprType is ArrayType) {
             // expect (array<T>, T, int, int)
-            val searchType = if (arrayExprType.inner == ScriptVarType.NAMEDOBJ) {
-                // special case since finding a namedobj index within the array by obj isn't unsafe
-                ScriptVarType.OBJ
-            } else {
-                arrayExprType.inner
-            }
+            val searchType =
+                if (arrayExprType.inner == ScriptVarType.NAMEDOBJ) {
+                    // special case since finding a namedobj index within the array by obj isn't unsafe
+                    ScriptVarType.OBJ
+                } else {
+                    arrayExprType.inner
+                }
             val expectedTypes = TupleType(arrayExprType, searchType, PrimitiveType.INT, PrimitiveType.INT)
             checkArgumentTypes(expectedTypes)
         }
@@ -47,11 +47,12 @@ class ArraySearchCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            MetaType.Any,
-            PrimitiveType.INT,
-            PrimitiveType.INT,
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                MetaType.Any,
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+            )
     }
 }

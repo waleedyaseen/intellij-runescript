@@ -11,14 +11,19 @@ import io.runescript.plugin.symbollang.RuneScriptSymbol
 import io.runescript.plugin.symbollang.filetypes.RsSymFileType
 
 object RsSymElementGenerator {
-
-    fun createField(project: Project, text: String): RsSymField {
+    fun createField(
+        project: Project,
+        text: String,
+    ): RsSymField {
         val element = createDummyFile(project, "000\t$text\n")
         val symField = PsiTreeUtil.findChildOfType(element, RsSymField::class.java)!!.nextSibling.nextSibling
         return symField as RsSymField
     }
 
-    private fun createDummyFile(project: Project, text: String): PsiFile {
+    private fun createDummyFile(
+        project: Project,
+        text: String,
+    ): PsiFile {
         val factory = PsiFileFactory.getInstance(project) as PsiFileFactoryImpl
         val name = "dummy.sym"
         val virtualFile = LightVirtualFile(name, RsSymFileType, StringUtil.convertLineSeparators(text))

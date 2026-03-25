@@ -5,7 +5,13 @@ package io.runescript.plugin.ide.doc
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType
 import com.intellij.codeInsight.documentation.DocumentationManagerUtil
-import com.intellij.lang.documentation.DocumentationMarkup.*
+import com.intellij.lang.documentation.DocumentationMarkup.CONTENT_END
+import com.intellij.lang.documentation.DocumentationMarkup.CONTENT_START
+import com.intellij.lang.documentation.DocumentationMarkup.SECTIONS_END
+import com.intellij.lang.documentation.DocumentationMarkup.SECTIONS_START
+import com.intellij.lang.documentation.DocumentationMarkup.SECTION_END
+import com.intellij.lang.documentation.DocumentationMarkup.SECTION_HEADER_START
+import com.intellij.lang.documentation.DocumentationMarkup.SECTION_SEPARATOR
 import com.intellij.lang.documentation.QuickDocHighlightingHelper
 import com.intellij.lang.documentation.QuickDocHighlightingHelper.appendStyledCodeBlock
 import com.intellij.lang.documentation.QuickDocHighlightingHelper.appendStyledFragment
@@ -42,13 +48,11 @@ import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
 
 object RsDocRenderer {
-
     private fun StringBuilder.appendRsDocContent(docComment: RsDocTag): StringBuilder =
         append(markdownToHtml(docComment, allowSingleParagraph = true))
 
     private fun StringBuilder.appendRsDocSections(sections: List<RsDocSection>) {
-        fun findTagsByName(name: String) =
-            sequence { sections.forEach { yieldAll(it.findTagsByName(name)) } }
+        fun findTagsByName(name: String) = sequence { sections.forEach { yieldAll(it.findTagsByName(name)) } }
 
         fun findTagByName(name: String) = findTagsByName(name).firstOrNull()
 
@@ -56,7 +60,7 @@ object RsDocRenderer {
         appendTagList(
             paramTags,
             RsBundle.message("rsdoc.section.title.parameters"),
-            RsSyntaxHighlighterColors.LOCAL_VARIABLE
+            RsSyntaxHighlighterColors.LOCAL_VARIABLE,
         )
 
         appendTag(findTagByName("return"), RsBundle.message("rsdoc.section.title.returns"))
@@ -72,7 +76,7 @@ object RsDocRenderer {
 
     fun StringBuilder.renderRsDoc(
         contentTag: RsDocTag,
-        sections: List<RsDocSection> = if (contentTag is RsDocSection) listOf(contentTag) else emptyList()
+        sections: List<RsDocSection> = if (contentTag is RsDocSection) listOf(contentTag) else emptyList(),
     ) {
         val computedContent = buildString { appendRsDocContent(contentTag) }
         if (computedContent.isNotBlank()) {
@@ -100,24 +104,24 @@ object RsDocRenderer {
         }
     }
 
-    private fun RsDocReference.resolveToElement(): PsiElement? =
-        multiResolve(incompleteCode = false).firstOrNull()?.element
+    private fun RsDocReference.resolveToElement(): PsiElement? = multiResolve(incompleteCode = false).firstOrNull()?.element
 
-    private fun getTargetLinkElementAttributes(element: PsiElement?): TextAttributes {
-        return element
+    private fun getTargetLinkElementAttributes(element: PsiElement?): TextAttributes =
+        element
             ?.let { textAttributesKeyForRsElement(it)?.attributesKey }
             ?.let { getTargetLinkElementAttributes(it) }
             ?: TextAttributes().apply {
                 foregroundColor =
                     EditorColorsManager.getInstance().globalScheme.getColor(DefaultLanguageHighlighterColors.DOC_COMMENT_LINK)
             }
-    }
 
-    private fun getTargetLinkElementAttributes(key: TextAttributesKey): TextAttributes {
-        return tuneAttributesForLink(EditorColorsManager.getInstance().globalScheme.getAttributes(key))
-    }
+    private fun getTargetLinkElementAttributes(key: TextAttributesKey): TextAttributes =
+        tuneAttributesForLink(EditorColorsManager.getInstance().globalScheme.getAttributes(key))
 
-    private fun highlightQualifiedName(qualifiedName: String, lastSegmentAttributes: TextAttributes): String {
+    private fun highlightQualifiedName(
+        qualifiedName: String,
+        lastSegmentAttributes: TextAttributes,
+    ): String {
         val linkComponents = qualifiedName.split("/")
         val elementName = linkComponents.last()
         return buildString {
@@ -125,10 +129,12 @@ object RsDocRenderer {
         }
     }
 
-    private fun RsDocLink.getTargetElement(): PsiElement? {
-        return getChildrenOfType<RsDocName>().last().references.firstIsInstanceOrNull<RsDocReference>()
+    private fun RsDocLink.getTargetElement(): PsiElement? =
+        getChildrenOfType<RsDocName>()
+            .last()
+            .references
+            .firstIsInstanceOrNull<RsDocReference>()
             ?.resolveToElement()
-    }
 
     private fun PsiElement.extractExampleText() = text
 
@@ -140,7 +146,10 @@ object RsDocRenderer {
         return lines.joinToString("\n") { it.drop(minIndent) }
     }
 
-    private fun StringBuilder.appendSection(title: String, content: StringBuilder.() -> Unit) {
+    private fun StringBuilder.appendSection(
+        title: String,
+        content: StringBuilder.() -> Unit,
+    ) {
         append(SECTION_HEADER_START, title, ":", SECTION_SEPARATOR)
         content()
         append(SECTION_END)
@@ -157,12 +166,14 @@ object RsDocRenderer {
                     this@appendSamplesList.appendStyledCodeBlock(
                         subjectLink.project,
                         RuneScript,
-                        if (DumbService.isDumb(subjectLink.project))
+                        if (DumbService.isDumb(subjectLink.project)) {
                             "// " + RsBundle.message("rsdoc.comment.unresolved")
-                        else when (val target = subjectLink.getTargetElement()) {
-                            null -> "// " + RsBundle.message("rsdoc.comment.unresolved")
-                            else -> trimCommonIndent(target.extractExampleText()).htmlEscape()
-                        }
+                        } else {
+                            when (val target = subjectLink.getTargetElement()) {
+                                null -> "// " + RsBundle.message("rsdoc.comment.unresolved")
+                                else -> trimCommonIndent(target.extractExampleText()).htmlEscape()
+                            }
+                        },
                     )
                 }
             }
@@ -180,15 +191,22 @@ object RsDocRenderer {
                 val subjectName = tag.getSubjectName()
                 val link = tag.getChildrenOfType<RsDocLink>().lastOrNull()
                 when {
-                    link != null -> this.appendHyperlink(link)
-                    subjectName != null -> DocumentationManagerUtil.createHyperlink(
-                        this,
-                        subjectName,
-                        subjectName,
-                        false
-                    )
+                    link != null -> {
+                        this.appendHyperlink(link)
+                    }
 
-                    else -> append(tag.getContent())
+                    subjectName != null -> {
+                        DocumentationManagerUtil.createHyperlink(
+                            this,
+                            subjectName,
+                            subjectName,
+                            false,
+                        )
+                    }
+
+                    else -> {
+                        append(tag.getContent())
+                    }
                 }
                 if (iterator.hasNext()) {
                     append(",<br>")
@@ -215,7 +233,7 @@ object RsDocRenderer {
     private fun StringBuilder.appendTagList(
         tags: Sequence<RsDocTag>,
         title: String,
-        titleAttributes: TextAttributesKey
+        titleAttributes: TextAttributesKey,
     ) {
         if (!tags.any()) {
             return
@@ -240,7 +258,10 @@ object RsDocRenderer {
         }
     }
 
-    private fun StringBuilder.appendTag(tag: RsDocTag?, title: String) {
+    private fun StringBuilder.appendTag(
+        tag: RsDocTag?,
+        title: String,
+    ) {
         if (tag != null) {
             appendSection(title) {
                 append(markdownToHtml(tag))
@@ -248,39 +269,55 @@ object RsDocRenderer {
         }
     }
 
-    private fun markdownToHtml(comment: RsDocTag, allowSingleParagraph: Boolean = false): String {
+    private fun markdownToHtml(
+        comment: RsDocTag,
+        allowSingleParagraph: Boolean = false,
+    ): String {
         val markdownTree = MarkdownParser(GFMFlavourDescriptor()).buildMarkdownTreeFromString(comment.getContent())
         val markdownNode = MarkdownNode(markdownTree, null, comment)
 
         // Avoid wrapping the entire converted contents in a <p> tag if it's just a single paragraph
         val maybeSingleParagraph = markdownNode.children.singleOrNull { it.type != MarkdownTokenTypes.EOL }
 
-        val firstParagraphOmitted = when {
-            maybeSingleParagraph != null && !allowSingleParagraph -> {
-                maybeSingleParagraph.children.joinToString("") { if (it.text == "\n") " " else it.toHtml() }
+        val firstParagraphOmitted =
+            when {
+                maybeSingleParagraph != null && !allowSingleParagraph -> {
+                    maybeSingleParagraph.children.joinToString("") { if (it.text == "\n") " " else it.toHtml() }
+                }
+
+                else -> {
+                    markdownNode.toHtml()
+                }
             }
 
-            else -> markdownNode.toHtml()
-        }
+        val topMarginOmitted =
+            when {
+                firstParagraphOmitted.startsWith("<p>") -> {
+                    firstParagraphOmitted.replaceFirst(
+                        "<p>",
+                        "<p style='margin-top:0;padding-top:0;'>",
+                    )
+                }
 
-        val topMarginOmitted = when {
-            firstParagraphOmitted.startsWith("<p>") -> firstParagraphOmitted.replaceFirst(
-                "<p>",
-                "<p style='margin-top:0;padding-top:0;'>"
-            )
-
-            else -> firstParagraphOmitted
-        }
+                else -> {
+                    firstParagraphOmitted
+                }
+            }
 
         return topMarginOmitted
     }
 
-    class MarkdownNode(val node: ASTNode, val parent: MarkdownNode?, val comment: RsDocTag) {
+    class MarkdownNode(
+        val node: ASTNode,
+        val parent: MarkdownNode?,
+        val comment: RsDocTag,
+    ) {
         val children: List<MarkdownNode> = node.children.map { MarkdownNode(it, this, comment) }
         val endOffset: Int get() = node.endOffset
         val startOffset: Int get() = node.startOffset
         val type: IElementType get() = node.type
         val text: String get() = comment.getContent().substring(startOffset, endOffset)
+
         fun child(type: IElementType): MarkdownNode? = children.firstOrNull { it.type == type }
     }
 
@@ -294,12 +331,15 @@ object RsDocRenderer {
 
     private fun MarkdownNode.toHtml(): String {
         if (node.type == MarkdownTokenTypes.WHITE_SPACE) {
-            return text   // do not trim trailing whitespace
+            return text // do not trim trailing whitespace
         }
 
         val sb = StringBuilder()
         visit { node, processChildren ->
-            fun wrapChildren(tag: String, newline: Boolean = false) {
+            fun wrapChildren(
+                tag: String,
+                newline: Boolean = false,
+            ) {
                 sb.append("<$tag>")
                 processChildren()
                 sb.append("</$tag>")
@@ -309,19 +349,58 @@ object RsDocRenderer {
             val nodeType = node.type
             val nodeText = node.text
             when (nodeType) {
-                MarkdownElementTypes.UNORDERED_LIST -> wrapChildren("ul", newline = true)
-                MarkdownElementTypes.ORDERED_LIST -> wrapChildren("ol", newline = true)
-                MarkdownElementTypes.LIST_ITEM -> wrapChildren("li")
-                MarkdownElementTypes.EMPH -> wrapChildren("em")
-                MarkdownElementTypes.STRONG -> wrapChildren("strong")
-                GFMElementTypes.STRIKETHROUGH -> wrapChildren("del")
-                MarkdownElementTypes.ATX_1 -> wrapChildren("h1")
-                MarkdownElementTypes.ATX_2 -> wrapChildren("h2")
-                MarkdownElementTypes.ATX_3 -> wrapChildren("h3")
-                MarkdownElementTypes.ATX_4 -> wrapChildren("h4")
-                MarkdownElementTypes.ATX_5 -> wrapChildren("h5")
-                MarkdownElementTypes.ATX_6 -> wrapChildren("h6")
-                MarkdownElementTypes.BLOCK_QUOTE -> wrapChildren("blockquote")
+                MarkdownElementTypes.UNORDERED_LIST -> {
+                    wrapChildren("ul", newline = true)
+                }
+
+                MarkdownElementTypes.ORDERED_LIST -> {
+                    wrapChildren("ol", newline = true)
+                }
+
+                MarkdownElementTypes.LIST_ITEM -> {
+                    wrapChildren("li")
+                }
+
+                MarkdownElementTypes.EMPH -> {
+                    wrapChildren("em")
+                }
+
+                MarkdownElementTypes.STRONG -> {
+                    wrapChildren("strong")
+                }
+
+                GFMElementTypes.STRIKETHROUGH -> {
+                    wrapChildren("del")
+                }
+
+                MarkdownElementTypes.ATX_1 -> {
+                    wrapChildren("h1")
+                }
+
+                MarkdownElementTypes.ATX_2 -> {
+                    wrapChildren("h2")
+                }
+
+                MarkdownElementTypes.ATX_3 -> {
+                    wrapChildren("h3")
+                }
+
+                MarkdownElementTypes.ATX_4 -> {
+                    wrapChildren("h4")
+                }
+
+                MarkdownElementTypes.ATX_5 -> {
+                    wrapChildren("h5")
+                }
+
+                MarkdownElementTypes.ATX_6 -> {
+                    wrapChildren("h6")
+                }
+
+                MarkdownElementTypes.BLOCK_QUOTE -> {
+                    wrapChildren("blockquote")
+                }
+
                 MarkdownElementTypes.PARAGRAPH -> {
                     sb.trimEnd()
                     wrapChildren("p", newline = true)
@@ -336,23 +415,26 @@ object RsDocRenderer {
                 }
 
                 MarkdownElementTypes.CODE_BLOCK,
-                MarkdownElementTypes.CODE_FENCE -> {
+                MarkdownElementTypes.CODE_FENCE,
+                -> {
                     sb.trimEnd()
                     var language: String? = null
                     val contents = StringBuilder()
                     node.children.forEach { child ->
                         when (child.type) {
-                            MarkdownTokenTypes.CODE_FENCE_CONTENT, MarkdownTokenTypes.CODE_LINE, MarkdownTokenTypes.EOL ->
+                            MarkdownTokenTypes.CODE_FENCE_CONTENT, MarkdownTokenTypes.CODE_LINE, MarkdownTokenTypes.EOL -> {
                                 contents.append(child.text)
+                            }
 
-                            MarkdownTokenTypes.FENCE_LANG ->
+                            MarkdownTokenTypes.FENCE_LANG -> {
                                 language = child.text.trim().split(' ')[0]
+                            }
                         }
                     }
                     sb.appendStyledCodeBlock(
                         project = comment.project,
                         language = QuickDocHighlightingHelper.guessLanguage(language) ?: RuneScript,
-                        code = contents
+                        code = contents,
                     )
                 }
 
@@ -361,18 +443,22 @@ object RsDocRenderer {
                 }
 
                 MarkdownElementTypes.SHORT_REFERENCE_LINK,
-                MarkdownElementTypes.FULL_REFERENCE_LINK -> {
+                MarkdownElementTypes.FULL_REFERENCE_LINK,
+                -> {
                     val linkLabelNode = node.child(MarkdownElementTypes.LINK_LABEL)
-                    val linkLabelContent = linkLabelNode?.children
-                        ?.dropWhile { it.type == MarkdownTokenTypes.LBRACKET }
-                        ?.dropLastWhile { it.type == MarkdownTokenTypes.RBRACKET }
+                    val linkLabelContent =
+                        linkLabelNode
+                            ?.children
+                            ?.dropWhile { it.type == MarkdownTokenTypes.LBRACKET }
+                            ?.dropLastWhile { it.type == MarkdownTokenTypes.RBRACKET }
                     if (linkLabelContent != null) {
                         val label = linkLabelContent.joinToString(separator = "") { it.text }
                         val linkText = node.child(MarkdownElementTypes.LINK_TEXT)?.toHtml() ?: label
                         if (DumbService.isDumb(comment.project)) {
                             sb.append(linkText)
                         } else {
-                            comment.findDescendantOfType<RsDocName> { it.text == label }
+                            comment
+                                .findDescendantOfType<RsDocName> { it.text == label }
                                 ?.references
                                 ?.firstIsInstanceOrNull<RsDocReference>()
                                 ?.resolveToElement()
@@ -382,7 +468,7 @@ object RsDocRenderer {
                                         label,
                                         highlightQualifiedName(
                                             linkText,
-                                            getTargetLinkElementAttributes(resolvedLinkElement)
+                                            getTargetLinkElementAttributes(resolvedLinkElement),
                                         ),
                                         false,
                                     )
@@ -416,7 +502,8 @@ object RsDocRenderer {
                 MarkdownTokenTypes.EXCLAMATION_MARK,
                 GFMTokenTypes.CHECK_BOX,
                 GFMTokenTypes.GFM_AUTOLINK,
-                GFMTokenTypes.DOLLAR -> {
+                GFMTokenTypes.DOLLAR,
+                -> {
                     sb.append(nodeText)
                 }
 
@@ -424,8 +511,13 @@ object RsDocRenderer {
                     sb.append(" ")
                 }
 
-                MarkdownTokenTypes.GT -> sb.append("&gt;")
-                MarkdownTokenTypes.LT -> sb.append("&lt;")
+                MarkdownTokenTypes.GT -> {
+                    sb.append("&gt;")
+                }
+
+                MarkdownTokenTypes.LT -> {
+                    sb.append("&lt;")
+                }
 
                 MarkdownElementTypes.LINK_TEXT -> {
                     val childrenWithoutBrackets = node.children.drop(1).dropLast(1)
@@ -489,7 +581,12 @@ object RsDocRenderer {
 
     private fun String.htmlEscape(): String = replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    private fun processTableRow(sb: StringBuilder, node: MarkdownNode, cellTag: String, alignment: List<String>) {
+    private fun processTableRow(
+        sb: StringBuilder,
+        node: MarkdownNode,
+        cellTag: String,
+        alignment: List<String>,
+    ) {
         sb.append("<tr>")
         for ((i, child) in node.children.filter { it.type == GFMTokenTypes.CELL }.withIndex()) {
             val alignValue = alignment.getOrElse(i) { "" }
@@ -502,17 +599,23 @@ object RsDocRenderer {
     }
 
     private fun getTableAlignment(node: MarkdownNode): List<String> {
-        val separatorRow = node.child(GFMTokenTypes.TABLE_SEPARATOR)
-            ?: return emptyList()
+        val separatorRow =
+            node.child(GFMTokenTypes.TABLE_SEPARATOR)
+                ?: return emptyList()
 
         return separatorRow.text.split('|').filterNot { it.isBlank() }.map {
             val trimmed = it.trim()
             val left = trimmed.startsWith(':')
             val right = trimmed.endsWith(':')
-            if (left && right) "center"
-            else if (right) "right"
-            else if (left) "left"
-            else ""
+            if (left && right) {
+                "center"
+            } else if (right) {
+                "right"
+            } else if (left) {
+                "left"
+            } else {
+                ""
+            }
         }
     }
 
@@ -522,8 +625,8 @@ object RsDocRenderer {
      */
     private fun tuneAttributesForLink(attributes: TextAttributes): TextAttributes {
         val globalScheme = EditorColorsManager.getInstance().globalScheme
-        if (attributes.foregroundColor == globalScheme.getAttributes(HighlighterColors.TEXT).foregroundColor
-            || attributes.foregroundColor == globalScheme.getAttributes(DefaultLanguageHighlighterColors.IDENTIFIER).foregroundColor
+        if (attributes.foregroundColor == globalScheme.getAttributes(HighlighterColors.TEXT).foregroundColor ||
+            attributes.foregroundColor == globalScheme.getAttributes(DefaultLanguageHighlighterColors.IDENTIFIER).foregroundColor
         ) {
             val tuned = attributes.clone()
             if (ApplicationManager.getApplication().isUnitTestMode) {
@@ -555,9 +658,8 @@ object RsDocRenderer {
         val SCRIPT_DECLARATION: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.SCRIPT_DECLARATION)
         val LOCAL_VARIABLE: HighlightInfoType = createSymbolTypeInfo(RsSyntaxHighlighterColors.LOCAL_VARIABLE)
 
-        private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType {
-            return HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, attributesKey)
-        }
+        private fun createSymbolTypeInfo(attributesKey: TextAttributesKey): HighlightInfoType =
+            HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, attributesKey)
     }
 }
 

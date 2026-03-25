@@ -9,8 +9,11 @@ import io.runescript.plugin.symbollang.psi.RsSymFile
 import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 
 class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
-
-    override fun checkFile(file: PsiFile, manager: InspectionManager, isOnTheFly: Boolean): Array<ProblemDescriptor>? {
+    override fun checkFile(
+        file: PsiFile,
+        manager: InspectionManager,
+        isOnTheFly: Boolean,
+    ): Array<ProblemDescriptor>? {
         if (file !is RsSymFile) {
             return null
         }
@@ -22,8 +25,8 @@ class RuneScriptInvalidSymbolFileInspection : LocalInspectionTool() {
                     arrayOf(),
                     ProblemHighlightType.ERROR,
                     isOnTheFly,
-                    false
-                )
+                    false,
+                ),
             )
         }
         return null

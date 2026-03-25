@@ -27,10 +27,11 @@ class EnumGetInputsOutputsCommandHandler : DynamicCommandHandler {
         val type = (typeExpr?.type as? MetaType.Type)?.inner
 
         // create the expected type of type,enum
-        val expectedTypes = TupleType(
-            MetaType.Type(type ?: MetaType.Any),
-            ScriptVarType.ENUM,
-        )
+        val expectedTypes =
+            TupleType(
+                MetaType.Type(type ?: MetaType.Any),
+                ScriptVarType.ENUM,
+            )
 
         // compare the expected types with the actual types
         checkArgumentTypes(expectedTypes)

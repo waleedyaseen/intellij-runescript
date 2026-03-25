@@ -8,10 +8,9 @@ import com.intellij.psi.util.elementType
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsElementTypes
 import io.runescript.plugin.lang.psi.RsFile
-import java.util.*
+import java.util.Collections
 
 class RsNumberConversionIntention : AbstractNumberConversionIntention() {
-
     override fun extract(element: PsiElement): NumberConversionContext? {
         if (element.elementType == RsElementTypes.INTEGER) {
             var rawValue = element.text
@@ -32,43 +31,45 @@ class RsNumberConversionIntention : AbstractNumberConversionIntention() {
         return null
     }
 
-    override fun getConverters(file: PsiFile): List<NumberConverter> {
-        return if (file is RsFile) CONVERTERS else Collections.emptyList()
-    }
+    override fun getConverters(file: PsiFile): List<NumberConverter> = if (file is RsFile) CONVERTERS else Collections.emptyList()
 
-    override fun replace(sourceElement: PsiElement, replacement: String) {
+    override fun replace(
+        sourceElement: PsiElement,
+        replacement: String,
+    ) {
         sourceElement.replace(RsElementGenerator.createIntegerLiteral(sourceElement.project, replacement))
     }
 
     companion object {
+        private val INTEGER_TO_HEX =
+            object : NumberConverter {
+                override fun getConvertedText(
+                    text: String,
+                    number: Number,
+                ): String? =
+                    if (text.startsWith("0x") || text.startsWith("0X")) {
+                        null
+                    } else {
+                        "0x${Integer.toHexString(number.toInt())}"
+                    }
 
-        private val INTEGER_TO_HEX = object : NumberConverter {
-            override fun getConvertedText(text: String, number: Number): String? {
-                return if (text.startsWith("0x") || text.startsWith("0X")) {
-                    null
-                } else {
-                    "0x${Integer.toHexString(number.toInt())}"
-                }
+                override fun toString(): String = "hex"
             }
 
-            override fun toString(): String {
-                return "hex"
-            }
-        }
+        private val INTEGER_TO_DECIMAL =
+            object : NumberConverter {
+                override fun getConvertedText(
+                    text: String,
+                    number: Number,
+                ): String? =
+                    if (text.startsWith("0x") || text.startsWith("0X")) {
+                        number.toString()
+                    } else {
+                        null
+                    }
 
-        private val INTEGER_TO_DECIMAL = object : NumberConverter {
-            override fun getConvertedText(text: String, number: Number): String? {
-                return if (text.startsWith("0x") || text.startsWith("0X")) {
-                    number.toString()
-                } else {
-                    null
-                }
+                override fun toString(): String = "decimal"
             }
-
-            override fun toString(): String {
-                return "decimal"
-            }
-        }
 
         private val CONVERTERS = listOf(INTEGER_TO_DECIMAL, INTEGER_TO_HEX)
     }

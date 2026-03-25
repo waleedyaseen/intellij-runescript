@@ -8,28 +8,40 @@ import com.intellij.lang.documentation.DocumentationSettings
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.richcopy.HtmlSyntaxInfoUtil
 import com.intellij.openapi.module.ModuleUtil
-import com.intellij.psi.*
+import com.intellij.psi.PsiDocCommentBase
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.intellij.psi.SyntaxTraverser
 import com.intellij.psi.util.childrenOfType
 import com.intellij.psi.util.parentOfType
 import io.runescript.plugin.ide.doc.RsDocRenderer.renderRsDoc
 import io.runescript.plugin.ide.highlight.RsSyntaxHighlighterColors
 import io.runescript.plugin.lang.doc.psi.api.RsDoc
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsArrayVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsFile
+import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsParameter
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.qualifiedName
 import java.util.function.Consumer
 
 class RsDocumentationProvider : AbstractDocumentationProvider() {
+    override fun generateDoc(
+        element: PsiElement?,
+        originalElement: PsiElement?,
+    ): String? = getDescription(element)
 
-    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        return getDescription(element)
-    }
+    override fun getQuickNavigateInfo(
+        element: PsiElement?,
+        originalElement: PsiElement?,
+    ): String? = getDescription(element)
 
-    override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? {
-        return getDescription(element)
-    }
-
-    override fun generateHoverDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        return getDescription(element)
-    }
+    override fun generateHoverDoc(
+        element: PsiElement,
+        originalElement: PsiElement?,
+    ): String? = getDescription(element)
 
     private fun getDescription(element: PsiElement?): String? {
         when (element) {
@@ -39,12 +51,13 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
                 if (!parameterDoc.isNullOrBlank()) {
                     builder.append(DEFINITION_START)
                 }
-                val type = when (val parent = element.parent) {
-                    is RsParameter -> parent.typeName.text
-                    is RsLocalVariableDeclarationStatement -> parent.defineType.text.substring(4)
-                    is RsArrayVariableDeclarationStatement -> "${parent.defineType.text.substring(4)}array"
-                    else -> return null
-                }
+                val type =
+                    when (val parent = element.parent) {
+                        is RsParameter -> parent.typeName.text
+                        is RsLocalVariableDeclarationStatement -> parent.defineType.text.substring(4)
+                        is RsArrayVariableDeclarationStatement -> "${parent.defineType.text.substring(4)}array"
+                        else -> return null
+                    }
                 if (element.parent is RsParameter) {
                     builder.appendKeyword("parameter ")
                 }
@@ -58,7 +71,6 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
                 return builder.toString()
             }
 
-
             is RsScript -> {
                 val builder = StringBuilder()
 
@@ -71,7 +83,9 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
                 return builder.toString()
             }
 
-            else -> return null
+            else -> {
+                return null
+            }
         }
     }
 
@@ -108,7 +122,7 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
             appendKeyword(it.typeName.text)
             appendHighlighted(
                 " ${it.localVariableExpression?.text ?: "<unknown-parameter>" }",
-                RsSyntaxHighlighterColors.LOCAL_VARIABLE
+                RsSyntaxHighlighterColors.LOCAL_VARIABLE,
             )
         }
         appendRParen()
@@ -125,18 +139,23 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
         appendRParen()
     }
 
-    override fun collectDocComments(file: PsiFile, sink: Consumer<in PsiDocCommentBase>) {
+    override fun collectDocComments(
+        file: PsiFile,
+        sink: Consumer<in PsiDocCommentBase>,
+    ) {
         if (file !is RsFile) return
-        SyntaxTraverser.psiTraverser(file)
+        SyntaxTraverser
+            .psiTraverser(file)
             .filterIsInstance<RsDoc>()
             .forEach { sink.accept(it) }
     }
 
     override fun generateRenderedDoc(comment: PsiDocCommentBase): String? {
         val docComment = comment as? RsDoc ?: return null
-        val result = StringBuilder().also {
-            it.renderRsDoc(docComment.getDefaultSection(), docComment.getAllSections())
-        }
+        val result =
+            StringBuilder().also {
+                it.renderRsDoc(docComment.getDefaultSection(), docComment.getAllSections())
+            }
         return JavaDocExternalFilter.filterInternalDocInfo(result.toString())
     }
 
@@ -179,13 +198,16 @@ private fun StringBuilder.appendKeyword(keyword: String) {
     appendHighlighted(keyword, RsSyntaxHighlighterColors.KEYWORD)
 }
 
-private fun StringBuilder.appendHighlighted(keyword: String, attributes: TextAttributesKey) {
+private fun StringBuilder.appendHighlighted(
+    keyword: String,
+    attributes: TextAttributesKey,
+) {
     @Suppress("UnstableApiUsage")
     HtmlSyntaxInfoUtil.appendStyledSpan(
         this,
         attributes,
         keyword,
-        DocumentationSettings.getHighlightingSaturation(false)
+        DocumentationSettings.getHighlightingSaturation(false),
     )
 }
 
@@ -193,6 +215,4 @@ private fun StringBuilder.appendColon(text: String = ":") {
     appendHighlighted(text, RsSyntaxHighlighterColors.COLON)
 }
 
-fun RsScript.findDoc(): RsDoc? {
-    return childrenOfType<RsDoc>().firstOrNull()
-}
+fun RsScript.findDoc(): RsDoc? = childrenOfType<RsDoc>().firstOrNull()

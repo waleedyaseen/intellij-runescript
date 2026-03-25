@@ -10,21 +10,21 @@ import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 import io.runescript.plugin.lang.psi.typechecker.type.Type
 import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
 
-
 fun rawSymToType(
     symbol: RsSymSymbol,
     typeManager: TypeManager,
-    loaders: Map<String, (subTypes: Type) -> Type>
+    loaders: Map<String, (subTypes: Type) -> Type>,
 ): Type {
     val typeName = resolveToSymTypeName(symbol.containingFile)
     val typeSupplier = loaders[typeName] ?: return MetaType.Error
-    val subTypes = if (symbol.fieldList.size >= 3 && symbol.fieldList[2].text.isNotBlank()) {
-        val typeSplit = symbol.fieldList[2].text.split(',')
-        val types = typeSplit.map { typeName -> typeManager.find(typeName, allowArray = true) }
-        TupleType.fromList(types)
-    } else {
-        MetaType.Unit
-    }
+    val subTypes =
+        if (symbol.fieldList.size >= 3 && symbol.fieldList[2].text.isNotBlank()) {
+            val typeSplit = symbol.fieldList[2].text.split(',')
+            val types = typeSplit.map { typeName -> typeManager.find(typeName, allowArray = true) }
+            TupleType.fromList(types)
+        } else {
+            MetaType.Unit
+        }
     return typeSupplier(subTypes)
 }
 
@@ -43,7 +43,10 @@ fun resolveToSymTypeName(file: PsiFile?): String? {
     return null
 }
 
-fun resolveToSymTypeName(symbolsRoot: VirtualFile, file: VirtualFile): String? {
+fun resolveToSymTypeName(
+    symbolsRoot: VirtualFile,
+    file: VirtualFile,
+): String? {
     val dir1 = file.parent
     if (dir1 == symbolsRoot) {
         return file.nameWithoutExtension
@@ -57,7 +60,8 @@ fun resolveToSymTypeName(symbolsRoot: VirtualFile, file: VirtualFile): String? {
 
 fun PsiFile.isConstantFile() = resolveToSymTypeName(this) == "constant"
 
-fun PsiFile.isVarFile() = when (resolveToSymTypeName(this)) {
-    "varbit", "varc", "varclan", "varclansetting", "varcstr", "varp" -> true
-    else -> false
-}
+fun PsiFile.isVarFile() =
+    when (resolveToSymTypeName(this)) {
+        "varbit", "varc", "varclan", "varclansetting", "varcstr", "varp" -> true
+        else -> false
+    }

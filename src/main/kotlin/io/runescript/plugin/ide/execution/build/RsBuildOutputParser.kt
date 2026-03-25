@@ -9,8 +9,9 @@ import com.intellij.build.output.BuildOutputParser
 import java.io.File
 import java.util.function.Consumer
 
-class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputParser {
-
+class RsBuildOutputParser(
+    private val instance: RsBuildInstance,
+) : BuildOutputParser {
     private val fileMessageContext = FileMessageContext()
     private val detailsBuilder = StringBuilder()
     private var detailsCount = 0
@@ -19,7 +20,7 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
     override fun parse(
         line: String,
         reader: BuildOutputInstantReader,
-        messageConsumer: Consumer<in BuildEvent>
+        messageConsumer: Consumer<in BuildEvent>,
     ): Boolean {
         if (detailsCount > 0) {
             detailsCount--
@@ -28,7 +29,8 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
                 val filePath = File(fileMessageContext.path)
                 val filePosition = FilePosition(filePath, fileMessageContext.line, fileMessageContext.column)
                 val fileMessage =
-                    FileMessageEvent.builder(fileMessageContext.message, MessageEvent.Kind.ERROR, filePosition)
+                    FileMessageEvent
+                        .builder(fileMessageContext.message, MessageEvent.Kind.ERROR, filePosition)
                         .withParentId(instance.buildId)
                         .withGroup("Compiler Errors")
                         .withDescription(detailsBuilder.toString())
@@ -51,11 +53,13 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
         }
         if (collectingStackTrace) {
             if (line.startsWith("Process finished")) {
-                val fileMessage = MessageEvent.builder("Internal Error", MessageEvent.Kind.ERROR)
-                    .withParentId(instance.buildId)
-                    .withGroup("Compiler Errors")
-                    .withDescription(detailsBuilder.toString())
-                    .build()
+                val fileMessage =
+                    MessageEvent
+                        .builder("Internal Error", MessageEvent.Kind.ERROR)
+                        .withParentId(instance.buildId)
+                        .withGroup("Compiler Errors")
+                        .withDescription(detailsBuilder.toString())
+                        .build()
                 messageConsumer.accept(fileMessage)
                 collectingStackTrace = false
             } else {
@@ -81,5 +85,5 @@ private data class FileMessageContext(
     var path: String = "",
     var line: Int = 0,
     var column: Int = 0,
-    var message: String = ""
+    var message: String = "",
 )

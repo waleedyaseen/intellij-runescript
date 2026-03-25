@@ -22,36 +22,24 @@ import io.runescript.plugin.lang.psi.RsTokenTypesSets
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
 class RsParserDefinition : ParserDefinition {
-
-    override fun createLexer(project: Project): Lexer {
-        return RsLexerAdapter(RsLexerInfo(DEFAULT_RESOLVED_DATA.types))
-    }
+    override fun createLexer(project: Project): Lexer = RsLexerAdapter(RsLexerInfo(DEFAULT_RESOLVED_DATA.types))
 
     override fun createParser(project: Project): PsiParser {
         error("Should not be called")
     }
 
-    override fun getFileNodeType(): IFileElementType {
-        return RsFileStubType
-    }
+    override fun getFileNodeType(): IFileElementType = RsFileStubType
 
-    override fun getCommentTokens(): TokenSet {
-        return RsTokenTypesSets.COMMENTS
-    }
+    override fun getCommentTokens(): TokenSet = RsTokenTypesSets.COMMENTS
 
-    override fun getStringLiteralElements(): TokenSet {
-        return RsTokenTypesSets.STRING_ELEMENTS
-    }
+    override fun getStringLiteralElements(): TokenSet = RsTokenTypesSets.STRING_ELEMENTS
 
-    override fun createElement(node: ASTNode): PsiElement {
-        return when (val elementType = node.elementType) {
+    override fun createElement(node: ASTNode): PsiElement =
+        when (val elementType = node.elementType) {
             is RsDocElementType -> elementType.createPsi(node)
             RsDocTokens.MARKDOWN_LINK -> RsDocLink(node)
             else -> RsElementTypes.Factory.createElement(node)
         }
-    }
 
-    override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return RsFile(viewProvider)
-    }
+    override fun createFile(viewProvider: FileViewProvider): PsiFile = RsFile(viewProvider)
 }

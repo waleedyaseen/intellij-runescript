@@ -28,7 +28,7 @@ class RsBuildInstance(
     val module: Module,
     val workDirectory: String,
     private val neptuneHome: File,
-    private val javaSdk: Sdk
+    private val javaSdk: Sdk,
 ) {
     val project: Project
         get() = environment.project
@@ -77,7 +77,5 @@ class RsBuildInstance(
         return processHandler
     }
 
-    private fun createCommandLine(): GeneralCommandLine {
-        return createNeptuneJvmCommand(javaSdk, neptuneHome, workDirectory)
-    }
+    private fun createCommandLine(): GeneralCommandLine = createNeptuneJvmCommand(javaSdk, neptuneHome, workDirectory)
 }

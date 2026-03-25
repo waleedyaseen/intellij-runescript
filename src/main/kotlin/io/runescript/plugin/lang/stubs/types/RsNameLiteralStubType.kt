@@ -11,23 +11,28 @@ import io.runescript.plugin.lang.psi.impl.RsNameLiteralImpl
 import io.runescript.plugin.lang.stubs.RsNameLiteralStub
 
 object RsNameLiteralStubType : RsStubType<RsNameLiteralStub, RsNameLiteral>("NAME_LITERAL") {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsNameLiteralStub = RsNameLiteralStub(parentStub, this)
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsNameLiteralStub {
-        return RsNameLiteralStub(parentStub, this)
+    override fun serialize(
+        stub: RsNameLiteralStub,
+        dataStream: StubOutputStream,
+    ) {
     }
 
-    override fun serialize(stub: RsNameLiteralStub, dataStream: StubOutputStream) {
-    }
+    override fun createStub(
+        psi: RsNameLiteral,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsNameLiteralStub = RsNameLiteralStub(parentStub, this)
 
-    override fun createStub(psi: RsNameLiteral, parentStub: StubElement<out PsiElement>?): RsNameLiteralStub {
-        return RsNameLiteralStub(parentStub, this)
-    }
+    override fun createPsi(stub: RsNameLiteralStub): RsNameLiteral = RsNameLiteralImpl(stub, this)
 
-    override fun createPsi(stub: RsNameLiteralStub): RsNameLiteral {
-        return RsNameLiteralImpl(stub, this)
-    }
-
-    override fun indexStub(stub: RsNameLiteralStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsNameLiteralStub,
+        sink: IndexSink,
+    ) {
         // TODO
     }
 }

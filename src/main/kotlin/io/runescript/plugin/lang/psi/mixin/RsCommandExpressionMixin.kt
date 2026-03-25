@@ -7,10 +7,11 @@ import io.runescript.plugin.lang.psi.RsArgumentList
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.refs.RsCommandExpressionReference
 
-abstract class RsCommandExpressionMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsCommandExpression {
-    override fun getReference(): PsiReference? {
-        return RsCommandExpressionReference(this)
-    }
+abstract class RsCommandExpressionMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsCommandExpression {
+    override fun getReference(): PsiReference? = RsCommandExpressionReference(this)
 
     override val argumentList: RsArgumentList?
         get() = args

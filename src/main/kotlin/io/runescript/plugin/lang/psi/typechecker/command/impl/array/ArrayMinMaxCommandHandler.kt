@@ -5,7 +5,6 @@ import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
-import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
 
 /**

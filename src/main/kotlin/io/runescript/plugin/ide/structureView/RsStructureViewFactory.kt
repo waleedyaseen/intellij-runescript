@@ -8,11 +8,8 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
 
 class RsStructureViewFactory : PsiStructureViewFactory {
-    override fun getStructureViewBuilder(psiFile: PsiFile): StructureViewBuilder {
-        return object : TreeBasedStructureViewBuilder() {
-            override fun createStructureViewModel(editor: Editor?): StructureViewModel {
-                return RsStructureViewModel(editor, psiFile)
-            }
+    override fun getStructureViewBuilder(psiFile: PsiFile): StructureViewBuilder =
+        object : TreeBasedStructureViewBuilder() {
+            override fun createStructureViewModel(editor: Editor?): StructureViewModel = RsStructureViewModel(editor, psiFile)
         }
-    }
 }

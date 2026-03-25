@@ -14,7 +14,7 @@ class NeptuneProjectImportBuilder :
     AbstractExternalProjectImportBuilder<NeptuneImportControl>(
         ProjectDataManager.getInstance(),
         { NeptuneImportControl() },
-        Neptune.SYSTEM_ID
+        Neptune.SYSTEM_ID,
     ) {
     override fun getName() = RsBundle.message("neptune.name")
 
@@ -23,12 +23,14 @@ class NeptuneProjectImportBuilder :
     override fun doPrepare(p0: WizardContext) {
     }
 
-    override fun beforeCommit(p0: DataNode<ProjectData>, p1: Project) {
+    override fun beforeCommit(
+        p0: DataNode<ProjectData>,
+        p1: Project,
+    ) {
     }
 
     override fun getExternalProjectConfigToUse(p0: File) = p0
 
     override fun applyExtraSettings(p0: WizardContext) {
     }
-
 }

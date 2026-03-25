@@ -14,10 +14,11 @@ class RsLineMarkerProvider : LineMarkerProvider {
             val targetElement = element.scriptNameExpression.identifier ?: return null
             val presentation = element.presentation ?: return null
             val icon = presentation.getIcon(false) ?: return null
-            return NavigationGutterIconBuilder.create(icon)
-                    .setTarget(targetElement)
-                    .setTooltipText("Navigate to ${presentation.presentableText}")
-                    .createLineMarkerInfo(targetElement)
+            return NavigationGutterIconBuilder
+                .create(icon)
+                .setTarget(targetElement)
+                .setTooltipText("Navigate to ${presentation.presentableText}")
+                .createLineMarkerInfo(targetElement)
         }
         return null
     }

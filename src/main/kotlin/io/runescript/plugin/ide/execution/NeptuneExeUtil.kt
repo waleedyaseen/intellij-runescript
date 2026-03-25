@@ -8,22 +8,20 @@ import java.io.File
 fun createNeptuneJvmCommand(
     javaSdk: Sdk,
     neptuneHome: File,
-    workDirectory: String
+    workDirectory: String,
 ) = createNeptuneJvmCommand(JavaSdk.getInstance().getVMExecutablePath(javaSdk), neptuneHome, workDirectory)
 
 fun createNeptuneJvmCommand(
     vmExecutablePath: String,
     neptuneHome: File,
-    workDirectory: String
+    workDirectory: String,
 ) = GeneralCommandLine()
     .withExePath(vmExecutablePath)
     .withParameters(createNeptuneJvmArgs(neptuneHome.toString()))
     .withWorkDirectory(workDirectory)
     .withEnvironment(System.getenv())
 
-private fun createNeptuneJvmArgs(
-    homeDirectory: String
-): MutableList<String> {
+private fun createNeptuneJvmArgs(homeDirectory: String): MutableList<String> {
     val args = mutableListOf<String>()
     args += "-classpath"
     args += "$homeDirectory${File.separator}lib${File.separator}*"

@@ -16,23 +16,18 @@ import io.runescript.plugin.lang.psi.scriptName
 import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 class RsFindUsagesProvider : FindUsagesProvider {
-
-    override fun getWordsScanner(): WordsScanner {
-        return DefaultWordsScanner(
-                RsLexerAdapter(RsLexerInfo(DEFAULT_RESOLVED_DATA.types)),
-                TokenSet.create(RsElementTypes.IDENTIFIER),
-                RsTokenTypesSets.COMMENTS,
-                TokenSet.create(RsElementTypes.TYPE_LITERAL),
+    override fun getWordsScanner(): WordsScanner =
+        DefaultWordsScanner(
+            RsLexerAdapter(RsLexerInfo(DEFAULT_RESOLVED_DATA.types)),
+            TokenSet.create(RsElementTypes.IDENTIFIER),
+            RsTokenTypesSets.COMMENTS,
+            TokenSet.create(RsElementTypes.TYPE_LITERAL),
         )
-    }
 
-    override fun canFindUsagesFor(psiElement: PsiElement): Boolean {
-        return psiElement is RsLocalVariableExpression || psiElement is RsScript || psiElement is RsSymSymbol
-    }
+    override fun canFindUsagesFor(psiElement: PsiElement): Boolean =
+        psiElement is RsLocalVariableExpression || psiElement is RsScript || psiElement is RsSymSymbol
 
-    override fun getHelpId(psiElement: PsiElement): String? {
-        return null
-    }
+    override fun getHelpId(psiElement: PsiElement): String? = null
 
     override fun getType(element: PsiElement): String {
         if (element is RsLocalVariableExpression) {
@@ -60,7 +55,10 @@ class RsFindUsagesProvider : FindUsagesProvider {
         return ""
     }
 
-    override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
+    override fun getNodeText(
+        element: PsiElement,
+        useFullName: Boolean,
+    ): String {
         if (element is RsLocalVariableExpression) {
             return element.nameLiteral.text
         }

@@ -6,10 +6,8 @@ import com.intellij.psi.stubs.StubElement
 import io.runescript.plugin.lang.RuneScript
 import org.jetbrains.annotations.NonNls
 
-abstract class RsStubType<StubT : StubElement<*>, PsiT : PsiElement>(@NonNls debugName: String)
-    : IStubElementType<StubT, PsiT>(debugName, RuneScript) {
-
-    override fun getExternalId(): String {
-        return "RuneScript.${super.toString()}"
-    }
+abstract class RsStubType<StubT : StubElement<*>, PsiT : PsiElement>(
+    @NonNls debugName: String,
+) : IStubElementType<StubT, PsiT>(debugName, RuneScript) {
+    override fun getExternalId(): String = "RuneScript.${super.toString()}"
 }

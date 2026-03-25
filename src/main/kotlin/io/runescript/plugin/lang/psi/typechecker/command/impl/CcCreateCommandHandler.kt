@@ -18,11 +18,12 @@ class CcCreateCommandHandler : DynamicCommandHandler {
         checkArgument(2, PrimitiveType.INT) // subid
         val requireNew = checkArgument(3, PrimitiveType.BOOLEAN)
 
-        val expectedTypes = mutableListOf(
-            ScriptVarType.COMPONENT,
-            PrimitiveType.INT,
-            PrimitiveType.INT,
-        )
+        val expectedTypes =
+            mutableListOf(
+                ScriptVarType.COMPONENT,
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+            )
 
         // if a 4th argument is supplied then we want to make sure it's a boolean
         if (requireNew != null) {

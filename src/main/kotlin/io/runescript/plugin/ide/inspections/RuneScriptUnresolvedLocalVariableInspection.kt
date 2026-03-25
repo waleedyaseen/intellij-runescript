@@ -9,15 +9,18 @@ import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsVisitor
 
 class RuneScriptUnresolvedLocalVariableInspection : LocalInspectionTool() {
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+    ): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitLocalVariableExpression(o: RsLocalVariableExpression) {
                 val reference = o.reference ?: return
                 if (reference.resolve() == null) {
-                    holder.registerProblem(o,
-                            RsBundle.message("inspection.error.unresolved.local.variable", o.nameLiteral.text),
-                            ProblemHighlightType.LIKE_UNKNOWN_SYMBOL
+                    holder.registerProblem(
+                        o,
+                        RsBundle.message("inspection.error.unresolved.local.variable", o.nameLiteral.text),
+                        ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
                     )
                 }
             }

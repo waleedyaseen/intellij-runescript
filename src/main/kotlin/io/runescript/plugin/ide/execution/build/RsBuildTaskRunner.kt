@@ -7,7 +7,6 @@ import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ProgramRunner
-import com.intellij.ide.impl.isTrusted
 import com.intellij.ide.trustedProjects.TrustedProjects
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager
@@ -35,9 +34,7 @@ import org.jetbrains.concurrency.rejectedPromise
 import java.io.File
 import kotlin.io.path.absolutePathString
 
-
 class RsBuildTaskRunner : ProjectTaskRunner() {
-
     override fun canRun(projectTask: ProjectTask): Boolean {
         if (projectTask !is ModuleBuildTask) {
             return false
@@ -47,7 +44,11 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
         return moduleType.id == RsModuleType.ID
     }
 
-    override fun run(project: Project, context: ProjectTaskContext, vararg tasks: ProjectTask): Promise<Result> {
+    override fun run(
+        project: Project,
+        context: ProjectTaskContext,
+        vararg tasks: ProjectTask,
+    ): Promise<Result> {
         if (project.isDisposed) {
             return rejectedPromise("Project is already disposed")
         }
@@ -61,28 +62,36 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
         return promise
     }
 
-    private fun runTask(project: Project, task: ProjectTask, promise: AsyncPromise<Result>) {
+    private fun runTask(
+        project: Project,
+        task: ProjectTask,
+        promise: AsyncPromise<Result>,
+    ) {
         require(task is ModuleBuildTask)
         val settings = project.service<NeptuneSettings>()
-        val javaSdk = ProjectJdkTable.getInstance()
-            .findJdk(settings.launcherJre)
+        val javaSdk =
+            ProjectJdkTable
+                .getInstance()
+                .findJdk(settings.launcherJre)
         if (javaSdk == null) {
-            val notification = buildNotificationGroup().createNotification(
-                RsBundle.message("build.notification.jdk.not.found.title"),
-                RsBundle.message("build.notification.jdk.not.found.content"),
-                NotificationType.ERROR
-            )
+            val notification =
+                buildNotificationGroup().createNotification(
+                    RsBundle.message("build.notification.jdk.not.found.title"),
+                    RsBundle.message("build.notification.jdk.not.found.content"),
+                    NotificationType.ERROR,
+                )
             notification.notify(project)
             promise.setError("Could not find JDK 17")
             return
         }
         val neptuneHome = File(settings.neptuneHome)
         if (!neptuneHome.exists() || !neptuneHome.isDirectory) {
-            val notification = buildNotificationGroup().createNotification(
-                RsBundle.message("build.notification.neptune.home.not.found.title"),
-                RsBundle.message("build.notification.neptune.home.not.found.content"),
-                NotificationType.ERROR
-            )
+            val notification =
+                buildNotificationGroup().createNotification(
+                    RsBundle.message("build.notification.neptune.home.not.found.title"),
+                    RsBundle.message("build.notification.neptune.home.not.found.content"),
+                    NotificationType.ERROR,
+                )
             notification.notify(project)
             promise.setError("Could not find Neptune home")
             return
@@ -95,7 +104,7 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
         project: Project,
         task: ModuleBuildTask,
         neptuneHome: File,
-        javaSdk: Sdk
+        javaSdk: Sdk,
     ): Task.Backgroundable {
         return object : Task.Backgroundable(project, "Building", false) {
             override fun run(indicator: ProgressIndicator) {
@@ -103,15 +112,17 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
                 indicator.text2 = ""
                 try {
                     val runManager = RunManager.getInstance(project)
-                    val executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID)
-                        ?: return
+                    val executor =
+                        ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID)
+                            ?: return
                     val runner = ProgramRunner.findRunnerById(RsProgramRunner.ID) ?: return
                     val settings = createBuildSettings(runManager)
                     val environment = ExecutionEnvironment(executor, runner, settings, project)
-                    val workDirectory = task.module
-                        .guessModuleDir()!!
-                        .toNioPath()
-                        .absolutePathString()
+                    val workDirectory =
+                        task.module
+                            .guessModuleDir()!!
+                            .toNioPath()
+                            .absolutePathString()
                     val buildInstance =
                         RsBuildInstance(environment, Any(), task.module, workDirectory, neptuneHome, javaSdk)
                     buildInstance.build().get()
@@ -129,6 +140,4 @@ class RsBuildTaskRunner : ProjectTaskRunner() {
     }
 }
 
-fun buildNotificationGroup(): NotificationGroup {
-    return NotificationGroupManager.getInstance().getNotificationGroup("RuneScript Build")
-}
+fun buildNotificationGroup(): NotificationGroup = NotificationGroupManager.getInstance().getNotificationGroup("RuneScript Build")

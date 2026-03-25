@@ -5,13 +5,11 @@ import io.runescript.plugin.symbollang.psi.stub.types.RsSymFieldStubType
 import io.runescript.plugin.symbollang.psi.stub.types.RsSymSymbolStubType
 
 object RsSymStubElementFactory {
-
     @JvmStatic
-    fun create(name: String): IStubElementType<*, *> {
-        return when (name) {
+    fun create(name: String): IStubElementType<*, *> =
+        when (name) {
             "SYMBOL" -> RsSymSymbolStubType
             "FIELD" -> RsSymFieldStubType
             else -> error("Unrecognized stub type: $name")
         }
-    }
 }

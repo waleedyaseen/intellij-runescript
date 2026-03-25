@@ -3,7 +3,14 @@ package io.runescript.plugin.lang.psi.typechecker
 import com.intellij.openapi.progress.ProgressIndicatorProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsBlockStatement
+import io.runescript.plugin.lang.psi.RsParameter
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsSwitchCase
+import io.runescript.plugin.lang.psi.RsSwitchStatement
+import io.runescript.plugin.lang.psi.RsVisitor
+import io.runescript.plugin.lang.psi.scriptNameExpression
+import io.runescript.plugin.lang.psi.triggerNameExpression
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticMessage
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticType
@@ -14,7 +21,11 @@ import io.runescript.plugin.lang.psi.typechecker.trigger.CommandTrigger
 import io.runescript.plugin.lang.psi.typechecker.trigger.SubjectMode
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerManager
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
-import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
+import io.runescript.plugin.lang.psi.typechecker.type.Type
+import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
 import io.runescript.plugin.lang.psi.typechecker.type.wrapped.ArrayType
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
@@ -25,7 +36,6 @@ class PreTypeChecking(
     private val rootTable: LocalVariableTable,
     private val arraysV2: Boolean,
 ) : RsVisitor() {
-
     /**
      * A cached reference to a [Type] representing a `type`.
      */
@@ -72,7 +82,7 @@ class PreTypeChecking(
             if (trigger == null) {
                 script.triggerNameExpression.reportError(
                     DiagnosticMessage.SCRIPT_TRIGGER_INVALID,
-                    script.triggerNameExpression.text
+                    script.triggerNameExpression.text,
                 )
             } else {
                 script.triggerType = trigger
@@ -106,13 +116,14 @@ class PreTypeChecking(
             } else {
                 // default return based on trigger if the trigger was found
                 // triggers that allow returns will default to `unit` instead of `nothing`.
-                script.returnType = if (trigger == null) {
-                    MetaType.Error
-                } else if (trigger.allowReturns) {
-                    MetaType.Unit
-                } else {
-                    MetaType.Nothing
-                }
+                script.returnType =
+                    if (trigger == null) {
+                        MetaType.Error
+                    } else if (trigger.allowReturns) {
+                        MetaType.Unit
+                    } else {
+                        MetaType.Nothing
+                    }
             }
 
             // verify returns match what the trigger type allows
@@ -129,7 +140,10 @@ class PreTypeChecking(
      * Validates the subject of [script] is allowed following [SubjectMode] for the
      * [trigger].
      */
-    private fun checkScriptSubject(trigger: TriggerType?, script: RsScript) {
+    private fun checkScriptSubject(
+        trigger: TriggerType?,
+        script: RsScript,
+    ) {
         val mode = trigger?.subjectMode ?: return
         val subject = script.scriptNameExpression.text
 
@@ -157,7 +171,10 @@ class PreTypeChecking(
     /**
      * Verifies the trigger subject mode is allowed to be a global subject.
      */
-    private fun checkGlobalScriptSubject(trigger: TriggerType, script: RsScript) {
+    private fun checkGlobalScriptSubject(
+        trigger: TriggerType,
+        script: RsScript,
+    ) {
         val mode = trigger.subjectMode
 
         // trigger only allows global
@@ -178,7 +195,11 @@ class PreTypeChecking(
     /**
      * Verifies the trigger subject mode is allowed to be a category subject.
      */
-    private fun checkCategoryScriptSubject(trigger: TriggerType, script: RsScript, subject: String) {
+    private fun checkCategoryScriptSubject(
+        trigger: TriggerType,
+        script: RsScript,
+        subject: String,
+    ) {
         val mode = trigger.subjectMode
         val categoryType = categoryType ?: error("'category' type not defined.")
 
@@ -205,7 +226,11 @@ class PreTypeChecking(
     /**
      * Verifies the trigger subject is allowed to refer to a type, category, or global subject.
      */
-    private fun checkTypeScriptSubject(trigger: TriggerType, script: RsScript, subject: String) {
+    private fun checkTypeScriptSubject(
+        trigger: TriggerType,
+        script: RsScript,
+        subject: String,
+    ) {
         val mode = trigger.subjectMode
 
         // trigger only allows global
@@ -226,7 +251,11 @@ class PreTypeChecking(
     /**
      * Attempts to find a reference to the subject of a script.
      */
-    private fun resolveSubjectSymbol(script: RsScript, subject: String, type: Type) {
+    private fun resolveSubjectSymbol(
+        script: RsScript,
+        subject: String,
+        type: Type,
+    ) {
         val symbol = RsSymbolIndex.lookup(script.scriptNameExpression, type, subject)
         if (symbol == null) {
             script.scriptNameExpression.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, subject)
@@ -237,7 +266,11 @@ class PreTypeChecking(
     /**
      * Verifies the [script]s parameter types are what is allowed by the [trigger].
      */
-    private fun checkScriptParameters(trigger: TriggerType?, script: RsScript, parameters: List<RsParameter>?) {
+    private fun checkScriptParameters(
+        trigger: TriggerType?,
+        script: RsScript,
+        parameters: List<RsParameter>?,
+    ) {
         val triggerParameterType = trigger?.parameters
         val scriptParameterType = script.parameterType
         if (trigger != null && !trigger.allowParameters && !parameters.isNullOrEmpty()) {
@@ -255,7 +288,10 @@ class PreTypeChecking(
     /**
      * Verifies the [script] returns what is allowed by the [trigger].
      */
-    private fun checkScriptReturns(trigger: TriggerType?, script: RsScript) {
+    private fun checkScriptReturns(
+        trigger: TriggerType?,
+        script: RsScript,
+    ) {
         val triggerReturns = trigger?.returns
         val scriptReturns = script.returnType
         if (trigger != null && !trigger.allowReturns && scriptReturns != MetaType.Nothing) {
@@ -358,21 +394,30 @@ class PreTypeChecking(
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.INFO].
      */
-    private fun PsiElement.reportInfo(message: String, vararg args: Any) {
+    private fun PsiElement.reportInfo(
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.INFO, this, message, *args))
     }
 
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.WARNING].
      */
-    private fun PsiElement.reportWarning(message: String, vararg args: Any) {
+    private fun PsiElement.reportWarning(
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.WARNING, this, message, *args))
     }
 
     /**
      * Helper function to report a diagnostic with the type of [DiagnosticType.ERROR].
      */
-    private fun PsiElement.reportError(message: String, vararg args: Any) {
+    private fun PsiElement.reportError(
+        message: String,
+        vararg args: Any,
+    ) {
         diagnostics.report(Diagnostic(DiagnosticType.ERROR, this, message, *args))
     }
 

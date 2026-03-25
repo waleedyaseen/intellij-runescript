@@ -13,20 +13,24 @@ import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
 
 class RsChooseByNameContributor : ChooseByNameContributorEx {
+    private val keys =
+        arrayOf(
+            RsProcScriptIndex.KEY,
+            RsClientScriptIndex.KEY,
+            RsCommandScriptIndex.KEY,
+        )
 
-    private val keys = arrayOf(
-        RsProcScriptIndex.KEY,
-        RsClientScriptIndex.KEY,
-        RsCommandScriptIndex.KEY
-    )
-
-    override fun processNames(processor: Processor<in String>, scope: GlobalSearchScope, filter: IdFilter?) {
+    override fun processNames(
+        processor: Processor<in String>,
+        scope: GlobalSearchScope,
+        filter: IdFilter?,
+    ) {
         for (key in keys) {
             StubIndex.getInstance().processAllKeys(
                 key,
                 processor,
                 scope,
-                null
+                null,
             )
         }
     }
@@ -34,7 +38,7 @@ class RsChooseByNameContributor : ChooseByNameContributorEx {
     override fun processElementsWithName(
         name: String,
         processor: Processor<in NavigationItem>,
-        parameters: FindSymbolParameters
+        parameters: FindSymbolParameters,
     ) {
         val originScope = parameters.searchScope
         for (key in keys) {
@@ -44,7 +48,7 @@ class RsChooseByNameContributor : ChooseByNameContributorEx {
                 parameters.project,
                 originScope,
                 null,
-                RsScript::class.java
+                RsScript::class.java,
             ) { element ->
                 processor.process(element)
             }

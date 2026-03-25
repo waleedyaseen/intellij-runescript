@@ -8,16 +8,18 @@ import io.runescript.plugin.symbollang.RuneScriptSymbol
 import io.runescript.plugin.symbollang.psi.stub.RsSymFileStub
 
 object RsSymFileStubType : IStubFileElementType<RsSymFileStub>(RuneScriptSymbol) {
-
     override fun getStubVersion() = 2
 
-    override fun serialize(stub: RsSymFileStub, dataStream: StubOutputStream) {
-
+    override fun serialize(
+        stub: RsSymFileStub,
+        dataStream: StubOutputStream,
+    ) {
     }
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsSymFileStub {
-        return RsSymFileStub(null)
-    }
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsSymFileStub = RsSymFileStub(null)
 
     override fun getExternalId() = "RuneScriptSymbol.file"
 }

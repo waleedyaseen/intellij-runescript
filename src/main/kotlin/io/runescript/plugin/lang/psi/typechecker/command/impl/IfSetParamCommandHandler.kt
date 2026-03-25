@@ -1,10 +1,14 @@
 package io.runescript.plugin.lang.psi.typechecker.command.impl
 
-
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingContext
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.type
-import io.runescript.plugin.lang.psi.typechecker.type.*
+import io.runescript.plugin.lang.psi.typechecker.type.MetaType
+import io.runescript.plugin.lang.psi.typechecker.type.ParamType
+import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
+import io.runescript.plugin.lang.psi.typechecker.type.ScriptVarType
+import io.runescript.plugin.lang.psi.typechecker.type.TupleType
+import io.runescript.plugin.lang.psi.typechecker.type.Type
 
 /**
  * An implementation of [DynamicCommandHandler] that adds support for type checking
@@ -16,7 +20,9 @@ import io.runescript.plugin.lang.psi.typechecker.type.*
  * cc_setparam(some_int_param, 42);
  * ```
  */
-class IfSetParamCommandHandler(private val cc: Boolean) : DynamicCommandHandler {
+class IfSetParamCommandHandler(
+    private val cc: Boolean,
+) : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
         // check param reference
         val paramExpr = checkArgument(0, ParamCommandHandler.PARAM_ANY)
@@ -28,25 +34,27 @@ class IfSetParamCommandHandler(private val cc: Boolean) : DynamicCommandHandler 
         }
 
         // define the expected types based on what is currently known
-        val expectedBaseTypes = if (!cc) {
-            IF_BASE_EXPECTED_TYPES
-        } else {
-            CC_BASE_EXPECTED_TYPES
-        }
+        val expectedBaseTypes =
+            if (!cc) {
+                IF_BASE_EXPECTED_TYPES
+            } else {
+                CC_BASE_EXPECTED_TYPES
+            }
 
         // compare against the base type before we compare against the more concrete types
         if (checkArgumentTypes(expectedBaseTypes) && paramReturnType is Type) {
             // expect (param<T>, T, component, int) or (param<T>, T)
-            val expectedTypes = if (!cc) {
-                TupleType(
-                    ParamCommandHandler.PARAM_ANY,
-                    paramReturnType,
-                    ScriptVarType.COMPONENT,
-                    PrimitiveType.INT,
-                )
-            } else {
-                TupleType(ParamCommandHandler.PARAM_ANY, paramReturnType)
-            }
+            val expectedTypes =
+                if (!cc) {
+                    TupleType(
+                        ParamCommandHandler.PARAM_ANY,
+                        paramReturnType,
+                        ScriptVarType.COMPONENT,
+                        PrimitiveType.INT,
+                    )
+                } else {
+                    TupleType(ParamCommandHandler.PARAM_ANY, paramReturnType)
+                }
             checkArgumentTypes(expectedTypes)
         }
 
@@ -59,12 +67,13 @@ class IfSetParamCommandHandler(private val cc: Boolean) : DynamicCommandHandler 
     }
 
     private companion object {
-        val IF_BASE_EXPECTED_TYPES = TupleType(
-            ParamCommandHandler.PARAM_ANY,
-            MetaType.Any,
-            ScriptVarType.COMPONENT,
-            PrimitiveType.INT,
-        )
+        val IF_BASE_EXPECTED_TYPES =
+            TupleType(
+                ParamCommandHandler.PARAM_ANY,
+                MetaType.Any,
+                ScriptVarType.COMPONENT,
+                PrimitiveType.INT,
+            )
         val CC_BASE_EXPECTED_TYPES = TupleType(ParamCommandHandler.PARAM_ANY, MetaType.Any)
     }
 }

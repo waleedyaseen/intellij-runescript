@@ -3,14 +3,59 @@ package io.runescript.plugin.ide.codeInsight.controlFlow
 import com.intellij.codeInsight.controlflow.ControlFlowBuilder
 import com.intellij.codeInsight.controlflow.Instruction
 import com.intellij.psi.PsiElement
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsArgumentList
+import io.runescript.plugin.lang.psi.RsArithmeticExpression
+import io.runescript.plugin.lang.psi.RsArithmeticOp
+import io.runescript.plugin.lang.psi.RsArithmeticValueExpression
+import io.runescript.plugin.lang.psi.RsArrayAccessExpression
+import io.runescript.plugin.lang.psi.RsArrayVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsAssignmentStatement
+import io.runescript.plugin.lang.psi.RsBlockStatement
+import io.runescript.plugin.lang.psi.RsBooleanLiteralExpression
+import io.runescript.plugin.lang.psi.RsCalcExpression
+import io.runescript.plugin.lang.psi.RsCommandExpression
+import io.runescript.plugin.lang.psi.RsConditionExpression
+import io.runescript.plugin.lang.psi.RsConditionOp
+import io.runescript.plugin.lang.psi.RsConstantExpression
+import io.runescript.plugin.lang.psi.RsCoordLiteralExpression
+import io.runescript.plugin.lang.psi.RsDynamicExpression
+import io.runescript.plugin.lang.psi.RsEmptyStatement
+import io.runescript.plugin.lang.psi.RsExpressionStatement
+import io.runescript.plugin.lang.psi.RsGosubExpression
+import io.runescript.plugin.lang.psi.RsHookFragment
+import io.runescript.plugin.lang.psi.RsHookTransmitList
+import io.runescript.plugin.lang.psi.RsIfStatement
+import io.runescript.plugin.lang.psi.RsIntegerLiteralExpression
+import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
+import io.runescript.plugin.lang.psi.RsLocalVariableExpression
+import io.runescript.plugin.lang.psi.RsLongLiteralExpression
+import io.runescript.plugin.lang.psi.RsNameLiteral
+import io.runescript.plugin.lang.psi.RsNullLiteralExpression
+import io.runescript.plugin.lang.psi.RsParExpression
+import io.runescript.plugin.lang.psi.RsParameter
+import io.runescript.plugin.lang.psi.RsParameterList
+import io.runescript.plugin.lang.psi.RsPostfixExpression
+import io.runescript.plugin.lang.psi.RsPrefixExpression
+import io.runescript.plugin.lang.psi.RsRecursiveVisitor
+import io.runescript.plugin.lang.psi.RsRelationalValueExpression
+import io.runescript.plugin.lang.psi.RsReturnStatement
+import io.runescript.plugin.lang.psi.RsScopedVariableExpression
+import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.RsStatementList
+import io.runescript.plugin.lang.psi.RsStringInterpolationExpression
+import io.runescript.plugin.lang.psi.RsStringLiteralContent
+import io.runescript.plugin.lang.psi.RsStringLiteralExpression
+import io.runescript.plugin.lang.psi.RsSwitchCase
+import io.runescript.plugin.lang.psi.RsSwitchCaseDefaultExpression
+import io.runescript.plugin.lang.psi.RsSwitchStatement
+import io.runescript.plugin.lang.psi.RsWhileStatement
 
 class RsControlFlowBuilder : ControlFlowBuilder() {
-
     fun build(element: PsiElement) = build(RsControlFlowBuilderVisitor(this), element)
 
-    internal class RsControlFlowBuilderVisitor(private val builder: RsControlFlowBuilder) : RsRecursiveVisitor() {
-
+    internal class RsControlFlowBuilderVisitor(
+        private val builder: RsControlFlowBuilder,
+    ) : RsRecursiveVisitor() {
         override fun visitScript(o: RsScript) {
             addScriptDefinitionInstruction(o)
             o.parameterList?.parameterList?.forEach { parameter ->
@@ -18,7 +63,6 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             }
             o.statementList.accept(this)
         }
-
 
         override fun visitParameterList(o: RsParameterList) {
             // Nothing
@@ -150,7 +194,6 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
-
         override fun visitExpressionStatement(o: RsExpressionStatement) {
             o.expression.accept(this)
             addInstruction(o)
@@ -194,15 +237,16 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             val ifTrueBlockEnd = builder.prevInstruction
             builder.flowAbrupted()
 
-            val (ifFalseBlockStart, ifFalseBlockEnd) = if (falseStatement != null) {
-                val blockStart = addInstruction(null)
-                falseStatement.accept(this)
-                val blockEnd = builder.prevInstruction
-                builder.flowAbrupted()
-                blockStart to blockEnd
-            } else {
-                null to null
-            }
+            val (ifFalseBlockStart, ifFalseBlockEnd) =
+                if (falseStatement != null) {
+                    val blockStart = addInstruction(null)
+                    falseStatement.accept(this)
+                    val blockEnd = builder.prevInstruction
+                    builder.flowAbrupted()
+                    blockStart to blockEnd
+                } else {
+                    null to null
+                }
 
             val ifEndBlock = addInstruction(null)
             builder.prevInstruction = ifEndBlock
@@ -316,13 +360,9 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             addInstruction(o)
         }
 
-        private fun addScriptDefinitionInstruction(element: PsiElement?): RsInstruction {
-            return addInstruction(element)
-        }
+        private fun addScriptDefinitionInstruction(element: PsiElement?): RsInstruction = addInstruction(element)
 
-        private fun addVariableDefinition(element: PsiElement?): RsInstruction {
-            return addInstruction(element)
-        }
+        private fun addVariableDefinition(element: PsiElement?): RsInstruction = addInstruction(element)
 
         private fun addInstruction(element: PsiElement?): RsInstruction {
             val instruction = RsInstruction(builder, element)

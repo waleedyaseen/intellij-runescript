@@ -11,23 +11,28 @@ import io.runescript.plugin.lang.psi.impl.RsParameterListImpl
 import io.runescript.plugin.lang.stubs.RsParameterListStub
 
 object RsParameterListStubType : RsStubType<RsParameterListStub, RsParameterList>("PARAMETER_LIST") {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsParameterListStub = RsParameterListStub(parentStub, this)
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsParameterListStub {
-        return RsParameterListStub(parentStub, this)
+    override fun serialize(
+        stub: RsParameterListStub,
+        dataStream: StubOutputStream,
+    ) {
     }
 
-    override fun serialize(stub: RsParameterListStub, dataStream: StubOutputStream) {
-    }
+    override fun createStub(
+        psi: RsParameterList,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsParameterListStub = RsParameterListStub(parentStub, this)
 
-    override fun createStub(psi: RsParameterList, parentStub: StubElement<out PsiElement>?): RsParameterListStub {
-        return RsParameterListStub(parentStub, this)
-    }
+    override fun createPsi(stub: RsParameterListStub): RsParameterList = RsParameterListImpl(stub, this)
 
-    override fun createPsi(stub: RsParameterListStub): RsParameterList {
-        return RsParameterListImpl(stub, this)
-    }
-
-    override fun indexStub(stub: RsParameterListStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsParameterListStub,
+        sink: IndexSink,
+    ) {
         // TODO
     }
 }

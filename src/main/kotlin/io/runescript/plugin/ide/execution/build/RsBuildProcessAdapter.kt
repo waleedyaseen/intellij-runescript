@@ -24,14 +24,15 @@ import javax.swing.JComponent
 class RsBuildProcessAdapter(
     private val instance: RsBuildInstance,
     private val buildProgressListener: BuildProgressListener,
-    private val future: CompletableFuture<Any>
+    private val future: CompletableFuture<Any>,
 ) : ProcessListener {
-    private val instantReader = BuildOutputInstantReaderImpl(
-        instance.buildId,
-        instance.buildId,
-        buildProgressListener,
-        listOf(RsBuildOutputParser(instance))
-    )
+    private val instantReader =
+        BuildOutputInstantReaderImpl(
+            instance.buildId,
+            instance.buildId,
+            buildProgressListener,
+            listOf(RsBuildOutputParser(instance)),
+        )
     private val decoder = AnsiEscapeDecoder()
 
     init {
@@ -43,21 +44,26 @@ class RsBuildProcessAdapter(
         buildContentDescriptor.isNavigateToError = ThreeState.UNSURE
 
         @Suppress("UnstableApiUsage")
-        val buildDescriptor = DefaultBuildDescriptor(
-            instance.buildId,
-            instance.project.name,
-            instance.workDirectory,
-            System.currentTimeMillis()
-        )
-            .withContentDescriptor { buildContentDescriptor }
-            .withRestartAction(StopProcessAction("Stop", "Stop", instance.processHandler))
+        val buildDescriptor =
+            DefaultBuildDescriptor(
+                instance.buildId,
+                instance.project.name,
+                instance.workDirectory,
+                System.currentTimeMillis(),
+            ).withContentDescriptor { buildContentDescriptor }
+                .withRestartAction(StopProcessAction("Stop", "Stop", instance.processHandler))
 
-        val buildStarted = StartBuildEvent.builder(RsBundle.message("build.status.running"), buildDescriptor)
-            .build()
+        val buildStarted =
+            StartBuildEvent
+                .builder(RsBundle.message("build.status.running"), buildDescriptor)
+                .build()
         buildProgressListener.onEvent(instance.buildId, buildStarted)
     }
 
-    override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
+    override fun onTextAvailable(
+        event: ProcessEvent,
+        outputType: Key<*>,
+    ) {
         val buffer = StringBuilder(event.text.length)
         decoder.escapeText(event.text, ProcessOutputTypes.STDOUT) { text, _ ->
             buffer.append(text)
@@ -65,33 +71,40 @@ class RsBuildProcessAdapter(
         instantReader.append(buffer.toString())
     }
 
-    override fun processWillTerminate(event: ProcessEvent, willBeDestroyed: Boolean) {
+    override fun processWillTerminate(
+        event: ProcessEvent,
+        willBeDestroyed: Boolean,
+    ) {
         instance.executionPublisher.processTerminating(instance.executorId, instance.environment, event.processHandler)
     }
 
     override fun processTerminated(event: ProcessEvent) {
         instantReader.closeAndGetFuture().whenComplete { _, _ ->
             val isSuccessfulBuild = event.exitCode == 0 && instance.errorCount.get() == 0
-            val finishEvent = if (isSuccessfulBuild) {
-                createFinishEvent(RsBundle.message("build.status.finished"), SuccessResultImpl())
-            } else {
-                createFinishEvent(RsBundle.message("build.status.failed"), FailureResultImpl())
-            }
+            val finishEvent =
+                if (isSuccessfulBuild) {
+                    createFinishEvent(RsBundle.message("build.status.finished"), SuccessResultImpl())
+                } else {
+                    createFinishEvent(RsBundle.message("build.status.failed"), FailureResultImpl())
+                }
             // createFinishEvent(RsBundle.message("build.status.cancelled"), SkippedResultImpl())
             buildProgressListener.onEvent(instance.buildId, finishEvent)
             instance.executionPublisher.processTerminated(
                 instance.executorId,
                 instance.environment,
                 event.processHandler,
-                event.exitCode
+                event.exitCode,
             )
             future.complete(Any())
         }
     }
 
-    private fun createFinishEvent(message: String, result: EventResult): BuildEvent {
-        return FinishBuildEvent.builder(instance.buildId, message, result)
+    private fun createFinishEvent(
+        message: String,
+        result: EventResult,
+    ): BuildEvent =
+        FinishBuildEvent
+            .builder(instance.buildId, message, result)
             .withTime(System.currentTimeMillis())
             .build()
-    }
 }

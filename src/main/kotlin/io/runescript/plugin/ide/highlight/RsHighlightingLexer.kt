@@ -7,7 +7,9 @@ import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.psi.RsTokenTypes
 
-class RsHighlightingLexer(lexerInfo: RsLexerInfo) : LayeredLexer(RsLexerAdapter(lexerInfo)) {
+class RsHighlightingLexer(
+    lexerInfo: RsLexerInfo,
+) : LayeredLexer(RsLexerAdapter(lexerInfo)) {
     init {
         registerSelfStoppingLayer(RsDocLexer(), arrayOf(RsTokenTypes.DOC_COMMENT), IElementType.EMPTY_ARRAY)
     }

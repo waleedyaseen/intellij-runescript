@@ -11,17 +11,28 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.endOffset
 import com.intellij.psi.util.startOffset
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsBlockStatement
+import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsStatementList
+import io.runescript.plugin.lang.psi.RsSwitchStatement
+import io.runescript.plugin.lang.psi.RsTokenTypes
 
-class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
-    override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
-        val elements = PsiTreeUtil.findChildrenOfAnyType(
+class RsFoldingBuilder :
+    FoldingBuilderEx(),
+    DumbAware {
+    override fun buildFoldRegions(
+        root: PsiElement,
+        document: Document,
+        quick: Boolean,
+    ): Array<FoldingDescriptor> {
+        val elements =
+            PsiTreeUtil.findChildrenOfAnyType(
                 root,
                 RsBlockStatement::class.java,
                 RsSwitchStatement::class.java,
                 RsStatementList::class.java,
-                PsiComment::class.java
-        )
+                PsiComment::class.java,
+            )
         val descriptors = ArrayList<FoldingDescriptor>(elements.size)
         elements.forEach { element ->
             when (element) {
@@ -66,11 +77,11 @@ class RsFoldingBuilder : FoldingBuilderEx(), DumbAware {
                 return node.text.substring(whiteSpace, newLineIndex)
             }
 
-            else -> return "...\n"
+            else -> {
+                return "...\n"
+            }
         }
     }
 
-    override fun isCollapsedByDefault(node: ASTNode): Boolean {
-        return false
-    }
+    override fun isCollapsedByDefault(node: ASTNode): Boolean = false
 }

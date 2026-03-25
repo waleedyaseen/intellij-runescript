@@ -24,21 +24,18 @@ import io.runescript.plugin.lang.doc.getChildrenOfType
  * can have sections for the class itself, its primary constructor and each of the
  * properties defined in the primary constructor.
  */
-class RsDocSection(node: ASTNode) : RsDocTag(node) {
+class RsDocSection(
+    node: ASTNode,
+) : RsDocTag(node) {
     /**
      * Returns the name of the section (the name of the doc tag introducing the section,
      * or null for the default section).
      */
-    override fun getName(): String? =
-        (firstChild as? RsDocTag)?.name
+    override fun getName(): String? = (firstChild as? RsDocTag)?.name
 
-    override fun getSubjectName(): String? =
-        (firstChild as? RsDocTag)?.getSubjectName()
+    override fun getSubjectName(): String? = (firstChild as? RsDocTag)?.getSubjectName()
 
-    override fun getContent(): String =
-        (firstChild as? RsDocTag)?.getContent() ?: super.getContent()
+    override fun getContent(): String = (firstChild as? RsDocTag)?.getContent() ?: super.getContent()
 
-    fun findTagsByName(name: String): List<RsDocTag> {
-        return getChildrenOfType<RsDocTag>().filter { it.name == name }
-    }
+    fun findTagsByName(name: String): List<RsDocTag> = getChildrenOfType<RsDocTag>().filter { it.name == name }
 }

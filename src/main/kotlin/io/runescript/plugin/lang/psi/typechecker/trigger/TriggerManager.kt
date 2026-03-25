@@ -14,7 +14,10 @@ class TriggerManager {
     /**
      * Registers [trigger] using [name] for lookup.
      */
-    fun register(name: String, trigger: TriggerType) {
+    fun register(
+        name: String,
+        trigger: TriggerType,
+    ) {
         val existingTrigger = nameToTrigger.putIfAbsent(name, trigger)
         if (existingTrigger != null) {
             error("Trigger '$name' is already registered.")

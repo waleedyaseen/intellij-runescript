@@ -8,7 +8,9 @@ import io.runescript.plugin.lang.psi.typechecker.type.ParamType
 import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 import io.runescript.plugin.lang.psi.typechecker.type.Type
 
-class ParamCommandHandler(private val type: Type) : DynamicCommandHandler {
+class ParamCommandHandler(
+    private val type: Type,
+) : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
         // check first argument is the defined type
         checkArgument(0, type)
@@ -18,10 +20,11 @@ class ParamCommandHandler(private val type: Type) : DynamicCommandHandler {
         val paramReturnType = (paramExpr?.type as? ParamType)?.inner
 
         // define the expected types based on what is currently known
-        val expectedTypes = TupleType(
-            type,
-            ParamType(paramReturnType ?: MetaType.Any),
-        )
+        val expectedTypes =
+            TupleType(
+                type,
+                ParamType(paramReturnType ?: MetaType.Any),
+            )
 
         // compare the expected types with the actual types
         if (!checkArgumentTypes(expectedTypes)) {

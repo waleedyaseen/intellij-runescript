@@ -5,7 +5,8 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotifica
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager
 
 class NeptuneSystemTaskManager : ExternalSystemTaskManager<NeptuneExecutionSettings> {
-    override fun cancelTask(id: ExternalSystemTaskId, listener: ExternalSystemTaskNotificationListener): Boolean {
-        return false
-    }
+    override fun cancelTask(
+        id: ExternalSystemTaskId,
+        listener: ExternalSystemTaskNotificationListener,
+    ): Boolean = false
 }

@@ -15,20 +15,26 @@
  */
 package io.runescript.plugin.lang.doc.parser
 
-enum class RsDocKnownTag(val isReferenceRequired: Boolean, val isSectionStart: Boolean) {
+enum class RsDocKnownTag(
+    val isReferenceRequired: Boolean,
+    val isSectionStart: Boolean,
+) {
     AUTHOR(false, false),
     PARAM(true, false),
     RETURN(false, false),
     SEE(true, false),
     SINCE(false, false),
-    SAMPLE(true, false);
-
+    SAMPLE(true, false),
+    ;
 
     companion object {
         fun findByTagName(tagName: CharSequence): RsDocKnownTag? {
-            val name = if (tagName.startsWith('@')) {
-                tagName.subSequence(1, tagName.length)
-            } else tagName
+            val name =
+                if (tagName.startsWith('@')) {
+                    tagName.subSequence(1, tagName.length)
+                } else {
+                    tagName
+                }
             try {
                 return valueOf(name.toString().uppercase())
             } catch (ignored: IllegalArgumentException) {

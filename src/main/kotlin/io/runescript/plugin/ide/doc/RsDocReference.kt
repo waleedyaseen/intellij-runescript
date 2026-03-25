@@ -19,8 +19,9 @@ import io.runescript.plugin.symbollang.psi.RsSymSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 
-class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName>(element) {
-
+class RsDocReference(
+    element: RsDocName,
+) : PsiPolyVariantReferenceBase<RsDocName>(element) {
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val typeName = (element.firstChild as? RsDocName)?.text
         val elementName = element.lastChild.text
@@ -34,13 +35,9 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
 
     override fun isSoft() = false
 
-    override fun getRangeInElement(): TextRange {
-        return element.getNameTextRange()
-    }
+    override fun getRangeInElement(): TextRange = element.getNameTextRange()
 
-    override fun getCanonicalText(): String {
-        return element.getNameText()
-    }
+    override fun getCanonicalText(): String = element.getNameText()
 
     companion object {
         fun resolve(
@@ -48,7 +45,7 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
             module: Module,
             owner: RsScript?,
             typeName: String?,
-            elementName: String
+            elementName: String,
         ): Array<PsiElement> {
             if (typeName == null) {
                 return owner
@@ -59,29 +56,32 @@ class RsDocReference(element: RsDocName) : PsiPolyVariantReferenceBase<RsDocName
                     ?.toTypedArray()
                     ?: emptyArray()
             }
-            val scriptIndexKey = when (typeName) {
-                "command" -> RsCommandScriptIndex.KEY
-                "clientscript" -> RsClientScriptIndex.KEY
-                "proc" -> RsProcScriptIndex.KEY
-                else -> null
-            }
+            val scriptIndexKey =
+                when (typeName) {
+                    "command" -> RsCommandScriptIndex.KEY
+                    "clientscript" -> RsClientScriptIndex.KEY
+                    "proc" -> RsProcScriptIndex.KEY
+                    else -> null
+                }
             if (scriptIndexKey != null) {
-                val scripts = StubIndex.getElements(
-                    scriptIndexKey,
+                val scripts =
+                    StubIndex.getElements(
+                        scriptIndexKey,
+                        elementName,
+                        project,
+                        GlobalSearchScope.moduleScope(module),
+                        RsScript::class.java,
+                    )
+                return scripts.toTypedArray()
+            }
+            val configs =
+                StubIndex.getElements(
+                    RsSymbolIndex.KEY,
                     elementName,
                     project,
                     GlobalSearchScope.moduleScope(module),
-                    RsScript::class.java
+                    RsSymSymbol::class.java,
                 )
-                return scripts.toTypedArray()
-            }
-            val configs = StubIndex.getElements(
-                RsSymbolIndex.KEY,
-                elementName,
-                project,
-                GlobalSearchScope.moduleScope(module),
-                RsSymSymbol::class.java
-            )
             return configs
                 .filter { resolveToSymTypeName(it.containingFile) == typeName }
                 .toTypedArray()

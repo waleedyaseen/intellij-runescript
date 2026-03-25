@@ -31,12 +31,13 @@ class EnumCommandHandler : DynamicCommandHandler {
         checkArgument(3, inputType)
 
         // create the expected type of type,type,enum,any
-        val expectedTypes = TupleType(
-            MetaType.Type(inputType ?: MetaType.Any),
-            MetaType.Type(outputType ?: MetaType.Any),
-            ScriptVarType.ENUM,
-            inputType ?: MetaType.Any,
-        )
+        val expectedTypes =
+            TupleType(
+                MetaType.Type(inputType ?: MetaType.Any),
+                MetaType.Type(outputType ?: MetaType.Any),
+                ScriptVarType.ENUM,
+                inputType ?: MetaType.Any,
+            )
 
         // compare the expected types with the actual types
         checkArgumentTypes(expectedTypes)

@@ -5,6 +5,9 @@ import com.intellij.lexer.MergingLexerAdapter
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.psi.RsElementTypes
 
-class RsLexerAdapter(lexerInfo: RsLexerInfo) : MergingLexerAdapter(
-    FlexAdapter(_RsLexer(null, lexerInfo)), TokenSet.create(RsElementTypes.STRING_PART)
-)
+class RsLexerAdapter(
+    lexerInfo: RsLexerInfo,
+) : MergingLexerAdapter(
+        FlexAdapter(_RsLexer(null, lexerInfo)),
+        TokenSet.create(RsElementTypes.STRING_PART),
+    )

@@ -12,23 +12,27 @@ import com.intellij.psi.util.findParentOfType
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsScript
 
-class RsCreateScriptQuickFix(private val trigger: String, private val functionName: String) : LocalQuickFix {
+class RsCreateScriptQuickFix(
+    private val trigger: String,
+    private val functionName: String,
+) : LocalQuickFix {
+    override fun getName(): String = "Create script ('$functionName')"
 
-    override fun getName(): String {
-        return "Create script ('${functionName}')"
-    }
+    override fun getFamilyName(): String = "Create script"
 
-    override fun getFamilyName(): String {
-        return "Create script"
-    }
+    override fun generatePreview(
+        project: Project,
+        previewDescriptor: ProblemDescriptor,
+    ): IntentionPreviewInfo = IntentionPreviewInfo.EMPTY
 
-    override fun generatePreview(project: Project, previewDescriptor: ProblemDescriptor): IntentionPreviewInfo =
-        IntentionPreviewInfo.EMPTY
-
-    override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
-        val newScript = RsScriptBuilder(trigger, functionName)
-            .statement("error(\"Not yet implemented\");")
-            .build(project)
+    override fun applyFix(
+        project: Project,
+        descriptor: ProblemDescriptor,
+    ) {
+        val newScript =
+            RsScriptBuilder(trigger, functionName)
+                .statement("error(\"Not yet implemented\");")
+                .build(project)
         val parentScript = descriptor.psiElement.findParentOfType<RsScript>()!!
         val parentFile = parentScript.parent
         parentFile.addAfter(newScript, parentScript)
@@ -36,7 +40,10 @@ class RsCreateScriptQuickFix(private val trigger: String, private val functionNa
         openAndSelect(project, newScript)
     }
 
-    private fun openAndSelect(project: Project, script: RsScript) {
+    private fun openAndSelect(
+        project: Project,
+        script: RsScript,
+    ) {
         val containingFile = script.containingFile.virtualFile ?: return
         val openDescriptor = OpenFileDescriptor(project, containingFile)
         val textEditor = FileEditorManager.getInstance(project).openTextEditor(openDescriptor, true) ?: return

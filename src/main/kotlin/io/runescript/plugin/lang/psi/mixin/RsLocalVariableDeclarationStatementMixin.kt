@@ -8,9 +8,16 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 
-abstract class RsLocalVariableDeclarationStatementMixin(node: ASTNode) : ASTWrapperPsiElement(node), RsLocalVariableDeclarationStatement {
-
-    override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
+abstract class RsLocalVariableDeclarationStatementMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node),
+    RsLocalVariableDeclarationStatement {
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement,
+    ): Boolean {
         if (expressionList.isNotEmpty()) {
             val declaredVariable = expressionList[0]
             return processor.execute(declaredVariable, state)
@@ -18,7 +25,5 @@ abstract class RsLocalVariableDeclarationStatementMixin(node: ASTNode) : ASTWrap
         return true
     }
 
-    override fun getVariable(): RsLocalVariableExpression {
-        return expressionList[0] as RsLocalVariableExpression
-    }
+    override fun getVariable(): RsLocalVariableExpression = expressionList[0] as RsLocalVariableExpression
 }

@@ -10,8 +10,10 @@ import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.isSourceFile
 
 class RuneScriptUnresolvedProcedureInspection : LocalInspectionTool() {
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+    ): PsiElementVisitor {
         return object : RsVisitor() {
             override fun visitGosubExpression(o: RsGosubExpression) {
                 if (!o.isSourceFile()) return
@@ -21,7 +23,7 @@ class RuneScriptUnresolvedProcedureInspection : LocalInspectionTool() {
                         o.nameLiteral,
                         RsBundle.message("inspection.error.unresolved.procedure", o.nameLiteral.text),
                         ProblemHighlightType.LIKE_UNKNOWN_SYMBOL,
-                        RsCreateScriptQuickFix("proc", o.nameLiteral.text)
+                        RsCreateScriptQuickFix("proc", o.nameLiteral.text),
                     )
                 }
             }

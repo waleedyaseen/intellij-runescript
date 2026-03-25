@@ -33,9 +33,10 @@ class ArrayDeleteCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            PrimitiveType.INT,
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                PrimitiveType.INT,
+            )
     }
 }

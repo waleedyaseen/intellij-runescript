@@ -10,7 +10,10 @@ import io.runescript.plugin.lang.psi.typechecker.type.Type
  * A command that allows replacing a command call with a constant value. The
  * return type is set to [type].
  */
-class PlaceholderCommand(private val type: Type, private val value: Any) : DynamicCommandHandler {
+class PlaceholderCommand(
+    private val type: Type,
+    private val value: Any,
+) : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
         checkArgumentTypes(MetaType.Unit)
         expression.type = type

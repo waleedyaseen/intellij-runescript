@@ -7,10 +7,15 @@ import com.intellij.lang.parameterInfo.UpdateParameterInfoContext
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.startOffset
-import io.runescript.plugin.lang.psi.*
+import io.runescript.plugin.lang.psi.RsArgumentList
+import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsExpression
+import io.runescript.plugin.lang.psi.RsFile
+import io.runescript.plugin.lang.psi.RsGosubExpression
+import io.runescript.plugin.lang.psi.RsParameter
+import io.runescript.plugin.lang.psi.RsScript
 
 class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgumentList, CallInfo, RsExpression> {
-
     override fun findElementForParameterInfo(context: CreateParameterInfoContext): RsArgumentList? {
         val file = context.file as? RsFile ?: return null
         val element = file.findElementAt(context.offset) ?: return null
@@ -20,7 +25,6 @@ class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgum
         context.itemsToShow = arrayOf(CallInfo.of(parameters))
         return argumentList
     }
-
 
     override fun findElementForUpdatingParameterInfo(context: UpdateParameterInfoContext): RsArgumentList? {
         val element = context.file.findElementAt(context.offset) ?: return null
@@ -37,7 +41,10 @@ class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgum
         return argumentList
     }
 
-    private fun findParameterIndex(argumentList: RsArgumentList, offset: Int): Int {
+    private fun findParameterIndex(
+        argumentList: RsArgumentList,
+        offset: Int,
+    ): Int {
         var index = 0
         var node = argumentList.node.firstChildNode
         while (node != null) {
@@ -49,27 +56,31 @@ class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgum
         return index
     }
 
-    override fun updateUI(p: CallInfo, context: ParameterInfoUIContext) {
+    override fun updateUI(
+        p: CallInfo,
+        context: ParameterInfoUIContext,
+    ) {
         if (context.parameterOwner == null || !context.parameterOwner.isValid) {
             context.isUIComponentEnabled = false
             return
         }
         var highlightStartOffset = -1
         var highlightEndOffset = -1
-        val text = buildString {
-            for ((index, parameter) in p.parameters.withIndex()) {
-                if (index != 0) {
-                    append(", ")
-                }
-                if (index == context.currentParameterIndex) {
-                    highlightStartOffset = length
-                }
-                renderParameter(parameter)
-                if (index == context.currentParameterIndex) {
-                    highlightEndOffset = length
+        val text =
+            buildString {
+                for ((index, parameter) in p.parameters.withIndex()) {
+                    if (index != 0) {
+                        append(", ")
+                    }
+                    if (index == context.currentParameterIndex) {
+                        highlightStartOffset = length
+                    }
+                    renderParameter(parameter)
+                    if (index == context.currentParameterIndex) {
+                        highlightEndOffset = length
+                    }
                 }
             }
-        }
         context.setupUIComponentPresentation(
             text,
             highlightStartOffset,
@@ -77,7 +88,7 @@ class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgum
             false,
             false,
             false,
-            context.defaultParameterColor
+            context.defaultParameterColor,
         )
     }
 
@@ -87,7 +98,10 @@ class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgum
         append(parameter.parameterName)
     }
 
-    override fun updateParameterInfo(parameterOwner: RsArgumentList, context: UpdateParameterInfoContext) {
+    override fun updateParameterInfo(
+        parameterOwner: RsArgumentList,
+        context: UpdateParameterInfoContext,
+    ) {
         if (context.parameterOwner !== parameterOwner) {
             context.removeHint()
         }
@@ -95,49 +109,42 @@ class RsParameterInfoProvider : ParameterInfoHandlerWithTabActionSupport<RsArgum
         context.setCurrentParameter(parameterIndex)
     }
 
-    override fun showParameterInfo(element: RsArgumentList, context: CreateParameterInfoContext) {
+    override fun showParameterInfo(
+        element: RsArgumentList,
+        context: CreateParameterInfoContext,
+    ) {
         context.showHint(element, element.startOffset, this)
     }
 
-    override fun getActualParameterDelimiterType(): IElementType {
-        return RsElementTypes.COMMA
-    }
+    override fun getActualParameterDelimiterType(): IElementType = RsElementTypes.COMMA
 
-    override fun getActualParametersRBraceType(): IElementType {
-        return RsElementTypes.RPAREN
-    }
+    override fun getActualParametersRBraceType(): IElementType = RsElementTypes.RPAREN
 
-    override fun getArgumentListAllowedParentClasses(): Set<Class<*>> {
-        return setOf(RsGosubExpression::class.java)
-    }
+    override fun getArgumentListAllowedParentClasses(): Set<Class<*>> = setOf(RsGosubExpression::class.java)
 
-    override fun getArgListStopSearchClasses(): Set<Class<*>> {
-        return setOf(RsArgumentList::class.java)
-    }
+    override fun getArgListStopSearchClasses(): Set<Class<*>> = setOf(RsArgumentList::class.java)
 
-    override fun getArgumentListClass(): Class<RsArgumentList> {
-        return RsArgumentList::class.java
-    }
+    override fun getArgumentListClass(): Class<RsArgumentList> = RsArgumentList::class.java
 
-    override fun getActualParameters(o: RsArgumentList): Array<RsExpression> {
-        return o.expressionList.toTypedArray()
-    }
+    override fun getActualParameters(o: RsArgumentList): Array<RsExpression> = o.expressionList.toTypedArray()
 }
 
 data class CallInfo(
-    val parameters: List<CallParameterInfo>
+    val parameters: List<CallParameterInfo>,
 ) {
     companion object {
-
-        fun of(parameters: List<RsParameter>) = CallInfo(parameters.map {
-            val typeName = it.typeName.text ?: "unknown"
-            val parameterName = it.localVariableExpression?.name ?: return@map CallParameterInfo(typeName, "<unknown-parameter>")
-            CallParameterInfo(typeName, parameterName)
-        })
+        fun of(parameters: List<RsParameter>) =
+            CallInfo(
+                parameters.map {
+                    val typeName = it.typeName.text ?: "unknown"
+                    val parameterName = it.localVariableExpression?.name ?: return@map CallParameterInfo(typeName, "<unknown-parameter>")
+                    CallParameterInfo(typeName, parameterName)
+                },
+            )
     }
 }
 
 data class CallParameterInfo(
     val typeName: String,
-    val parameterName: String
+    val parameterName: String,
 )

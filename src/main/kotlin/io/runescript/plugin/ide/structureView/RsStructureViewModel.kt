@@ -6,16 +6,12 @@ import com.intellij.ide.structureView.StructureViewTreeElement
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
 
-class RsStructureViewModel(editor: Editor?, psiFile: PsiFile) :
-        StructureViewModelBase(psiFile, editor, RsStructureViewElement(psiFile)), StructureViewModel.ElementInfoProvider {
+class RsStructureViewModel(
+    editor: Editor?,
+    psiFile: PsiFile,
+) : StructureViewModelBase(psiFile, editor, RsStructureViewElement(psiFile)),
+    StructureViewModel.ElementInfoProvider {
+    override fun isAlwaysShowsPlus(element: StructureViewTreeElement?): Boolean = false
 
-    override fun isAlwaysShowsPlus(element: StructureViewTreeElement?): Boolean {
-        return false
-    }
-
-    override fun isAlwaysLeaf(element: StructureViewTreeElement?): Boolean {
-        return false
-    }
-
+    override fun isAlwaysLeaf(element: StructureViewTreeElement?): Boolean = false
 }
-

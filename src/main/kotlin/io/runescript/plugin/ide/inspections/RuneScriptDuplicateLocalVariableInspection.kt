@@ -16,10 +16,11 @@ import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
 class RuneScriptDuplicateLocalVariableInspection : LocalInspectionTool() {
-
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+    ): PsiElementVisitor {
         return object : RsVisitor() {
-
             override fun visitParameter(o: RsParameter) {
                 val name = o.localVariableExpression?.name ?: return
                 var prev = o.prevSibling
@@ -30,7 +31,7 @@ class RuneScriptDuplicateLocalVariableInspection : LocalInspectionTool() {
                             holder.registerProblem(
                                 o.localVariableExpression!!,
                                 RsBundle.message("inspection.error.duplicate.parameter", name),
-                                ProblemHighlightType.GENERIC_ERROR
+                                ProblemHighlightType.GENERIC_ERROR,
                             )
                             break
                         }
@@ -49,7 +50,7 @@ class RuneScriptDuplicateLocalVariableInspection : LocalInspectionTool() {
                     holder.registerProblem(
                         expr,
                         RsBundle.message("inspection.error.duplicate.local.variable", name),
-                        ProblemHighlightType.GENERIC_ERROR
+                        ProblemHighlightType.GENERIC_ERROR,
                     )
                 }
             }
@@ -64,7 +65,7 @@ class RuneScriptDuplicateLocalVariableInspection : LocalInspectionTool() {
                     holder.registerProblem(
                         expr,
                         RsBundle.message("inspection.error.duplicate.array.variable", name),
-                        ProblemHighlightType.GENERIC_ERROR
+                        ProblemHighlightType.GENERIC_ERROR,
                     )
                 }
             }

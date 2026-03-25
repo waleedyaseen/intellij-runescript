@@ -1,17 +1,23 @@
 package io.runescript.plugin.ide.formatter.blocks
 
-import com.intellij.formatting.*
+import com.intellij.formatting.Alignment
+import com.intellij.formatting.Block
+import com.intellij.formatting.Indent
+import com.intellij.formatting.Spacing
+import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
 import io.runescript.plugin.ide.formatter.RsFormatterContext
 
-open class RsBlock(private val context: RsFormatterContext, node: ASTNode, private val indent: Indent, alignment: Alignment?, wrap: Wrap?)
-    : AbstractBlock(node, wrap, alignment) {
-
-    public override fun getChildIndent(): Indent? {
-        return super.getChildIndent()
-    }
+open class RsBlock(
+    private val context: RsFormatterContext,
+    node: ASTNode,
+    private val indent: Indent,
+    alignment: Alignment?,
+    wrap: Wrap?,
+) : AbstractBlock(node, wrap, alignment) {
+    public override fun getChildIndent(): Indent? = super.getChildIndent()
 
     override fun buildChildren(): MutableList<Block> {
         val blocks = mutableListOf<Block>()
@@ -25,9 +31,10 @@ open class RsBlock(private val context: RsFormatterContext, node: ASTNode, priva
         return blocks
     }
 
-    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
-        return context.spacingBuilder.getSpacing(this, child1, child2)
-    }
+    override fun getSpacing(
+        child1: Block?,
+        child2: Block,
+    ): Spacing? = context.spacingBuilder.getSpacing(this, child1, child2)
 
     override fun getIndent() = indent
 

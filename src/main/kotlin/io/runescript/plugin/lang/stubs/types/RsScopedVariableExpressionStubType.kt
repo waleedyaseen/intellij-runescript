@@ -10,25 +10,32 @@ import io.runescript.plugin.lang.psi.RsStubType
 import io.runescript.plugin.lang.psi.impl.RsScopedVariableExpressionImpl
 import io.runescript.plugin.lang.stubs.RsScopedVariableExpressionStub
 
-object RsScopedVariableExpressionStubType : RsStubType<RsScopedVariableExpressionStub, RsScopedVariableExpression>("SCOPED_VARIABLE_EXPRESSION") {
+object RsScopedVariableExpressionStubType : RsStubType<RsScopedVariableExpressionStub, RsScopedVariableExpression>(
+    "SCOPED_VARIABLE_EXPRESSION",
+) {
+    override fun deserialize(
+        dataStream: StubInputStream,
+        parentStub: StubElement<*>?,
+    ): RsScopedVariableExpressionStub = RsScopedVariableExpressionStub(parentStub, this, dataStream.readUTF())
 
-    override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): RsScopedVariableExpressionStub {
-        return RsScopedVariableExpressionStub(parentStub, this, dataStream.readUTF())
-    }
-
-    override fun serialize(stub: RsScopedVariableExpressionStub, dataStream: StubOutputStream) {
+    override fun serialize(
+        stub: RsScopedVariableExpressionStub,
+        dataStream: StubOutputStream,
+    ) {
         dataStream.writeUTF(stub.name)
     }
 
-    override fun createStub(psi: RsScopedVariableExpression, parentStub: StubElement<out PsiElement>?): RsScopedVariableExpressionStub {
-        return RsScopedVariableExpressionStub(parentStub, this, psi.name!!)
-    }
+    override fun createStub(
+        psi: RsScopedVariableExpression,
+        parentStub: StubElement<out PsiElement>?,
+    ): RsScopedVariableExpressionStub = RsScopedVariableExpressionStub(parentStub, this, psi.name!!)
 
-    override fun createPsi(stub: RsScopedVariableExpressionStub): RsScopedVariableExpression {
-        return RsScopedVariableExpressionImpl(stub, this)
-    }
+    override fun createPsi(stub: RsScopedVariableExpressionStub): RsScopedVariableExpression = RsScopedVariableExpressionImpl(stub, this)
 
-    override fun indexStub(stub: RsScopedVariableExpressionStub, sink: IndexSink) {
+    override fun indexStub(
+        stub: RsScopedVariableExpressionStub,
+        sink: IndexSink,
+    ) {
         // TODO
     }
 }

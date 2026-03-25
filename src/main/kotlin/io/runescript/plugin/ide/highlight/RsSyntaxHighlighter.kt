@@ -7,7 +7,17 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 import io.runescript.plugin.lang.lexer.RsLexerInfo
-import io.runescript.plugin.lang.psi.RsElementTypes.*
+import io.runescript.plugin.lang.psi.RsElementTypes.COLON
+import io.runescript.plugin.lang.psi.RsElementTypes.COMMA
+import io.runescript.plugin.lang.psi.RsElementTypes.IDENTIFIER
+import io.runescript.plugin.lang.psi.RsElementTypes.INTEGER
+import io.runescript.plugin.lang.psi.RsElementTypes.LONG
+import io.runescript.plugin.lang.psi.RsElementTypes.SEMICOLON
+import io.runescript.plugin.lang.psi.RsElementTypes.STRING_END
+import io.runescript.plugin.lang.psi.RsElementTypes.STRING_PART
+import io.runescript.plugin.lang.psi.RsElementTypes.STRING_START
+import io.runescript.plugin.lang.psi.RsElementTypes.STRING_TAG
+import io.runescript.plugin.lang.psi.RsElementTypes.TYPE_LITERAL
 import io.runescript.plugin.lang.psi.RsTokenTypes.BLOCK_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypes.LINE_COMMENT
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.BRACES
@@ -16,15 +26,13 @@ import io.runescript.plugin.lang.psi.RsTokenTypesSets.KEYWORDS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.OPERATORS
 import io.runescript.plugin.lang.psi.RsTokenTypesSets.PARENS
 
-class RsSyntaxHighlighter(private val lexerInfo: RsLexerInfo) : SyntaxHighlighterBase() {
+class RsSyntaxHighlighter(
+    private val lexerInfo: RsLexerInfo,
+) : SyntaxHighlighterBase() {
+    override fun getHighlightingLexer(): Lexer = RsHighlightingLexer(lexerInfo)
 
-    override fun getHighlightingLexer(): Lexer {
-        return RsHighlightingLexer(lexerInfo)
-    }
-
-    override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> {
-        return pack(attributes[tokenType], attributes2[tokenType])
-    }
+    override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> =
+        pack(attributes[tokenType], attributes2[tokenType])
 
     companion object {
         private val attributes = mutableMapOf<IElementType, TextAttributesKey>()

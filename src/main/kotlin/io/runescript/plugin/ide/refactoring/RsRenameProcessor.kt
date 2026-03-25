@@ -16,26 +16,27 @@ import io.runescript.plugin.lang.psi.scope.RsResolveMode
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
 class RsRenameProcessor : RenamePsiElementProcessor() {
-
     override fun createDialog(
-        project: Project, element: PsiElement, nameSuggestionContext: PsiElement?, editor: Editor?
-    ): RenameRefactoringDialog? {
-        return RenamePsiFileProcessor.PsiFileRenameDialog(project, element, nameSuggestionContext, editor)
-    }
+        project: Project,
+        element: PsiElement,
+        nameSuggestionContext: PsiElement?,
+        editor: Editor?,
+    ): RenameRefactoringDialog? = RenamePsiFileProcessor.PsiFileRenameDialog(project, element, nameSuggestionContext, editor)
 
     override fun findExistingNameConflicts(
-        element: PsiElement, newName: String, conflicts: MultiMap<PsiElement?, @NlsContexts.DialogMessage String?>
+        element: PsiElement,
+        newName: String,
+        conflicts: MultiMap<PsiElement?, @NlsContexts.DialogMessage String?>,
     ) {
         val resolver = RsLocalVariableResolver(newName, RsResolveMode.Both)
         RsScopesUtil.walkUpScopes(resolver, ResolveState.initial(), element)
         if (resolver.declaration != null) {
             conflicts.putValue(
-                resolver.declaration, RsBundle.message("refactoring.error.duplicate.local.variable", newName)
+                resolver.declaration,
+                RsBundle.message("refactoring.error.duplicate.local.variable", newName),
             )
         }
     }
 
-    override fun canProcessElement(element: PsiElement): Boolean {
-        return element is RsLocalVariableExpression
-    }
+    override fun canProcessElement(element: PsiElement): Boolean = element is RsLocalVariableExpression
 }

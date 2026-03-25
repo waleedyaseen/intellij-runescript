@@ -19,7 +19,9 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
 
-class RsDocLink(node: ASTNode) : ASTWrapperPsiElement(node) {
+class RsDocLink(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node) {
     fun getLinkText(): String = getLinkTextRange().substring(text)
 
     private fun getLinkTextRange(): TextRange {

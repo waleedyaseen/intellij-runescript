@@ -7,13 +7,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import io.runescript.plugin.lang.psi.RsControlFlowHolder
 
-class RsControlFlowProvider : ControlFlowProvider{
+class RsControlFlowProvider : ControlFlowProvider {
+    override fun getControlFlow(element: PsiElement): ControlFlow? = element.parentOfType<RsControlFlowHolder>()?.controlFlow
 
-    override fun getControlFlow(element: PsiElement): ControlFlow? {
-        return element.parentOfType<RsControlFlowHolder>()?.controlFlow
-    }
-
-    override fun getAdditionalInfo(instruction: Instruction): String? {
-        return null
-    }
+    override fun getAdditionalInfo(instruction: Instruction): String? = null
 }

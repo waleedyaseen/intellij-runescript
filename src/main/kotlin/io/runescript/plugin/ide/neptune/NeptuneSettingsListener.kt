@@ -4,7 +4,6 @@ import com.intellij.openapi.externalSystem.settings.ExternalSystemSettingsListen
 import com.intellij.util.messages.Topic
 import com.intellij.util.messages.Topic.ProjectLevel
 
-
 interface NeptuneSettingsListener : ExternalSystemSettingsListener<NeptuneProjectSettings> {
     companion object {
         @ProjectLevel

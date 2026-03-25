@@ -26,11 +26,12 @@ class ArrayInsertallCommandHandler : DynamicCommandHandler {
 
         // check the base signature matches
         if (checkArgumentTypes(BASE_EXPECTED_TYPES) && array1ExprType is ArrayType) {
-            val expectedTypes = TupleType(
-                array1ExprType,
-                array1ExprType,
-                PrimitiveType.INT,
-            )
+            val expectedTypes =
+                TupleType(
+                    array1ExprType,
+                    array1ExprType,
+                    PrimitiveType.INT,
+                )
             checkArgumentTypes(expectedTypes)
         }
 
@@ -38,10 +39,11 @@ class ArrayInsertallCommandHandler : DynamicCommandHandler {
     }
 
     private companion object {
-        val BASE_EXPECTED_TYPES = TupleType(
-            ArrayType(MetaType.Any),
-            ArrayType(MetaType.Any),
-            PrimitiveType.INT,
-        )
+        val BASE_EXPECTED_TYPES =
+            TupleType(
+                ArrayType(MetaType.Any),
+                ArrayType(MetaType.Any),
+                PrimitiveType.INT,
+            )
     }
 }

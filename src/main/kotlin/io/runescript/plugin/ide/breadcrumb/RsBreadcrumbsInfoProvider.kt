@@ -9,13 +9,13 @@ import io.runescript.plugin.lang.psi.qualifiedName
 import javax.swing.Icon
 
 class RsBreadcrumbsInfoProvider : BreadcrumbsProvider {
-
     override fun getLanguages() = arrayOf(RuneScript)
 
-    override fun acceptElement(e: PsiElement) = when (e) {
-        is RsScript -> true
-        else -> false
-    }
+    override fun acceptElement(e: PsiElement) =
+        when (e) {
+            is RsScript -> true
+            else -> false
+        }
 
     override fun getElementInfo(element: PsiElement): @NlsSafe String {
         if (element is RsScript) {

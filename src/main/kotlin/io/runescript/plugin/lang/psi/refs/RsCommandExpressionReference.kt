@@ -12,17 +12,23 @@ import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 
-class RsCommandExpressionReference(element: RsCommandExpression) : PsiPolyVariantReferenceBase<RsCommandExpression>(element, element.nameLiteral.textRangeInParent) {
-
+class RsCommandExpressionReference(
+    element: RsCommandExpression,
+) : PsiPolyVariantReferenceBase<RsCommandExpression>(element, element.nameLiteral.textRangeInParent) {
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
-        val elements = StubIndex.getElements(RsCommandScriptIndex.KEY, element.nameString, element.project, GlobalSearchScope.moduleScope(module), RsScript::class.java)
+        val elements =
+            StubIndex.getElements(
+                RsCommandScriptIndex.KEY,
+                element.nameString,
+                element.project,
+                GlobalSearchScope.moduleScope(module),
+                RsScript::class.java,
+            )
         return elements.map { PsiElementResolveResult(it) }.toTypedArray()
     }
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 
-    override fun handleElementRename(newElementName: String): PsiElement {
-        return element
-    }
+    override fun handleElementRename(newElementName: String): PsiElement = element
 }

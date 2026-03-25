@@ -8,7 +8,9 @@ import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
 import io.runescript.plugin.lang.psi.typechecker.type.TupleType
 
-class DbFindCommandHandler(private val withCount: Boolean) : DynamicCommandHandler {
+class DbFindCommandHandler(
+    private val withCount: Boolean,
+) : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
         // lookup the column expression
         val columnExpr = checkArgument(0, DbColumnType(MetaType.Any))
@@ -18,10 +20,11 @@ class DbFindCommandHandler(private val withCount: Boolean) : DynamicCommandHandl
         checkArgument(1, keyType)
 
         // define the expected types based on what is currently known
-        val expectedTypes = TupleType(
-            DbColumnType(keyType ?: MetaType.Any),
-            keyType ?: MetaType.Any,
-        )
+        val expectedTypes =
+            TupleType(
+                DbColumnType(keyType ?: MetaType.Any),
+                keyType ?: MetaType.Any,
+            )
 
         // check that the key type is not a tuple type
         if (keyType is TupleType) {

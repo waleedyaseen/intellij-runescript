@@ -5,9 +5,7 @@ import com.intellij.psi.stubs.StubIndexKey
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
-
 class RsClientScriptIndex : StringStubIndexExtension<RsScript>() {
-
     override fun getVersion(): Int = RsFileStubType.stubVersion
 
     override fun getKey(): StubIndexKey<String, RsScript> = KEY

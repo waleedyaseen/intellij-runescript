@@ -29,9 +29,9 @@ import com.intellij.vcsUtil.VcsUtil.getCanonicalPath
 import java.io.File
 import java.util.function.Predicate
 
-class NeptuneSystemSettingsControl(private val settings: NeptuneSettings) :
-    ExternalSystemSettingsControl<NeptuneSettings> {
-
+class NeptuneSystemSettingsControl(
+    private val settings: NeptuneSettings,
+) : ExternalSystemSettingsControl<NeptuneSettings> {
     private val propertyGraph = PropertyGraph()
     private val neptuneHomeProperty = propertyGraph.property("")
 
@@ -42,54 +42,60 @@ class NeptuneSystemSettingsControl(private val settings: NeptuneSettings) :
     private val selectedJdk: String
         get() = jvmComboBox.getSelectedSdk()?.name ?: ""
 
-
     private fun createJava17SdkModel(): SdkComboBoxModel {
         val project = settings.project
         val model = ProjectSdksModel()
         model.reset(project)
-        val isJava17Sdk = Predicate<Sdk> { sdk ->
-            if (sdk.homePath == null) {
-                return@Predicate false
+        val isJava17Sdk =
+            Predicate<Sdk> { sdk ->
+                if (sdk.homePath == null) {
+                    return@Predicate false
+                }
+                val sdkType = sdk.sdkType
+                if (sdkType !is JavaSdkType) {
+                    return@Predicate false
+                }
+                val versionString = sdkType.getVersionString(sdk) ?: return@Predicate false
+                val version = JavaVersion.parse(versionString)
+                version.feature >= 17
             }
-            val sdkType = sdk.sdkType
-            if (sdkType !is JavaSdkType) {
-                return@Predicate false
-            }
-            val versionString = sdkType.getVersionString(sdk) ?: return@Predicate false
-            val version = JavaVersion.parse(versionString)
-            version.feature >= 17
-        }
         return createJdkComboBoxModel(
             project,
             model,
             null,
             null,
-            isJava17Sdk
+            isJava17Sdk,
         )
     }
 
-    override fun fillUi(canvas: PaintAwarePanel, indentLevel: Int) {
-        val panel = panel {
-            row("Neptune JVM:") {
-                cell(jvmComboBox)
-                    .align(AlignX.FILL)
-                    .comment("The JVM to use for running Neptune.")
+    override fun fillUi(
+        canvas: PaintAwarePanel,
+        indentLevel: Int,
+    ) {
+        val panel =
+            panel {
+                row("Neptune JVM:") {
+                    cell(jvmComboBox)
+                        .align(AlignX.FILL)
+                        .comment("The JVM to use for running Neptune.")
+                }
+                row("Neptune home:") {
+                    val fileChooserDescriptor =
+                        FileChooserDescriptorFactory
+                            .createSingleFolderDescriptor()
+                            .withPathToTextConvertor(::getPresentablePath)
+                            .withTextToPathConvertor(::getCanonicalPath)
+                            .withTitle("Neptune Home:")
+                    textFieldWithBrowseButton(
+                        fileChooserDescriptor = fileChooserDescriptor,
+                        project = null,
+                        fileChosen = null,
+                    ).bindText(neptuneHomeProperty.toUiPathProperty())
+                        .trimmedTextValidation(CHECK_NON_EMPTY, CHECK_DIRECTORY)
+                        .validationInfo { validateNeptuneHome() }
+                        .align(AlignX.FILL)
+                }
             }
-            row("Neptune home:") {
-                val fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
-                    .withPathToTextConvertor(::getPresentablePath)
-                    .withTextToPathConvertor(::getCanonicalPath)
-                    .withTitle("Neptune Home:")
-                textFieldWithBrowseButton(
-                    fileChooserDescriptor = fileChooserDescriptor,
-                    project = null,
-                    fileChosen = null
-                ).bindText(neptuneHomeProperty.toUiPathProperty())
-                    .trimmedTextValidation(CHECK_NON_EMPTY, CHECK_DIRECTORY)
-                    .validationInfo { validateNeptuneHome() }
-                    .align(AlignX.FILL)
-            }
-        }
 
         canvas.add(panel, ExternalSystemUiUtil.getFillLineConstraints(indentLevel))
     }
@@ -101,7 +107,7 @@ class NeptuneSystemSettingsControl(private val settings: NeptuneSettings) :
         }
         val libsFolder = File(homeFolder, "libs")
         if (!libsFolder.exists() || !libsFolder.isDirectory) {
-            return error("The specified Neptune home directory is not valid.");
+            return error("The specified Neptune home directory is not valid.")
         }
         val compilerJar =
             libsFolder.listFiles { _, name -> name.matches("neptune-clientscript-compiler-.*\\.jar".toRegex()) }
@@ -121,12 +127,12 @@ class NeptuneSystemSettingsControl(private val settings: NeptuneSettings) :
         neptuneHome = settings.neptuneHome
     }
 
-    override fun isModified(): Boolean {
-        return settings.launcherJre != selectedJdk
-                || ExternalSystemApiUtil.normalizePath(settings.neptuneHome) != ExternalSystemApiUtil.normalizePath(
-            neptuneHome
-        )
-    }
+    override fun isModified(): Boolean =
+        settings.launcherJre != selectedJdk ||
+            ExternalSystemApiUtil.normalizePath(settings.neptuneHome) !=
+            ExternalSystemApiUtil.normalizePath(
+                neptuneHome,
+            )
 
     override fun disposeUIResources() {
         ExternalSystemUiUtil.disposeUi(this)
@@ -136,9 +142,7 @@ class NeptuneSystemSettingsControl(private val settings: NeptuneSettings) :
         ExternalSystemUiUtil.showUi(this, show)
     }
 
-    override fun validate(settings: NeptuneSettings): Boolean {
-        return true
-    }
+    override fun validate(settings: NeptuneSettings): Boolean = true
 
     override fun apply(settings: NeptuneSettings) {
         settings.launcherJre = selectedJdk

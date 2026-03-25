@@ -4,8 +4,9 @@ import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings
 
 @Suppress("PropertyName", "unused")
-class RsCodeStyleSettings(container: CodeStyleSettings) : CustomCodeStyleSettings("RuneScriptCodeStyleSettings", container) {
-
+class RsCodeStyleSettings(
+    container: CodeStyleSettings,
+) : CustomCodeStyleSettings("RuneScriptCodeStyleSettings", container) {
     @JvmField
     var SPACE_WITHIN_ARRAY_BOUNDS = false
 
@@ -32,7 +33,7 @@ class RsCodeStyleSettings(container: CodeStyleSettings) : CustomCodeStyleSetting
 
     @JvmField
     var SPACE_AFTER_COMMA_IN_RETURN_LIST = false
-    
+
     @JvmField
     var SPACE_BEFORE_COMMA_IN_RETURN_ARGUMENTS = false
 

@@ -5,20 +5,13 @@ import com.intellij.ui.dsl.builder.panel
 import javax.swing.JComponent
 
 class RsRunConfigurationEditor : SettingsEditor<RsRunConfiguration>() {
-
-
     override fun applyEditorTo(s: RsRunConfiguration) {
-
     }
 
     override fun resetEditorFrom(s: RsRunConfiguration) {
-
     }
 
-    override fun createEditor(): JComponent {
-        return panel {
-
+    override fun createEditor(): JComponent =
+        panel {
         }
-    }
-
 }

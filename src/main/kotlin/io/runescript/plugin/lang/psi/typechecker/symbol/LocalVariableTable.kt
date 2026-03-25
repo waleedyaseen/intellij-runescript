@@ -8,7 +8,9 @@ package io.runescript.plugin.lang.psi.typechecker.symbol
  * See Also: [Symbol table](https://en.wikipedia.org/wiki/Symbol_table)
  * @see createSubTable
  */
-class LocalVariableTable internal constructor(private val parent: LocalVariableTable? = null) {
+class LocalVariableTable internal constructor(
+    private val parent: LocalVariableTable? = null,
+) {
     /**
      * Table of all symbols defined in the table. This does not include symbols
      * defined in a parent.

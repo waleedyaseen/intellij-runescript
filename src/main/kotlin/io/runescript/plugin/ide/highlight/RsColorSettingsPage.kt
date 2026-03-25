@@ -12,37 +12,23 @@ import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
 import javax.swing.Icon
 
 class RsColorSettingsPage : ColorSettingsPage {
+    override fun getAttributeDescriptors(): Array<AttributesDescriptor> = DESCRIPTORS
 
-    override fun getAttributeDescriptors(): Array<AttributesDescriptor> {
-        return DESCRIPTORS
-    }
+    override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
 
-    override fun getColorDescriptors(): Array<ColorDescriptor> {
-        return ColorDescriptor.EMPTY_ARRAY
-    }
+    override fun getDisplayName(): String = RsBundle.message("runescript.title")
 
-    override fun getDisplayName(): String {
-        return RsBundle.message("runescript.title")
-    }
+    override fun getIcon(): Icon = RsIcons.RuneScript
 
-    override fun getIcon(): Icon {
-        return RsIcons.RuneScript
-    }
+    override fun getHighlighter(): SyntaxHighlighter = RsSyntaxHighlighter(LEXER_INFO)
 
-    override fun getHighlighter(): SyntaxHighlighter {
-        return RsSyntaxHighlighter(LEXER_INFO)
-    }
+    override fun getDemoText(): String = DEMO_TEXT
 
-    override fun getDemoText(): String {
-        return DEMO_TEXT
-    }
-
-    override fun getAdditionalHighlightingTagToDescriptorMap(): MutableMap<String, TextAttributesKey> {
-        return TAG_TO_DESCRIPTOR_MAP
-    }
+    override fun getAdditionalHighlightingTagToDescriptorMap(): MutableMap<String, TextAttributesKey> = TAG_TO_DESCRIPTOR_MAP
 
     companion object {
-        private val DEMO_TEXT = """
+        private val DEMO_TEXT =
+            """
             <RUNESCRIPT_SCRIPT_DECLARATION>[proc,countodd]</RUNESCRIPT_SCRIPT_DECLARATION>(int ${'$'}count, intarray ${'$'}array)(int)
             def_int <RUNESCRIPT_LOCAL_VARIABLE>${'$'}index</RUNESCRIPT_LOCAL_VARIABLE> = 0;
             def_int <RUNESCRIPT_LOCAL_VARIABLE>${'$'}odd_count</RUNESCRIPT_LOCAL_VARIABLE> = 0;
@@ -68,63 +54,125 @@ class RsColorSettingsPage : ColorSettingsPage {
             }
             // Single line comment.
             return(<RUNESCRIPT_LOCAL_VARIABLE>${'$'}odd_count</RUNESCRIPT_LOCAL_VARIABLE>);
-         """.trimIndent()
-        private val DESCRIPTORS = arrayOf(
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.identifier"), RsSyntaxHighlighterColors.IDENTIFIER),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.number"), RsSyntaxHighlighterColors.NUMBER),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.keyword"), RsSyntaxHighlighterColors.KEYWORD),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.type_literal"), RsSyntaxHighlighterColors.TYPE_LITERAL),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.string"), RsSyntaxHighlighterColors.STRING),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.string_tag"), RsSyntaxHighlighterColors.STRING_TAG),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.block_comment"), RsSyntaxHighlighterColors.BLOCK_COMMENT),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.doc_comment"), RsSyntaxHighlighterColors.DOC_COMMENT),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.doc_tag"), RsSyntaxHighlighterColors.DOC_COMMENT_TAG),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.doc_link"), RsSyntaxHighlighterColors.DOC_COMMENT_LINK),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.line_comment"), RsSyntaxHighlighterColors.LINE_COMMENT),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.operation_sign"), RsSyntaxHighlighterColors.OPERATION_SIGN),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.braces"), RsSyntaxHighlighterColors.BRACES),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.semicolon"), RsSyntaxHighlighterColors.SEMICOLON),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.colon"), RsSyntaxHighlighterColors.COLON),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.comma"), RsSyntaxHighlighterColors.COMMA),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.parenthesis"), RsSyntaxHighlighterColors.PARENTHESIS),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.brackets"), RsSyntaxHighlighterColors.BRACKETS),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.constant"), RsSyntaxHighlighterColors.CONSTANT),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.variable.local"), RsSyntaxHighlighterColors.LOCAL_VARIABLE),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.variable.scoped"), RsSyntaxHighlighterColors.SCOPED_VARIABLE),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.script_declaration"), RsSyntaxHighlighterColors.SCRIPT_DECLARATION),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.command_call"), RsSyntaxHighlighterColors.COMMAND_CALL),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.proc_call"), RsSyntaxHighlighterColors.PROC_CALL),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.clientscript_call"), RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL),
-            AttributesDescriptor(RsBundle.message("runescript.color.settings.description.config.reference"), RsSyntaxHighlighterColors.CONFIG_REFERENCE),
-        )
-        private val TAG_TO_DESCRIPTOR_MAP = mutableMapOf(
-            "RUNESCRIPT_IDENTIFIER" to RsSyntaxHighlighterColors.IDENTIFIER,
-            "RUNESCRIPT_NUMBER" to RsSyntaxHighlighterColors.NUMBER,
-            "RUNESCRIPT_KEYWORD" to RsSyntaxHighlighterColors.KEYWORD,
-            "RUNESCRIPT_TYPE_LITERAL" to RsSyntaxHighlighterColors.TYPE_LITERAL,
-            "RUNESCRIPT_STRING" to RsSyntaxHighlighterColors.STRING,
-            "RUNESCRIPT_STRING_TAG" to RsSyntaxHighlighterColors.STRING_TAG,
-            "RUNESCRIPT_BLOCK_COMMENT" to RsSyntaxHighlighterColors.BLOCK_COMMENT,
-            "RUNESCRIPT_LINE_COMMENT" to RsSyntaxHighlighterColors.LINE_COMMENT,
-            "RUNESCRIPT_DOC_COMMENT" to RsSyntaxHighlighterColors.DOC_COMMENT,
-            "RUNESCRIPT_DOC_TAG_NAME" to RsSyntaxHighlighterColors.DOC_COMMENT_TAG,
-            "RUNESCRIPT_DOC_COMMENT_LINK" to RsSyntaxHighlighterColors.DOC_COMMENT_LINK,
-            "RUNESCRIPT_OPERATION_SIGN" to RsSyntaxHighlighterColors.OPERATION_SIGN,
-            "RUNESCRIPT_BRACES" to RsSyntaxHighlighterColors.BRACES,
-            "RUNESCRIPT_SEMICOLON" to RsSyntaxHighlighterColors.SEMICOLON,
-            "RUNESCRIPT_COLON" to RsSyntaxHighlighterColors.COLON,
-            "RUNESCRIPT_COMMA" to RsSyntaxHighlighterColors.COMMA,
-            "RUNESCRIPT_PARENTHESIS" to RsSyntaxHighlighterColors.PARENTHESIS,
-            "RUNESCRIPT_BRACKETS" to RsSyntaxHighlighterColors.BRACKETS,
-            "RUNESCRIPT_CONSTANT" to RsSyntaxHighlighterColors.CONSTANT,
-            "RUNESCRIPT_LOCAL_VARIABLE" to RsSyntaxHighlighterColors.LOCAL_VARIABLE,
-            "RUNESCRIPT_SCOPED_VARIABLE" to RsSyntaxHighlighterColors.SCOPED_VARIABLE,
-            "RUNESCRIPT_SCRIPT_DECLARATION" to RsSyntaxHighlighterColors.SCRIPT_DECLARATION,
-            "RUNESCRIPT_COMMAND_CALL" to RsSyntaxHighlighterColors.COMMAND_CALL,
-            "RUNESCRIPT_PROC_CALL" to RsSyntaxHighlighterColors.PROC_CALL,
-            "RUNESCRIPT_CLIENTSCRIPT_CALL" to RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL,
-            "RUNESCRIPT_CONFIG_REFERENCE" to RsSyntaxHighlighterColors.CONFIG_REFERENCE,
-        )
+            """.trimIndent()
+        private val DESCRIPTORS =
+            arrayOf(
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.identifier"),
+                    RsSyntaxHighlighterColors.IDENTIFIER,
+                ),
+                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.number"), RsSyntaxHighlighterColors.NUMBER),
+                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.keyword"), RsSyntaxHighlighterColors.KEYWORD),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.type_literal"),
+                    RsSyntaxHighlighterColors.TYPE_LITERAL,
+                ),
+                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.string"), RsSyntaxHighlighterColors.STRING),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.string_tag"),
+                    RsSyntaxHighlighterColors.STRING_TAG,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.block_comment"),
+                    RsSyntaxHighlighterColors.BLOCK_COMMENT,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.doc_comment"),
+                    RsSyntaxHighlighterColors.DOC_COMMENT,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.doc_tag"),
+                    RsSyntaxHighlighterColors.DOC_COMMENT_TAG,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.doc_link"),
+                    RsSyntaxHighlighterColors.DOC_COMMENT_LINK,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.line_comment"),
+                    RsSyntaxHighlighterColors.LINE_COMMENT,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.operation_sign"),
+                    RsSyntaxHighlighterColors.OPERATION_SIGN,
+                ),
+                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.braces"), RsSyntaxHighlighterColors.BRACES),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.semicolon"),
+                    RsSyntaxHighlighterColors.SEMICOLON,
+                ),
+                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.colon"), RsSyntaxHighlighterColors.COLON),
+                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.comma"), RsSyntaxHighlighterColors.COMMA),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.parenthesis"),
+                    RsSyntaxHighlighterColors.PARENTHESIS,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.brackets"),
+                    RsSyntaxHighlighterColors.BRACKETS,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.constant"),
+                    RsSyntaxHighlighterColors.CONSTANT,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.variable.local"),
+                    RsSyntaxHighlighterColors.LOCAL_VARIABLE,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.variable.scoped"),
+                    RsSyntaxHighlighterColors.SCOPED_VARIABLE,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.script_declaration"),
+                    RsSyntaxHighlighterColors.SCRIPT_DECLARATION,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.command_call"),
+                    RsSyntaxHighlighterColors.COMMAND_CALL,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.proc_call"),
+                    RsSyntaxHighlighterColors.PROC_CALL,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.clientscript_call"),
+                    RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.config.reference"),
+                    RsSyntaxHighlighterColors.CONFIG_REFERENCE,
+                ),
+            )
+        private val TAG_TO_DESCRIPTOR_MAP =
+            mutableMapOf(
+                "RUNESCRIPT_IDENTIFIER" to RsSyntaxHighlighterColors.IDENTIFIER,
+                "RUNESCRIPT_NUMBER" to RsSyntaxHighlighterColors.NUMBER,
+                "RUNESCRIPT_KEYWORD" to RsSyntaxHighlighterColors.KEYWORD,
+                "RUNESCRIPT_TYPE_LITERAL" to RsSyntaxHighlighterColors.TYPE_LITERAL,
+                "RUNESCRIPT_STRING" to RsSyntaxHighlighterColors.STRING,
+                "RUNESCRIPT_STRING_TAG" to RsSyntaxHighlighterColors.STRING_TAG,
+                "RUNESCRIPT_BLOCK_COMMENT" to RsSyntaxHighlighterColors.BLOCK_COMMENT,
+                "RUNESCRIPT_LINE_COMMENT" to RsSyntaxHighlighterColors.LINE_COMMENT,
+                "RUNESCRIPT_DOC_COMMENT" to RsSyntaxHighlighterColors.DOC_COMMENT,
+                "RUNESCRIPT_DOC_TAG_NAME" to RsSyntaxHighlighterColors.DOC_COMMENT_TAG,
+                "RUNESCRIPT_DOC_COMMENT_LINK" to RsSyntaxHighlighterColors.DOC_COMMENT_LINK,
+                "RUNESCRIPT_OPERATION_SIGN" to RsSyntaxHighlighterColors.OPERATION_SIGN,
+                "RUNESCRIPT_BRACES" to RsSyntaxHighlighterColors.BRACES,
+                "RUNESCRIPT_SEMICOLON" to RsSyntaxHighlighterColors.SEMICOLON,
+                "RUNESCRIPT_COLON" to RsSyntaxHighlighterColors.COLON,
+                "RUNESCRIPT_COMMA" to RsSyntaxHighlighterColors.COMMA,
+                "RUNESCRIPT_PARENTHESIS" to RsSyntaxHighlighterColors.PARENTHESIS,
+                "RUNESCRIPT_BRACKETS" to RsSyntaxHighlighterColors.BRACKETS,
+                "RUNESCRIPT_CONSTANT" to RsSyntaxHighlighterColors.CONSTANT,
+                "RUNESCRIPT_LOCAL_VARIABLE" to RsSyntaxHighlighterColors.LOCAL_VARIABLE,
+                "RUNESCRIPT_SCOPED_VARIABLE" to RsSyntaxHighlighterColors.SCOPED_VARIABLE,
+                "RUNESCRIPT_SCRIPT_DECLARATION" to RsSyntaxHighlighterColors.SCRIPT_DECLARATION,
+                "RUNESCRIPT_COMMAND_CALL" to RsSyntaxHighlighterColors.COMMAND_CALL,
+                "RUNESCRIPT_PROC_CALL" to RsSyntaxHighlighterColors.PROC_CALL,
+                "RUNESCRIPT_CLIENTSCRIPT_CALL" to RsSyntaxHighlighterColors.CLIENTSCRIPT_CALL,
+                "RUNESCRIPT_CONFIG_REFERENCE" to RsSyntaxHighlighterColors.CONFIG_REFERENCE,
+            )
 
         private val LEXER_INFO = RsLexerInfo(TypeManager())
     }

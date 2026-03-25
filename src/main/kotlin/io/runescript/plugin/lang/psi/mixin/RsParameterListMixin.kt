@@ -10,13 +10,19 @@ import com.intellij.psi.tree.IElementType
 import io.runescript.plugin.lang.psi.RsParameterList
 import io.runescript.plugin.lang.stubs.RsParameterListStub
 
-abstract class RsParameterListMixin : StubBasedPsiElementBase<RsParameterListStub>, RsParameterList {
-
+abstract class RsParameterListMixin :
+    StubBasedPsiElementBase<RsParameterListStub>,
+    RsParameterList {
     constructor(node: ASTNode) : super(node)
     constructor(stub: RsParameterListStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsParameterListStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
-    override fun processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement?, place: PsiElement): Boolean {
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement,
+    ): Boolean {
         parameterList.forEach {
             val expr = it.localVariableExpression
             if (lastParent != it && expr != null && !processor.execute(expr, state)) {

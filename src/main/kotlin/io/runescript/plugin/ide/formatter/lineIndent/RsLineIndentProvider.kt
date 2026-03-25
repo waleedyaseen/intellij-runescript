@@ -8,7 +8,22 @@ import com.intellij.psi.TokenType
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition
 import com.intellij.psi.impl.source.codeStyle.lineIndent.IndentCalculator
 import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider
-import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.*
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.BlockClosingBrace
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.BlockComment
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.BlockOpeningBrace
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.Colon
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.Comma
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.DocBlockEnd
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.DocBlockStart
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.ElseKeyword
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.IfKeyword
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.LeftParenthesis
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.LineComment
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.RightParenthesis
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.Semicolon
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.SwitchCase
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.SwitchDefault
+import com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.Whitespace
 import com.intellij.psi.tree.IElementType
 import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.doc.lexer.RsDocTokens
@@ -16,11 +31,14 @@ import io.runescript.plugin.lang.psi.RsElementTypes
 import io.runescript.plugin.lang.psi.RsTokenTypes
 
 class RsLineIndentProvider : JavaLikeLangLineIndentProvider() {
-    override fun mapType(tokenType: IElementType): SemanticEditorPosition.SyntaxElement? {
-        return elementsMap[tokenType]
-    }
+    override fun mapType(tokenType: IElementType): SemanticEditorPosition.SyntaxElement? = elementsMap[tokenType]
 
-    override fun getIndent(project: Project, editor: Editor, language: Language?, offset: Int): IndentCalculator? {
+    override fun getIndent(
+        project: Project,
+        editor: Editor,
+        language: Language?,
+        offset: Int,
+    ): IndentCalculator? {
         val currentPosition = getPosition(editor, offset)
         val before = currentPosition.beforeOptionalMix(Whitespace, LineComment, BlockComment)
         val factory = IndentCalculatorFactory(project, editor)
@@ -37,23 +55,24 @@ class RsLineIndentProvider : JavaLikeLangLineIndentProvider() {
     override fun isSuitableForLanguage(language: Language) = language.isKindOf(RuneScript)
 
     companion object {
-        private val elementsMap: Map<IElementType, SemanticEditorPosition.SyntaxElement> = hashMapOf(
-            TokenType.WHITE_SPACE to Whitespace,
-            RsElementTypes.SEMICOLON to Semicolon,
-            RsElementTypes.LBRACE to BlockOpeningBrace,
-            RsElementTypes.RBRACE to BlockClosingBrace,
-            RsElementTypes.LPAREN to RightParenthesis,
-            RsElementTypes.RPAREN to LeftParenthesis,
-            RsElementTypes.COLON to Colon,
-            RsElementTypes.CASE to SwitchCase,
-            RsElementTypes.DEFAULT to SwitchDefault,
-            RsElementTypes.ELSE to ElseKeyword,
-            RsElementTypes.IF to IfKeyword,
-            RsTokenTypes.BLOCK_COMMENT to BlockComment,
-            RsTokenTypes.LINE_COMMENT to LineComment,
-            RsDocTokens.START to DocBlockStart,
-            RsDocTokens.END to DocBlockEnd,
-            RsElementTypes.COMMA to Comma
-        )
+        private val elementsMap: Map<IElementType, SemanticEditorPosition.SyntaxElement> =
+            hashMapOf(
+                TokenType.WHITE_SPACE to Whitespace,
+                RsElementTypes.SEMICOLON to Semicolon,
+                RsElementTypes.LBRACE to BlockOpeningBrace,
+                RsElementTypes.RBRACE to BlockClosingBrace,
+                RsElementTypes.LPAREN to RightParenthesis,
+                RsElementTypes.RPAREN to LeftParenthesis,
+                RsElementTypes.COLON to Colon,
+                RsElementTypes.CASE to SwitchCase,
+                RsElementTypes.DEFAULT to SwitchDefault,
+                RsElementTypes.ELSE to ElseKeyword,
+                RsElementTypes.IF to IfKeyword,
+                RsTokenTypes.BLOCK_COMMENT to BlockComment,
+                RsTokenTypes.LINE_COMMENT to LineComment,
+                RsDocTokens.START to DocBlockStart,
+                RsDocTokens.END to DocBlockEnd,
+                RsElementTypes.COMMA to Comma,
+            )
     }
 }

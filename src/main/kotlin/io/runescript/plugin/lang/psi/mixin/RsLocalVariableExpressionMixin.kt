@@ -18,9 +18,9 @@ import io.runescript.plugin.lang.psi.refs.RsLocalVariableReference
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.stubs.RsLocalVariableExpressionStub
 
-abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalVariableExpressionStub>,
+abstract class RsLocalVariableExpressionMixin :
+    StubBasedPsiElementBase<RsLocalVariableExpressionStub>,
     RsLocalVariableExpression {
-
     constructor(node: ASTNode) : super(node)
     constructor(stub: RsLocalVariableExpressionStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsLocalVariableExpressionStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
@@ -42,19 +42,11 @@ abstract class RsLocalVariableExpressionMixin : StubBasedPsiElementBase<RsLocalV
         return RsLocalVariableReference(this)
     }
 
-    override fun getTextOffset(): Int {
-        return nameLiteral.startOffset
-    }
+    override fun getTextOffset(): Int = nameLiteral.startOffset
 
-    override fun getNameIdentifier(): PsiElement {
-        return nameLiteral
-    }
+    override fun getNameIdentifier(): PsiElement = nameLiteral
 
-    override fun getName(): String {
-        return RsPsiImplUtil.getName(nameLiteral)
-    }
+    override fun getName(): String = RsPsiImplUtil.getName(nameLiteral)
 
-    override fun setName(newName: String): PsiElement {
-        return RsPsiImplUtil.setName(nameLiteral, newName)
-    }
+    override fun setName(newName: String): PsiElement = RsPsiImplUtil.setName(nameLiteral, newName)
 }

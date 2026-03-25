@@ -7,52 +7,27 @@ import io.runescript.plugin.lang.doc.psi.api.RsDoc
 import io.runescript.plugin.lang.psi.RsTokenTypes
 
 class RsCommenter : CodeDocumentationAwareCommenter {
+    override fun getLineCommentPrefix(): String = "//"
 
-    override fun getLineCommentPrefix(): String {
-        return "//"
-    }
+    override fun getBlockCommentPrefix(): String = "/*"
 
-    override fun getBlockCommentPrefix(): String {
-        return "/*"
-    }
+    override fun getBlockCommentSuffix(): String = "*/"
 
-    override fun getBlockCommentSuffix(): String {
-        return "*/"
-    }
+    override fun getCommentedBlockCommentPrefix(): String? = null
 
-    override fun getCommentedBlockCommentPrefix(): String? {
-        return null
-    }
+    override fun getCommentedBlockCommentSuffix(): String? = null
 
-    override fun getCommentedBlockCommentSuffix(): String? {
-        return null
-    }
+    override fun getLineCommentTokenType(): IElementType = RsTokenTypes.LINE_COMMENT
 
-    override fun getLineCommentTokenType(): IElementType {
-        return RsTokenTypes.LINE_COMMENT
-    }
+    override fun getBlockCommentTokenType(): IElementType = RsTokenTypes.BLOCK_COMMENT
 
-    override fun getBlockCommentTokenType(): IElementType {
-        return RsTokenTypes.BLOCK_COMMENT
-    }
+    override fun getDocumentationCommentTokenType(): IElementType = RsTokenTypes.DOC_COMMENT
 
-    override fun getDocumentationCommentTokenType(): IElementType {
-        return RsTokenTypes.DOC_COMMENT
-    }
+    override fun getDocumentationCommentPrefix(): String = "/**"
 
-    override fun getDocumentationCommentPrefix(): String {
-        return "/**"
-    }
+    override fun getDocumentationCommentLinePrefix(): String = "*"
 
-    override fun getDocumentationCommentLinePrefix(): String {
-        return "*"
-    }
+    override fun getDocumentationCommentSuffix(): String = "*/"
 
-    override fun getDocumentationCommentSuffix(): String {
-        return "*/"
-    }
-
-    override fun isDocumentationComment(element: PsiComment?): Boolean {
-        return element is RsDoc
-    }
+    override fun isDocumentationComment(element: PsiComment?): Boolean = element is RsDoc
 }

@@ -16,12 +16,8 @@ import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
 import io.runescript.plugin.ide.projectWizard.RsModuleType
 import org.slf4j.LoggerFactory
 import java.io.File
-import kotlin.Boolean
-import kotlin.String
-import kotlin.collections.List
 
 class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSettings> {
-
     private val log = LoggerFactory.getLogger(NeptuneProjectResolver::class.java)
 
     override fun resolveProjectInfo(
@@ -30,7 +26,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         isPreviewMode: Boolean,
         settings: NeptuneExecutionSettings?,
         resolverPolicy: ProjectResolverPolicy?,
-        listener: ExternalSystemTaskNotificationListener
+        listener: ExternalSystemTaskNotificationListener,
     ): DataNode<ProjectData>? {
         check(settings != null) { "Neptune settings must not be null" }
 
@@ -43,12 +39,13 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val neptuneData = extractNeptuneProjectMetadata(settings, projectRoot) ?: return null
         val projectName = neptuneData.name
 
-        val projectData = ProjectData(
-            Neptune.SYSTEM_ID,
-            projectName,
-            projectRoot.absolutePath,
-            projectRoot.absolutePath,
-        )
+        val projectData =
+            ProjectData(
+                Neptune.SYSTEM_ID,
+                projectName,
+                projectRoot.absolutePath,
+                projectRoot.absolutePath,
+            )
         val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
         val moduleNode = projectNode.createModuleNode(projectName, projectRoot.absolutePath)
 
@@ -68,15 +65,19 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         return projectNode
     }
 
-    private fun DataNode<*>.createModuleNode(moduleName: String, moduleRootPath: String): DataNode<ModuleData> {
-        val module = ModuleData(
-            moduleName,
-            Neptune.SYSTEM_ID,
-            RsModuleType.ID,
-            moduleName,
-            moduleRootPath,
-            moduleRootPath
-        )
+    private fun DataNode<*>.createModuleNode(
+        moduleName: String,
+        moduleRootPath: String,
+    ): DataNode<ModuleData> {
+        val module =
+            ModuleData(
+                moduleName,
+                Neptune.SYSTEM_ID,
+                RsModuleType.ID,
+                moduleName,
+                moduleRootPath,
+                moduleRootPath,
+            )
         val moduleNode = createChild(ProjectKeys.MODULE, module)
         return moduleNode
     }
@@ -85,7 +86,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         rootPath: String,
         srcPaths: List<String>,
         symbolPaths: List<String>,
-        excludedPaths: List<String>
+        excludedPaths: List<String>,
     ) {
         val content = ContentRootData(Neptune.SYSTEM_ID, rootPath)
         for (srcPath in srcPaths) {
@@ -103,22 +104,24 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         createChild(ProjectKeys.CONTENT_ROOT, content)
     }
 
-    override fun cancelTask(taskId: ExternalSystemTaskId, listener: ExternalSystemTaskNotificationListener): Boolean {
-        return false
-    }
+    override fun cancelTask(
+        taskId: ExternalSystemTaskId,
+        listener: ExternalSystemTaskNotificationListener,
+    ): Boolean = false
 
     private fun extractNeptuneProjectMetadata(
         settings: NeptuneExecutionSettings,
-        projectRoot: File
+        projectRoot: File,
     ): JsonNeptuneProjectData? {
         val neptuneFile = projectRoot.resolve("neptune.toml")
         check(neptuneFile.exists())
 
-        val commandLine = createNeptuneJvmCommand(
-            settings.jvmExecutablePath,
-            File(settings.neptuneSdkHome),
-            projectRoot.absolutePath
-        )
+        val commandLine =
+            createNeptuneJvmCommand(
+                settings.jvmExecutablePath,
+                File(settings.neptuneSdkHome),
+                projectRoot.absolutePath,
+            )
         commandLine.addParameter("--config-path")
         commandLine.addParameter(neptuneFile.absolutePath)
 
@@ -154,9 +157,8 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         @SerializedName("features")
         val features: JsonCompilerFeatureSet = JsonCompilerFeatureSet(),
     ) {
-
-        fun toPersistentData(): NeptuneProjectImportData {
-            return NeptuneProjectImportData(
+        fun toPersistentData(): NeptuneProjectImportData =
+            NeptuneProjectImportData(
                 name,
                 sourcePaths = sourcePaths,
                 symbolPaths = symbolPaths,
@@ -166,11 +168,16 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
                 arraysV2 = features.arraysV2,
                 simplifiedTypeCodes = features.simplifiedTypeCodes,
             )
-        }
     }
 
-    data class JsonClientScriptWriterConfig(val binary: JsonBinaryFileWriterConfig? = null)
-    data class JsonBinaryFileWriterConfig(val outputPath: String)
+    data class JsonClientScriptWriterConfig(
+        val binary: JsonBinaryFileWriterConfig? = null,
+    )
+
+    data class JsonBinaryFileWriterConfig(
+        val outputPath: String,
+    )
+
     data class JsonCompilerFeatureSet(
         val dbFindReturnsCount: Boolean = false,
         val ccCreateAssertNewArg: Boolean = false,

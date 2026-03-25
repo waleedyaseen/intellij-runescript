@@ -8,29 +8,35 @@ import io.runescript.plugin.lang.psi.typechecker.type.Type
 /**
  * A [Type] that represents an array of another type.
  */
-data class ArrayType(val inner: Type) : Type {
+data class ArrayType(
+    val inner: Type,
+) : Type {
     init {
         assert(inner !is ArrayType)
     }
 
-    override val representation: String = when (inner) {
-        MetaType.Any -> "array"
-        else -> "${inner.representation}array"
-    }
+    override val representation: String =
+        when (inner) {
+            MetaType.Any -> "array"
+            else -> "${inner.representation}array"
+        }
 
-    override val code: Char = when (inner.baseType) {
-        BaseVarType.INTEGER -> INTARRAY_CHAR
-        BaseVarType.STRING -> STRINGARRAY_CHAR
-        else -> error("Invalid type: $inner")
-    }
+    override val code: Char =
+        when (inner.baseType) {
+            BaseVarType.INTEGER -> INTARRAY_CHAR
+            BaseVarType.STRING -> STRINGARRAY_CHAR
+            else -> error("Invalid type: $inner")
+        }
 
     override val baseType: BaseVarType = BaseVarType.ARRAY
 
     override val defaultValue: Any? = null
 
-    override fun toString(): String = MoreObjects.toStringHelper(this)
-        .add("inner", inner)
-        .toString()
+    override fun toString(): String =
+        MoreObjects
+            .toStringHelper(this)
+            .add("inner", inner)
+            .toString()
 
     private companion object {
         // these two values actually refer to intarray and componentarray characters,

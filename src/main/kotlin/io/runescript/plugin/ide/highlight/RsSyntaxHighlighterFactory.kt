@@ -10,14 +10,17 @@ import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 
 class RsSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
-
-    override fun getSyntaxHighlighter(project: Project?, virtualFile: VirtualFile?): SyntaxHighlighter {
-        val resolvedData = if (project != null && virtualFile != null) {
-            val module = ModuleUtilCore.findModuleForFile(virtualFile, project)
-            module?.neptuneModuleData?.resolvedData
-        } else {
-            null
-        }
+    override fun getSyntaxHighlighter(
+        project: Project?,
+        virtualFile: VirtualFile?,
+    ): SyntaxHighlighter {
+        val resolvedData =
+            if (project != null && virtualFile != null) {
+                val module = ModuleUtilCore.findModuleForFile(virtualFile, project)
+                module?.neptuneModuleData?.resolvedData
+            } else {
+                null
+            }
         val types = (resolvedData ?: DEFAULT_RESOLVED_DATA).types
         return RsSyntaxHighlighter(RsLexerInfo(types))
     }

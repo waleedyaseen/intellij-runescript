@@ -8,18 +8,14 @@ class NeptuneImportControl :
         Neptune.SYSTEM_ID,
         NeptuneSettings(ProjectManager.getInstance().defaultProject),
         NeptuneProjectSettings(),
-        true
+        true,
     ) {
-
     override fun onLinkedProjectPathChange(p0: String) {
     }
 
-    override fun createSystemSettingsControl(settings: NeptuneSettings): NeptuneSystemSettingsControl {
-        return NeptuneSystemSettingsControl(settings)
-    }
+    override fun createSystemSettingsControl(settings: NeptuneSettings): NeptuneSystemSettingsControl =
+        NeptuneSystemSettingsControl(settings)
 
-    override fun createProjectSettingsControl(settings: NeptuneProjectSettings): NeptuneProjectSettingsControl {
-        return NeptuneProjectSettingsControl(settings)
-    }
-
+    override fun createProjectSettingsControl(settings: NeptuneProjectSettings): NeptuneProjectSettingsControl =
+        NeptuneProjectSettingsControl(settings)
 }

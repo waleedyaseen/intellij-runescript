@@ -1,26 +1,19 @@
 package io.runescript.plugin.lang.psi
 
 import com.intellij.openapi.module.ModuleUtil
-import com.intellij.openapi.module.ModuleUtilCore
-import com.intellij.openapi.project.guessModuleDir
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.psi.util.parentOfType
 import io.runescript.plugin.ide.neptune.findNeptuneProjectRoot
-import io.runescript.plugin.ide.neptune.neptuneModuleData
-import io.runescript.plugin.lang.psi.typechecker.type.MetaType
-import io.runescript.plugin.lang.psi.typechecker.type.TupleType
-import io.runescript.plugin.lang.psi.typechecker.type.Type
-import io.runescript.plugin.lang.psi.typechecker.type.TypeManager
-import io.runescript.plugin.symbollang.psi.RsSymSymbol
 
 val RsStatement.controlFlowHolder: RsControlFlowHolder?
     get() = parentOfType<RsControlFlowHolder>()
 
 fun RsConditionOp.isLogicalAnd() = ampersand != null
+
 fun RsConditionOp.isLogicalOr() = bar != null
+
 fun RsConditionOp.isEquality() = excel != null || equal != null
+
 fun RsConditionOp.isRelational() = lt != null || lte != null || gt != null || gte != null
 
 fun RsStatement?.isNullOrEmpty(): Boolean {
