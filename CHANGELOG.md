@@ -4,6 +4,7 @@
 
 - Fix trailing EOL comments parsing
 - Update to IntelliJ 2026.1
+- Fix build output not displaying errors correctly
 
 ## [1.9.0] - 2026-01-28
 

@@ -29,7 +29,7 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
                 val filePosition = FilePosition(filePath, fileMessageContext.line, fileMessageContext.column)
                 val fileMessage =
                     FileMessageEvent.builder(fileMessageContext.message, MessageEvent.Kind.ERROR, filePosition)
-                        .withId(instance.buildId)
+                        .withParentId(instance.buildId)
                         .withGroup("Compiler Errors")
                         .withDescription(detailsBuilder.toString())
                         .build()
@@ -52,7 +52,7 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
         if (collectingStackTrace) {
             if (line.startsWith("Process finished")) {
                 val fileMessage = MessageEvent.builder("Internal Error", MessageEvent.Kind.ERROR)
-                    .withId(instance.buildId)
+                    .withParentId(instance.buildId)
                     .withGroup("Compiler Errors")
                     .withDescription(detailsBuilder.toString())
                     .build()
@@ -67,7 +67,7 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
             detailsBuilder.appendLine(exceptionLine)
             collectingStackTrace = true
         }
-        return false
+        return true
     }
 
     companion object {
