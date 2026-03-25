@@ -9,6 +9,7 @@ intelliJPlatform = "2.13.1"
 kotlin = "2.3.20"
 kover = "0.9.7"
 qodana = "2025.3.2"
+kotlinter = "5.4.2"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -20,3 +21,4 @@ intelliJPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "inte
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
