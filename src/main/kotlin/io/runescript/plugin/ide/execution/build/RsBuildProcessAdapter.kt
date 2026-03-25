@@ -4,8 +4,9 @@ import com.intellij.build.BuildContentDescriptor
 import com.intellij.build.BuildProgressListener
 import com.intellij.build.DefaultBuildDescriptor
 import com.intellij.build.events.BuildEvent
-import com.intellij.build.events.BuildEvents
 import com.intellij.build.events.EventResult
+import com.intellij.build.events.FinishBuildEvent
+import com.intellij.build.events.StartBuildEvent
 import com.intellij.build.events.impl.FailureResultImpl
 import com.intellij.build.events.impl.SuccessResultImpl
 import com.intellij.build.output.BuildOutputInstantReaderImpl
@@ -14,10 +15,8 @@ import com.intellij.execution.process.AnsiEscapeDecoder
 import com.intellij.execution.process.ProcessEvent
 import com.intellij.execution.process.ProcessListener
 import com.intellij.execution.process.ProcessOutputTypes
-import com.intellij.openapi.components.service
 import com.intellij.openapi.util.Key
 import com.intellij.util.ThreeState
-import com.intellij.util.application
 import io.runescript.plugin.ide.RsBundle
 import java.util.concurrent.CompletableFuture
 import javax.swing.JComponent
@@ -53,10 +52,7 @@ class RsBuildProcessAdapter(
             .withContentDescriptor { buildContentDescriptor }
             .withRestartAction(StopProcessAction("Stop", "Stop", instance.processHandler))
 
-        val buildStarted = application.service<BuildEvents>()
-            .startBuild()
-            .withBuildDescriptor(buildDescriptor)
-            .withMessage(RsBundle.message("build.status.running"))
+        val buildStarted = StartBuildEvent.builder(RsBundle.message("build.status.running"), buildDescriptor)
             .build()
         buildProgressListener.onEvent(instance.buildId, buildStarted)
     }
@@ -94,11 +90,7 @@ class RsBuildProcessAdapter(
     }
 
     private fun createFinishEvent(message: String, result: EventResult): BuildEvent {
-        return application.service<BuildEvents>()
-            .finishBuild()
-            .withStartBuildId(instance.buildId)
-            .withMessage(message)
-            .withResult(result)
+        return FinishBuildEvent.builder(instance.buildId, message, result)
             .withTime(System.currentTimeMillis())
             .build()
     }

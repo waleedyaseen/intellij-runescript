@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Fix trailing EOL comments parsing
+- Update to IntelliJ 2026.1
 
 ## [1.9.0] - 2026-01-28
 

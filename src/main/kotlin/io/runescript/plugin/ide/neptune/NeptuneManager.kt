@@ -19,6 +19,7 @@ import com.intellij.openapi.projectRoots.ProjectJdkTable
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Pair
 import com.intellij.util.Function
+import kotlinx.coroutines.Deferred
 import java.io.File
 
 class NeptuneManager :
@@ -29,6 +30,7 @@ class NeptuneManager :
 
     override fun enhanceRemoteProcessing(parameters: SimpleJavaParameters) {
         parameters.classPath.add(PathManager.getJarPathForClass(Gson::class.java))
+        parameters.classPath.add(PathManager.getJarPathForClass(Deferred::class.java))
     }
 
     override fun getSystemId() = Neptune.SYSTEM_ID

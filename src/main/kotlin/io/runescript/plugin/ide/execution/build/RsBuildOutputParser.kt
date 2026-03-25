@@ -2,12 +2,10 @@ package io.runescript.plugin.ide.execution.build
 
 import com.intellij.build.FilePosition
 import com.intellij.build.events.BuildEvent
-import com.intellij.build.events.BuildEvents
+import com.intellij.build.events.FileMessageEvent
 import com.intellij.build.events.MessageEvent
 import com.intellij.build.output.BuildOutputInstantReader
 import com.intellij.build.output.BuildOutputParser
-import com.intellij.openapi.components.service
-import com.intellij.util.application
 import java.io.File
 import java.util.function.Consumer
 
@@ -29,15 +27,12 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
             if (detailsCount == 0) {
                 val filePath = File(fileMessageContext.path)
                 val filePosition = FilePosition(filePath, fileMessageContext.line, fileMessageContext.column)
-                val fileMessage = application.service<BuildEvents>()
-                    .fileMessage()
-                    .withId(instance.buildId)
-                    .withKind(MessageEvent.Kind.ERROR)
-                    .withGroup("Compiler Errors")
-                    .withMessage(fileMessageContext.message)
-                    .withDescription(detailsBuilder.toString())
-                    .withFilePosition(filePosition)
-                    .build()
+                val fileMessage =
+                    FileMessageEvent.builder(fileMessageContext.message, MessageEvent.Kind.ERROR, filePosition)
+                        .withId(instance.buildId)
+                        .withGroup("Compiler Errors")
+                        .withDescription(detailsBuilder.toString())
+                        .build()
                 instance.errorCount.incrementAndGet()
                 messageConsumer.accept(fileMessage)
                 detailsBuilder.setLength(0)
@@ -56,12 +51,9 @@ class RsBuildOutputParser(private val instance: RsBuildInstance) : BuildOutputPa
         }
         if (collectingStackTrace) {
             if (line.startsWith("Process finished")) {
-                val fileMessage = application.service<BuildEvents>()
-                    .message()
+                val fileMessage = MessageEvent.builder("Internal Error", MessageEvent.Kind.ERROR)
                     .withId(instance.buildId)
-                    .withKind(MessageEvent.Kind.ERROR)
                     .withGroup("Compiler Errors")
-                    .withMessage("Internal Error")
                     .withDescription(detailsBuilder.toString())
                     .build()
                 messageConsumer.accept(fileMessage)
