@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-03-26
+
 - Fix trailing EOL comments parsing
 - Update to IntelliJ 2026.1
 - Fix build output not displaying errors correctly
@@ -180,7 +182,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.7.1...v1.8.0
