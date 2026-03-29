@@ -1,6 +1,9 @@
 # intellij-runescript Changelog
 
 ## [Unreleased]
+
+## [1.9.2] - 2026-03-29
+
 - Remove internal api usage
 
 ## [1.9.1] - 2026-03-26
@@ -183,7 +186,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.1...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.2...HEAD
+[1.9.2]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.0...v1.8.1
