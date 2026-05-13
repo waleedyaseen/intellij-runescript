@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij.completion.ml.ranking">
+        <policy language="RuneScript" implementationClass="io.runescript.plugin.ide.completion.RsCompletionMLPolicy"/>
+    </extensions>
+</idea-plugin>

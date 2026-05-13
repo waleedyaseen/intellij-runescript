@@ -5,6 +5,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
     <depends>org.toml.lang</depends>
+    <depends optional="true" config-file="completion-ml.xml">com.intellij.completion.ml.ranking</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
