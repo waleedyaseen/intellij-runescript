@@ -137,7 +137,11 @@ data class CallInfo(
             CallInfo(
                 parameters.map {
                     val typeName = it.typeName.text ?: "unknown"
-                    val parameterName = it.localVariableExpression?.name ?: return@map CallParameterInfo(typeName, "<unknown-parameter>")
+                    val parameterName =
+                        it.localVariableExpression?.name ?: return@map CallParameterInfo(
+                            typeName,
+                            "<unknown-parameter>",
+                        )
                     CallParameterInfo(typeName, parameterName)
                 },
             )

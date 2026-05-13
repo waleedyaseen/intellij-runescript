@@ -121,7 +121,7 @@ class RsDocumentationProvider : AbstractDocumentationProvider() {
             }
             appendKeyword(it.typeName.text)
             appendHighlighted(
-                " ${it.localVariableExpression?.text ?: "<unknown-parameter>" }",
+                " ${it.localVariableExpression?.text ?: "<unknown-parameter>"}",
                 RsSyntaxHighlighterColors.LOCAL_VARIABLE,
             )
         }

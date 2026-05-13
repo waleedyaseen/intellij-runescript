@@ -52,7 +52,10 @@ object RsSymSymbolStubType :
         if (typeName in VAR_SYMBOL_TYPES && stub.childrenStubs.size >= 3) {
             val valueTypeField = stub.childrenStubs[2] as RsSymFieldStub
             if (valueTypeField.value.isNotBlank()) {
-                sink.occurrence(RsSymbolTypeIndex.KEY, RsSymbolTypeIndex.makeScopedVarKey(valueTypeField.value, nameField.value))
+                sink.occurrence(
+                    RsSymbolTypeIndex.KEY,
+                    RsSymbolTypeIndex.makeScopedVarKey(valueTypeField.value, nameField.value),
+                )
             }
         }
     }

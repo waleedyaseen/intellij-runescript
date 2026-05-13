@@ -28,6 +28,7 @@ enum class ScriptVarType(
     NPC_STAT('T'),
     WRITEINV('V'),
     MAPAREA('`', representation = "wma"),
+
     // COORDGRID
     GRAPHIC('d'),
     CHATPHRASE('e'),
@@ -42,12 +43,14 @@ enum class ScriptVarType(
     OBJ('o'),
     PLAYER_UID('p'),
     REGION_UID('r'),
+
     // STRING
     SPOTANIM('t'),
     NPC_UID('u'),
     INV('v'),
     TEXTURE('x'),
     CATEGORY('y'),
+
     // CHAR
     LASER('|'),
     BAS('€'),
@@ -113,6 +116,7 @@ enum class ScriptVarType(
     TEMP_HISCORE_CONTRIBUTE_RESULT('à', representation = "temphiscorecontributeresult"),
     AUDIOGROUP('À'),
     AUDIOMIXBUSS('Ò', representation = "audiobuss"),
+
     // LONG
     CRM_CHANNEL('Ì'),
     HTTP_IMAGE('É'),
@@ -123,6 +127,7 @@ enum class ScriptVarType(
     ENTITYOVERLAY('-'),
     DBTABLE('Ø'),
     STRINGVECTOR('¸'),
+
     // COMPONENTARRAY('X'),
     // INTARRAY('W'),
     LABEL('b'),

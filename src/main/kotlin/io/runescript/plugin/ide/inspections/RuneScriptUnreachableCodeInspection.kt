@@ -20,7 +20,11 @@ class RuneScriptUnreachableCodeInspection : LocalInspectionTool() {
                     if (it.isReachable(element)) {
                         return@visitStatement
                     }
-                    holder.registerProblem(element, RsBundle.message("inspection.warning.unreachable.code"), ProblemHighlightType.WARNING)
+                    holder.registerProblem(
+                        element,
+                        RsBundle.message("inspection.warning.unreachable.code"),
+                        ProblemHighlightType.WARNING,
+                    )
                     super.visitStatement(element)
                 }
             }

@@ -98,7 +98,9 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
             is RsGosubExpression, is RsCommandExpression -> {
                 val reference = element.reference?.resolve() ?: return null
                 reference as RsScript
-                reference.parameterList?.parameterList?.map { it.localVariableExpression?.name ?: "<unknown-parameter>" }
+                reference.parameterList?.parameterList?.map {
+                    it.localVariableExpression?.name ?: "<unknown-parameter>"
+                }
             }
 
             else -> {

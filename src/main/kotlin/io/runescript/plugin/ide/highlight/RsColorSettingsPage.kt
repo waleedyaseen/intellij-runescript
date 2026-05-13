@@ -61,13 +61,22 @@ class RsColorSettingsPage : ColorSettingsPage {
                     RsBundle.message("runescript.color.settings.description.identifier"),
                     RsSyntaxHighlighterColors.IDENTIFIER,
                 ),
-                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.number"), RsSyntaxHighlighterColors.NUMBER),
-                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.keyword"), RsSyntaxHighlighterColors.KEYWORD),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.number"),
+                    RsSyntaxHighlighterColors.NUMBER,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.keyword"),
+                    RsSyntaxHighlighterColors.KEYWORD,
+                ),
                 AttributesDescriptor(
                     RsBundle.message("runescript.color.settings.description.type_literal"),
                     RsSyntaxHighlighterColors.TYPE_LITERAL,
                 ),
-                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.string"), RsSyntaxHighlighterColors.STRING),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.string"),
+                    RsSyntaxHighlighterColors.STRING,
+                ),
                 AttributesDescriptor(
                     RsBundle.message("runescript.color.settings.description.string_tag"),
                     RsSyntaxHighlighterColors.STRING_TAG,
@@ -96,13 +105,22 @@ class RsColorSettingsPage : ColorSettingsPage {
                     RsBundle.message("runescript.color.settings.description.operation_sign"),
                     RsSyntaxHighlighterColors.OPERATION_SIGN,
                 ),
-                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.braces"), RsSyntaxHighlighterColors.BRACES),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.braces"),
+                    RsSyntaxHighlighterColors.BRACES,
+                ),
                 AttributesDescriptor(
                     RsBundle.message("runescript.color.settings.description.semicolon"),
                     RsSyntaxHighlighterColors.SEMICOLON,
                 ),
-                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.colon"), RsSyntaxHighlighterColors.COLON),
-                AttributesDescriptor(RsBundle.message("runescript.color.settings.description.comma"), RsSyntaxHighlighterColors.COMMA),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.colon"),
+                    RsSyntaxHighlighterColors.COLON,
+                ),
+                AttributesDescriptor(
+                    RsBundle.message("runescript.color.settings.description.comma"),
+                    RsSyntaxHighlighterColors.COMMA,
+                ),
                 AttributesDescriptor(
                     RsBundle.message("runescript.color.settings.description.parenthesis"),
                     RsSyntaxHighlighterColors.PARENTHESIS,

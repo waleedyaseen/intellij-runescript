@@ -36,7 +36,7 @@ public interface RsDocTokens {
             PsiElement parentElement = chameleon.getTreeParent().getPsi();
             Project project = parentElement.getProject();
             PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new RsDocLexer(), getLanguage(),
-                    chameleon.getText());
+                chameleon.getText());
             PsiParser parser = new RsDocParser();
 
             return parser.parse(this, builder).getFirstChildNode();

@@ -44,7 +44,11 @@ class RsSyntaxHighlighter(
             attributes[LONG] = RsSyntaxHighlighterColors.NUMBER
             fillMap(attributes, KEYWORDS, RsSyntaxHighlighterColors.KEYWORD)
             attributes[TYPE_LITERAL] = RsSyntaxHighlighterColors.TYPE_LITERAL
-            fillMap(attributes, TokenSet.create(STRING_START, STRING_PART, STRING_END), RsSyntaxHighlighterColors.STRING)
+            fillMap(
+                attributes,
+                TokenSet.create(STRING_START, STRING_PART, STRING_END),
+                RsSyntaxHighlighterColors.STRING,
+            )
             attributes[STRING_TAG] = RsSyntaxHighlighterColors.STRING_TAG
             attributes[BLOCK_COMMENT] = RsSyntaxHighlighterColors.BLOCK_COMMENT
             attributes[LINE_COMMENT] = RsSyntaxHighlighterColors.LINE_COMMENT

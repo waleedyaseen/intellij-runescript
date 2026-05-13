@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 
 object RsBundle {
-    @NonNls private const val BUNDLE_FQN: String = "messages.RsBundle"
+    @NonNls
+    private const val BUNDLE_FQN: String = "messages.RsBundle"
     private val BUNDLE = DynamicBundle(RsBundle::class.java, BUNDLE_FQN)
 
     @Nls

@@ -46,9 +46,20 @@ class RsLineIndentProvider : JavaLikeLangLineIndentProvider() {
             return null
         }
         return when {
-            before.isAt(Semicolon) -> factory.createIndentCalculator(Indent.getNoneIndent(), IndentCalculator.LINE_BEFORE)
-            before.isAt(BlockOpeningBrace) -> factory.createIndentCalculator(Indent.getNormalIndent()) { before.startOffset }
-            else -> super.getIndent(project, editor, language, offset)
+            before.isAt(Semicolon) -> {
+                factory.createIndentCalculator(
+                    Indent.getNoneIndent(),
+                    IndentCalculator.LINE_BEFORE,
+                )
+            }
+
+            before.isAt(BlockOpeningBrace) -> {
+                factory.createIndentCalculator(Indent.getNormalIndent()) { before.startOffset }
+            }
+
+            else -> {
+                super.getIndent(project, editor, language, offset)
+            }
         }
     }
 

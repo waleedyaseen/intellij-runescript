@@ -126,8 +126,23 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                 }
                 addStatementKeywords(position, request, prefixedResult)
                 addVariables(position, parameters.offset, prefixedResult, null, request.prefix, VARIABLE_PRIORITY)
-                addScopedVariables(position, prefixedResult, null, request.prefix, SCOPED_VARIABLE_PRIORITY, includeIncompatible = true)
-                addScripts(position, prefixedResult, RsCommandScriptIndex.KEY, null, null, request.prefix, COMMAND_PRIORITY)
+                addScopedVariables(
+                    position,
+                    prefixedResult,
+                    null,
+                    request.prefix,
+                    SCOPED_VARIABLE_PRIORITY,
+                    includeIncompatible = true,
+                )
+                addScripts(
+                    position,
+                    prefixedResult,
+                    RsCommandScriptIndex.KEY,
+                    null,
+                    null,
+                    request.prefix,
+                    COMMAND_PRIORITY,
+                )
                 addScripts(position, prefixedResult, RsProcScriptIndex.KEY, "~", null, request.prefix, PROC_PRIORITY)
             }
 
@@ -147,7 +162,13 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             }
 
             RsCompletionIntent.Constant -> {
-                addConstants(position, prefixedResult, request.expectedType, request.prefix, CONSTANT_REFERENCE_PRIORITY)
+                addConstants(
+                    position,
+                    prefixedResult,
+                    request.expectedType,
+                    request.prefix,
+                    CONSTANT_REFERENCE_PRIORITY,
+                )
             }
 
             RsCompletionIntent.ScopedVariable -> {
@@ -162,7 +183,14 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             }
 
             RsCompletionIntent.LocalVariable -> {
-                addVariables(position, parameters.offset, prefixedResult, request.expectedType, request.prefix, LOCAL_VARIABLE_PRIORITY)
+                addVariables(
+                    position,
+                    parameters.offset,
+                    prefixedResult,
+                    request.expectedType,
+                    request.prefix,
+                    LOCAL_VARIABLE_PRIORITY,
+                )
             }
 
             RsCompletionIntent.CommandScript -> {
@@ -222,7 +250,12 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             priorityForPrefix("while", request.prefix, STATEMENT_KEYWORD_PRIORITY),
             RsKeywordSnippetInsertHandler("while (${RsKeywordSnippetInsertHandler.CARET_MARKER}) {\n}"),
         )
-        addKeyword(result, "switch", "statement", priorityForPrefix("switch", request.prefix, STATEMENT_KEYWORD_PRIORITY))
+        addKeyword(
+            result,
+            "switch",
+            "statement",
+            priorityForPrefix("switch", request.prefix, STATEMENT_KEYWORD_PRIORITY),
+        )
         addKeyword(
             result,
             "return",
@@ -272,7 +305,8 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             addConstants(position, result, expectedType, prefix, CONSTANT_PRIORITY)
             return
         }
-        val booleanPriority = priorityForType(position, expectedType, PrimitiveType.BOOLEAN, EXPRESSION_KEYWORD_PRIORITY)
+        val booleanPriority =
+            priorityForType(position, expectedType, PrimitiveType.BOOLEAN, EXPRESSION_KEYWORD_PRIORITY)
         val genericExpressionGroup = genericExpressionGroup(expectedType)
         addKeyword(result, "true", "boolean", booleanPriority, grouping = genericExpressionGroup)
         addKeyword(result, "false", "boolean", booleanPriority, grouping = genericExpressionGroup)
@@ -541,7 +575,11 @@ class RsCompletionProvider : RsCompletionProviderBase() {
 
         fun addScopedVariable(symbol: RsSymSymbol): Boolean {
             val gameVarType =
-                rawSymToType(symbol, moduleData.resolvedData.types, moduleData.resolvedData.symbolLoaders) as? GameVarType
+                rawSymToType(
+                    symbol,
+                    moduleData.resolvedData.types,
+                    moduleData.resolvedData.symbolLoaders,
+                ) as? GameVarType
                     ?: return false
             val name = symbol.name ?: return false
             val lookupString = "%$name"
@@ -593,7 +631,11 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                 val symbols = StubIndex.getElements(RsSymbolIndex.KEY, key, project, scope, RsSymSymbol::class.java)
                 for (symbol in symbols) {
                     val gameVarType =
-                        rawSymToType(symbol, moduleData.resolvedData.types, moduleData.resolvedData.symbolLoaders) as? GameVarType
+                        rawSymToType(
+                            symbol,
+                            moduleData.resolvedData.types,
+                            moduleData.resolvedData.symbolLoaders,
+                        ) as? GameVarType
                             ?: continue
                     if (compatibleWithExpectedType != null) {
                         val isCompatible =
@@ -670,7 +712,10 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                         .withTypeText(type.representation)
                         .withIcon(AllIcons.Nodes.Property)
                         .withInsertHandler(RsSymbolInsertHandler)
-                result.addPrioritizedElement(element, priorityForCandidate(position, expectedType, type, name, prefix, SYMBOL_PRIORITY))
+                result.addPrioritizedElement(
+                    element,
+                    priorityForCandidate(position, expectedType, type, name, prefix, SYMBOL_PRIORITY),
+                )
             }
         }
     }
@@ -887,9 +932,16 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         }
         return when {
             normalizedLookup.equals(normalizedPrefix, ignoreCase = true) -> basePriority + EXACT_PREFIX_PRIORITY_BOOST
+
             normalizedLookup.startsWith(normalizedPrefix, ignoreCase = true) -> basePriority + PREFIX_PRIORITY_BOOST
-            normalizedLookup.contains(normalizedPrefix, ignoreCase = true) -> basePriority + SUBSTRING_PREFIX_PRIORITY_BOOST
+
+            normalizedLookup.contains(
+                normalizedPrefix,
+                ignoreCase = true,
+            ) -> basePriority + SUBSTRING_PREFIX_PRIORITY_BOOST
+
             fuzzyMatches(normalizedLookup, normalizedPrefix) -> basePriority + FUZZY_PREFIX_PRIORITY_BOOST
+
             else -> basePriority
         }
     }
@@ -1451,7 +1503,11 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             if (declaration != null) {
                 return safeTypeCheckedType(declaration)
             }
-            val prefix = position.containingFile.text.substring(0, position.textOffset.coerceIn(0, position.containingFile.textLength))
+            val prefix =
+                position.containingFile.text.substring(
+                    0,
+                    position.textOffset.coerceIn(0, position.containingFile.textLength),
+                )
             val match =
                 LOCAL_DECLARATION_REGEX
                     .findAll(prefix)

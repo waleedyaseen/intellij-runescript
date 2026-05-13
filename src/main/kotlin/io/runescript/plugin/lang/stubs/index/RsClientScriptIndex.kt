@@ -11,6 +11,7 @@ class RsClientScriptIndex : StringStubIndexExtension<RsScript>() {
     override fun getKey(): StubIndexKey<String, RsScript> = KEY
 
     companion object {
-        val KEY = StubIndexKey.createIndexKey<String, RsScript>("io.runescript.plugin.lang.stubs.index.RsClientScriptIndex")
+        val KEY =
+            StubIndexKey.createIndexKey<String, RsScript>("io.runescript.plugin.lang.stubs.index.RsClientScriptIndex")
     }
 }

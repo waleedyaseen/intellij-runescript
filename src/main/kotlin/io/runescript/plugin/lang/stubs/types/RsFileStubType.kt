@@ -24,7 +24,8 @@ object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
         val project = psi.project
         val languageForParser = getLanguageForParser(psi)
         val lexer = RsLexerAdapter(RsLexerInfo(psi.typeManager))
-        val builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, lexer, languageForParser, chameleon.chars)
+        val builder =
+            PsiBuilderFactory.getInstance().createBuilder(project, chameleon, lexer, languageForParser, chameleon.chars)
         val host = InjectedLanguageManager.getInstance(project).getInjectionHost(psi)
         val node =
             if (host != null) {

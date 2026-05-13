@@ -13,7 +13,11 @@ import java.io.Serializable
 @Service(Service.Level.PROJECT)
 class NeptuneLocalSettings(
     project: Project,
-) : AbstractExternalSystemLocalSettings<NeptuneLocalSettingsState>(Neptune.SYSTEM_ID, project, NeptuneLocalSettingsState()),
+) : AbstractExternalSystemLocalSettings<NeptuneLocalSettingsState>(
+        Neptune.SYSTEM_ID,
+        project,
+        NeptuneLocalSettingsState(),
+    ),
     PersistentStateComponent<NeptuneLocalSettingsState> {
     override fun loadState(state: NeptuneLocalSettingsState) {
     }
