@@ -16,22 +16,7 @@ class RsCompletionContributor : CompletionContributor() {
         extend(
             CompletionType.BASIC,
             base().and(notCommentOrString()),
-            RsCompletionProviderKeywords(),
-        )
-        extend(
-            CompletionType.BASIC,
-            base().and(notCommentOrString()),
-            RsCompletionProviderVariables(),
-        )
-        extend(
-            CompletionType.BASIC,
-            base().and(notCommentOrString()),
-            RsCompletionProviderCommand(),
-        )
-        extend(
-            CompletionType.BASIC,
-            base().and(notCommentOrString()),
-            RsCompletionProviderProc(),
+            RsCompletionProvider(),
         )
     }
 
@@ -44,9 +29,32 @@ class RsCompletionContributor : CompletionContributor() {
         val parent = element?.parent
         if (parent is RsArgumentList) {
             return CompletionUtil.DUMMY_IDENTIFIER_TRIMMED
-        } else {
-            return "${CompletionUtil.DUMMY_IDENTIFIER};"
         }
+        if (hasIdentifierPrefix(context) && hasArgumentListAfter(context)) {
+            return CompletionUtil.DUMMY_IDENTIFIER_TRIMMED
+        }
+        if (hasIdentifierPrefix(context)) {
+            return ""
+        }
+        return "${CompletionUtil.DUMMY_IDENTIFIER};"
+    }
+
+    private fun hasIdentifierPrefix(context: CompletionInitializationContext): Boolean {
+        val offset = context.startOffset
+        if (offset <= 0) {
+            return false
+        }
+        val previous = context.editor.document.charsSequence[offset - 1]
+        return previous.isLetterOrDigit() || previous == '_' || previous == '.' || previous == ':'
+    }
+
+    private fun hasArgumentListAfter(context: CompletionInitializationContext): Boolean {
+        val text = context.editor.document.charsSequence
+        var offset = context.startOffset
+        while (offset < text.length && text[offset].isWhitespace()) {
+            offset++
+        }
+        return offset < text.length && text[offset] == '('
     }
 
     private fun base(): PsiElementPattern.Capture<PsiElement> =
