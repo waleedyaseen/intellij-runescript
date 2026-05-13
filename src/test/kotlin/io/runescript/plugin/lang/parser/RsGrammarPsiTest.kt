@@ -7,8 +7,6 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.impl.DebugUtil
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import io.runescript.plugin.ide.neptune.NeptuneProjectImportData
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
@@ -47,23 +45,7 @@ import io.runescript.plugin.lang.psi.RsSwitchCase
 import io.runescript.plugin.lang.psi.RsSwitchStatement
 import io.runescript.plugin.lang.psi.RsWhileStatement
 
-class RsGrammarPsiTest : BasePlatformTestCase() {
-    override fun setUp() {
-        super.setUp()
-        module.neptuneModuleData.updateFromImportData(
-            NeptuneProjectImportData(
-                name = "test",
-                sourcePaths = emptyList(),
-                symbolPaths = emptyList(),
-                dbFindReturnsCount = true,
-                ccCreateAssertNewArg = true,
-                prefixPostfixExpressions = true,
-                arraysV2 = true,
-                simplifiedTypeCodes = true,
-            ),
-        )
-    }
-
+class RsGrammarPsiTest : RsParserTestCase() {
     fun testScriptHeaderParametersReturnsAndBlockParse() {
         val file =
             parse(

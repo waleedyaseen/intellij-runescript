@@ -12,7 +12,6 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import io.runescript.plugin.lang.stubs.RsReturnListStub;
 import io.runescript.plugin.lang.psi.*;
 import com.intellij.psi.stubs.IStubElementType;
-import org.jetbrains.annotations.ApiStatus.Experimental;
 import com.intellij.psi.tree.IElementType;
 
 public class RsReturnListImpl extends StubBasedPsiElementBase<RsReturnListStub> implements RsReturnList {

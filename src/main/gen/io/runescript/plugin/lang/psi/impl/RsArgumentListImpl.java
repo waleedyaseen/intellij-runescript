@@ -40,9 +40,9 @@ public class RsArgumentListImpl extends ASTWrapperPsiElement implements RsArgume
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getRparen() {
-    return notNullChild(findChildByType(RPAREN));
+    return findChildByType(RPAREN);
   }
 
 }
