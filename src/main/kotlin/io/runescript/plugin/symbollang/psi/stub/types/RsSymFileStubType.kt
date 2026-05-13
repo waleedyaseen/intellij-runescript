@@ -8,7 +8,7 @@ import io.runescript.plugin.symbollang.RuneScriptSymbol
 import io.runescript.plugin.symbollang.psi.stub.RsSymFileStub
 
 object RsSymFileStubType : IStubFileElementType<RsSymFileStub>(RuneScriptSymbol) {
-    override fun getStubVersion() = 2
+    override fun getStubVersion() = 4
 
     override fun serialize(
         stub: RsSymFileStub,

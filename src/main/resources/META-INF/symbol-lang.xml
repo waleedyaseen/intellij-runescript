@@ -9,5 +9,6 @@
                                class="io.runescript.plugin.symbollang.psi.RsSymElementTypes"/>
 
         <stubIndex implementation="io.runescript.plugin.symbollang.psi.index.RsSymbolIndex"/>
+        <stubIndex implementation="io.runescript.plugin.symbollang.psi.index.RsSymbolTypeIndex"/>
     </extensions>
 </idea-plugin>
