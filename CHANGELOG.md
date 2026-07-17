@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Update to IntelliJ 2026.2
+
 ## [1.9.2] - 2026-03-29
 
 - Remove internal api usage
