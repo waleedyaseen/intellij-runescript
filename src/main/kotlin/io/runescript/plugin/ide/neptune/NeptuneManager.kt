@@ -20,7 +20,7 @@ import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Pair
 import com.intellij.util.Function
 import kotlinx.coroutines.Deferred
-import java.io.File
+import java.nio.file.Path
 
 class NeptuneManager :
     ExternalSystemManager<NeptuneProjectSettings, NeptuneSettingsListener, NeptuneSettings, NeptuneLocalSettings, NeptuneExecutionSettings>,
@@ -73,10 +73,10 @@ class NeptuneManager :
         project: Project,
     ): String? = autoImport.getAffectedExternalProjectPath(changedFileOrDirPath, project)
 
-    override fun getAffectedExternalProjectFiles(
+    override fun getAffectedExternalProjectFilePaths(
         projectPath: String,
         project: Project,
-    ): MutableList<File> = autoImport.getAffectedExternalProjectFiles(projectPath, project)
+    ): List<Path> = autoImport.getAffectedExternalProjectFilePaths(projectPath, project)
 
     override fun isApplicable(resolverPolicy: ProjectResolverPolicy?): Boolean =
         resolverPolicy == null || !resolverPolicy.isPartialDataResolveAllowed

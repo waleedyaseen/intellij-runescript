@@ -1,11 +1,11 @@
 package io.runescript.plugin.ide.searchEverywhere
 
-import com.intellij.ide.IdeBundle
 import com.intellij.ide.util.gotoByName.FilteringGotoByModel
 import com.intellij.navigation.ChooseByNameContributor
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.project.Project
 import com.intellij.ui.IdeUICustomization
+import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.qualifiedName
 
@@ -19,7 +19,7 @@ class RsGotoScriptModel(
 
     override fun getNotInMessage(): String = IdeUICustomization.getInstance().projectMessage("label.no.matches.found.in.project")
 
-    override fun getNotFoundMessage(): String = IdeBundle.message("label.no.matches.found")
+    override fun getNotFoundMessage(): String = RsBundle.message("search.everywhere.no.matches.found")
 
     override fun getCheckBoxName(): String? = null
 

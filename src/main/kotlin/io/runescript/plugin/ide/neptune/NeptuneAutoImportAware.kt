@@ -2,31 +2,23 @@ package io.runescript.plugin.ide.neptune
 
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
 import com.intellij.openapi.project.Project
-import java.io.File
-import java.util.Collections
+import java.nio.file.Path
 
 class NeptuneAutoImportAware : ExternalSystemAutoImportAware {
     override fun getAffectedExternalProjectPath(
         changedFileOrDirPath: String,
         project: Project,
     ): String? {
-        if (changedFileOrDirPath != "neptune.toml") {
+        val changedPath = Path.of(changedFileOrDirPath)
+        if (changedPath.fileName?.toString() != "neptune.toml") {
             return null
         }
 
-        val file = File(changedFileOrDirPath)
-        if (file.isDirectory) {
-            return null
-        }
-
-        return file.parent
+        return changedPath.parent?.toString()
     }
 
-    override fun getAffectedExternalProjectFiles(
+    override fun getAffectedExternalProjectFilePaths(
         projectPath: String,
         project: Project,
-    ): MutableList<File> {
-        val neptuneToml = File(projectPath, "neptune.toml")
-        return Collections.singletonList(neptuneToml)
-    }
+    ): List<Path> = listOf(Path.of(projectPath, "neptune.toml"))
 }

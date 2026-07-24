@@ -35,7 +35,11 @@ import java.io.File
 import kotlin.io.path.absolutePathString
 
 class RsBuildTaskRunner : ProjectTaskRunner() {
-    override fun canRun(projectTask: ProjectTask): Boolean {
+    override fun canRun(
+        project: Project,
+        projectTask: ProjectTask,
+        context: ProjectTaskContext?,
+    ): Boolean {
         if (projectTask !is ModuleBuildTask) {
             return false
         }

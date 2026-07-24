@@ -2,11 +2,10 @@ package io.runescript.plugin.ide.execution.build
 
 import com.intellij.build.FilePosition
 import com.intellij.build.events.BuildEvent
-import com.intellij.build.events.FileMessageEvent
 import com.intellij.build.events.MessageEvent
 import com.intellij.build.output.BuildOutputInstantReader
 import com.intellij.build.output.BuildOutputParser
-import java.io.File
+import java.nio.file.Path
 import java.util.function.Consumer
 
 class RsBuildOutputParser(
@@ -26,11 +25,12 @@ class RsBuildOutputParser(
             detailsCount--
             detailsBuilder.appendLine(line)
             if (detailsCount == 0) {
-                val filePath = File(fileMessageContext.path)
+                val filePath = Path.of(fileMessageContext.path)
                 val filePosition = FilePosition(filePath, fileMessageContext.line, fileMessageContext.column)
                 val fileMessage =
-                    FileMessageEvent
-                        .builder(fileMessageContext.message, MessageEvent.Kind.ERROR, filePosition)
+                    MessageEvent
+                        .builder(fileMessageContext.message, MessageEvent.Kind.ERROR)
+                        .withFilePosition(filePosition)
                         .withParentId(instance.buildId)
                         .withGroup("Compiler Errors")
                         .withDescription(detailsBuilder.toString())

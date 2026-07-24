@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 - Update to IntelliJ 2026.2
+- Fix automatic Neptune reimport when `neptune.toml` changes
+- Remove deprecated and internal IntelliJ Platform API usage
 
 ## [1.9.2] - 2026-03-29
 

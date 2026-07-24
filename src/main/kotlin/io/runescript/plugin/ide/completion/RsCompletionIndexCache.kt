@@ -8,10 +8,12 @@ import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
+import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
+import io.runescript.plugin.symbollang.RuneScriptSymbol
 import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 import io.runescript.plugin.symbollang.psi.index.RsSymbolTypeIndex
 
@@ -112,11 +114,13 @@ internal class RsCompletionIndexCache private constructor(
             }
 
         private fun create(project: Project): CachedValueProvider.Result<RsCompletionIndexCache> {
-            val stubIndex = StubIndex.getInstance()
+            val languageModificationTracker =
+                PsiModificationTracker
+                    .getInstance(project)
+                    .forLanguages { language -> language == RuneScript || language == RuneScriptSymbol }
             return CachedValueProvider.Result.create(
                 createValue(project),
-                stubIndex.getStubIndexModificationTracker(project),
-                PsiModificationTracker.getInstance(project),
+                languageModificationTracker,
             )
         }
 
