@@ -25,6 +25,8 @@ class RsSearchEverywhereContributor(
 
     override fun getFullGroupName(): String = "Scripts"
 
+    override fun getSearchProviderId(): String = ID
+
     override fun getSortWeight(): Int = 400
 
     override fun createModel(project: Project): FilteringGotoByModel<RsTriggerRef> {
@@ -58,6 +60,8 @@ class RsSearchEverywhereContributor(
     }
 
     companion object {
+        const val ID: String = "RsSearchEverywhereContributor"
+
         fun createTriggerFilter(project: Project): PersistentSearchEverywhereContributorFilter<RsTriggerRef> {
             val items = RsTriggerRef.forAllTriggers()
             val persistentConfig = RsGotoScriptSymbolConfiguration.getInstance(project)
