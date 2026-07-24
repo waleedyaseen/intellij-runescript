@@ -25,7 +25,7 @@ object TypeCheckingUtil {
                 .getCachedValue(typeCheckerRoot) {
                     val moduleData = typeCheckerRoot.neptuneModuleData
                     if (moduleData == null) {
-                        CachedValueProvider.Result.create(null)
+                        CachedValueProvider.Result.create(null, typeCheckerRoot)
                     } else {
                         typeCheckerRoot.typeCheckerData = TypeCheckerDataHolder()
                         val diagnostics = Diagnostics()
