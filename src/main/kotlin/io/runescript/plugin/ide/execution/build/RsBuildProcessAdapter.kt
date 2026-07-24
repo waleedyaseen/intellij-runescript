@@ -18,13 +18,13 @@ import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.openapi.util.Key
 import com.intellij.util.ThreeState
 import io.runescript.plugin.ide.RsBundle
-import java.util.concurrent.CompletableFuture
+import kotlinx.coroutines.CompletableDeferred
 import javax.swing.JComponent
 
 class RsBuildProcessAdapter(
     private val instance: RsBuildInstance,
     private val buildProgressListener: BuildProgressListener,
-    private val future: CompletableFuture<Any>,
+    private val completion: CompletableDeferred<Boolean>,
 ) : ProcessListener {
     private val instantReader =
         BuildOutputInstantReaderImpl(
@@ -95,7 +95,7 @@ class RsBuildProcessAdapter(
                 event.processHandler,
                 event.exitCode,
             )
-            future.complete(Any())
+            completion.complete(isSuccessfulBuild)
         }
     }
 

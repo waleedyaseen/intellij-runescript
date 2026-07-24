@@ -8,7 +8,7 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
-import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.module.Module
@@ -17,8 +17,12 @@ import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.vfs.newvfs.ManagingFS
 import com.intellij.openapi.wm.ToolWindow
 import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.job
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicInteger
 
 class RsBuildInstance(
@@ -42,23 +46,38 @@ class RsBuildInstance(
     var processHandler: ProcessHandler? = null
     var errorCount = AtomicInteger()
 
-    fun build(): CompletableFuture<Any> {
-        val future = CompletableFuture<Any>()
+    suspend fun build(): Boolean {
         executionPublisher.processStartScheduled(executorId, environment)
-        ApplicationManager.getApplication().executeOnPooledThread {
-            executionPublisher.processStarting(executorId, environment)
-            ApplicationManager.getApplication().invokeAndWait {
+        executionPublisher.processStarting(executorId, environment)
+        var processLifecycleStarted = false
+        return try {
+            withContext(Dispatchers.EDT) {
                 FileDocumentManager.getInstance().saveAllDocuments()
                 openBuildToolWindow()
             }
-            ManagingFS.getInstance().flushPendingUpdates()
-            val processHandler = createProcessHandler()
-            this.processHandler = processHandler
-            val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), future)
+            withContext(Dispatchers.IO) {
+                ManagingFS.getInstance().flushPendingUpdates()
+                processHandler = createProcessHandler()
+            }
+            val processHandler = checkNotNull(processHandler)
+            val completion = CompletableDeferred<Boolean>(currentCoroutineContext().job)
+            processLifecycleStarted = true
+            val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), completion)
             processHandler.addProcessListener(processAdapter)
             processHandler.startNotify()
+            completion.await()
+        } catch (error: Throwable) {
+            if (!processLifecycleStarted) {
+                executionPublisher.processNotStarted(executorId, environment, error)
+            }
+            throw error
+        } finally {
+            processHandler?.let {
+                if (!it.isProcessTerminated) {
+                    it.destroyProcess()
+                }
+            }
         }
-        return future
     }
 
     private fun openBuildToolWindow(): ToolWindow {
