@@ -9,13 +9,12 @@ import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.invokeLater
-import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
+import com.intellij.openapi.vfs.newvfs.ManagingFS
 import com.intellij.openapi.wm.ToolWindow
 import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
 import java.io.File
@@ -48,17 +47,16 @@ class RsBuildInstance(
         executionPublisher.processStartScheduled(executorId, environment)
         ApplicationManager.getApplication().executeOnPooledThread {
             executionPublisher.processStarting(executorId, environment)
-            invokeLater {
+            ApplicationManager.getApplication().invokeAndWait {
                 FileDocumentManager.getInstance().saveAllDocuments()
                 openBuildToolWindow()
-                runWriteAction {
-                    val processHandler = createProcessHandler()
-                    this.processHandler = processHandler
-                    val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), future)
-                    processHandler.addProcessListener(processAdapter)
-                    processHandler.startNotify()
-                }
             }
+            ManagingFS.getInstance().flushPendingUpdates()
+            val processHandler = createProcessHandler()
+            this.processHandler = processHandler
+            val processAdapter = RsBuildProcessAdapter(this, project.service<BuildViewManager>(), future)
+            processHandler.addProcessListener(processAdapter)
+            processHandler.startNotify()
         }
         return future
     }
