@@ -4,7 +4,6 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.platform.searchEverywhere.SeFilterState
 import com.intellij.platform.searchEverywhere.SeItem
 import com.intellij.platform.searchEverywhere.SeItemsProvider
-import com.intellij.platform.searchEverywhere.SeItemsProviderFactory
 import com.intellij.platform.searchEverywhere.SeParams
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.runescript.plugin.lang.psi.RsScript
@@ -25,10 +24,7 @@ class RsSearchEverywhereItemsProviderTest : BasePlatformTestCase() {
             """.trimIndent(),
         )
 
-        val factory =
-            SeItemsProviderFactory.EP_NAME.extensionList.single {
-                it.id == RsSearchEverywhereContributor.ID
-            }
+        val factory = RsSearchEverywhereItemsProviderFactory()
         val items = mutableListOf<SeItem>()
         runBlocking {
             val provider = factory.getItemsProvider(project, DataContext.EMPTY_CONTEXT)

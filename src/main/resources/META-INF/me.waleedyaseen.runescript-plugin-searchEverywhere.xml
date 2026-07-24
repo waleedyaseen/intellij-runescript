@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <searchEverywhere.itemsProviderFactory implementation="io.runescript.plugin.ide.searchEverywhere.RsSearchEverywhereItemsProviderFactory"/>
+    </extensions>
+</idea-plugin>
