@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.9.3] - 2026-07-24
+
 - Update to IntelliJ 2026.2
 - Fix automatic Neptune reimport when `neptune.toml` changes
 - Remove deprecated and internal IntelliJ Platform API usage
@@ -190,7 +192,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.2...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.3...HEAD
+[1.9.3]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.8.1...v1.9.0
