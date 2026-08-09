@@ -33,9 +33,10 @@ fun resolveToSymTypeName(file: PsiFile?): String? {
     val module = ModuleUtilCore.findModuleForPsiElement(file)
     val moduleDir = module?.guessModuleDir() ?: return null
     val neptuneModuleData = module.neptuneModuleData
+    val virtualFile = file.virtualFile ?: file.originalFile.virtualFile ?: return null
     for (symbolPath in neptuneModuleData.symbolPaths) {
         val symbolsDir = moduleDir.findFileByRelativePath(symbolPath) ?: continue
-        val typeName = resolveToSymTypeName(symbolsDir, file.virtualFile)
+        val typeName = resolveToSymTypeName(symbolsDir, virtualFile)
         if (typeName != null) {
             return typeName
         }
@@ -47,7 +48,7 @@ fun resolveToSymTypeName(
     symbolsRoot: VirtualFile,
     file: VirtualFile,
 ): String? {
-    val dir1 = file.parent
+    val dir1 = file.parent ?: return null
     if (dir1 == symbolsRoot) {
         return file.nameWithoutExtension
     }
