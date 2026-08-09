@@ -1,5 +1,6 @@
 package io.runescript.plugin.ide.neptune
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
 import com.intellij.openapi.project.Project
 import java.nio.file.Path
@@ -14,11 +15,16 @@ class NeptuneAutoImportAware : ExternalSystemAutoImportAware {
             return null
         }
 
-        return changedPath.parent?.toString()
+        val projectRoot = changedPath.parent?.toString() ?: return null
+        return project
+            .service<NeptuneSettings>()
+            .linkedProjectsSettings
+            .firstOrNull { it.matchesProjectPath(projectRoot) }
+            ?.externalProjectPath
     }
 
     override fun getAffectedExternalProjectFilePaths(
         projectPath: String,
         project: Project,
-    ): List<Path> = listOf(Path.of(projectPath, "neptune.toml"))
+    ): List<Path> = listOf(Path.of(normalizeNeptuneProjectPath(projectPath), "neptune.toml"))
 }
