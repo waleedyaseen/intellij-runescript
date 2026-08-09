@@ -96,7 +96,7 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
             if (o.expressionList.size > 1) {
                 o.expressionList[1].accept(this)
             }
-            o.expressionList[0].accept(this)
+            o.expressionList.firstOrNull()?.accept(this)
             addInstruction(o)
         }
 
@@ -107,7 +107,7 @@ class RsControlFlowBuilder : ControlFlowBuilder() {
         }
 
         override fun visitArrayAccessExpression(o: RsArrayAccessExpression) {
-            o.expressionList[0].accept(this)
+            o.expressionList.firstOrNull()?.accept(this)
         }
 
         override fun visitScopedVariableExpression(o: RsScopedVariableExpression) {

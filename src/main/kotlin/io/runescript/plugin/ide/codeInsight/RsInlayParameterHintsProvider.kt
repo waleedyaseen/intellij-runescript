@@ -59,7 +59,7 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
                 is RsCommandExpression -> argument.nameLiteral.text
                 is RsLocalVariableExpression -> argument.nameLiteral.text
                 is RsScopedVariableExpression -> argument.nameLiteral.text
-                is RsArrayAccessExpression -> (argument.expressionList[0] as RsLocalVariableExpression).nameLiteral.text
+                is RsArrayAccessExpression -> argument.localVariableName()
                 else -> null
             }
         if (parameterName.length < 3) {
@@ -86,6 +86,9 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
             unwrappedExpression !is RsNullLiteralExpression
     }
 
+    private fun RsArrayAccessExpression.localVariableName(): String? =
+        (expressionList.firstOrNull() as? RsLocalVariableExpression)?.nameLiteral?.text
+
     private fun getArgumentsList(element: PsiElement) =
         when (element) {
             is RsGosubExpression -> element.argumentList?.expressionList
@@ -97,8 +100,7 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
         return when (element) {
             is RsGosubExpression, is RsCommandExpression -> {
                 val reference = element.reference?.resolve() ?: return null
-                reference as RsScript
-                reference.parameterList?.parameterList?.map {
+                (reference as? RsScript)?.parameterList?.parameterList?.map {
                     it.localVariableExpression?.name ?: "<unknown-parameter>"
                 }
             }
@@ -116,8 +118,7 @@ class RsInlayParameterHintsProvider : InlayParameterHintsProvider {
                 if (reference == null) {
                     1
                 } else {
-                    reference as RsScript
-                    reference.returnList?.typeNameList?.size ?: 0
+                    (reference as? RsScript)?.returnList?.typeNameList?.size ?: 0
                 }
             }
 

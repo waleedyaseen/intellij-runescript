@@ -42,7 +42,7 @@ class RsHighlightingAnnotator : Annotator {
             }
 
             is RsArrayAccessExpression -> {
-                element.expressionList[0].highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
+                element.expressionList.firstOrNull()?.highlight(holder, RsSyntaxHighlighterColors.LOCAL_VARIABLE)
             }
 
             is RsScopedVariableExpression -> {
