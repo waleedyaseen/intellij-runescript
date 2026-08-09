@@ -74,6 +74,7 @@ class NeptuneSettingsState : AbstractExternalSystemSettings.State<NeptuneProject
     override fun getLinkedExternalProjectsSettings(): MutableSet<NeptuneProjectSettings> = settings
 
     override fun setLinkedExternalProjectsSettings(settings: MutableSet<NeptuneProjectSettings>?) {
-        this.settings.addAll(settings ?: return)
+        this.settings.clear()
+        this.settings.addAll(settings.orEmpty())
     }
 }
