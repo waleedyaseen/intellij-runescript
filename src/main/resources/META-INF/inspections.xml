@@ -56,6 +56,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptTypeCheckerInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Parameter constant values"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptParameterConstantInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unreachable code"
                          enabledByDefault="true"
                          level="WARNING"

@@ -85,11 +85,21 @@ object RsParameterBehaviorResolver {
     }
 
     private fun parse(content: String): RsParameterBehavior? {
-        val parts = content.trim().split(WHITESPACE).filter(String::isNotEmpty)
-        val id = parts.firstOrNull() ?: return null
-        return RsParameterBehavior(id, parts.drop(1))
+        val match = BEHAVIOR_PATTERN.matchEntire(content.trim()) ?: return null
+        val id = match.groupValues[1]
+        val bracketOptions =
+            match.groupValues[2]
+                .split(',')
+                .map(String::trim)
+                .filter(String::isNotEmpty)
+        val trailingOptions =
+            match.groupValues[3]
+                .split(WHITESPACE)
+                .filter(String::isNotEmpty)
+        return RsParameterBehavior(id, bracketOptions + trailingOptions)
     }
 
     private const val PARAMETER_METADATA_TAG = "parammeta"
+    private val BEHAVIOR_PATTERN = Regex("([^\\s\\[]+)(?:\\[([^]]*)])?(?:\\s+(.*))?", RegexOption.DOT_MATCHES_ALL)
     private val WHITESPACE = "\\s+".toRegex()
 }
