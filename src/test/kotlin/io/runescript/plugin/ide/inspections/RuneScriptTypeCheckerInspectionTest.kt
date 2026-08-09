@@ -4,8 +4,11 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.ide.inspections.fixes.RsCreateScriptQuickFix
+import io.runescript.plugin.ide.neptune.NeptuneProjectImportData
+import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsStringLiteralContent
@@ -227,6 +230,47 @@ class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
         myFixture.enableInspections(RuneScriptTypeCheckerInspection())
 
         assertFalse(myFixture.getAllQuickFixes().any { action -> action.text.contains("Create local variable") })
+    }
+
+    fun testUnresolvedConstantCanBeCreatedFromExpectedType() {
+        myFixture.addFileToProject("neptune.toml", "")
+        module.neptuneModuleData.updateFromImportData(
+            NeptuneProjectImportData(
+                name = "test",
+                sourcePaths = emptyList(),
+                symbolPaths = listOf("symbols"),
+                dbFindReturnsCount = true,
+                ccCreateAssertNewArg = true,
+                prefixPostfixExpressions = true,
+                arraysV2 = true,
+                simplifiedTypeCodes = true,
+            ),
+        )
+        val constantFile = myFixture.addFileToProject("symbols/constant.sym", "existing\tint\t1\n")
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,takes_int](int ${"$"}value)
+            {
+            }
+            """.trimIndent(),
+        )
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                takes_int(^missing);
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Create constant '^missing'" }
+        myFixture.launchAction(fix)
+
+        val psiFile = PsiManager.getInstance(project).findFile(constantFile.virtualFile)!!
+        assertEquals("existing\tint\t1\nmissing\tint\t0\n", psiFile.text)
     }
 
     fun testUnresolvedInjectedHookCanCreateClientscript() {
