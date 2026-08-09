@@ -78,13 +78,13 @@ object RsParameterBehaviorResolver {
                 .orEmpty()
                 .mapIndexedNotNull { index, parameter ->
                     val name = parameter.localVariableExpression?.name ?: return@mapIndexedNotNull null
-                    val behaviors = metadata[name].orEmpty().mapNotNull { tag -> parse(tag.getContent()) }
+                    val behaviors = metadata[name].orEmpty().mapNotNull { tag -> parseBehavior(tag.getContent()) }
                     if (behaviors.isEmpty()) null else index to behaviors
                 }.toMap()
         return CachedValueProvider.Result.create(result, *dependencies.toTypedArray())
     }
 
-    private fun parse(content: String): RsParameterBehavior? {
+    fun parseBehavior(content: String): RsParameterBehavior? {
         val match = BEHAVIOR_PATTERN.matchEntire(content.trim()) ?: return null
         val id = match.groupValues[1]
         val bracketOptions =
@@ -99,7 +99,7 @@ object RsParameterBehaviorResolver {
         return RsParameterBehavior(id, bracketOptions + trailingOptions)
     }
 
-    private const val PARAMETER_METADATA_TAG = "parammeta"
+    const val PARAMETER_METADATA_TAG = "parammeta"
     private val BEHAVIOR_PATTERN = Regex("([^\\s\\[]+)(?:\\[([^]]*)])?(?:\\s+(.*))?", RegexOption.DOT_MATCHES_ALL)
     private val WHITESPACE = "\\s+".toRegex()
 }

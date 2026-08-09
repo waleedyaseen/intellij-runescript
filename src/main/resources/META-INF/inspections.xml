@@ -62,6 +62,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptParameterConstantInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Parameter metadata"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptParameterMetadataInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unreachable code"
                          enabledByDefault="true"
                          level="WARNING"
