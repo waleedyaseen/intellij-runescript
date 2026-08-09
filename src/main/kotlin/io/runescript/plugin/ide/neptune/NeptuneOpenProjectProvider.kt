@@ -1,10 +1,13 @@
 package io.runescript.plugin.ide.neptune
 
 import com.intellij.openapi.externalSystem.importing.AbstractOpenProjectProvider
-import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
+import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
+import com.intellij.openapi.externalSystem.service.project.trusted.ExternalSystemTrustedProjectDialog
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import kotlin.io.path.absolutePathString
+import java.nio.file.Path
 
 object NeptuneOpenProjectProvider : AbstractOpenProjectProvider() {
     override val systemId = Neptune.SYSTEM_ID
@@ -16,10 +19,22 @@ object NeptuneOpenProjectProvider : AbstractOpenProjectProvider() {
         project: Project,
     ) {
         val projectRoot = if (projectFile.isDirectory) projectFile else projectFile.parent
+        val projectPath = normalizeNeptuneProjectPath(projectRoot.path)
+        val trusted =
+            ExternalSystemTrustedProjectDialog.confirmLinkingUntrustedProjectAsync(
+                project,
+                systemId,
+                Path.of(projectPath),
+            )
+        if (!trusted) return
 
         val settings = NeptuneProjectSettings()
-        settings.externalProjectPath = projectRoot.toNioPath().absolutePathString()
+        settings.externalProjectPath = projectPath
 
-        ExternalSystemApiUtil.getSettings(project, Neptune.SYSTEM_ID).linkProject(settings)
+        val importSpec =
+            ImportSpecBuilder(project, systemId)
+                .use(ProgressExecutionMode.IN_BACKGROUND_ASYNC)
+                .withImportProjectData(true)
+        ExternalSystemUtil.linkExternalProject(settings, importSpec)
     }
 }
