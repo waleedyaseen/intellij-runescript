@@ -220,6 +220,27 @@ class TypeCheckingAnalysisTest : RsParserTestCase() {
         assertSame(initialData, script.typeCheckerData)
     }
 
+    fun testAnalysisIsRetainedWhenUnrelatedLanguageStubChanges() {
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    def_int ${"$"}value = 1;
+                }
+                """.trimIndent(),
+            )
+        val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        val initialData = script.typeCheckerData
+        myFixture.addFileToProject("Unrelated.java", "class Unrelated {}")
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        assertSame(initialData, script.typeCheckerData)
+    }
+
     fun testUnresolvedAnalysisIsInvalidatedWhenTargetIsAdded() {
         val file =
             myFixture.configureByText(

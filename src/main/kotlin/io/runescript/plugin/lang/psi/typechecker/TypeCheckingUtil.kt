@@ -13,6 +13,8 @@ import io.runescript.plugin.lang.psi.stubIndexModificationTracker
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostics
 import io.runescript.plugin.lang.psi.typechecker.symbol.LocalVariableTable
+import io.runescript.plugin.lang.stubs.index.RsScriptIndex
+import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 object TypeCheckingUtil {
     private data class ActiveAnalysis(
@@ -104,7 +106,8 @@ object TypeCheckingUtil {
             result,
             rootFile.localModificationTracker(),
             moduleData,
-            root.project.stubIndexModificationTracker(),
+            root.project.stubIndexModificationTracker(RsScriptIndex.KEY),
+            root.project.stubIndexModificationTracker(RsSymbolIndex.KEY),
             *externalFiles.map { it.localModificationTracker() }.toTypedArray(),
         )
     }
