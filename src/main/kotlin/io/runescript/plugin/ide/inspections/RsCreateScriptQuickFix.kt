@@ -8,9 +8,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.util.findParentOfType
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
 class RsCreateScriptQuickFix(
     private val trigger: String,
@@ -33,7 +33,7 @@ class RsCreateScriptQuickFix(
             RsScriptBuilder(trigger, functionName)
                 .statement("error(\"Not yet implemented\");")
                 .build(project)
-        val parentScript = descriptor.psiElement.findParentOfType<RsScript>()!!
+        val parentScript = RsScopesUtil.parentScript(descriptor.psiElement) ?: return
         val parentFile = parentScript.parent
         parentFile.addAfter(newScript, parentScript)
         parentFile.addAfter(RsElementGenerator.createNewLine(project), parentScript)
