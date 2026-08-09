@@ -12,5 +12,7 @@
         <stubIndex implementation="io.runescript.plugin.symbollang.psi.index.RsSymbolTypeIndex"/>
         <completion.contributor language="RuneScriptSymbol"
                                 implementationClass="io.runescript.plugin.ide.completion.RsSymCompletionContributor"/>
+        <annotator language="RuneScriptSymbol"
+                   implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
     </extensions>
 </idea-plugin>

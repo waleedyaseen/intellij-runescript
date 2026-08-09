@@ -65,6 +65,10 @@ class RsHighlightingAnnotator : Annotator {
             is RsDynamicExpression -> {
                 highlightDynamic(element, holder)
             }
+
+            is RsSymSymbol -> {
+                element.nameIdentifier?.highlight(holder, RsSyntaxHighlighterColors.CONFIG_REFERENCE)
+            }
         }
     }
 
