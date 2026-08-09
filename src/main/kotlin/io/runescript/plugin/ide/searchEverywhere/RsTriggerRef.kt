@@ -3,6 +3,7 @@ package io.runescript.plugin.ide.searchEverywhere
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.util.text.StringUtil
 import io.runescript.plugin.ide.RsIcons
+import io.runescript.plugin.ide.neptune.DEFAULT_RESOLVED_DATA
 import io.runescript.plugin.ide.neptune.triggerManager
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.triggerName
@@ -14,12 +15,6 @@ data class RsTriggerRef(
     val icon: Icon?,
 ) {
     companion object {
-        private val triggerTypes =
-            arrayListOf(
-                "proc",
-                "clientscript",
-            )
-
         @JvmStatic
         fun forTrigger(trigger: TriggerType): RsTriggerRef = forTrigger(trigger.identifier)
 
@@ -44,7 +39,9 @@ data class RsTriggerRef(
 
         @JvmStatic
         fun forAllTriggers(): List<RsTriggerRef> =
-            triggerTypes
+            DEFAULT_RESOLVED_DATA.triggers
+                .all()
+                .map(TriggerType::identifier)
                 .sortedWith { a, b -> StringUtil.naturalCompare(a, b) }
                 .map { forTrigger(it) }
     }

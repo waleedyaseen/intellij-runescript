@@ -58,4 +58,6 @@ class TriggerManager {
      * If a trigger with the name was not found, `null` is returned.
      */
     fun findOrNull(name: String): TriggerType? = nameToTrigger[name]
+
+    fun all(): Collection<TriggerType> = nameToTrigger.values
 }
