@@ -178,6 +178,57 @@ class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
         )
     }
 
+    fun testUnresolvedLocalCanBeCreatedFromExpectedType() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,takes_string](string ${"$"}value)
+            {
+            }
+            """.trimIndent(),
+        )
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                takes_string(${"$"}missing);
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Create local variable '${"$"}missing'" }
+        myFixture.launchAction(fix)
+
+        myFixture.checkResult(
+            """
+            [proc,main]
+            {
+                def_string ${"$"}missing = "";
+                takes_string(${"$"}missing);
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testUnresolvedLocalWithoutExpectedTypeHasNoCreationFix() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                ${"$"}missing;
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        assertFalse(myFixture.getAllQuickFixes().any { action -> action.text.contains("Create local variable") })
+    }
+
     fun testUnresolvedInjectedHookCanCreateClientscript() {
         myFixture.addFileToProject("neptune.toml", "")
         myFixture.addFileToProject(
