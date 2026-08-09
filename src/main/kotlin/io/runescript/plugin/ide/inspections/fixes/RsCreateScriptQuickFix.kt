@@ -1,4 +1,4 @@
-package io.runescript.plugin.ide.inspections
+package io.runescript.plugin.ide.inspections.fixes
 
 import com.intellij.codeInsight.intention.preview.IntentionPreviewInfo
 import com.intellij.codeInspection.LocalQuickFix
@@ -8,6 +8,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
+import io.runescript.plugin.ide.inspections.RsScriptBuilder
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.scope.RsScopesUtil

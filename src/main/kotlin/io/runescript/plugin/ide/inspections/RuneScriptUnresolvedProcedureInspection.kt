@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.inspections.fixes.RsCreateScriptQuickFix
 import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.isSourceFile
