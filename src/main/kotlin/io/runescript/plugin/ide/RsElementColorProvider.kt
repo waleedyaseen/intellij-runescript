@@ -1,8 +1,6 @@
 package io.runescript.plugin.ide
 
-import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.editor.ElementColorProvider
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
 import io.runescript.plugin.lang.psi.RsElementGenerator
@@ -21,10 +19,7 @@ class RsElementColorProvider : ElementColorProvider {
         color: Color,
     ) {
         val tagName = element.text.substring(1, element.text.indexOf('='))
-        val document = PsiDocumentManager.getInstance(element.project).getDocument(element.containingFile)
-        CommandProcessor.getInstance().executeCommand(element.project, {
-            element.replace(RsElementGenerator.createColorTag(element.project, color.rgb, tagName))
-        }, "Change Color", null, document)
+        element.replace(RsElementGenerator.createColorTag(element.project, color.rgb, tagName))
     }
 
     companion object {

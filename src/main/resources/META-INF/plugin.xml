@@ -65,7 +65,8 @@
         <lang.elementManipulator forClass="io.runescript.plugin.symbollang.psi.RsSymSymbol" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsSymSymbolManipulator"/>
         <lang.psiStructureViewFactory language="RuneScript" implementationClass="io.runescript.plugin.ide.structureView.RsStructureViewFactory"/>
         <controlFlowProvider implementation="io.runescript.plugin.ide.codeInsight.controlFlow.RsControlFlowProvider"/>
-        <colorProvider implementation="io.runescript.plugin.ide.RsElementColorProvider"/>
+        <codeInsight.lineMarkerProvider language="RuneScript"
+                                        implementationClass="io.runescript.plugin.ide.RsColorLineMarkerProvider"/>
         <breadcrumbsInfoProvider implementation="io.runescript.plugin.ide.breadcrumb.RsBreadcrumbsInfoProvider" />
         <projectImportProvider implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportProvider"/>
         <projectImportBuilder implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportBuilder"/>

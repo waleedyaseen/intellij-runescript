@@ -63,7 +63,11 @@ object RsElementGenerator {
         val element = createDummyFile(project, "[proc,dummy]()()\"<$tagName=%06x>\";".format(color and 0xffffff))
         val literal =
             PsiTreeUtil.findChildOfType(element, RsStringLiteralExpression::class.java) as RsStringLiteralExpression
-        return literal.node.findChildByType(RsElementTypes.STRING_TAG)!!.psi
+        return literal
+            .stringLiteralContent
+            .node
+            .findChildByType(RsElementTypes.STRING_TAG)!!
+            .psi
     }
 
     fun createScript(
