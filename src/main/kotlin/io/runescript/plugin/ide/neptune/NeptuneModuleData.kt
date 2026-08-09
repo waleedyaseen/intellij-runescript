@@ -63,6 +63,7 @@ data class NeptuneResolvedData(
     val prefixPostfixExpressions: Boolean = true,
     val arraysV2: Boolean = true,
     val simplifiedTypeCodes: Boolean = true,
+    val longSupport: Boolean = true,
 ) {
     /**
      * The [TypeManager] for the compiler that is used for registering and looking up types.
@@ -108,8 +109,10 @@ data class NeptuneResolvedData(
         // register types
         types.registerAll<ScriptVarType>()
         types.register("param", ParamCommandHandler.PARAM_ANY)
-        types.changeOptions("long") {
-            allowDeclaration = false
+        if (!longSupport) {
+            types.changeOptions("long") {
+                allowDeclaration = false
+            }
         }
 
         // special types for commands
@@ -385,6 +388,7 @@ class NeptuneModuleData :
         var prefixPostfixExpressions: Boolean = false,
         var arraysV2: Boolean = false,
         var simplifiedTypeCodes: Boolean = false,
+        var longSupport: Boolean = false,
     )
 
     val sourcePaths: List<String>
@@ -401,6 +405,8 @@ class NeptuneModuleData :
         get() = state.arraysV2
     val simplifiedTypeCodes: Boolean
         get() = state.simplifiedTypeCodes
+    val longSupport: Boolean
+        get() = state.longSupport
 
     var resolvedData = NeptuneResolvedData()
         private set
@@ -424,6 +430,7 @@ class NeptuneModuleData :
             it.prefixPostfixExpressions = importData.prefixPostfixExpressions
             it.arraysV2 = importData.arraysV2
             it.simplifiedTypeCodes = importData.simplifiedTypeCodes
+            it.longSupport = importData.longSupport
             it
         }
         resolvedData = state.toResolvedData()
@@ -439,6 +446,7 @@ class NeptuneModuleData :
             prefixPostfixExpressions = prefixPostfixExpressions,
             arraysV2 = arraysV2,
             simplifiedTypeCodes = simplifiedTypeCodes,
+            longSupport = longSupport,
         )
 }
 

@@ -14,7 +14,8 @@ class NeptuneProjectResolverTest : TestCase() {
                   "sourcePaths": ["src"],
                   "symbolPaths": ["symbols"],
                   "libraryPaths": [],
-                  "excludePaths": ["build"]
+                  "excludePaths": ["build"],
+                  "features": {"longSupport": true}
                 }
                 """.trimIndent(),
             )
@@ -23,6 +24,8 @@ class NeptuneProjectResolverTest : TestCase() {
         assertEquals(listOf("src"), metadata.sourcePaths)
         assertEquals(listOf("symbols"), metadata.symbolPaths)
         assertEquals(listOf("build"), metadata.excludePaths)
+        assertTrue(metadata.features.longSupport)
+        assertTrue(metadata.toPersistentData().longSupport)
     }
 
     fun testRejectsInvalidProjectMetadata() {

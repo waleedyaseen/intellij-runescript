@@ -207,6 +207,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
                 prefixPostfixExpressions = features.prefixPostfixExpressions,
                 arraysV2 = features.arraysV2,
                 simplifiedTypeCodes = features.simplifiedTypeCodes,
+                longSupport = features.longSupport,
             )
     }
 
@@ -224,6 +225,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val prefixPostfixExpressions: Boolean = false,
         val arraysV2: Boolean = false,
         val simplifiedTypeCodes: Boolean = false,
+        val longSupport: Boolean = false,
     )
 
     private companion object {

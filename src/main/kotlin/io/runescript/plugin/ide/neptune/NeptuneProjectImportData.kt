@@ -11,4 +11,26 @@ class NeptuneProjectImportData(
     val prefixPostfixExpressions: Boolean,
     val arraysV2: Boolean,
     val simplifiedTypeCodes: Boolean,
-) : AbstractExternalEntityData(Neptune.SYSTEM_ID)
+    val longSupport: Boolean,
+) : AbstractExternalEntityData(Neptune.SYSTEM_ID) {
+    constructor(
+        name: String,
+        sourcePaths: List<String>,
+        symbolPaths: List<String>,
+        dbFindReturnsCount: Boolean,
+        ccCreateAssertNewArg: Boolean,
+        prefixPostfixExpressions: Boolean,
+        arraysV2: Boolean,
+        simplifiedTypeCodes: Boolean,
+    ) : this(
+        name,
+        sourcePaths,
+        symbolPaths,
+        dbFindReturnsCount,
+        ccCreateAssertNewArg,
+        prefixPostfixExpressions,
+        arraysV2,
+        simplifiedTypeCodes,
+        false,
+    )
+}

@@ -3,6 +3,16 @@ package io.runescript.plugin.ide.neptune
 import junit.framework.TestCase
 
 class NeptuneModuleDataTest : TestCase() {
+    fun testLongSupportControlsLongDeclarations() {
+        val enabledData = NeptuneResolvedData(longSupport = true)
+        val disabledData = NeptuneResolvedData(longSupport = false)
+        val longType = enabledData.types.find("long")
+
+        assertTrue(enabledData.types.getOptions(longType).allowDeclaration)
+        assertFalse(disabledData.types.getOptions(longType).allowDeclaration)
+        assertTrue(enabledData.types.getOptions(longType).allowDeclaration)
+    }
+
     fun testLoadStateRestoresResolvedRuntimeData() {
         val data = NeptuneModuleData()
         val state =
@@ -14,6 +24,7 @@ class NeptuneModuleDataTest : TestCase() {
                 prefixPostfixExpressions = true,
                 arraysV2 = true,
                 simplifiedTypeCodes = true,
+                longSupport = true,
             )
 
         data.loadState(state)
@@ -25,6 +36,7 @@ class NeptuneModuleDataTest : TestCase() {
         assertEquals(state.prefixPostfixExpressions, data.resolvedData.prefixPostfixExpressions)
         assertEquals(state.arraysV2, data.resolvedData.arraysV2)
         assertEquals(state.simplifiedTypeCodes, data.resolvedData.simplifiedTypeCodes)
+        assertEquals(state.longSupport, data.resolvedData.longSupport)
         assertTrue(data.modificationCount > 0)
     }
 }
