@@ -9,6 +9,18 @@ import io.runescript.plugin.ide.neptune.NeptuneProjectImportData
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 
 class RsCompletionContributorTest : BasePlatformTestCase() {
+    fun testCompletionCandidateOnlySuppressesInvalidCandidateFailures() {
+        assertNull(completionCandidateOrNull<Int> { error("invalid candidate") })
+
+        val failure = RuntimeException("canceled or unexpected")
+        try {
+            completionCandidateOrNull<Int> { throw failure }
+            fail("Unexpected runtime failures must propagate")
+        } catch (caught: RuntimeException) {
+            assertSame(failure, caught)
+        }
+    }
+
     fun testLocalCompletionDoesNotLeakFromPreviousScript() {
         configure(
             """

@@ -67,6 +67,13 @@ import io.runescript.plugin.symbollang.psi.index.RsSymbolTypeIndex
 import io.runescript.plugin.symbollang.psi.rawSymToType
 import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 
+internal inline fun <T> completionCandidateOrNull(action: () -> T): T? =
+    try {
+        action()
+    } catch (_: IllegalStateException) {
+        null
+    }
+
 private fun scriptTextBefore(
     position: PsiElement,
     absoluteOffset: Int,
@@ -722,9 +729,9 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                     continue
                 }
                 val type =
-                    runCatching {
+                    completionCandidateOrNull {
                         rawSymToType(symbol, moduleData.resolvedData.types, moduleData.resolvedData.symbolLoaders)
-                    }.getOrNull()
+                    }
                 if (type == null || type is GameVarType || type == MetaType.Error) {
                     continue
                 }
@@ -1073,7 +1080,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         isCompatible(expectedType, actualType) ||
             (expectedType == ScriptVarType.OBJ && actualType == ScriptVarType.NAMEDOBJ)
 
-    private fun RsLocalVariableExpression.safeTypeCheckedType(): Type? = runCatching { typeCheckedType }.getOrNull()
+    private fun RsLocalVariableExpression.safeTypeCheckedType(): Type? = completionCandidateOrNull { typeCheckedType }
 
     private fun RsScript.returnCompletionType(): Type? = containingFile.typeManager.typeFromTypeNames(returnList?.typeNameList.orEmpty())
 
@@ -1557,7 +1564,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         }
 
         private fun safeTypeCheckedType(declaration: RsLocalVariableExpression): Type? =
-            runCatching { declaration.typeCheckedType }.getOrNull()
+            completionCandidateOrNull { declaration.typeCheckedType }
 
         private fun typeFromTypeNames(
             typeManager: TypeManager,
