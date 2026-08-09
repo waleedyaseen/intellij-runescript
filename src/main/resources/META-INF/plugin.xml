@@ -13,6 +13,8 @@
         <multiHostInjector implementation="io.runescript.plugin.ide.injection.RsHookLanguageInjector"/>
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
+        <lang.parserDefinition language="RuneScriptHook"
+                               implementationClass="io.runescript.plugin.lang.parser.RsHookParserDefinition"/>
         <fileType name="RuneScript" language="RuneScript"
                   implementationClass="io.runescript.plugin.ide.filetypes.RsFileType" fieldName="INSTANCE"
                   extensions="cs2"/>

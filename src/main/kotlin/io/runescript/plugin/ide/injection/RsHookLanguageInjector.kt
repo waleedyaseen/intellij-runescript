@@ -4,7 +4,7 @@ import com.intellij.lang.injection.MultiHostInjector
 import com.intellij.lang.injection.MultiHostRegistrar
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
-import io.runescript.plugin.lang.RuneScript
+import io.runescript.plugin.lang.RuneScriptHook
 import io.runescript.plugin.lang.psi.RsStringLiteralContent
 import io.runescript.plugin.lang.psi.isHookExpression
 
@@ -19,7 +19,7 @@ class RsHookLanguageInjector : MultiHostInjector {
         if (!host.isValidHost || !host.isHookExpression()) return
 
         registrar
-            .startInjecting(RuneScript)
+            .startInjecting(RuneScriptHook)
             .addPlace(null, null, host, TextRange.from(0, host.textLength))
             .doneInjecting()
     }

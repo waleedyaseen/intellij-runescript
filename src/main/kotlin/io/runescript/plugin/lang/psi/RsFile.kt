@@ -4,11 +4,10 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import io.runescript.plugin.ide.filetypes.RsFileType
-import io.runescript.plugin.lang.RuneScript
 
 class RsFile(
     viewProvider: FileViewProvider,
-) : PsiFileBase(viewProvider, RuneScript) {
+) : PsiFileBase(viewProvider, viewProvider.baseLanguage) {
     override fun getFileType(): FileType = RsFileType
 
     override fun toString(): String = "RsFile: $name"

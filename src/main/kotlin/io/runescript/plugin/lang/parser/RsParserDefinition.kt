@@ -21,14 +21,16 @@ import io.runescript.plugin.lang.psi.RsFile
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
 import io.runescript.plugin.lang.stubs.types.RsFileStubType
 
-class RsParserDefinition : ParserDefinition {
+open class RsParserDefinition(
+    private val fileNodeType: IFileElementType = RsFileStubType,
+) : ParserDefinition {
     override fun createLexer(project: Project): Lexer = RsLexerAdapter(RsLexerInfo(DEFAULT_RESOLVED_DATA.types))
 
     override fun createParser(project: Project): PsiParser {
         error("Should not be called")
     }
 
-    override fun getFileNodeType(): IFileElementType = RsFileStubType
+    override fun getFileNodeType(): IFileElementType = fileNodeType
 
     override fun getCommentTokens(): TokenSet = RsTokenTypesSets.COMMENTS
 
@@ -43,3 +45,5 @@ class RsParserDefinition : ParserDefinition {
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile = RsFile(viewProvider)
 }
+
+class RsHookParserDefinition : RsParserDefinition(RsHookFileElementType)

@@ -6,6 +6,8 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
+import io.runescript.plugin.lang.RuneScriptHook
+import io.runescript.plugin.lang.parser.RsHookFileElementType
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsStringLiteralContent
@@ -19,6 +21,8 @@ class RsHookLanguageInjectorTest : RsParserTestCase() {
         val injectedFile = injectedFile(file)
         val hook = PsiTreeUtil.findChildOfType(injectedFile, RsHookFragment::class.java)
 
+        assertSame(RuneScriptHook, injectedFile.language)
+        assertSame(RsHookFileElementType, injectedFile.node.elementType)
         assertNotNull(hook)
         assertEquals("target", hook!!.nameLiteral.text)
         assertEquals("(1)", hook.argumentList?.text)

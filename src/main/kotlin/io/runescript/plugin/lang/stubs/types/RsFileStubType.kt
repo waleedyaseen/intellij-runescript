@@ -2,7 +2,6 @@ package io.runescript.plugin.lang.stubs.types
 
 import com.intellij.lang.ASTNode
 import com.intellij.lang.PsiBuilderFactory
-import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.StubElement
 import com.intellij.psi.stubs.StubInputStream
@@ -13,7 +12,6 @@ import io.runescript.plugin.lang.RuneScript
 import io.runescript.plugin.lang.lexer.RsLexerAdapter
 import io.runescript.plugin.lang.lexer.RsLexerInfo
 import io.runescript.plugin.lang.parser.RsParser
-import io.runescript.plugin.lang.psi.RsElementTypes
 import io.runescript.plugin.lang.stubs.RsFileStub
 
 object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
@@ -26,14 +24,7 @@ object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
         val lexer = RsLexerAdapter(RsLexerInfo(psi.typeManager))
         val builder =
             PsiBuilderFactory.getInstance().createBuilder(project, chameleon, lexer, languageForParser, chameleon.chars)
-        val host = InjectedLanguageManager.getInstance(project).getInjectionHost(psi)
-        val node =
-            if (host != null) {
-                RsParser().parse(RsElementTypes.HOOK_ROOT, builder)
-            } else {
-                RsParser().parse(this, builder)
-            }
-        return node.firstChildNode
+        return RsParser().parse(this, builder).firstChildNode
     }
 
     override fun getStubVersion() = 4
