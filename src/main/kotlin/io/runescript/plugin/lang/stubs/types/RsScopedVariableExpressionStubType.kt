@@ -1,5 +1,6 @@
 package io.runescript.plugin.lang.stubs.types
 
+import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.IndexSink
 import com.intellij.psi.stubs.StubElement
@@ -13,6 +14,8 @@ import io.runescript.plugin.lang.stubs.RsScopedVariableExpressionStub
 object RsScopedVariableExpressionStubType : RsStubType<RsScopedVariableExpressionStub, RsScopedVariableExpression>(
     "SCOPED_VARIABLE_EXPRESSION",
 ) {
+    override fun shouldCreateStub(node: ASTNode): Boolean = false
+
     override fun deserialize(
         dataStream: StubInputStream,
         parentStub: StubElement<*>?,

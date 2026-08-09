@@ -27,7 +27,7 @@ object RsFileStubType : IStubFileElementType<RsFileStub>(RuneScript) {
         return RsParser().parse(this, builder).firstChildNode
     }
 
-    override fun getStubVersion() = 4
+    override fun getStubVersion() = 5
 
     override fun serialize(
         stub: RsFileStub,
