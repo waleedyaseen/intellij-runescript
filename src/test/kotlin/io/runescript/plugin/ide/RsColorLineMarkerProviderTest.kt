@@ -16,12 +16,12 @@ class RsColorLineMarkerProviderTest : RsParserTestCase() {
             "commands.cs2",
             """
             /**
-             * @parammeta x1 color
+             * @parammeta x1 rgb
              */
             [command,cc_setgraphicshadow](int ${"$"}x1)
 
             /**
-             * @parammeta x1 color
+             * @parammeta x1 argb
              */
             [command,.cc_setgraphicshadow](int ${"$"}x1)
 
@@ -35,7 +35,7 @@ class RsColorLineMarkerProviderTest : RsParserTestCase() {
                 [proc,main]
                 {
                     cc_setgraphicshadow(0x112233);
-                    .cc_setgraphicshadow(0x445566);
+                    .cc_setgraphicshadow(0x80445566);
                     plain_int(0x778899);
                 }
                 """.trimIndent(),
@@ -47,13 +47,23 @@ class RsColorLineMarkerProviderTest : RsParserTestCase() {
 
         assertSize(2, markers)
         assertEquals(
-            listOf("0x112233", "0x445566"),
+            listOf("0x112233", "0x80445566"),
             markers.mapNotNull { marker -> marker.element?.text },
         )
 
-        provider.showColorPicker = { _, _, _, onChanged -> onChanged(Color(0x00ff00)) }
+        val alphaModes = mutableListOf<Boolean>()
+        val initialColors = mutableListOf<Color>()
+        provider.showColorPicker = { _, initialColor, _, showAlpha, onChanged ->
+            initialColors += initialColor
+            alphaModes += showAlpha
+            onChanged(Color(0x00, 0xff, 0x00, 0x7f))
+        }
         navigate(markers.first())
+        navigate(markers.last())
+        assertEquals(listOf(false, true), alphaModes)
+        assertEquals(listOf(0xff112233.toInt(), 0x80445566.toInt()), initialColors.map(Color::getRGB))
         assertTrue(file.text.contains("cc_setgraphicshadow(0x00ff00);"))
+        assertTrue(file.text.contains(".cc_setgraphicshadow(0x7f00ff00);"))
     }
 
     fun testColorMarkerUsesCurrentPsiAfterReparse() {
@@ -70,7 +80,7 @@ class RsColorLineMarkerProviderTest : RsParserTestCase() {
         val originalTag = file.findElementAt(file.text.indexOf("<col="))!!
         val provider = RsColorLineMarkerProvider()
         val marker = provider.getLineMarkerInfo(originalTag)!!
-        provider.showColorPicker = { _, _, _, onChanged -> onChanged(Color(0x00ff00)) }
+        provider.showColorPicker = { _, _, _, _, onChanged -> onChanged(Color(0x00ff00)) }
 
         WriteCommandAction.runWriteCommandAction(project) {
             myFixture.editor.document.replaceString(

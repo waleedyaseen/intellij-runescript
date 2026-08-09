@@ -28,11 +28,16 @@ object RsParameterBehaviorResolver {
     fun find(
         argument: RsExpression,
         behaviorId: String,
+    ): RsParameterBehavior? = find(argument, setOf(behaviorId))
+
+    fun find(
+        argument: RsExpression,
+        behaviorIds: Set<String>,
     ): RsParameterBehavior? {
         val argumentList = argument.parentOfType<RsArgumentList>() ?: return null
         val call = argumentList.parent as? RsCallExpression ?: return null
         val argumentIndex = call.arguments.indexOf(argument).takeIf { it >= 0 } ?: return null
-        return behaviors(call)[argumentIndex]?.firstOrNull { behavior -> behavior.id == behaviorId }
+        return behaviors(call)[argumentIndex]?.firstOrNull { behavior -> behavior.id in behaviorIds }
     }
 
     private fun behaviors(call: RsCallExpression): Map<Int, List<RsParameterBehavior>> {

@@ -18,21 +18,22 @@ import io.runescript.plugin.lang.psi.RsIntegerLiteralExpression
 import java.awt.Color
 
 class RsColorLineMarkerProvider : LineMarkerProvider {
-    internal var showColorPicker: (Project, Color, RelativePoint, (Color) -> Unit) -> Unit = { project, color, point, onChanged ->
-        ColorChooserService.getInstance().showPopup(
-            project,
-            color,
-            ColorListener { selectedColor, _ -> onChanged(selectedColor) },
-            point,
-            true,
-        )
-    }
+    internal var showColorPicker: (Project, Color, RelativePoint, Boolean, (Color) -> Unit) -> Unit =
+        { project, color, point, showAlpha, onChanged ->
+            ColorChooserService.getInstance().showPopup(
+                project,
+                color,
+                ColorListener { selectedColor, _ -> onChanged(selectedColor) },
+                point,
+                showAlpha,
+            )
+        }
 
     private val colorProvider = RsElementColorProvider()
 
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<PsiElement>? {
         val color = colorProvider.getColorFrom(element) ?: return null
-        return createMarker(element, color, colorProvider::setColorTo)
+        return createMarker(element, color, false, colorProvider::setColorTo)
     }
 
     override fun collectSlowLineMarkers(
@@ -40,17 +41,20 @@ class RsColorLineMarkerProvider : LineMarkerProvider {
         result: MutableCollection<in LineMarkerInfo<*>>,
     ) {
         for (expression in elements.filterIsInstance<RsIntegerLiteralExpression>()) {
-            if (RsParameterBehaviorResolver.find(expression, COLOR_BEHAVIOR_ID) == null) {
-                continue
-            }
-            val color = parseRgb(expression.text) ?: continue
-            result += createMarker(expression.firstChild, color, ::setRgbColor)
+            val behavior = RsParameterBehaviorResolver.find(expression, COLOR_BEHAVIOR_IDS) ?: continue
+            val format = ColorFormat.fromBehaviorId(behavior.id) ?: continue
+            val color = format.parse(expression.text) ?: continue
+            result +=
+                createMarker(expression.firstChild, color, format.showAlpha) { element, selectedColor ->
+                    setIntegerColor(element, selectedColor, format)
+                }
         }
     }
 
     private fun createMarker(
         element: PsiElement,
         color: Color,
+        showAlpha: Boolean,
         setColor: (PsiElement, Color) -> Unit,
     ): LineMarkerInfo<PsiElement> {
         val project = element.project
@@ -64,7 +68,7 @@ class RsColorLineMarkerProvider : LineMarkerProvider {
                     return@LineMarkerInfo
                 }
                 val pointer = SmartPointerManager.createPointer(currentElement)
-                showColorPicker(project, color, RelativePoint(event)) { selectedColor ->
+                showColorPicker(project, color, RelativePoint(event), showAlpha) { selectedColor ->
                     WriteCommandAction.runWriteCommandAction(project) {
                         val currentTag = pointer.element
                         if (currentTag != null && currentTag.isValid) {
@@ -78,27 +82,65 @@ class RsColorLineMarkerProvider : LineMarkerProvider {
         )
     }
 
-    private fun setRgbColor(
+    private fun setIntegerColor(
         element: PsiElement,
         color: Color,
+        format: ColorFormat,
     ) {
         val expression = element as? RsIntegerLiteralExpression ?: element.parentOfType<RsIntegerLiteralExpression>() ?: return
-        val replacement = "0x%06x".format(color.rgb and MAX_RGB)
+        val replacement = format.format(color)
         expression.replace(RsElementGenerator.createIntegerLiteral(element.project, replacement))
     }
 
-    private fun parseRgb(text: String): Color? {
-        val value =
-            if (text.startsWith("0x", ignoreCase = true)) {
-                text.substring(2).toIntOrNull(16)
-            } else {
-                text.toIntOrNull()
-            } ?: return null
-        return value.takeIf { it in 0..MAX_RGB }?.let(::Color)
+    private companion object {
+        val COLOR_BEHAVIOR_IDS = ColorFormat.entries.mapTo(mutableSetOf(), ColorFormat::behaviorId)
     }
 
-    private companion object {
-        const val COLOR_BEHAVIOR_ID = "color"
-        const val MAX_RGB = 0xffffff
+    private enum class ColorFormat(
+        val behaviorId: String,
+        val showAlpha: Boolean,
+        private val digits: Int,
+        private val maxValue: Long,
+    ) {
+        RGB("rgb", false, 6, 0xffffff),
+        ARGB("argb", true, 8, 0xffffffffL),
+        ;
+
+        fun parse(text: String): Color? {
+            val value =
+                if (text.startsWith("0x", ignoreCase = true)) {
+                    text.substring(2).toLongOrNull(16)
+                } else {
+                    text.toLongOrNull()
+                } ?: return null
+            if (value !in 0..maxValue) return null
+            return when (this) {
+                RGB -> {
+                    Color(value.toInt())
+                }
+
+                ARGB -> {
+                    Color(value.toInt(), true)
+                }
+            }
+        }
+
+        fun format(color: Color): String {
+            val value =
+                when (this) {
+                    RGB -> {
+                        color.rgb.toLong() and 0xffffff
+                    }
+
+                    ARGB -> {
+                        color.rgb.toLong() and 0xffffffffL
+                    }
+                }
+            return "0x%0${digits}x".format(value)
+        }
+
+        companion object {
+            fun fromBehaviorId(id: String): ColorFormat? = entries.firstOrNull { format -> format.behaviorId == id }
+        }
     }
 }
