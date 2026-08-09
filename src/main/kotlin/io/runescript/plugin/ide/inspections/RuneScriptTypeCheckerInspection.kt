@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
+import io.runescript.plugin.ide.inspections.fixes.RsChangeLocalVariableTypeQuickFix
 import io.runescript.plugin.ide.inspections.fixes.RsCreateConstantQuickFix
 import io.runescript.plugin.ide.inspections.fixes.RsCreateLocalVariableQuickFix
 import io.runescript.plugin.ide.inspections.fixes.RsCreateScriptQuickFix
@@ -52,6 +53,7 @@ class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
         RsRemoveExtraArgumentsQuickFix.from(this)?.let { return arrayOf(it) }
         RsCreateLocalVariableQuickFix.from(this)?.let { return arrayOf(it) }
         RsCreateConstantQuickFix.from(this)?.let { return arrayOf(it) }
+        RsChangeLocalVariableTypeQuickFix.from(this)?.let { return arrayOf(it) }
         val trigger =
             when (message) {
                 DiagnosticMessage.PROC_REFERENCE_UNRESOLVED -> "proc"

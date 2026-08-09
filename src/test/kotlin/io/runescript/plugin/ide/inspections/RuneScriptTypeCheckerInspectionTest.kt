@@ -273,6 +273,32 @@ class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
         assertEquals("existing\tint\t1\nmissing\tint\t0\n", psiFile.text)
     }
 
+    fun testLocalDeclarationCanAdoptInitializerType() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                def_int ${"$"}name = "RuneScript";
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Change local type to 'string'" }
+        myFixture.launchAction(fix)
+
+        myFixture.checkResult(
+            """
+            [proc,main]
+            {
+                def_string ${"$"}name = "RuneScript";
+            }
+            """.trimIndent(),
+        )
+    }
+
     fun testUnresolvedInjectedHookCanCreateClientscript() {
         myFixture.addFileToProject("neptune.toml", "")
         myFixture.addFileToProject(
