@@ -31,6 +31,22 @@ class NeptuneManagerTest : BasePlatformTestCase() {
         assertEquals(projectHome.toString(), resolvedHome)
     }
 
+    fun testCreatesExecutionSettingsFromProjectDefaults() {
+        val projectRoot = FileUtil.createTempDirectory("neptune-project-test-", null, true).toPath()
+        val projectHome = createNeptuneHome(projectRoot.resolve("sdk"))
+        val settings = project.service<NeptuneSettings>()
+        settings.neptuneHome = ""
+        settings.launcherJre = ""
+
+        val executionSettings =
+            NeptuneManager()
+                .executionSettingsProvider
+                .`fun`(Pair.create(project, projectRoot.toString()))
+
+        assertEquals(projectHome.toString(), executionSettings.neptuneSdkHome)
+        assertTrue(Files.isRegularFile(Path.of(executionSettings.jvmExecutablePath)))
+    }
+
     fun testUsesIdeRuntimeJvmWhenNeptuneJvmIsNotConfigured() {
         val settings = project.service<NeptuneSettings>()
         settings.neptuneHome = createNeptuneHome().toString()
