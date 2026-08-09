@@ -49,8 +49,8 @@ class NeptuneManagerTest : BasePlatformTestCase() {
 
     private fun createNeptuneHome(): Path {
         val home = FileUtil.createTempDirectory("neptune-manager-test-", null, true).toPath()
-        val libs = Files.createDirectories(home.resolve("libs"))
-        Files.createFile(libs.resolve("neptune-clientscript-compiler-test.jar"))
+        val lib = Files.createDirectories(home.resolve("lib"))
+        Files.createFile(lib.resolve("neptune-clientscript-compiler-test.jar"))
         return home
     }
 }

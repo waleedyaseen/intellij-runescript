@@ -146,12 +146,12 @@ internal fun getNeptuneHomeValidationError(neptuneHome: String): String? {
     if (!homeFolder.exists() || !homeFolder.isDirectory) {
         return "The specified Neptune home directory does not exist."
     }
-    val libsFolder = File(homeFolder, "libs")
-    if (!libsFolder.exists() || !libsFolder.isDirectory) {
+    val libFolder = File(homeFolder, "lib")
+    if (!libFolder.exists() || !libFolder.isDirectory) {
         return "The specified Neptune home directory is not valid."
     }
     val compilerJar =
-        libsFolder.listFiles { _, name -> name.matches("neptune-clientscript-compiler-.*\\.jar".toRegex()) }
+        libFolder.listFiles { _, name -> name.matches("neptune-clientscript-compiler-.*\\.jar".toRegex()) }
     if (compilerJar.isNullOrEmpty()) {
         return "The specified Neptune home directory does not contain the compiler jar."
     }
