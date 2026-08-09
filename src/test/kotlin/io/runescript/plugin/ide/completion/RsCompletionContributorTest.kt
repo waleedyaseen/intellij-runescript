@@ -2,11 +2,64 @@ package io.runescript.plugin.ide.completion
 
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.lookup.Lookup
+import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.runescript.plugin.ide.neptune.NeptuneProjectImportData
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 
 class RsCompletionContributorTest : BasePlatformTestCase() {
+    fun testIndexKeyCacheSurvivesBodyOnlyEdit() {
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    foo(1);
+                }
+                """.trimIndent(),
+            )
+        val initialCache = RsCompletionIndexCache.get(project)
+
+        WriteCommandAction.runWriteCommandAction(project) {
+            file.viewProvider.document!!.setText(
+                """
+                [proc,main]
+                {
+                    foo(2);
+                }
+                """.trimIndent(),
+            )
+            PsiDocumentManager.getInstance(project).commitAllDocuments()
+        }
+
+        assertSame(initialCache, RsCompletionIndexCache.get(project))
+    }
+
+    fun testIndexKeyCacheInvalidatesWhenScriptIsAdded() {
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+            }
+            """.trimIndent(),
+        )
+        val initialCache = RsCompletionIndexCache.get(project)
+
+        myFixture.addFileToProject(
+            "new.cs2",
+            """
+            [proc,new_script]
+            {
+            }
+            """.trimIndent(),
+        )
+
+        assertNotSame(initialCache, RsCompletionIndexCache.get(project))
+    }
+
     fun testStatementCompletionIncludesSupportedKeywordsAndDeclarations() {
         configure(
             """
