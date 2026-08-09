@@ -354,7 +354,7 @@ class TypeChecking(
         // notify invalid type
         if (type == null) {
             declarationStatement.defineType.reportError(DiagnosticMessage.GENERIC_INVALID_TYPE, typeName)
-        } else if (!type.options.allowDeclaration) {
+        } else if (!typeManager.getOptions(type).allowDeclaration) {
             declarationStatement.defineType.reportError(
                 DiagnosticMessage.LOCAL_DECLARATION_INVALID_TYPE,
                 type.representation,
@@ -391,12 +391,12 @@ class TypeChecking(
         // notify invalid type
         if (type == null) {
             arrayDeclarationStatement.defineType.reportError(DiagnosticMessage.GENERIC_INVALID_TYPE, typeName)
-        } else if (!type.options.allowDeclaration) {
+        } else if (!typeManager.getOptions(type).allowDeclaration) {
             arrayDeclarationStatement.defineType.reportError(
                 DiagnosticMessage.LOCAL_DECLARATION_INVALID_TYPE,
                 type.representation,
             )
-        } else if (!type.options.allowArray) {
+        } else if (!typeManager.getOptions(type).allowArray) {
             arrayDeclarationStatement.defineType.reportError(
                 DiagnosticMessage.LOCAL_ARRAY_INVALID_TYPE,
                 type.representation,

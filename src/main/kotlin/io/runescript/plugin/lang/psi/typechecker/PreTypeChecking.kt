@@ -358,7 +358,7 @@ class PreTypeChecking(
         // notify invalid type
         if (type == null) {
             switchStatement.switch.reportError(DiagnosticMessage.GENERIC_INVALID_TYPE, typeName)
-        } else if (!type.options.allowSwitch) {
+        } else if (!typeManager.getOptions(type).allowSwitch) {
             switchStatement.switch.reportError(DiagnosticMessage.SWITCH_INVALID_TYPE, type.representation)
         }
 

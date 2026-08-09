@@ -21,6 +21,12 @@ class TypeManager {
     private val typeToName = mutableMapOf<Type, String>()
 
     /**
+     * Per-manager type options. Enum-backed types are shared JVM singletons, so their mutable
+     * options must never be changed directly when projects use different compiler features.
+     */
+    private val typeOptions = mutableMapOf<Type, MutableTypeOptions>()
+
+    /**
      * A list of possible checkers to run against types.
      */
     private val checkers = mutableListOf<TypeChecker>()
@@ -60,6 +66,14 @@ class TypeManager {
             error("Type '$name' is already registered.")
         }
         typeToName[type] = name
+        typeOptions.putIfAbsent(
+            type,
+            MutableTypeOptions(
+                allowSwitch = type.options.allowSwitch,
+                allowArray = type.options.allowArray,
+                allowDeclaration = type.options.allowDeclaration,
+            ),
+        )
         cacheDirty = true
     }
 
@@ -120,10 +134,12 @@ class TypeManager {
         builder: TypeBuilder,
     ) {
         val type = nameToType[name] ?: error("$name was not found")
-        val options = type.options as MutableTypeOptions
+        val options = typeOptions.getValue(type)
         options.builder()
         cacheDirty = true
     }
+
+    fun getOptions(type: Type): TypeOptions = typeOptions[type] ?: type.options
 
     /**
      * Finds a type by [name]. If [allowArray] is enabled, names ending with `array`
@@ -150,7 +166,7 @@ class TypeManager {
             // substring before the last "array" to prevent requesting intarrayarray (or deeper)
             val baseType = name.substringBeforeLast(ARRAY_SUFFIX)
             val type = findOrNull(baseType)
-            if (type == null || !type.options.allowArray) {
+            if (type == null || !getOptions(type).allowArray) {
                 return null
             }
             return ArrayType(type)
@@ -198,9 +214,10 @@ class TypeManager {
     private fun generateDefineKeywords(): List<CharSequence> {
         val keywords = mutableListOf<CharSequence>()
         for ((name, type) in nameToType) {
-            if (type.options.allowDeclaration) {
+            val options = getOptions(type)
+            if (options.allowDeclaration) {
                 keywords.add("def_$name")
-                if (type.options.allowArray) {
+                if (options.allowArray) {
                     keywords.add("def_${name}array")
                 }
             }
@@ -212,7 +229,7 @@ class TypeManager {
         val keywords = mutableListOf<CharSequence>()
         for ((name, type) in nameToType) {
             keywords.add(name)
-            if (type.options.allowArray) {
+            if (getOptions(type).allowArray) {
                 keywords.add("${name}array")
             }
         }
@@ -222,7 +239,7 @@ class TypeManager {
     private fun generateSwitchKeyword(): List<CharSequence> {
         val keywords = mutableListOf<CharSequence>()
         for ((name, type) in nameToType) {
-            if (type.options.allowSwitch) {
+            if (getOptions(type).allowSwitch) {
                 keywords.add("switch_$name")
             }
         }
