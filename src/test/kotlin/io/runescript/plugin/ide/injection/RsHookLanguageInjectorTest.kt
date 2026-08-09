@@ -10,8 +10,10 @@ import io.runescript.plugin.lang.RuneScriptHook
 import io.runescript.plugin.lang.parser.RsHookFileElementType
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsHookFragment
+import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsStringLiteralContent
 import io.runescript.plugin.lang.psi.typechecker.TypeCheckingUtil
+import io.runescript.plugin.lang.psi.typechecker.typeCheckerData
 
 class RsHookLanguageInjectorTest : RsParserTestCase() {
     fun testInjectsHookFragmentIntoHookArgument() {
@@ -71,6 +73,30 @@ class RsHookLanguageInjectorTest : RsParserTestCase() {
 
         assertNotNull(hook)
         assertEmpty(TypeCheckingUtil.typeCheck(hook!!))
+    }
+
+    fun testHookCheckingReusesHostAndInjectedAnalysis() {
+        addHookCommand()
+        myFixture.addFileToProject(
+            "target.cs2",
+            """
+            [clientscript,target]
+            {
+            }
+            """.trimIndent(),
+        )
+        val file = configure("set_hook(\"target\");")
+        val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
+        val hook = PsiTreeUtil.findChildOfType(injectedFile(file), RsHookFragment::class.java)!!
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        val hostData = script.typeCheckerData
+        assertEmpty(TypeCheckingUtil.typeCheck(hook))
+        val hookData = hook.typeCheckerData
+
+        assertEmpty(TypeCheckingUtil.typeCheck(hook))
+        assertSame(hostData, script.typeCheckerData)
+        assertSame(hookData, hook.typeCheckerData)
     }
 
     fun testInjectionIsInvalidatedWhenCommandSignatureChanges() {

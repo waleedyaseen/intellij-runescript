@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.util.PsiTreeUtil
+import io.runescript.plugin.ide.inspections.RuneScriptTypeCheckerInspection
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsDynamicExpression
@@ -61,8 +62,13 @@ class TypeCheckingAnalysisTest : RsParserTestCase() {
         val expression = PsiTreeUtil.findChildOfType(file, RsDynamicExpression::class.java)!!
 
         assertEmpty(TypeCheckingUtil.typeCheck(script))
+        val initialData = script.typeCheckerData
         assertSame(target, expression.typeCheckedResolvedSymbol)
         assertSame(target, expression.reference?.resolve())
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+        myFixture.doHighlighting()
+        assertSame(initialData, script.typeCheckerData)
     }
 
     fun testConcurrentRequestsPublishCompleteAnalysis() {
