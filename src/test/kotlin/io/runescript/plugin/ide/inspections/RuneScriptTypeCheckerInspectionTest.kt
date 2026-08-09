@@ -52,6 +52,64 @@ class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
         assertTrue(file.text.contains("[proc,missing_proc]"))
     }
 
+    fun testMissingCallArgumentsCanBeInsertedWithTypeDefaults() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,configure](int ${"$"}id,string ${"$"}name,boolean ${"$"}enabled)
+            {
+            }
+            """.trimIndent(),
+        )
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                configure(42);
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Insert 2 missing arguments" }
+        myFixture.launchAction(fix)
+
+        myFixture.checkResult(
+            """
+            [proc,main]
+            {
+                configure(42, "", false);
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testSameArityTypeMismatchDoesNotOfferMissingArgumentsFix() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,takes_int](int ${"$"}value)
+            {
+            }
+            """.trimIndent(),
+        )
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                takes_int("wrong");
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        assertFalse(myFixture.getAllQuickFixes().any { action -> action.text.contains("missing argument") })
+    }
+
     fun testUnresolvedInjectedHookCanCreateClientscript() {
         myFixture.addFileToProject("neptune.toml", "")
         myFixture.addFileToProject(
