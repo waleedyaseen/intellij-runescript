@@ -104,6 +104,7 @@ class TypeCheckingAnalysisTest : RsParserTestCase() {
         val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
 
         assertEmpty(TypeCheckingUtil.typeCheck(script))
+        val initialData = script.typeCheckerData
 
         WriteCommandAction.runWriteCommandAction(project) {
             target.viewProvider.document!!.setText(
@@ -117,5 +118,78 @@ class TypeCheckingAnalysisTest : RsParserTestCase() {
         }
 
         assertNotEmpty(TypeCheckingUtil.typeCheck(script))
+        assertNotSame(initialData, script.typeCheckerData)
     }
+
+    fun testAnalysisIsRetainedWhenUnrelatedBodyChanges() {
+        val unrelated =
+            myFixture.addFileToProject(
+                "unrelated.cs2",
+                """
+                [proc,unrelated]
+                {
+                    target(1);
+                }
+                """.trimIndent(),
+            )
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    def_int ${"$"}value = 1;
+                }
+                """.trimIndent(),
+            )
+        val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        val initialData = script.typeCheckerData
+
+        WriteCommandAction.runWriteCommandAction(project) {
+            unrelated.viewProvider.document!!.setText(
+                """
+                [proc,unrelated]
+                {
+                    target(2);
+                }
+                """.trimIndent(),
+            )
+            PsiDocumentManager.getInstance(project).commitAllDocuments()
+        }
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        assertSame(initialData, script.typeCheckerData)
+    }
+
+    fun testUnresolvedAnalysisIsInvalidatedWhenTargetIsAdded() {
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    target();
+                }
+                """.trimIndent(),
+            )
+        val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
+
+        assertNotEmpty(TypeCheckingUtil.typeCheck(script))
+        val initialData = script.typeCheckerData
+
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,target]
+            {
+            }
+            """.trimIndent(),
+        )
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        assertNotSame(initialData, script.typeCheckerData)
+    }
+
 }

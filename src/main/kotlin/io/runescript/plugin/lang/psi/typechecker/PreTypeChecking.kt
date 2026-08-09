@@ -35,6 +35,7 @@ class PreTypeChecking(
     private val diagnostics: Diagnostics,
     private val rootTable: LocalVariableTable,
     private val arraysV2: Boolean,
+    private val dependencyConsumer: (PsiElement) -> Unit = {},
 ) : RsVisitor() {
     /**
      * A cached reference to a [Type] representing a `type`.
@@ -261,6 +262,7 @@ class PreTypeChecking(
             script.scriptNameExpression.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, subject)
             return
         }
+        dependencyConsumer(symbol)
     }
 
     /**

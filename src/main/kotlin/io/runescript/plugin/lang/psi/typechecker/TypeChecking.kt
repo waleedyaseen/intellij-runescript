@@ -84,6 +84,7 @@ class TypeChecking(
     private val dynamicCommands: Map<String, DynamicCommandHandler>,
     private val symbolLoaders: Map<String, (subTypes: Type) -> Type>,
     private val arraysV2: Boolean,
+    private val dependencyConsumer: (PsiElement) -> Unit = {},
 ) : RsVisitor() {
     /**
      * The trigger that represents 'command'.
@@ -746,7 +747,8 @@ class TypeChecking(
     ) {
         // lookup the symbol using the symbol type and name
         val name = call.nameLiteral?.text ?: ""
-        val symbol = call.reference?.resolve()?.let { it as RsScript }
+        val symbol = call.reference?.resolve() as? RsScript
+        symbol?.let(dependencyConsumer)
         if (symbol == null) {
             call.type = MetaType.Error
             call.reportError(unresolvedSymbolMessage, name)
@@ -1045,6 +1047,7 @@ class TypeChecking(
             node.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, name)
             return null
         }
+        dependencyConsumer(symbol)
         node.type = symbolToType(symbol, hint) ?: MetaType.Error
         return symbol
     }
