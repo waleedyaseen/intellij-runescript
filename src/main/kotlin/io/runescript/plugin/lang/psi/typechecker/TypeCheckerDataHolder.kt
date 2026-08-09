@@ -1,26 +1,37 @@
 package io.runescript.plugin.lang.psi.typechecker
 
 import com.intellij.psi.PsiElement
-import java.util.WeakHashMap
+import java.util.IdentityHashMap
 
-class TypeCheckerDataHolder {
-    private val map = WeakHashMap<PsiElement, MutableMap<String, Any?>>()
+internal enum class TypeCheckerAttribute {
+    TRIGGER_TYPE,
+    PARAMETER_TYPE,
+    RETURN_TYPE,
+    SCRIPT_SCOPE,
+    PARAMETER_SYMBOL,
+    BLOCK_SCOPE,
+    SWITCH_TYPE,
+    SWITCH_CASE_SCOPE,
+    EXPRESSION_TYPE,
+    TYPE_HINT,
+    HOOK_SCOPE,
+}
+
+internal class TypeCheckerDataHolder {
+    private val values = IdentityHashMap<PsiElement, Array<Any?>>()
 
     @Suppress("UNCHECKED_CAST")
     fun <T> get(
         element: PsiElement,
-        key: String,
-    ): T? = map[element]?.get(key) as T?
+        attribute: TypeCheckerAttribute,
+    ): T? = values[element]?.get(attribute.ordinal) as T?
 
     fun <T> set(
         element: PsiElement,
-        key: String,
+        attribute: TypeCheckerAttribute,
         value: T?,
     ) {
-        if (value == null) {
-            map[element]?.remove(key)
-        } else {
-            map.computeIfAbsent(element) { mutableMapOf() }[key] = value
-        }
+        if (value == null && element !in values) return
+        values.computeIfAbsent(element) { arrayOfNulls(TypeCheckerAttribute.entries.size) }[attribute.ordinal] = value
     }
 }
