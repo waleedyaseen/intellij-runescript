@@ -21,6 +21,9 @@ object RsScopesUtil {
             if (!scope.processDeclarations(processor, state, lastParent, element)) {
                 return false
             }
+            if (scope is RsScript) {
+                return true
+            }
             lastParent = scope
             scope = scope.context
         }

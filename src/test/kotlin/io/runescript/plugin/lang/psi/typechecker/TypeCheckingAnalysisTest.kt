@@ -15,6 +15,27 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 class TypeCheckingAnalysisTest : RsParserTestCase() {
+    fun testLocalReferenceDoesNotCrossScriptBoundary() {
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,first]
+                {
+                    def_int ${"$"}value = 1;
+                }
+
+                [proc,second]
+                {
+                    ${"$"}value = 2;
+                }
+                """.trimIndent(),
+            )
+        val usages = PsiTreeUtil.findChildrenOfType(file, RsLocalVariableExpression::class.java)
+
+        assertNull(usages.last().reference?.resolve())
+    }
+
     fun testDynamicReferenceReusesSymbolResolvedByTypeChecking() {
         val targetFile =
             myFixture.addFileToProject(
@@ -221,5 +242,4 @@ class TypeCheckingAnalysisTest : RsParserTestCase() {
         assertEmpty(TypeCheckingUtil.typeCheck(script))
         assertNotSame(initialData, script.typeCheckerData)
     }
-
 }

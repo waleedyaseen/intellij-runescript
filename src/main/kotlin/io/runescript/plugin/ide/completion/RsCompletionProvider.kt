@@ -47,6 +47,7 @@ import io.runescript.plugin.lang.psi.RsSwitchStatement
 import io.runescript.plugin.lang.psi.RsTypeName
 import io.runescript.plugin.lang.psi.isForArrayDeclaration
 import io.runescript.plugin.lang.psi.isForVariableDeclaration
+import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.psi.scope.collectVariableDeclarations
 import io.runescript.plugin.lang.psi.typechecker.trigger.ClientTriggerType
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
@@ -65,6 +66,34 @@ import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 import io.runescript.plugin.symbollang.psi.index.RsSymbolTypeIndex
 import io.runescript.plugin.symbollang.psi.rawSymToType
 import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
+
+private fun scriptTextBefore(
+    position: PsiElement,
+    absoluteOffset: Int,
+): String {
+    val file = position.containingFile
+    val script =
+        RsScopesUtil.parentScript(position)
+            ?: PsiTreeUtil
+                .findChildrenOfType(file, RsScript::class.java)
+                .firstOrNull { absoluteOffset in it.textRange.startOffset..it.textRange.endOffset }
+    if (script != null) {
+        val relativeOffset = (absoluteOffset - script.textOffset).coerceIn(0, script.textLength)
+        return script.text.substring(0, relativeOffset)
+    }
+
+    val fileText = file.text
+    val textBeforeCaret = fileText.substring(0, absoluteOffset.coerceIn(0, fileText.length))
+    val scriptStart =
+        SCRIPT_HEADER_REGEX
+            .findAll(textBeforeCaret)
+            .lastOrNull()
+            ?.range
+            ?.first ?: 0
+    return textBeforeCaret.substring(scriptStart)
+}
+
+private val SCRIPT_HEADER_REGEX = """(?m)^\s*\[[^\r\n]*]""".toRegex()
 
 class RsCompletionProvider : RsCompletionProviderBase() {
     override fun addCompletions(
@@ -437,8 +466,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         prefix: String,
         priority: Double,
     ) {
-        val text = position.containingFile.text
-        val textBeforeCaret = text.substring(0, offset.coerceIn(0, text.length))
+        val textBeforeCaret = scriptTextBefore(position, offset)
         val seen = mutableSetOf<String>()
         for (match in LOCAL_DECLARATION_REGEX.findAll(textBeforeCaret)) {
             val defineType = match.groupValues[1]
@@ -473,9 +501,10 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         if (scopedDeclarations.isNotEmpty()) {
             return scopedDeclarations
         }
+        val script = RsScopesUtil.parentScript(this) ?: return emptyList()
         val offset = textOffset
         return PsiTreeUtil
-            .findChildrenOfType(containingFile, RsLocalVariableExpression::class.java)
+            .findChildrenOfType(script, RsLocalVariableExpression::class.java)
             .filter {
                 it.textOffset < offset &&
                     (it.isForVariableDeclaration() || it.isForArrayDeclaration())
@@ -1503,11 +1532,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             if (declaration != null) {
                 return safeTypeCheckedType(declaration)
             }
-            val prefix =
-                position.containingFile.text.substring(
-                    0,
-                    position.textOffset.coerceIn(0, position.containingFile.textLength),
-                )
+            val prefix = scriptTextBefore(position, position.textOffset)
             val match =
                 LOCAL_DECLARATION_REGEX
                     .findAll(prefix)
@@ -1521,9 +1546,10 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             if (scopedDeclarations.isNotEmpty()) {
                 return scopedDeclarations
             }
+            val script = RsScopesUtil.parentScript(position) ?: return emptyList()
             val offset = position.textOffset
             return PsiTreeUtil
-                .findChildrenOfType(position.containingFile, RsLocalVariableExpression::class.java)
+                .findChildrenOfType(script, RsLocalVariableExpression::class.java)
                 .filter {
                     it.textOffset < offset &&
                         (it.isForVariableDeclaration() || it.isForArrayDeclaration())

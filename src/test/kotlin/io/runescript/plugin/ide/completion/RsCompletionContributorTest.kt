@@ -9,6 +9,24 @@ import io.runescript.plugin.ide.neptune.NeptuneProjectImportData
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 
 class RsCompletionContributorTest : BasePlatformTestCase() {
+    fun testLocalCompletionDoesNotLeakFromPreviousScript() {
+        configure(
+            """
+            [proc,first]
+            {
+                def_int ${"$"}leaked = 1;
+            }
+
+            [proc,second]
+            {
+                <caret>
+            }
+            """,
+        )
+
+        assertDoesNotContain("${"$"}leaked")
+    }
+
     fun testIndexKeyCacheSurvivesBodyOnlyEdit() {
         val file =
             myFixture.configureByText(
