@@ -42,9 +42,21 @@ private class RsSearchEverywhereItemsProvider(
         params: SeParams,
         collector: SeItemsProvider.Collector,
     ) {
-        for (item in findItems(params.inputQuery)) {
-            if (!collector.put(item)) {
-                break
+        val query = params.inputQuery.trim()
+        val nameQuery = scriptNameQuery(query)
+        val nameMatcher = createMatcher(nameQuery)
+        val qualifiedNameMatcher = createMatcher(query)
+        val model = RsGotoScriptModel(project)
+        model.setFilterItems(selectedTriggers())
+        val names = findCandidateNames(model, nameQuery, nameMatcher)
+        var collected = 0
+
+        for (name in names) {
+            for (item in findItemsByName(model, name, query, nameMatcher, qualifiedNameMatcher)) {
+                if (collected == MAX_RESULTS || !collector.put(item)) {
+                    return
+                }
+                collected++
             }
         }
     }
@@ -72,26 +84,33 @@ private class RsSearchEverywhereItemsProvider(
     override fun dispose() {
     }
 
-    private suspend fun findItems(searchText: String): List<RsSearchEverywhereItem> =
+    private suspend fun findCandidateNames(
+        model: RsGotoScriptModel,
+        nameQuery: String,
+        nameMatcher: MinusculeMatcher,
+    ): List<String> =
         smartReadAction(project) {
-            val model = RsGotoScriptModel(project)
-            model.setFilterItems(selectedTriggers())
-
-            val query = searchText.trim()
-            val nameQuery = scriptNameQuery(query)
-            val nameMatcher = createMatcher(nameQuery)
-            val qualifiedNameMatcher = createMatcher(query)
-
             model
                 .getNames(false)
                 .asSequence()
                 .filter { nameQuery.isEmpty() || nameMatcher.matches(it) }
-                .flatMap { name ->
-                    model
-                        .getElementsByName(name, false, query)
-                        .asSequence()
-                        .filterIsInstance<RsScript>()
-                }.mapNotNull { script ->
+                .sortedByDescending { if (nameQuery.isEmpty()) 0 else nameMatcher.matchingDegree(it) }
+                .toList()
+        }
+
+    private suspend fun findItemsByName(
+        model: RsGotoScriptModel,
+        name: String,
+        query: String,
+        nameMatcher: MinusculeMatcher,
+        qualifiedNameMatcher: MinusculeMatcher,
+    ): List<RsSearchEverywhereItem> =
+        smartReadAction(project) {
+            model
+                .getElementsByName(name, false, query)
+                .asSequence()
+                .filterIsInstance<RsScript>()
+                .mapNotNull { script ->
                     val qualifiedName = script.qualifiedName
                     if (query.isNotEmpty() &&
                         !qualifiedNameMatcher.matches(qualifiedName) &&
@@ -106,7 +125,7 @@ private class RsSearchEverywhereItemsProvider(
                         presentableText = presentableText,
                         locationText = presentation?.locationString ?: script.containingFile.name,
                         icon = presentation?.getIcon(false),
-                        matchedRanges = createMatcher(query).match(presentableText).orEmpty(),
+                        matchedRanges = qualifiedNameMatcher.match(presentableText).orEmpty(),
                         searchWeight =
                             if (query.isEmpty()) {
                                 0
@@ -144,6 +163,7 @@ private class RsSearchEverywhereItemsProvider(
             .build()
 
     private companion object {
+        const val MAX_RESULTS = 100
         val TRIGGER_NAMES = RsTriggerRef.forAllTriggers().mapTo(hashSetOf(), RsTriggerRef::displayName)
     }
 }

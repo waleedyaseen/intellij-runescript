@@ -67,7 +67,24 @@ class RsSearchEverywhereItemsProviderTest : BasePlatformTestCase() {
         assertEquals("[loadnpc,npc_target]", findSingleItem("npc_target"))
     }
 
+    fun testCapsBroadSearches() {
+        myFixture.configureByText(
+            "library.cs2",
+            (0..100).joinToString("\n\n") { index -> "[proc,script_$index]\n{\n}" },
+        )
+
+        val items = collectItems("")
+
+        assertSize(100, items)
+    }
+
     private fun findSingleItem(query: String): String {
+        val items = collectItems(query)
+        assertSize(1, items)
+        return runBlocking { items.single().presentation().text }
+    }
+
+    private fun collectItems(query: String): List<SeItem> {
         val items = mutableListOf<SeItem>()
         runBlocking {
             val provider = RsSearchEverywhereItemsProviderFactory().getItemsProvider(project, DataContext.EMPTY_CONTEXT)!!
@@ -81,7 +98,6 @@ class RsSearchEverywhereItemsProviderTest : BasePlatformTestCase() {
                 },
             )
         }
-        assertSize(1, items)
-        return runBlocking { items.single().presentation().text }
+        return items
     }
 }
