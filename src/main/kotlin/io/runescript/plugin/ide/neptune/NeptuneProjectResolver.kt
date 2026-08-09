@@ -16,11 +16,16 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
+import com.intellij.openapi.progress.ProcessCanceledException
 import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
 import io.runescript.plugin.ide.projectWizard.RsModuleType
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 
 class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSettings> {
+    private val activeProcesses = ConcurrentHashMap<ExternalSystemTaskId, CapturingProcessHandler>()
+    private val cancelledTasks = ConcurrentHashMap.newKeySet<ExternalSystemTaskId>()
+
     override fun resolveProjectInfo(
         id: ExternalSystemTaskId,
         projectPath: String,
@@ -37,7 +42,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         }
         check(projectRoot.isDirectory)
 
-        val neptuneData = extractNeptuneProjectMetadata(settings, projectRoot)
+        val neptuneData = extractNeptuneProjectMetadata(id, settings, projectRoot)
         val projectName = neptuneData.name
 
         val projectData =
@@ -108,9 +113,15 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
     override fun cancelTask(
         taskId: ExternalSystemTaskId,
         listener: ExternalSystemTaskNotificationListener,
-    ): Boolean = false
+    ): Boolean {
+        val process = activeProcesses[taskId] ?: return false
+        cancelledTasks.add(taskId)
+        process.destroyProcess()
+        return true
+    }
 
     private fun extractNeptuneProjectMetadata(
+        taskId: ExternalSystemTaskId,
         settings: NeptuneExecutionSettings,
         projectRoot: File,
     ): JsonNeptuneProjectData {
@@ -132,7 +143,18 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         commandLine.addParameter("--log-level")
         commandLine.addParameter("off")
 
-        return parseNeptuneProjectMetadata(CapturingProcessHandler(commandLine).runProcess())
+        val process = CapturingProcessHandler(commandLine)
+        activeProcesses[taskId] = process
+        try {
+            val output = process.runProcess()
+            if (cancelledTasks.remove(taskId)) {
+                throw ProcessCanceledException()
+            }
+            return parseNeptuneProjectMetadata(output)
+        } finally {
+            activeProcesses.remove(taskId, process)
+            cancelledTasks.remove(taskId)
+        }
     }
 
     internal fun parseNeptuneProjectMetadata(output: ProcessOutput): JsonNeptuneProjectData {
