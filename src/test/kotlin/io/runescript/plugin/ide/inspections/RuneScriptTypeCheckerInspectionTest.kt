@@ -110,6 +110,74 @@ class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
         assertFalse(myFixture.getAllQuickFixes().any { action -> action.text.contains("missing argument") })
     }
 
+    fun testExtraCallArgumentsCanBeRemoved() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,takes_one](int ${"$"}value)
+            {
+            }
+            """.trimIndent(),
+        )
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                takes_one(1, 2, 3);
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Remove 2 extra arguments" }
+        myFixture.launchAction(fix)
+
+        myFixture.checkResult(
+            """
+            [proc,main]
+            {
+                takes_one(1);
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testArgumentsCanBeRemovedFromNoArgumentCall() {
+        myFixture.addFileToProject("neptune.toml", "")
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            [command,takes_none]
+            {
+            }
+            """.trimIndent(),
+        )
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                takes_none(1);
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Remove extra argument" }
+        myFixture.launchAction(fix)
+
+        myFixture.checkResult(
+            """
+            [proc,main]
+            {
+                takes_none();
+            }
+            """.trimIndent(),
+        )
+    }
+
     fun testUnresolvedInjectedHookCanCreateClientscript() {
         myFixture.addFileToProject("neptune.toml", "")
         myFixture.addFileToProject(

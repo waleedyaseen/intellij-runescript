@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.ide.inspections.fixes.RsCreateScriptQuickFix
 import io.runescript.plugin.ide.inspections.fixes.RsInsertMissingArgumentsQuickFix
+import io.runescript.plugin.ide.inspections.fixes.RsRemoveExtraArgumentsQuickFix
 import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsVisitor
@@ -46,6 +47,7 @@ class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
 
     private fun Diagnostic.quickFixes(): Array<LocalQuickFix> {
         RsInsertMissingArgumentsQuickFix.from(this)?.let { return arrayOf(it) }
+        RsRemoveExtraArgumentsQuickFix.from(this)?.let { return arrayOf(it) }
         val trigger =
             when (message) {
                 DiagnosticMessage.PROC_REFERENCE_UNRESOLVED -> "proc"
