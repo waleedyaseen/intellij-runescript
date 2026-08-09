@@ -411,6 +411,7 @@ class NeptuneModuleData :
 
     override fun loadState(state: State) {
         super.loadState(state)
+        resolvedData = state.toResolvedData()
         modificationTracker.incModificationCount()
     }
 
@@ -425,18 +426,20 @@ class NeptuneModuleData :
             it.simplifiedTypeCodes = importData.simplifiedTypeCodes
             it
         }
-        resolvedData =
-            NeptuneResolvedData(
-                sourcePaths = importData.sourcePaths,
-                symbolPaths = importData.symbolPaths,
-                dbFindReturnsCount = importData.dbFindReturnsCount,
-                ccCreateAssertNewArg = importData.ccCreateAssertNewArg,
-                prefixPostfixExpressions = importData.prefixPostfixExpressions,
-                arraysV2 = importData.arraysV2,
-                simplifiedTypeCodes = importData.simplifiedTypeCodes,
-            )
+        resolvedData = state.toResolvedData()
         modificationTracker.incModificationCount()
     }
+
+    private fun State.toResolvedData(): NeptuneResolvedData =
+        NeptuneResolvedData(
+            sourcePaths = sourcePaths,
+            symbolPaths = symbolPaths,
+            dbFindReturnsCount = dbFindReturnsCount,
+            ccCreateAssertNewArg = ccCreateAssertNewArg,
+            prefixPostfixExpressions = prefixPostfixExpressions,
+            arraysV2 = arraysV2,
+            simplifiedTypeCodes = simplifiedTypeCodes,
+        )
 }
 
 val DEFAULT_RESOLVED_DATA = NeptuneResolvedData()
