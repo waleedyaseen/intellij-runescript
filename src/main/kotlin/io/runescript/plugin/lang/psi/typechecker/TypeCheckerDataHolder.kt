@@ -14,6 +14,7 @@ internal enum class TypeCheckerAttribute {
     SWITCH_CASE_SCOPE,
     EXPRESSION_TYPE,
     TYPE_HINT,
+    RESOLVED_SYMBOL,
     HOOK_SCOPE,
 }
 

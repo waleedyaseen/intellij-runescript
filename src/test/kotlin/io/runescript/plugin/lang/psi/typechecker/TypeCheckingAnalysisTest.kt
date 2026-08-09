@@ -6,6 +6,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsCommandExpression
+import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
@@ -14,6 +15,35 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 class TypeCheckingAnalysisTest : RsParserTestCase() {
+    fun testDynamicReferenceReusesSymbolResolvedByTypeChecking() {
+        val targetFile =
+            myFixture.addFileToProject(
+                "commands.cs2",
+                """
+                [command,target]()(int)
+                {
+                }
+                """.trimIndent(),
+            )
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    def_int ${"$"}value = target;
+                }
+                """.trimIndent(),
+            )
+        val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
+        val target = PsiTreeUtil.findChildOfType(targetFile, RsScript::class.java)!!
+        val expression = PsiTreeUtil.findChildOfType(file, RsDynamicExpression::class.java)!!
+
+        assertEmpty(TypeCheckingUtil.typeCheck(script))
+        assertSame(target, expression.typeCheckedResolvedSymbol)
+        assertSame(target, expression.reference?.resolve())
+    }
+
     fun testConcurrentRequestsPublishCompleteAnalysis() {
         val file =
             myFixture.configureByText(

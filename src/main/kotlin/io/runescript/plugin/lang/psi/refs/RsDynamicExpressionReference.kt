@@ -16,6 +16,7 @@ import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 import io.runescript.plugin.lang.psi.typechecker.trigger.TriggerType
 import io.runescript.plugin.lang.psi.typechecker.type.MetaType
 import io.runescript.plugin.lang.psi.typechecker.type.Type
+import io.runescript.plugin.lang.psi.typechecker.typeCheckedResolvedSymbol
 import io.runescript.plugin.lang.psi.typechecker.typeCheckedType
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsScriptIndex
@@ -24,7 +25,13 @@ import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 class RsDynamicExpressionReference(
     element: RsDynamicExpression,
 ) : RsCachedPolyVariantReference<RsDynamicExpression>(element, { it.nameLiteral.textRangeInParent }) {
-    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> = resolveElement(element, element.typeCheckedType)
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> {
+        val resolved = element.typeCheckedResolvedSymbol
+        if (resolved != null) {
+            return arrayOf(PsiElementResolveResult(resolved))
+        }
+        return resolveElement(element, element.typeCheckedType)
+    }
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 

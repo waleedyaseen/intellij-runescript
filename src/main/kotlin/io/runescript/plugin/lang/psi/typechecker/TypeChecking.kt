@@ -1048,6 +1048,7 @@ class TypeChecking(
             return null
         }
         dependencyConsumer(symbol)
+        node.resolvedSymbol = symbol
         node.type = symbolToType(symbol, hint) ?: MetaType.Error
         return symbol
     }

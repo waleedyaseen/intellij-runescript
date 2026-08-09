@@ -128,6 +128,8 @@ var RsExpression.nullableType: Type? by attributeOrNull(TypeCheckerAttribute.EXP
  */
 var RsExpression.typeHint: Type? by attributeOrNull(TypeCheckerAttribute.TYPE_HINT)
 
+internal var RsExpression.resolvedSymbol: PsiElement? by attributeOrNull(TypeCheckerAttribute.RESOLVED_SYMBOL)
+
 /**
  * Returns the type of the expression after type checking has been performed.
  */
@@ -135,6 +137,12 @@ val RsExpression.typeCheckedType: Type
     get() {
         TypeCheckingUtil.ensureTypeChecked(this)
         return this.nullableType ?: MetaType.Error
+    }
+
+val RsExpression.typeCheckedResolvedSymbol: PsiElement?
+    get() {
+        TypeCheckingUtil.ensureTypeChecked(this)
+        return resolvedSymbol
     }
 
 /**
