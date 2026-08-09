@@ -17,12 +17,9 @@ import com.intellij.openapi.ui.BrowseFolderDescriptor.Companion.withPathToTextCo
 import com.intellij.openapi.ui.BrowseFolderDescriptor.Companion.withTextToPathConvertor
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.ui.getPresentablePath
-import com.intellij.openapi.ui.validation.CHECK_DIRECTORY
-import com.intellij.openapi.ui.validation.CHECK_NON_EMPTY
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.builder.trimmedTextValidation
 import com.intellij.ui.layout.ValidationInfoBuilder
 import com.intellij.util.lang.JavaVersion
 import com.intellij.vcsUtil.VcsUtil.getCanonicalPath
@@ -77,7 +74,7 @@ class NeptuneSystemSettingsControl(
                 row("Neptune JVM:") {
                     cell(jvmComboBox)
                         .align(AlignX.FILL)
-                        .comment("The JVM to use for running Neptune.")
+                        .comment("The JVM to use for running Neptune. Leave empty to use the IDE runtime.")
                 }
                 row("Neptune home:") {
                     val fileChooserDescriptor =
@@ -91,9 +88,9 @@ class NeptuneSystemSettingsControl(
                         project = null,
                         fileChosen = null,
                     ).bindText(neptuneHomeProperty.toUiPathProperty())
-                        .trimmedTextValidation(CHECK_NON_EMPTY, CHECK_DIRECTORY)
                         .validationInfo { validateNeptuneHome() }
                         .align(AlignX.FILL)
+                        .comment("Leave empty to use the sdk directory in the linked Neptune project.")
                 }
             }
 
@@ -101,7 +98,7 @@ class NeptuneSystemSettingsControl(
     }
 
     private fun ValidationInfoBuilder.validateNeptuneHome(): ValidationInfo? {
-        val validationError = getNeptuneHomeValidationError(neptuneHome) ?: return null
+        val validationError = getOptionalNeptuneHomeValidationError(neptuneHome) ?: return null
         return error(validationError)
     }
 
@@ -137,6 +134,9 @@ class NeptuneSystemSettingsControl(
         settings.neptuneHome = ExternalSystemApiUtil.normalizePath(neptuneHome) ?: ""
     }
 }
+
+internal fun getOptionalNeptuneHomeValidationError(neptuneHome: String): String? =
+    if (neptuneHome.isBlank()) null else getNeptuneHomeValidationError(neptuneHome)
 
 internal fun getNeptuneHomeValidationError(neptuneHome: String): String? {
     if (neptuneHome.isBlank()) {

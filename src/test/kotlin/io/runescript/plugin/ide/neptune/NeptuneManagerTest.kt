@@ -9,6 +9,10 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class NeptuneManagerTest : BasePlatformTestCase() {
+    fun testBlankNeptuneHomeAllowsAutomaticConfiguration() {
+        assertNull(getOptionalNeptuneHomeValidationError(""))
+    }
+
     fun testReportsMissingNeptuneHome() {
         val settings = project.service<NeptuneSettings>()
         settings.neptuneHome = ""
