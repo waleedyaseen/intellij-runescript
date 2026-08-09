@@ -36,7 +36,6 @@
         <annotator language="RuneScript" implementationClass="io.runescript.plugin.ide.highlight.RsHighlightingAnnotator"/>
         <internalFileTemplate name="ClientScript"/>
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
-        <psi.referenceContributor language="RuneScript" implementation="io.runescript.plugin.lang.psi.refs.RsReferenceContributor"/>
         <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
