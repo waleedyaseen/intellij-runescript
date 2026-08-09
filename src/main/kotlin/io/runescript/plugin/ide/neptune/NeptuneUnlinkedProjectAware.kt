@@ -18,7 +18,11 @@ class NeptuneUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
     override fun isLinkedProject(
         project: Project,
         externalProjectPath: String,
-    ): Boolean = project.service<NeptuneSettings>().linkedProjectsSettings.isNotEmpty()
+    ): Boolean =
+        project
+            .service<NeptuneSettings>()
+            .linkedProjectsSettings
+            .any { it.matchesProjectPath(externalProjectPath) }
 
     override suspend fun linkAndLoadProjectAsync(
         project: Project,
@@ -31,7 +35,12 @@ class NeptuneUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
         project: Project,
         externalProjectPath: String,
     ) {
-        // TODO:
+        val settings = project.service<NeptuneSettings>()
+        val linkedPath =
+            settings.linkedProjectsSettings
+                .firstOrNull { it.matchesProjectPath(externalProjectPath) }
+                ?.externalProjectPath ?: return
+        settings.unlinkExternalProject(linkedPath)
     }
 
     override fun subscribe(
