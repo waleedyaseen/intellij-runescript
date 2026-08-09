@@ -3,8 +3,31 @@ package io.runescript.plugin.ide.neptune
 import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import junit.framework.TestCase
+import java.io.File
 
 class NeptuneProjectResolverTest : TestCase() {
+    fun testDoesNotAddOutputNestedUnderExcludedDirectory() {
+        val excluded =
+            NeptuneProjectResolver().collectExcludedPaths(
+                File("project"),
+                listOf("pack"),
+                "pack/server/cs2",
+            )
+
+        assertEquals(listOf("pack"), excluded)
+    }
+
+    fun testAddsOutputOutsideExcludedDirectories() {
+        val excluded =
+            NeptuneProjectResolver().collectExcludedPaths(
+                File("project"),
+                listOf("cache"),
+                "pack/server/cs2",
+            )
+
+        assertEquals(listOf("cache", "pack/server/cs2"), excluded)
+    }
+
     fun testParsesProjectMetadata() {
         val metadata =
             NeptuneProjectResolver().parseNeptuneProjectMetadata(

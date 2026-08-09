@@ -56,10 +56,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val moduleNode = projectNode.createModuleNode(projectName, projectRoot.absolutePath)
 
         val outputPath = neptuneData.writers?.binary?.outputPath
-        var excludedPaths = neptuneData.excludePaths
-        if (outputPath != null) {
-            excludedPaths = excludedPaths + outputPath
-        }
+        val excludedPaths = collectExcludedPaths(projectRoot, neptuneData.excludePaths, outputPath)
         moduleNode.createContentRootNode(
             projectRoot.absolutePath,
             neptuneData.sourcePaths,
@@ -69,6 +66,32 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         moduleNode.createChild(NeptuneProjectImportDataService.Keys.DATA_KEY, neptuneData.toPersistentData())
 
         return projectNode
+    }
+
+    internal fun collectExcludedPaths(
+        projectRoot: File,
+        excludedPaths: List<String>,
+        outputPath: String?,
+    ): List<String> {
+        if (outputPath == null) return excludedPaths
+
+        val absoluteOutputPath =
+            projectRoot
+                .resolve(outputPath)
+                .toPath()
+                .toAbsolutePath()
+                .normalize()
+        val outputAlreadyExcluded =
+            excludedPaths.any { excludedPath ->
+                absoluteOutputPath.startsWith(
+                    projectRoot
+                        .resolve(excludedPath)
+                        .toPath()
+                        .toAbsolutePath()
+                        .normalize(),
+                )
+            }
+        return if (outputAlreadyExcluded) excludedPaths else excludedPaths + outputPath
     }
 
     private fun DataNode<*>.createModuleNode(
