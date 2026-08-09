@@ -17,7 +17,6 @@ import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.projectRoots.ProjectJdkTable
-import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Pair
 import com.intellij.util.Function
 import kotlinx.coroutines.Deferred
@@ -25,7 +24,6 @@ import java.nio.file.Path
 
 class NeptuneManager :
     ExternalSystemManager<NeptuneProjectSettings, NeptuneSettingsListener, NeptuneSettings, NeptuneLocalSettings, NeptuneExecutionSettings>,
-    StartupActivity,
     ExternalSystemAutoImportAware,
     ExternalSystemConfigurableAware {
     private val autoImport = NeptuneAutoImportAware()
@@ -73,9 +71,6 @@ class NeptuneManager :
         NeptuneSystemTaskManager::class.java
 
     override fun getExternalProjectDescriptor(): FileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
-
-    override fun runActivity(project: Project) {
-    }
 
     override fun getAffectedExternalProjectPath(
         changedFileOrDirPath: String,
