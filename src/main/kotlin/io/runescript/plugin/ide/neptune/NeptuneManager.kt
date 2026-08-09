@@ -8,6 +8,7 @@ import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
 import com.intellij.openapi.externalSystem.ExternalSystemConfigurableAware
 import com.intellij.openapi.externalSystem.ExternalSystemManager
 import com.intellij.openapi.externalSystem.importing.ProjectResolverPolicy
+import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -45,11 +46,19 @@ class NeptuneManager :
         Function { pair ->
             val project = pair.first
             val systemSettings = project.service<NeptuneSettings>()
+            getNeptuneHomeValidationError(systemSettings.neptuneHome)?.let { error ->
+                throw ExternalSystemException(error)
+            }
+            if (systemSettings.launcherJre.isBlank()) {
+                throw ExternalSystemException("Neptune JVM is not configured")
+            }
             val javaSdk =
                 ProjectJdkTable
                     .getInstance()
                     .findJdk(systemSettings.launcherJre)
-                    ?: error("Java SDK not found")
+                    ?: throw ExternalSystemException(
+                        "Configured Neptune JVM '${systemSettings.launcherJre}' was not found",
+                    )
             val jvmExecutablePath = JavaSdk.getInstance().getVMExecutablePath(javaSdk)
             NeptuneExecutionSettings(
                 jvmExecutablePath,

@@ -101,20 +101,8 @@ class NeptuneSystemSettingsControl(
     }
 
     private fun ValidationInfoBuilder.validateNeptuneHome(): ValidationInfo? {
-        val homeFolder = File(neptuneHome)
-        if (!homeFolder.exists() || !homeFolder.isDirectory) {
-            return error("The specified Neptune home directory does not exist.")
-        }
-        val libsFolder = File(homeFolder, "libs")
-        if (!libsFolder.exists() || !libsFolder.isDirectory) {
-            return error("The specified Neptune home directory is not valid.")
-        }
-        val compilerJar =
-            libsFolder.listFiles { _, name -> name.matches("neptune-clientscript-compiler-.*\\.jar".toRegex()) }
-        if (compilerJar.isNullOrEmpty()) {
-            return error("The specified Neptune home directory does not contain the compiler jar.")
-        }
-        return null
+        val validationError = getNeptuneHomeValidationError(neptuneHome) ?: return null
+        return error(validationError)
     }
 
     override fun reset() {
@@ -148,4 +136,24 @@ class NeptuneSystemSettingsControl(
         settings.launcherJre = selectedJdk
         settings.neptuneHome = ExternalSystemApiUtil.normalizePath(neptuneHome) ?: ""
     }
+}
+
+internal fun getNeptuneHomeValidationError(neptuneHome: String): String? {
+    if (neptuneHome.isBlank()) {
+        return "Neptune home is not configured."
+    }
+    val homeFolder = File(neptuneHome)
+    if (!homeFolder.exists() || !homeFolder.isDirectory) {
+        return "The specified Neptune home directory does not exist."
+    }
+    val libsFolder = File(homeFolder, "libs")
+    if (!libsFolder.exists() || !libsFolder.isDirectory) {
+        return "The specified Neptune home directory is not valid."
+    }
+    val compilerJar =
+        libsFolder.listFiles { _, name -> name.matches("neptune-clientscript-compiler-.*\\.jar".toRegex()) }
+    if (compilerJar.isNullOrEmpty()) {
+        return "The specified Neptune home directory does not contain the compiler jar."
+    }
+    return null
 }
