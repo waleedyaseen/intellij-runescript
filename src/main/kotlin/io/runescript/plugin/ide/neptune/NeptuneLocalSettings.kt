@@ -20,6 +20,7 @@ class NeptuneLocalSettings(
     ),
     PersistentStateComponent<NeptuneLocalSettingsState> {
     override fun loadState(state: NeptuneLocalSettingsState) {
+        super.loadState(state)
     }
 }
 
