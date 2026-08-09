@@ -1,9 +1,13 @@
 package io.runescript.plugin.ide.neptune
 
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.annotations.SerializedName
+import com.intellij.execution.process.CapturingProcessHandler
+import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.externalSystem.importing.ProjectResolverPolicy
 import com.intellij.openapi.externalSystem.model.DataNode
+import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import com.intellij.openapi.externalSystem.model.ProjectKeys
 import com.intellij.openapi.externalSystem.model.project.ContentRootData
 import com.intellij.openapi.externalSystem.model.project.ExternalSystemSourceType
@@ -14,12 +18,9 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotifica
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
 import io.runescript.plugin.ide.execution.createNeptuneJvmCommand
 import io.runescript.plugin.ide.projectWizard.RsModuleType
-import org.slf4j.LoggerFactory
 import java.io.File
 
 class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSettings> {
-    private val log = LoggerFactory.getLogger(NeptuneProjectResolver::class.java)
-
     override fun resolveProjectInfo(
         id: ExternalSystemTaskId,
         projectPath: String,
@@ -36,7 +37,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         }
         check(projectRoot.isDirectory)
 
-        val neptuneData = extractNeptuneProjectMetadata(settings, projectRoot) ?: return null
+        val neptuneData = extractNeptuneProjectMetadata(settings, projectRoot)
         val projectName = neptuneData.name
 
         val projectData =
@@ -112,7 +113,7 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
     private fun extractNeptuneProjectMetadata(
         settings: NeptuneExecutionSettings,
         projectRoot: File,
-    ): JsonNeptuneProjectData? {
+    ): JsonNeptuneProjectData {
         val neptuneFile = projectRoot.resolve("neptune.toml")
         check(neptuneFile.exists())
 
@@ -131,13 +132,30 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         commandLine.addParameter("--log-level")
         commandLine.addParameter("off")
 
-        val process = commandLine.createProcess()
-        val output = process.inputStream.bufferedReader().readText()
+        return parseNeptuneProjectMetadata(CapturingProcessHandler(commandLine).runProcess())
+    }
+
+    internal fun parseNeptuneProjectMetadata(output: ProcessOutput): JsonNeptuneProjectData {
+        if (output.exitCode != 0) {
+            val details = output.stderr.trim().ifEmpty { output.stdout.trim() }
+            val suffix =
+                details
+                    .take(MAX_ERROR_DETAILS_LENGTH)
+                    .takeIf { it.isNotEmpty() }
+                    ?.let { ": $it" }
+                    .orEmpty()
+            throw ExternalSystemException("Neptune project import failed with exit code ${output.exitCode}$suffix")
+        }
+
+        return parseNeptuneProjectMetadata(output.stdout)
+    }
+
+    internal fun parseNeptuneProjectMetadata(output: String): JsonNeptuneProjectData {
         try {
             return Gson().fromJson(output, JsonNeptuneProjectData::class.java)
-        } catch (e: Throwable) {
-            log.error("Failed to parse Neptune project data", e)
-            return null
+                ?: throw JsonParseException("Neptune returned no project metadata")
+        } catch (_: JsonParseException) {
+            throw ExternalSystemException("Neptune returned invalid project metadata")
         }
     }
 
@@ -185,4 +203,8 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val arraysV2: Boolean = false,
         val simplifiedTypeCodes: Boolean = false,
     )
+
+    private companion object {
+        const val MAX_ERROR_DETAILS_LENGTH = 4_000
+    }
 }
