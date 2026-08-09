@@ -11,7 +11,9 @@ abstract class RsCommandExpressionMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsCommandExpression {
-    override fun getReference(): PsiReference? = RsCommandExpressionReference(this)
+    private val cachedReference by lazy { RsCommandExpressionReference(this) }
+
+    override fun getReference(): PsiReference = cachedReference
 
     override val argumentList: RsArgumentList?
         get() = args

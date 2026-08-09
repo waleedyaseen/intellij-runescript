@@ -49,7 +49,6 @@ import io.runescript.plugin.lang.psi.RsUnaryExpression
 import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.RsWhileStatement
 import io.runescript.plugin.lang.psi.arguments
-import io.runescript.plugin.lang.psi.isHookExpression
 import io.runescript.plugin.lang.psi.refs.RsDynamicExpressionReference
 import io.runescript.plugin.lang.psi.refs.RsIntegerLiteralReference
 import io.runescript.plugin.lang.psi.refs.RsStringLiteralReference
@@ -110,6 +109,10 @@ class TypeChecking(
      * The current table. This is updated each time when entering a new script or block.
      */
     private var table: LocalVariableTable = rootTable
+
+    private val triggerTypeCache = mutableMapOf<RsScript, TriggerType?>()
+    private val parameterTypeCache = mutableMapOf<RsScript, Type>()
+    private val returnTypeCache = mutableMapOf<Pair<RsScript, TriggerType?>, Type>()
 
     /**
      * Sets the active [table] to [newTable] and runs [block] then sets [table] back to what it was originally.
@@ -312,7 +315,7 @@ class TypeChecking(
 //            val sub = expression.subExpression
 //            sub == null || isConstantExpression(sub) TODO(Walied):
                 val stringContent = expression.stringLiteralContent
-                !stringContent.isHookExpression() && stringContent.stringInterpolationExpressionList.isEmpty()
+                expression.type !is MetaType.Hook && stringContent.stringInterpolationExpressionList.isEmpty()
             }
 
             is RsLiteralExpression -> {
@@ -448,6 +451,7 @@ class TypeChecking(
         val parent = host.parent
         check(parent is RsStringLiteralExpression)
 
+        TypeCheckingUtil.typeCheck(parent)
         val scope = parent.hookScope ?: return
 
         scoped(scope) {
@@ -1243,57 +1247,64 @@ class TypeChecking(
     }
 
     /**
-     * Finds all [Diagnostic]s that are of type [DiagnosticType.ERROR] and are associated with the given [element].
-     */
-    fun findErrors(element: PsiElement) =
-        diagnostics.diagnostics.filter {
-            it.isError() && it.element === element
-        }
-
-    /**
      * Computes the [TriggerType] for the given [RsScript] based on its trigger name expression.
      */
     fun RsScript?.computeTriggerType(): TriggerType? {
-        val text = this?.triggerNameExpression?.text ?: return null
-        return triggerManager.findOrNull(text)
+        val script = this ?: return null
+        if (script in triggerTypeCache) {
+            return triggerTypeCache[script]
+        }
+        val type = triggerManager.findOrNull(script.triggerNameExpression.text)
+        triggerTypeCache[script] = type
+        return type
     }
 
     /**
      * Computes the parameter types for the given [RsScript] based on its parameter list.
      */
     fun RsScript?.computeParameterType(): Type {
+        val script = this ?: return MetaType.Unit
+        parameterTypeCache[script]?.let { return it }
         val parameters =
-            this?.parameterList?.parameterList?.map {
+            script.parameterList?.parameterList?.map {
                 val text = it.typeName.text
                 val type = typeManager.findOrNull(text, allowArray = true)
                 type ?: MetaType.Error
             }
-        return TupleType.fromList(parameters)
+        val type = TupleType.fromList(parameters)
+        parameterTypeCache[script] = type
+        return type
     }
 
     /**
      * Computes the return type for the given [RsScript] based on its return list and the provided [TriggerType].
      */
     fun RsScript?.computeReturnType(trigger: TriggerType?): Type {
-        val returnTokens = this?.returnList?.typeNameList
-        return if (returnTokens.isNullOrEmpty()) {
-            // default return based on trigger if the trigger was found
-            // triggers that allow returns will default to `unit` instead of `nothing`.
-            if (trigger == null) {
-                MetaType.Error
-            } else if (trigger.allowReturns) {
-                MetaType.Unit
+        val script = this ?: return MetaType.Error
+        val key = script to trigger
+        returnTypeCache[key]?.let { return it }
+        val returnTokens = script.returnList?.typeNameList
+        val type =
+            if (returnTokens.isNullOrEmpty()) {
+                // default return based on trigger if the trigger was found
+                // triggers that allow returns will default to `unit` instead of `nothing`.
+                if (trigger == null) {
+                    MetaType.Error
+                } else if (trigger.allowReturns) {
+                    MetaType.Unit
+                } else {
+                    MetaType.Nothing
+                }
             } else {
-                MetaType.Nothing
+                val returns = mutableListOf<Type>()
+                for (token in returnTokens) {
+                    val type = typeManager.findOrNull(token.text, allowArray = arraysV2)
+                    returns += type ?: MetaType.Error
+                }
+                TupleType.fromList(returns)
             }
-        } else {
-            val returns = mutableListOf<Type>()
-            for (token in returnTokens) {
-                val type = typeManager.findOrNull(token.text, allowArray = arraysV2)
-                returns += type ?: MetaType.Error
-            }
-            TupleType.fromList(returns)
-        }
+        returnTypeCache[key] = type
+        return type
     }
 
     private companion object {

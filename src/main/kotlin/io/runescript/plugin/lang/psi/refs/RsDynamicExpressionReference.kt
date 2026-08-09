@@ -4,7 +4,6 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.ResolveState
 import com.intellij.psi.search.GlobalSearchScope
@@ -24,8 +23,8 @@ import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsDynamicExpressionReference(
     element: RsDynamicExpression,
-) : PsiPolyVariantReferenceBase<RsDynamicExpression>(element, element.nameLiteral.textRangeInParent) {
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> = resolveElement(element, element.typeCheckedType)
+) : RsCachedPolyVariantReference<RsDynamicExpression>(element, { it.nameLiteral.textRangeInParent }) {
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> = resolveElement(element, element.typeCheckedType)
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 

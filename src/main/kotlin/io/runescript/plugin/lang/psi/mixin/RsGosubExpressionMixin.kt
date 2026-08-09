@@ -11,7 +11,9 @@ abstract class RsGosubExpressionMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsGosubExpression {
-    override fun getReference(): RsGosubReference = RsGosubReference(this)
+    private val cachedReference by lazy { RsGosubReference(this) }
+
+    override fun getReference(): RsGosubReference = cachedReference
 
     override fun getNameIdentifier(): PsiElement = nameLiteral
 

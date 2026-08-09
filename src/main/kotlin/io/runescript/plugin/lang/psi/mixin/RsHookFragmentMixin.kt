@@ -11,7 +11,9 @@ abstract class RsHookFragmentMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsHookFragment {
-    override fun getReference(): RsHookFragmentReference = RsHookFragmentReference(this)
+    private val cachedReference by lazy { RsHookFragmentReference(this) }
+
+    override fun getReference(): RsHookFragmentReference = cachedReference
 
     override fun getNameIdentifier(): PsiElement = nameLiteral
 

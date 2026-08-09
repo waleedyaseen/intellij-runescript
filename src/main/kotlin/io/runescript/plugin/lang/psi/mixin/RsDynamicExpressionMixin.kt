@@ -14,11 +14,13 @@ abstract class RsDynamicExpressionMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsDynamicExpression {
+    private val cachedReference by lazy { RsDynamicExpressionReference(this) }
+
     override fun getReference(): PsiReference? {
         if (typeHint is MetaType.Type) {
             return null
         }
-        return RsDynamicExpressionReference(this)
+        return cachedReference
     }
 
     override fun getName(): String? = RsPsiImplUtil.getName(nameLiteral)

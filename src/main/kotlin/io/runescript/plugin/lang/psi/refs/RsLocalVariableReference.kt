@@ -2,8 +2,6 @@ package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReference
-import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.ResolveState
 import io.runescript.plugin.ide.neptune.neptuneModuleData
@@ -15,14 +13,8 @@ import io.runescript.plugin.lang.psi.scope.RsScopesUtil
 
 class RsLocalVariableReference(
     element: RsLocalVariableExpression,
-) : PsiReferenceBase<RsLocalVariableExpression>(element, element.nameLiteral.textRangeInParent),
-    PsiPolyVariantReference {
-    override fun resolve(): PsiElement? {
-        val result = multiResolve(false)
-        return result.singleOrNull()?.element
-    }
-
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+) : RsCachedPolyVariantReference<RsLocalVariableExpression>(element, { it.nameLiteral.textRangeInParent }) {
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> {
         val neptuneConfig = element.neptuneModuleData
         val resolveMode =
             if (neptuneConfig != null && neptuneConfig.arraysV2) {

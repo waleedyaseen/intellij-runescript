@@ -42,7 +42,7 @@ fun <T> attribute(key: String): ReadWriteProperty<PsiElement, T> =
             property: KProperty<*>,
         ): T {
             val value =
-                thisRef.typeCheckerData?.get<T>(thisRef, key)
+                TypeCheckingUtil.dataFor(thisRef)?.get<T>(thisRef, key)
                     ?: throw IllegalStateException("Property '${property.name}' should be initialized before get.")
             return value
         }
@@ -52,7 +52,7 @@ fun <T> attribute(key: String): ReadWriteProperty<PsiElement, T> =
             property: KProperty<*>,
             value: T,
         ) {
-            checkNotNull(thisRef.typeCheckerData).set(thisRef, key, value)
+            checkNotNull(TypeCheckingUtil.dataFor(thisRef)).set(thisRef, key, value)
         }
     }
 
@@ -65,14 +65,14 @@ fun <T : Any> attributeOrNull(key: String): ReadWriteProperty<PsiElement, T?> =
         override fun getValue(
             thisRef: PsiElement,
             property: KProperty<*>,
-        ): T? = thisRef.typeCheckerData?.get(thisRef, key)
+        ): T? = TypeCheckingUtil.dataFor(thisRef)?.get(thisRef, key)
 
         override fun setValue(
             thisRef: PsiElement,
             property: KProperty<*>,
             value: T?,
         ) {
-            checkNotNull(thisRef.typeCheckerData).set(thisRef, key, value)
+            checkNotNull(TypeCheckingUtil.dataFor(thisRef)).set(thisRef, key, value)
         }
     }
 

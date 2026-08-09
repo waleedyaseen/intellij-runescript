@@ -22,12 +22,14 @@ abstract class RsScopedVariableExpressionMixin :
     constructor(stub: RsScopedVariableExpressionStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsScopedVariableExpressionStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
+    private val cachedReference by lazy { RsScopedVariableReference(this) }
+
     override fun getUseScope(): SearchScope {
         val module = ModuleUtil.findModuleForPsiElement(this) ?: return super.getUseScope()
         return GlobalSearchScope.moduleScope(module)
     }
 
-    override fun getReference(): PsiReference? = RsScopedVariableReference(this)
+    override fun getReference(): PsiReference = cachedReference
 
     override fun getTextOffset(): Int = nameLiteral.startOffset
 

@@ -13,9 +13,11 @@ abstract class RsIntegerLiteralExpressionMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsIntegerLiteralExpression {
+    private val cachedReference by lazy { RsIntegerLiteralReference(this) }
+
     override fun getReference(): RsIntegerLiteralReference? {
         if (typeCheckedType != PrimitiveType.INT) {
-            return RsIntegerLiteralReference(this)
+            return cachedReference
         }
         return null
     }

@@ -13,7 +13,9 @@ abstract class RsConstantExpressionMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsConstantExpression {
-    override fun getReference(): PsiReference? = RsConstantReference(this)
+    private val cachedReference by lazy { RsConstantReference(this) }
+
+    override fun getReference(): PsiReference = cachedReference
 
     override fun getName(): String? = RsPsiImplUtil.getName(nameLiteral)
 

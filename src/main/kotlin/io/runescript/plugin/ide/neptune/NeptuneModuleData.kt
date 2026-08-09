@@ -7,6 +7,8 @@ import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
+import com.intellij.openapi.util.ModificationTracker
+import com.intellij.openapi.util.SimpleModificationTracker
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.CcCreateCommandHandler
@@ -372,7 +374,9 @@ data class NeptuneResolvedData(
     name = "NeptuneModuleData",
     storages = [Storage(StoragePathMacros.MODULE_FILE)],
 )
-class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData.State>(State()) {
+class NeptuneModuleData :
+    SerializablePersistentStateComponent<NeptuneModuleData.State>(State()),
+    ModificationTracker {
     data class State(
         var sourcePaths: List<String> = emptyList(),
         var symbolPaths: List<String> = emptyList(),
@@ -399,9 +403,15 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
         get() = state.simplifiedTypeCodes
 
     var resolvedData = NeptuneResolvedData()
+        private set
+
+    private val modificationTracker = SimpleModificationTracker()
+
+    override fun getModificationCount(): Long = modificationTracker.modificationCount
 
     override fun loadState(state: State) {
         super.loadState(state)
+        modificationTracker.incModificationCount()
     }
 
     fun updateFromImportData(importData: NeptuneProjectImportData) {
@@ -425,6 +435,7 @@ class NeptuneModuleData : SerializablePersistentStateComponent<NeptuneModuleData
                 arraysV2 = importData.arraysV2,
                 simplifiedTypeCodes = importData.simplifiedTypeCodes,
             )
+        modificationTracker.incModificationCount()
     }
 }
 

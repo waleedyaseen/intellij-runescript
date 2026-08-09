@@ -2,8 +2,6 @@ package io.runescript.plugin.lang.psi.refs
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReference
-import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.ResolveResult
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.psi.RsScopedVariableExpression
@@ -13,14 +11,8 @@ import io.runescript.plugin.symbollang.psi.rawSymToType
 
 class RsScopedVariableReference(
     element: RsScopedVariableExpression,
-) : PsiReferenceBase<RsScopedVariableExpression>(element, element.nameLiteral.textRangeInParent),
-    PsiPolyVariantReference {
-    override fun resolve(): PsiElement? {
-        val result = multiResolve(false)
-        return result.singleOrNull()?.element
-    }
-
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+) : RsCachedPolyVariantReference<RsScopedVariableExpression>(element, { it.nameLiteral.textRangeInParent }) {
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> {
         val name = element.name ?: return emptyArray()
         val moduleData = element.neptuneModuleData ?: return emptyArray()
         return RsSymbolIndex

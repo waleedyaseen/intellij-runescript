@@ -24,6 +24,8 @@ abstract class RsSymSymbolMixin :
     constructor(stub: RsSymSymbolStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsSymSymbolStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
+    private val cachedClientscriptReference by lazy { RsSymClientscriptReference(this) }
+
     override fun getUseScope(): SearchScope {
         val module = ModuleUtil.findModuleForPsiElement(this) ?: return super.getUseScope()
         return GlobalSearchScope.moduleScope(module)
@@ -33,7 +35,7 @@ abstract class RsSymSymbolMixin :
         if (containingFile.virtualFile != null && resolveToSymTypeName(containingFile) == "clientscript") {
             val text = fieldList.getOrNull(1)?.text
             if (text != null && text.startsWith("[") && text.endsWith("]") && text.contains(",")) {
-                return RsSymClientscriptReference(this)
+                return cachedClientscriptReference
             }
         }
         return super.getReference()

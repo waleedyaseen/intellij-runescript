@@ -4,7 +4,6 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
@@ -14,8 +13,8 @@ import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
 
 class RsHookFragmentReference(
     element: RsHookFragment,
-) : PsiPolyVariantReferenceBase<RsHookFragment>(element, element.nameLiteral.textRangeInParent) {
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+) : RsCachedPolyVariantReference<RsHookFragment>(element, { it.nameLiteral.textRangeInParent }) {
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> {
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
         val elements =
             StubIndex.getElements(

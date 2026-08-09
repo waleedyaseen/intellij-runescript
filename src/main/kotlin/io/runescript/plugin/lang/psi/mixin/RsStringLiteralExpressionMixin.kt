@@ -15,12 +15,14 @@ abstract class RsStringLiteralExpressionMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node),
     RsStringLiteralExpression {
+    private val cachedReference by lazy { RsStringLiteralReference(this) }
+
     override fun getReference(): RsStringLiteralReference? {
         if (stringLiteralContent.isHookExpression()) {
             return null
         }
         if (typeCheckedType != PrimitiveType.STRING) {
-            return RsStringLiteralReference(this)
+            return cachedReference
         }
         return null
     }

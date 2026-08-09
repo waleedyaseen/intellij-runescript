@@ -3,7 +3,6 @@ package io.runescript.plugin.lang.psi.refs
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.ResolveResult
 import io.runescript.plugin.lang.psi.RsStringLiteralExpression
 import io.runescript.plugin.lang.psi.isBasicContent
@@ -13,8 +12,8 @@ import io.runescript.plugin.symbollang.psi.index.RsSymbolIndex
 
 class RsStringLiteralReference(
     element: RsStringLiteralExpression,
-) : PsiPolyVariantReferenceBase<RsStringLiteralExpression>(element, element.stringLiteralContent.textRangeInParent) {
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> = resolveElement(element, element.typeCheckedType)
+) : RsCachedPolyVariantReference<RsStringLiteralExpression>(element, { it.stringLiteralContent.textRangeInParent }) {
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> = resolveElement(element, element.typeCheckedType)
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 

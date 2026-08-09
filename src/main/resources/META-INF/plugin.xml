@@ -10,7 +10,7 @@
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/META-INF/symbol-lang.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
-        <languageInjectionContributor language="RuneScript" implementationClass="io.runescript.plugin.ide.injection.RsInjectionContributor"/>
+        <multiHostInjector implementation="io.runescript.plugin.ide.injection.RsHookLanguageInjector"/>
         <lang.parserDefinition language="RuneScript"
                                implementationClass="io.runescript.plugin.lang.parser.RsParserDefinition"/>
         <fileType name="RuneScript" language="RuneScript"

@@ -25,6 +25,8 @@ abstract class RsLocalVariableExpressionMixin :
     constructor(stub: RsLocalVariableExpressionStub, type: IStubElementType<*, *>) : super(stub, type)
     constructor(stub: RsLocalVariableExpressionStub?, type: IElementType?, node: ASTNode?) : super(stub, type, node)
 
+    private val cachedReference by lazy { RsLocalVariableReference(this) }
+
     override fun getUseScope(): SearchScope {
         val script = RsScopesUtil.parentScript(this) ?: return LocalSearchScope.EMPTY
         val doc = script.findDoc()
@@ -39,7 +41,7 @@ abstract class RsLocalVariableExpressionMixin :
         if (isForVariableDeclaration() || isForArrayDeclaration()) {
             return null
         }
-        return RsLocalVariableReference(this)
+        return cachedReference
     }
 
     override fun getTextOffset(): Int = nameLiteral.startOffset
