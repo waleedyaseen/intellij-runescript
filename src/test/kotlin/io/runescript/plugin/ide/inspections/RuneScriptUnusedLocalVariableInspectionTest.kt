@@ -55,4 +55,23 @@ class RuneScriptUnusedLocalVariableInspectionTest : RsParserTestCase() {
 
         myFixture.checkHighlighting()
     }
+
+    fun testResolvesShadowedDeclarationsInSinglePass() {
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                def_int ${"$"}value = 1;
+                if (true) {
+                    def_int ${"$"}value = 2;
+                    ${"$"}value = 3;
+                }
+                ${"$"}value = 4;
+            }
+            """.trimIndent(),
+        )
+
+        myFixture.checkHighlighting()
+    }
 }
