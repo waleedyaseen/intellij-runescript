@@ -27,14 +27,17 @@ class NeptuneManagerTest : BasePlatformTestCase() {
         assertEquals(projectHome.toString(), resolvedHome)
     }
 
-    fun testReportsMissingNeptuneJvm() {
+    fun testUsesIdeRuntimeJvmWhenNeptuneJvmIsNotConfigured() {
         val settings = project.service<NeptuneSettings>()
         settings.neptuneHome = createNeptuneHome().toString()
         settings.launcherJre = ""
 
-        val error = getExecutionSettingsError()
+        val executionSettings =
+            NeptuneManager()
+                .executionSettingsProvider
+                .`fun`(Pair.create(project, project.basePath!!))
 
-        assertEquals("Neptune JVM is not configured", error.message)
+        assertEquals(resolveNeptuneJvmExecutable(""), executionSettings.jvmExecutablePath)
     }
 
     fun testReportsDeletedNeptuneJvm() {

@@ -45,17 +45,7 @@ class NeptuneManager :
             val project = pair.first
             val systemSettings = project.service<NeptuneSettings>()
             val neptuneHome = resolveNeptuneHome(systemSettings.neptuneHome, pair.second)
-            if (systemSettings.launcherJre.isBlank()) {
-                throw ExternalSystemException("Neptune JVM is not configured")
-            }
-            val javaSdk =
-                ProjectJdkTable
-                    .getInstance()
-                    .findJdk(systemSettings.launcherJre)
-                    ?: throw ExternalSystemException(
-                        "Configured Neptune JVM '${systemSettings.launcherJre}' was not found",
-                    )
-            val jvmExecutablePath = JavaSdk.getInstance().getVMExecutablePath(javaSdk)
+            val jvmExecutablePath = resolveNeptuneJvmExecutable(systemSettings.launcherJre)
             NeptuneExecutionSettings(
                 jvmExecutablePath,
                 neptuneHome,
@@ -84,6 +74,24 @@ class NeptuneManager :
         resolverPolicy == null || !resolverPolicy.isPartialDataResolveAllowed
 
     override fun getConfigurable(project: Project): Configurable = NeptuneSystemConfigurable(project)
+}
+
+internal fun resolveNeptuneJvmExecutable(configuredJre: String): String {
+    if (configuredJre.isBlank()) {
+        val executableName = if (System.getProperty("os.name").startsWith("Windows")) "java.exe" else "java"
+        val currentJvm = Path.of(System.getProperty("java.home"), "bin", executableName)
+        if (currentJvm.toFile().isFile) {
+            return currentJvm.toString()
+        }
+        throw ExternalSystemException("The IDE runtime JVM executable was not found at '$currentJvm'")
+    }
+
+    val javaSdk =
+        ProjectJdkTable
+            .getInstance()
+            .findJdk(configuredJre)
+            ?: throw ExternalSystemException("Configured Neptune JVM '$configuredJre' was not found")
+    return JavaSdk.getInstance().getVMExecutablePath(javaSdk)
 }
 
 internal fun resolveNeptuneHome(
