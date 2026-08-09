@@ -10,6 +10,21 @@ import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsStringLiteralContent
 
 class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
+    fun testIncompleteLocalDeclarationDoesNotCrashHighlighting() {
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            [proc,main]
+            {
+                def_int ${"$"} = 0;
+            }
+            """.trimIndent(),
+        )
+        myFixture.enableInspections(RuneScriptTypeCheckerInspection())
+
+        myFixture.doHighlighting()
+    }
+
     fun testUnresolvedCallsOfferScriptCreationFixes() {
         myFixture.addFileToProject("neptune.toml", "")
         val file =

@@ -377,7 +377,8 @@ class TypeChecking(
 
     override fun visitLocalVariableDeclarationStatement(declarationStatement: RsLocalVariableDeclarationStatement) {
         val typeName = declarationStatement.defineType.text.removePrefix("def_")
-        val name = declarationStatement.variable.nameLiteral.text
+        val variable = declarationStatement.expressionList.firstOrNull() as? RsLocalVariableExpression ?: return
+        val name = variable.nameLiteral.text
         val type = typeManager.findOrNull(typeName, allowArray = arraysV2)
 
         // notify invalid type
@@ -394,10 +395,10 @@ class TypeChecking(
         val symbol = LocalVariableSymbol(name, type ?: MetaType.Error)
         val inserted = table.insert(symbol)
         if (!inserted) {
-            declarationStatement.variable.reportError(DiagnosticMessage.SCRIPT_LOCAL_REDECLARATION, name)
+            variable.reportError(DiagnosticMessage.SCRIPT_LOCAL_REDECLARATION, name)
         }
 
-        declarationStatement.variable.type = symbol.type
+        variable.type = symbol.type
 
         // visit the initializer if it exists to resolve references in it
         val initializer = declarationStatement.initializer
@@ -409,12 +410,13 @@ class TypeChecking(
             checkTypeMatch(initializer, symbol.type, initializer.type)
         }
 
-        declarationStatement.variable.type = symbol.type
+        variable.type = symbol.type
     }
 
     override fun visitArrayVariableDeclarationStatement(arrayDeclarationStatement: RsArrayVariableDeclarationStatement) {
         val typeName = arrayDeclarationStatement.defineType.text.removePrefix("def_")
-        val name = arrayDeclarationStatement.variable.nameLiteral.text
+        val variable = arrayDeclarationStatement.expressionList.firstOrNull() as? RsLocalVariableExpression ?: return
+        val name = variable.nameLiteral.text
         var type = typeManager.findOrNull(typeName)
 
         // notify invalid type
@@ -441,7 +443,7 @@ class TypeChecking(
                 MetaType.Error
             }
 
-        arrayDeclarationStatement.variable.type = type
+        variable.type = type
 
         // visit the initializer if it exists to resolve references in it
         val initializer = arrayDeclarationStatement.initializer
@@ -454,7 +456,7 @@ class TypeChecking(
         val symbol = LocalVariableSymbol(name, type)
         val inserted = table.insert(symbol)
         if (!inserted) {
-            arrayDeclarationStatement.variable.reportError(DiagnosticMessage.SCRIPT_LOCAL_REDECLARATION, name)
+            variable.reportError(DiagnosticMessage.SCRIPT_LOCAL_REDECLARATION, name)
         }
     }
 

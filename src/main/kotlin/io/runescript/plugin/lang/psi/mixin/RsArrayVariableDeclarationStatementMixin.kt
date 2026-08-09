@@ -18,7 +18,7 @@ abstract class RsArrayVariableDeclarationStatementMixin(
         lastParent: PsiElement?,
         place: PsiElement,
     ): Boolean {
-        val declaredVariable = expressionList[0]
+        val declaredVariable = expressionList.firstOrNull() as? RsLocalVariableExpression ?: return true
         return processor.execute(declaredVariable, state)
     }
 

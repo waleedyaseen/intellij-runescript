@@ -18,11 +18,8 @@ abstract class RsLocalVariableDeclarationStatementMixin(
         lastParent: PsiElement?,
         place: PsiElement,
     ): Boolean {
-        if (expressionList.isNotEmpty()) {
-            val declaredVariable = expressionList[0]
-            return processor.execute(declaredVariable, state)
-        }
-        return true
+        val declaredVariable = expressionList.firstOrNull() as? RsLocalVariableExpression ?: return true
+        return processor.execute(declaredVariable, state)
     }
 
     override fun getVariable(): RsLocalVariableExpression = expressionList[0] as RsLocalVariableExpression
