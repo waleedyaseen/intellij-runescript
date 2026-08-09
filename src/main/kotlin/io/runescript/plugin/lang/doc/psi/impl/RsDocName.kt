@@ -30,9 +30,11 @@ import io.runescript.plugin.lang.psi.RsElementTypes
 class RsDocName(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node) {
+    private val cachedReference by lazy { RsDocReference(this) }
+
     override fun getReference(): PsiReference? {
         if (parent !is RsDocName) {
-            return RsDocReference(this)
+            return cachedReference
         }
         return null
     }

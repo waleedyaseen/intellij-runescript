@@ -3,15 +3,14 @@ package io.runescript.plugin.ide.doc
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.doc.psi.impl.RsDocName
 import io.runescript.plugin.lang.psi.RsScript
+import io.runescript.plugin.lang.psi.refs.RsCachedPolyVariantReference
 import io.runescript.plugin.lang.stubs.index.RsClientScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 import io.runescript.plugin.lang.stubs.index.RsProcScriptIndex
@@ -21,8 +20,8 @@ import io.runescript.plugin.symbollang.psi.resolveToSymTypeName
 
 class RsDocReference(
     element: RsDocName,
-) : PsiPolyVariantReferenceBase<RsDocName>(element) {
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+) : RsCachedPolyVariantReference<RsDocName>(element, RsDocName::getNameTextRange) {
+    override fun resolveInner(incompleteCode: Boolean): Array<ResolveResult> {
         val typeName = (element.firstChild as? RsDocName)?.text
         val elementName = element.lastChild.text
         val module = ModuleUtil.findModuleForPsiElement(element) ?: return emptyArray()
@@ -34,8 +33,6 @@ class RsDocReference(
     override fun getVariants(): Array<Any> = emptyArray()
 
     override fun isSoft() = false
-
-    override fun getRangeInElement(): TextRange = element.getNameTextRange()
 
     override fun getCanonicalText(): String = element.getNameText()
 
