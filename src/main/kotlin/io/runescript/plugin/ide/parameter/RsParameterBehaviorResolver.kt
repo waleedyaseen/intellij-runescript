@@ -40,6 +40,12 @@ object RsParameterBehaviorResolver {
         return behaviors(call)[argumentIndex]?.firstOrNull { behavior -> behavior.id in behaviorIds }
     }
 
+    fun find(
+        script: RsScript,
+        parameterIndex: Int,
+        behaviorId: String,
+    ): RsParameterBehavior? = parameterBehaviors(script)[parameterIndex]?.firstOrNull { behavior -> behavior.id == behaviorId }
+
     private fun behaviors(call: RsCallExpression): Map<Int, List<RsParameterBehavior>> {
         val callElement = call as PsiElement
         return CachedValuesManager
@@ -64,6 +70,11 @@ object RsParameterBehaviorResolver {
                 ?: return CachedValueProvider.Result.create(emptyMap(), *dependencies.toTypedArray())
         dependencies += target.containingFile.localModificationTracker()
 
+        val result = parameterBehaviors(target)
+        return CachedValueProvider.Result.create(result, *dependencies.toTypedArray())
+    }
+
+    private fun parameterBehaviors(target: RsScript): Map<Int, List<RsParameterBehavior>> {
         val metadata =
             target
                 .findDoc()
@@ -71,17 +82,15 @@ object RsParameterBehaviorResolver {
                 .orEmpty()
                 .flatMap { section -> section.findTagsByName(PARAMETER_METADATA_TAG) }
                 .groupBy { tag -> tag.getSubjectName() }
-        val result =
-            target
-                .parameterList
-                ?.parameterList
-                .orEmpty()
-                .mapIndexedNotNull { index, parameter ->
-                    val name = parameter.localVariableExpression?.name ?: return@mapIndexedNotNull null
-                    val behaviors = metadata[name].orEmpty().mapNotNull { tag -> parseBehavior(tag.getContent()) }
-                    if (behaviors.isEmpty()) null else index to behaviors
-                }.toMap()
-        return CachedValueProvider.Result.create(result, *dependencies.toTypedArray())
+        return target
+            .parameterList
+            ?.parameterList
+            .orEmpty()
+            .mapIndexedNotNull { index, parameter ->
+                val name = parameter.localVariableExpression?.name ?: return@mapIndexedNotNull null
+                val behaviors = metadata[name].orEmpty().mapNotNull { tag -> parseBehavior(tag.getContent()) }
+                if (behaviors.isEmpty()) null else index to behaviors
+            }.toMap()
     }
 
     fun parseBehavior(content: String): RsParameterBehavior? {

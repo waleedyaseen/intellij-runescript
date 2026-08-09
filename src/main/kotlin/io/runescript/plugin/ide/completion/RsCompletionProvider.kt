@@ -25,6 +25,7 @@ import io.runescript.plugin.ide.completion.insertHandler.RsSymbolInsertHandler
 import io.runescript.plugin.ide.completion.insertHandler.RsVariableInsertHandler
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.ide.neptune.typeManager
+import io.runescript.plugin.ide.parameter.RsParameterBehaviorResolver
 import io.runescript.plugin.lang.psi.RsArgumentList
 import io.runescript.plugin.lang.psi.RsBlockStatement
 import io.runescript.plugin.lang.psi.RsCommandExpression
@@ -112,6 +113,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         val request = RsCompletionContext.detect(parameters)
         val prefixedResult = result.withPrefixMatcher(request.prefix)
         val hasConstantMarkerPrefix = hasConstantMarkerPrefix(parameters, request.prefix)
+        val preferredConstants = preferredConstants(position, parameters.editor.document.text, parameters.offset)
         when (request.intent) {
             RsCompletionIntent.None -> {
                 return
@@ -152,6 +154,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                     request.prefix,
                     prefixedResult,
                     hasConstantMarkerPrefix,
+                    preferredConstants,
                 )
             }
 
@@ -190,6 +193,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                     request.prefix,
                     prefixedResult,
                     hasConstantMarkerPrefix,
+                    preferredConstants,
                 )
             }
 
@@ -204,6 +208,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                     request.expectedType,
                     request.prefix,
                     CONSTANT_REFERENCE_PRIORITY,
+                    preferredConstants,
                 )
             }
 
@@ -336,10 +341,22 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         prefix: String,
         result: CompletionResultSet,
         hasConstantMarkerPrefix: Boolean,
+        preferredConstants: Set<String>?,
     ) {
         if (hasConstantMarkerPrefix) {
-            addConstants(position, result, expectedType, prefix, CONSTANT_PRIORITY)
+            addConstants(position, result, expectedType, prefix, CONSTANT_PRIORITY, preferredConstants)
             return
+        }
+        if (preferredConstants != null) {
+            addConstants(
+                position,
+                result,
+                expectedType,
+                prefix,
+                CONSTRAINED_CONSTANT_PRIORITY,
+                preferredConstants,
+                includeUnpreferred = false,
+            )
         }
         val booleanPriority =
             priorityForType(position, expectedType, PrimitiveType.BOOLEAN, EXPRESSION_KEYWORD_PRIORITY)
@@ -533,6 +550,8 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         expectedType: Type?,
         prefix: String,
         priority: Double,
+        preferredConstants: Set<String>? = null,
+        includeUnpreferred: Boolean = true,
     ) {
         val project = position.project
         val scope = position.completionSearchScope()
@@ -548,6 +567,9 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                     continue
                 }
                 val name = symbol.name ?: continue
+                if (!includeUnpreferred && name !in preferredConstants.orEmpty()) {
+                    continue
+                }
                 val lookupString = "^$name"
                 if (!matchesPrefix(lookupString, prefix)) {
                     continue
@@ -558,15 +580,22 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                         .create(symbol, lookupString)
                         .withPresentableText(lookupString)
                         .withTypeText(type?.representation ?: "constant")
+                        .withTailText(symbol.constantValueText()?.let { value -> " = $value" }, true)
                         .withIcon(AllIcons.Nodes.Constant)
                         .withInsertHandler(RsConstantInsertHandler)
+                val candidatePriority =
+                    when {
+                        preferredConstants == null -> priority
+                        name in preferredConstants -> CONSTRAINED_CONSTANT_PRIORITY
+                        else -> priority + UNEXPECTED_TYPE_PRIORITY_PENALTY
+                    }
                 addPrioritizedElement(
                     result,
                     result,
                     lookupString,
                     prefix,
                     element,
-                    priorityForConstantCandidate(position, expectedType, type, lookupString, prefix, priority),
+                    priorityForConstantCandidate(position, expectedType, type, lookupString, prefix, candidatePriority),
                     completionGrouping = macroCompletionGroup(expectedType),
                 )
             }
@@ -595,6 +624,26 @@ class RsCompletionProvider : RsCompletionProviderBase() {
             .getOrNull(1)
             ?.text
             ?.let { typeManager.findOrNull(it, allowArray = true) }
+
+    private fun RsSymSymbol.constantValueText(): String? = fieldList.lastOrNull()?.text
+
+    private fun preferredConstants(
+        position: PsiElement,
+        text: String,
+        offset: Int,
+    ): Set<String>? {
+        val call = currentCall(text, offset) ?: return null
+        val key = if (call.isProc) RsProcScriptIndex.KEY else RsCommandScriptIndex.KEY
+        val target =
+            StubIndex
+                .getElements(key, call.name, position.project, position.completionSearchScope(), RsScript::class.java)
+                .firstOrNull() ?: return null
+        return RsParameterBehaviorResolver
+            .find(target, call.argumentIndex, "constant")
+            ?.options
+            ?.mapTo(linkedSetOf()) { option -> option.removePrefix("^") }
+            ?.takeIf(Set<String>::isNotEmpty)
+    }
 
     private fun addScopedVariables(
         position: PsiElement,
@@ -1631,6 +1680,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
         private const val LOCAL_VARIABLE_PRIORITY = 85.0
         private const val VARIABLE_PRIORITY = 80.0
         private const val CONSTANT_PRIORITY = 78.0
+        private const val CONSTRAINED_CONSTANT_PRIORITY = 130.0
         private const val SCOPED_VARIABLE_PRIORITY = 76.0
         private const val SYMBOL_PRIORITY = 82.0
         private const val SCRIPT_REFERENCE_PRIORITY = 75.0

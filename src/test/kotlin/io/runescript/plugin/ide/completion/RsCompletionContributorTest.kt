@@ -2,6 +2,7 @@ package io.runescript.plugin.ide.completion
 
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.lookup.Lookup
+import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -1111,6 +1112,72 @@ class RsCompletionContributorTest : BasePlatformTestCase() {
         assertTrue(myFixture.file.text.contains("if (${"$"}count = ^answer"))
         assertFalse(myFixture.file.text.contains("^ans^answer"))
         assertFalse(myFixture.file.text.contains("^^answer"))
+    }
+
+    fun testDocumentedParameterConstantsArePrioritizedWithValues() {
+        myFixture.addFileToProject(
+            "symbols/constant.sym",
+            """
+            align_left	int	0
+            align_centre	int	1
+            unrelated	int	99
+            """.trimIndent() + "\n",
+        )
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            /**
+             * @parammeta alignment constant[align_left, align_centre]
+             */
+            [command,set_alignment](int ${"$"}alignment)
+            """.trimIndent(),
+        )
+        configure(
+            """
+            [proc,main]
+            {
+                set_alignment(^<caret>);
+            }
+            """,
+        )
+
+        assertBefore("^align_left", "^unrelated")
+        assertBefore("^align_centre", "^unrelated")
+        val allowed = myFixture.lookupElements!!.single { element -> element.lookupString == "^align_left" }
+        val presentation = LookupElementPresentation()
+        allowed.renderElement(presentation)
+        assertEquals(" = 0", presentation.tailText)
+    }
+
+    fun testDocumentedParameterConstantsAreOfferedWithoutCaretPrefix() {
+        myFixture.addFileToProject(
+            "symbols/constant.sym",
+            """
+            align_left	int	0
+            align_centre	int	1
+            unrelated	int	99
+            """.trimIndent() + "\n",
+        )
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            /**
+             * @parammeta alignment constant[align_left, align_centre]
+             */
+            [command,set_alignment](int ${"$"}alignment)
+            """.trimIndent(),
+        )
+        configure(
+            """
+            [proc,main]
+            {
+                set_alignment(<caret>);
+            }
+            """,
+        )
+
+        assertContains("^align_left", "^align_centre")
+        assertDoesNotContain("^unrelated")
     }
 
     fun testScopedVariableCompletionReplacesBarePercentPrefix() {
