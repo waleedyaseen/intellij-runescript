@@ -1,13 +1,61 @@
 package io.runescript.plugin.ide
 
+import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import java.awt.Color
 import java.awt.event.MouseEvent
 import javax.swing.JPanel
 
 class RsColorLineMarkerProviderTest : RsParserTestCase() {
+    fun testDisplaysColorsForDocAnnotatedCommandParameters() {
+        myFixture.addFileToProject(
+            "commands.cs2",
+            """
+            /**
+             * @parammeta x1 color
+             */
+            [command,cc_setgraphicshadow](int ${"$"}x1)
+
+            /**
+             * @parammeta x1 color
+             */
+            [command,.cc_setgraphicshadow](int ${"$"}x1)
+
+            [command,plain_int](int ${"$"}x1)
+            """.trimIndent(),
+        )
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    cc_setgraphicshadow(0x112233);
+                    .cc_setgraphicshadow(0x445566);
+                    plain_int(0x778899);
+                }
+                """.trimIndent(),
+            )
+        val provider = RsColorLineMarkerProvider()
+        val markers = mutableListOf<com.intellij.codeInsight.daemon.LineMarkerInfo<*>>()
+
+        provider.collectSlowLineMarkers(PsiTreeUtil.collectElements(file) { true }.toMutableList(), markers)
+
+        assertSize(2, markers)
+        assertEquals(
+            listOf("0x112233", "0x445566"),
+            markers.mapNotNull { marker -> marker.element?.text },
+        )
+
+        provider.showColorPicker = { _, _, _, onChanged -> onChanged(Color(0x00ff00)) }
+        navigate(markers.first())
+        assertTrue(file.text.contains("cc_setgraphicshadow(0x00ff00);"))
+    }
+
     fun testColorMarkerUsesCurrentPsiAfterReparse() {
         val file =
             myFixture.configureByText(
@@ -42,5 +90,14 @@ class RsColorLineMarkerProviderTest : RsParserTestCase() {
             currentTag,
         )
         assertTrue(file.text.contains("<col=00ff00>"))
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun navigate(marker: LineMarkerInfo<*>) {
+        val typedMarker = marker as LineMarkerInfo<PsiElement>
+        typedMarker.navigationHandler.navigate(
+            MouseEvent(JPanel(), MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, 1, false),
+            typedMarker.element,
+        )
     }
 }

@@ -21,6 +21,7 @@ enum class RsDocKnownTag(
 ) {
     AUTHOR(false, false),
     PARAM(true, false),
+    PARAMMETA(true, false),
     RETURN(false, false),
     SEE(true, false),
     SINCE(false, false),
