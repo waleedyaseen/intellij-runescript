@@ -22,6 +22,7 @@
         <iconProvider implementation="io.runescript.plugin.ide.icons.RsIconProvider" />
 
         <!-- Project & Modules -->
+        <moduleType id="RUNESCRIPT_MODULE" implementationClass="io.runescript.plugin.ide.projectWizard.RsModuleType"/>
         <moduleBuilder builderClass="io.runescript.plugin.ide.projectWizard.NeptuneModuleBuilder"/>
 
         <externalSystemManager implementation="io.runescript.plugin.ide.neptune.NeptuneManager"/>

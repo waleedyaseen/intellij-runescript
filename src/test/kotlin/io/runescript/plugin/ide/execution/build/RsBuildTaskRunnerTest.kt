@@ -2,13 +2,21 @@ package io.runescript.plugin.ide.execution.build
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleTypeManager
 import com.intellij.task.ModuleBuildTask
 import com.intellij.task.ProjectTaskContext
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.runescript.plugin.ide.neptune.NeptuneSettings
+import io.runescript.plugin.ide.projectWizard.RsModuleType
 import java.util.concurrent.TimeUnit
 
 class RsBuildTaskRunnerTest : BasePlatformTestCase() {
+    fun testRuneScriptModuleTypeIsRegistered() {
+        val moduleType = ModuleTypeManager.getInstance().findByID(RsModuleType.ID)
+
+        assertInstanceOf(moduleType, RsModuleType::class.java)
+    }
+
     fun testMissingJdkCompletesCoroutineBuildAsFailure() {
         project.service<NeptuneSettings>().launcherJre = "missing-test-jdk"
 
