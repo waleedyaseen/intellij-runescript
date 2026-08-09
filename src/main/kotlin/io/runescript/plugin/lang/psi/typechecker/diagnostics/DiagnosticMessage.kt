@@ -50,6 +50,7 @@ object DiagnosticMessage {
     // switch statement node specific
     const val SWITCH_INVALID_TYPE: String = "'%s' is not allowed within a switch statement."
     const val SWITCH_DUPLICATE_DEFAULT: String = "Duplicate default label."
+    const val SWITCH_DUPLICATE_CASE: String = "Duplicate case label '%s'."
     const val SWITCH_CASE_NOT_CONSTANT: String = "Switch case value is not a constant expression."
 
     // assignment statement node specific

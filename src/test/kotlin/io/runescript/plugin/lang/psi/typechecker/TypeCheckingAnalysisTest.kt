@@ -11,11 +11,39 @@ import io.runescript.plugin.lang.psi.RsDynamicExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.typechecker.diagnostics.Diagnostic
+import io.runescript.plugin.lang.psi.typechecker.diagnostics.DiagnosticMessage
 import io.runescript.plugin.lang.psi.typechecker.type.PrimitiveType
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 class TypeCheckingAnalysisTest : RsParserTestCase() {
+    fun testReportsDuplicateSwitchCaseValues() {
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    def_int ${"$"}value = 1;
+                    switch_int (${"$"}value) {
+                        case 1, 0x1 :
+                        case 1 :
+                        case 2 :
+                    }
+                }
+                """.trimIndent(),
+            )
+        val script = PsiTreeUtil.findChildOfType(file, RsScript::class.java)!!
+
+        val duplicates =
+            TypeCheckingUtil
+                .typeCheck(script)
+                .filter { diagnostic -> diagnostic.message == DiagnosticMessage.SWITCH_DUPLICATE_CASE }
+
+        assertSize(2, duplicates)
+        assertEquals(listOf("0x1", "1"), duplicates.map { diagnostic -> diagnostic.element.text })
+    }
+
     fun testLocalReferenceDoesNotCrossScriptBoundary() {
         val file =
             myFixture.configureByText(

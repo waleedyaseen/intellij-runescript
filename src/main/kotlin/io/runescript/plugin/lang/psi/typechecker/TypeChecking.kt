@@ -249,9 +249,9 @@ class TypeChecking(
             checkTypeMatch(condition, expectedType, condition.type)
         }
 
-        // TODO check for duplicate case labels (other than default)
         // visit all the cases, cases will be type checked there.
         var defaultCase: RsSwitchCase? = null
+        val caseLabels = hashSetOf<Pair<Type, Any>>()
         for (case in switchStatement.switchCaseList) {
             val isDefault =
                 case.children.any {
@@ -265,7 +265,36 @@ class TypeChecking(
                 }
             }
             case.visit()
+            for (key in case.expressionList) {
+                if (key is RsSwitchCaseDefaultExpression || !isConstantExpression(key)) {
+                    continue
+                }
+                if (!caseLabels.add(switchCaseKey(key))) {
+                    key.reportError(DiagnosticMessage.SWITCH_DUPLICATE_CASE, key.text)
+                }
+            }
         }
+    }
+
+    private fun switchCaseKey(expression: RsExpression): Pair<Type, Any> {
+        val value =
+            if (expression is RsIntegerLiteralExpression) {
+                parseIntegerLiteral(expression.text) ?: expression.text
+            } else {
+                expression.text
+            }
+        return expression.type to value
+    }
+
+    private fun parseIntegerLiteral(text: String): Int? {
+        val negative = text.startsWith('-')
+        var unsignedText = text.removePrefix("-").removePrefix("+")
+        val radix = if (unsignedText.startsWith("0x", ignoreCase = true)) 16 else 10
+        if (radix == 16) {
+            unsignedText = unsignedText.substring(2)
+        }
+        val value = unsignedText.toUIntOrNull(radix)?.toInt() ?: return null
+        return if (negative) -value else value
     }
 
     override fun visitSwitchCase(switchCase: RsSwitchCase) {
