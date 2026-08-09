@@ -44,9 +44,7 @@ class NeptuneManager :
         Function { pair ->
             val project = pair.first
             val systemSettings = project.service<NeptuneSettings>()
-            getNeptuneHomeValidationError(systemSettings.neptuneHome)?.let { error ->
-                throw ExternalSystemException(error)
-            }
+            val neptuneHome = resolveNeptuneHome(systemSettings.neptuneHome, pair.second)
             if (systemSettings.launcherJre.isBlank()) {
                 throw ExternalSystemException("Neptune JVM is not configured")
             }
@@ -60,7 +58,7 @@ class NeptuneManager :
             val jvmExecutablePath = JavaSdk.getInstance().getVMExecutablePath(javaSdk)
             NeptuneExecutionSettings(
                 jvmExecutablePath,
-                systemSettings.neptuneHome,
+                neptuneHome,
             )
         }
 
@@ -86,4 +84,29 @@ class NeptuneManager :
         resolverPolicy == null || !resolverPolicy.isPartialDataResolveAllowed
 
     override fun getConfigurable(project: Project): Configurable = NeptuneSystemConfigurable(project)
+}
+
+internal fun resolveNeptuneHome(
+    configuredHome: String,
+    externalProjectPath: String,
+): String {
+    if (configuredHome.isNotBlank()) {
+        getNeptuneHomeValidationError(configuredHome)?.let { error ->
+            throw ExternalSystemException(error)
+        }
+        return Path
+            .of(configuredHome)
+            .toAbsolutePath()
+            .normalize()
+            .toString()
+    }
+
+    val projectHome = Path.of(normalizeNeptuneProjectPath(externalProjectPath), "sdk")
+    if (getNeptuneHomeValidationError(projectHome.toString()) == null) {
+        return projectHome.toString()
+    }
+
+    throw ExternalSystemException(
+        "Neptune home is not configured and no project-local SDK was found at '$projectHome'",
+    )
 }

@@ -15,7 +15,16 @@ class NeptuneManagerTest : BasePlatformTestCase() {
 
         val error = getExecutionSettingsError()
 
-        assertEquals("Neptune home is not configured.", error.message)
+        assertTrue(error.message!!.startsWith("Neptune home is not configured and no project-local SDK was found"))
+    }
+
+    fun testUsesProjectLocalNeptuneHome() {
+        val projectRoot = FileUtil.createTempDirectory("neptune-project-test-", null, true).toPath()
+        val projectHome = createNeptuneHome(projectRoot.resolve("sdk"))
+
+        val resolvedHome = resolveNeptuneHome("", projectRoot.toString())
+
+        assertEquals(projectHome.toString(), resolvedHome)
     }
 
     fun testReportsMissingNeptuneJvm() {
@@ -47,8 +56,7 @@ class NeptuneManagerTest : BasePlatformTestCase() {
         }
     }
 
-    private fun createNeptuneHome(): Path {
-        val home = FileUtil.createTempDirectory("neptune-manager-test-", null, true).toPath()
+    private fun createNeptuneHome(home: Path = FileUtil.createTempDirectory("neptune-manager-test-", null, true).toPath()): Path {
         val lib = Files.createDirectories(home.resolve("lib"))
         Files.createFile(lib.resolve("neptune-clientscript-compiler-test.jar"))
         return home
