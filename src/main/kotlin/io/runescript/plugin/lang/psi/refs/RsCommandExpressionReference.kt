@@ -8,6 +8,7 @@ import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 import io.runescript.plugin.lang.psi.RsCommandExpression
+import io.runescript.plugin.lang.psi.RsPsiImplUtil
 import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex
 
@@ -29,5 +30,5 @@ class RsCommandExpressionReference(
 
     override fun getVariants(): Array<out LookupElement> = LookupElement.EMPTY_ARRAY
 
-    override fun handleElementRename(newElementName: String): PsiElement = element
+    override fun handleElementRename(newElementName: String): PsiElement = RsPsiImplUtil.setName(element.nameLiteral, newElementName)
 }
