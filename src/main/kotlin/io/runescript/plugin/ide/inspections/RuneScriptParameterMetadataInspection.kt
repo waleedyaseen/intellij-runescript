@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.ide.doc.findDoc
+import io.runescript.plugin.ide.inspections.fixes.RsRemoveInvalidParameterMetadataQuickFix
 import io.runescript.plugin.ide.parameter.RsParameterBehavior
 import io.runescript.plugin.ide.parameter.RsParameterBehaviorOptionKind
 import io.runescript.plugin.ide.parameter.RsParameterBehaviorRegistry
@@ -57,34 +58,42 @@ class RuneScriptParameterMetadataInspection : LocalInspectionTool() {
     ) {
         val subject = tag.getSubjectName()
         if (subject == null) {
-            holder.registerProblem(tag, "Parameter metadata must name a parameter")
+            holder.registerProblem(tag, "Parameter metadata must name a parameter", removeInvalidMetadataFix())
             return
         }
         val subjectElement = tag.subjectElement()
         val parameter = parameters[subject]
         if (parameter == null) {
             val nearest = parameters.keys.minByOrNull { candidate -> editDistance(subject, candidate) }
-            val fixes = nearest?.let { name -> arrayOf<LocalQuickFix>(RsRenameMetadataParameterQuickFix(name)) }.orEmpty()
+            val fixes =
+                buildList<LocalQuickFix> {
+                    nearest?.let { name -> add(RsRenameMetadataParameterQuickFix(name)) }
+                    add(removeInvalidMetadataFix())
+                }.toTypedArray()
             holder.registerProblem(subjectElement ?: tag, "Unknown parameter '$subject'", *fixes)
             return
         }
 
         val behavior = RsParameterBehaviorResolver.parseBehavior(tag.getContent())
         if (behavior == null) {
-            holder.registerProblem(tag, "Malformed parameter behavior")
+            holder.registerProblem(tag, "Malformed parameter behavior", removeInvalidMetadataFix())
             return
         }
         val definition = RsParameterBehaviorRegistry.find(behavior.id)
         if (definition == null) {
-            holder.registerProblem(tag, "Unknown parameter behavior '${behavior.id}'")
+            holder.registerProblem(tag, "Unknown parameter behavior '${behavior.id}'", removeInvalidMetadataFix())
             return
         }
         if (!seen.add(subject to behavior.id)) {
-            holder.registerProblem(tag, "Duplicate '${behavior.id}' behavior for '$subject'")
+            holder.registerProblem(tag, "Duplicate '${behavior.id}' behavior for '$subject'", removeInvalidMetadataFix())
         }
 
         if (definition.requiredTypeName != null && parameter.typeName.text != definition.requiredTypeName) {
-            holder.registerProblem(tag, "'${behavior.id}' behavior requires an ${definition.requiredTypeName} parameter")
+            holder.registerProblem(
+                tag,
+                "'${behavior.id}' behavior requires an ${definition.requiredTypeName} parameter",
+                removeInvalidMetadataFix(),
+            )
         }
         when (definition.optionKind) {
             RsParameterBehaviorOptionKind.NONE -> inspectOptionlessBehavior(tag, behavior, holder)
@@ -98,7 +107,7 @@ class RuneScriptParameterMetadataInspection : LocalInspectionTool() {
         holder: ProblemsHolder,
     ) {
         if (behavior.options.isNotEmpty()) {
-            holder.registerProblem(tag, "'${behavior.id}' behavior does not accept options")
+            holder.registerProblem(tag, "'${behavior.id}' behavior does not accept options", removeInvalidMetadataFix())
         }
     }
 
@@ -109,19 +118,21 @@ class RuneScriptParameterMetadataInspection : LocalInspectionTool() {
         holder: ProblemsHolder,
     ) {
         if (behavior.options.isEmpty()) {
-            holder.registerProblem(tag, "'constant' behavior requires at least one constant")
+            holder.registerProblem(tag, "'constant' behavior requires at least one constant", removeInvalidMetadataFix())
             return
         }
         for (option in behavior.options) {
             val name = option.removePrefix("^")
             if (RsSymbolIndex.lookup(script, "constant", name) == null) {
-                holder.registerProblem(tag, "Unknown constant '^$name'")
+                holder.registerProblem(tag, "Unknown constant '^$name'", removeInvalidMetadataFix())
             }
         }
     }
 
     private fun RsDocTag.subjectElement(): PsiElement? =
         getSubjectLink()?.let { link -> PsiTreeUtil.findChildOfType(link, RsDocName::class.java) }
+
+    private fun removeInvalidMetadataFix(): LocalQuickFix = RsRemoveInvalidParameterMetadataQuickFix()
 }
 
 private class RsRenameMetadataParameterQuickFix(

@@ -59,4 +59,43 @@ class RuneScriptParameterMetadataInspectionTest : RsParserTestCase() {
 
         assertTrue(file.text.contains("@parammeta color rgb"))
     }
+
+    fun testRemovesInvalidMetadataAndItsContinuationLines() {
+        val file =
+            myFixture.configureByText(
+                "commands.cs2",
+                """
+                /**
+                 * @parammeta value unknown
+                 *   invalid continuation
+                 * @param value retained documentation
+                 */
+                [command,target](int ${"$"}value)
+                """.trimIndent(),
+            )
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Remove invalid parameter metadata" }
+        myFixture.launchAction(fix)
+
+        assertFalse(file.text.contains("@parammeta"))
+        assertFalse(file.text.contains("invalid continuation"))
+        assertTrue(file.text.contains("@param value retained documentation"))
+    }
+
+    fun testRemovesInvalidMetadataFromSingleLineDocumentation() {
+        val file =
+            myFixture.configureByText(
+                "commands.cs2",
+                """
+                /** @parammeta value unknown */
+                [command,target](int ${"$"}value)
+                """.trimIndent(),
+            )
+
+        val fix = myFixture.getAllQuickFixes().single { action -> action.text == "Remove invalid parameter metadata" }
+        myFixture.launchAction(fix)
+
+        assertFalse(file.text.contains("@parammeta"))
+        assertTrue(file.text.contains("[command,target]"))
+    }
 }
