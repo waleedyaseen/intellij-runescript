@@ -1,6 +1,7 @@
 package io.runescript.plugin.ide.codeInsight.intention.documentation
 
 import com.intellij.codeInsight.intention.BaseElementAtCaretIntentionAction
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
@@ -20,12 +21,7 @@ class RsRemoveObsoleteDocTagsIntention : BaseElementAtCaretIntentionAction() {
         element: PsiElement,
     ) {
         val script = element.findScriptAtSignature() ?: return
-        val doc = script.findDoc() ?: return
-        val updated = removeObsoleteTags(script, doc.text)
-        if (updated == doc.text) return
-
-        editor.document.replaceString(doc.textRange.startOffset, doc.textRange.endOffset, updated)
-        PsiDocumentManager.getInstance(project).commitDocument(editor.document)
+        applyTo(project, editor.document, script)
     }
 
     override fun isAvailable(
@@ -34,8 +30,24 @@ class RsRemoveObsoleteDocTagsIntention : BaseElementAtCaretIntentionAction() {
         element: PsiElement,
     ): Boolean {
         val script = element.findScriptAtSignature() ?: return false
+        return isNeeded(script)
+    }
+
+    internal fun isNeeded(script: RsScript): Boolean {
         val doc = script.findDoc() ?: return false
         return removeObsoleteTags(script, doc.text) != doc.text
+    }
+
+    internal fun applyTo(
+        project: Project,
+        document: Document,
+        script: RsScript,
+    ) {
+        val doc = script.findDoc() ?: return
+        val updated = removeObsoleteTags(script, doc.text)
+        if (updated == doc.text) return
+        document.replaceString(doc.textRange.startOffset, doc.textRange.endOffset, updated)
+        PsiDocumentManager.getInstance(project).commitDocument(document)
     }
 
     private fun removeObsoleteTags(
