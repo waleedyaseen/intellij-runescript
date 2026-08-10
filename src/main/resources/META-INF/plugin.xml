@@ -48,6 +48,7 @@
         <lang.namesValidator language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
         <lang.namesValidator language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
+        <inlineActionHandler implementation="io.runescript.plugin.ide.refactoring.RsInlineLocalHandler"/>
 
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
