@@ -1,0 +1,4 @@
+[proc,calculate_total](int $value)
+{
+    return($value * 2);
+}
