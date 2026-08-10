@@ -118,6 +118,122 @@ class RsSmartEnterProcessorTest : RsParserTestCase() {
         )
     }
 
+    fun testAddsBodyToScriptHeader() {
+        checkSmartEnter(
+            """
+            [proc,main]<caret>
+            """.trimIndent(),
+            """
+            [proc,main]
+            {
+                <caret>
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testCompletesScriptParameterListAndAddsBody() {
+        checkSmartEnter(
+            """
+            [proc,main](int ${'$'}value<caret>
+            """.trimIndent(),
+            """
+            [proc,main](int ${'$'}value)
+            {
+                <caret>
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testCompletesScriptReturnListAndAddsBody() {
+        checkSmartEnter(
+            """
+            [proc,main](int ${'$'}value)(int<caret>
+            """.trimIndent(),
+            """
+            [proc,main](int ${'$'}value)(int)
+            {
+                <caret>
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testCompletesNestedArgumentLists() {
+        checkSmartEnter(
+            """
+            [proc,main]
+            {
+                outer(inner(1, value(2<caret>
+            }
+            """.trimIndent(),
+            """
+            [proc,main]
+            {
+                outer(inner(1, value(2)));
+                <caret>
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testCompletesReturnExpression() {
+        checkSmartEnter(
+            """
+            [proc,main]
+            {
+                return(value(1<caret>
+            }
+            """.trimIndent(),
+            """
+            [proc,main]
+            {
+                return(value(1));
+                <caret>
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testUsesExistingControlFlowBlockOnFollowingLine() {
+        checkSmartEnter(
+            """
+            [proc,main]
+            {
+                if (${'$'}value = 1<caret>
+                {
+                }
+            }
+            """.trimIndent(),
+            """
+            [proc,main]
+            {
+                if (${'$'}value = 1)
+                {
+                    <caret>
+                }
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testUsesExistingScriptBlockOnFollowingLine() {
+        checkSmartEnter(
+            """
+            [proc,main]<caret>
+            {
+            }
+            """.trimIndent(),
+            """
+            [proc,main]
+            {
+                <caret>
+            }
+            """.trimIndent(),
+        )
+    }
+
     private fun checkSmartEnter(
         before: String,
         after: String,

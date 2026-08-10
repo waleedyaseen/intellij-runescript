@@ -35,6 +35,21 @@ class RsSmartEnterProcessor : SmartEnterProcessor() {
         val indentOptions = CodeStyle.getIndentOptions(psiFile)
         val indentUnit = if (indentOptions.USE_TAB_CHARACTER) "\t" else " ".repeat(indentOptions.INDENT_SIZE)
         val bodyIndent = lineIndent + indentUnit
+        val followingBraceOffset =
+            if (completion.mode == EnterMode.BRACES || completion.mode == EnterMode.SCRIPT_BODY) {
+                nextNonWhitespaceOffset(document.charsSequence, lineEnd)?.takeIf { document.charsSequence[it] == '{' }
+            } else {
+                null
+            }
+        if (followingBraceOffset != null) {
+            val suffix = if (completion.mode == EnterMode.BRACES) completion.suffix.removeSuffix(" {") else completion.suffix
+            document.insertString(caretOffset, suffix)
+            val braceOffset = followingBraceOffset + suffix.length
+            document.insertString(braceOffset + 1, "\n$bodyIndent")
+            PsiDocumentManager.getInstance(project).commitDocument(document)
+            editor.caretModel.moveToOffset(braceOffset + bodyIndent.length + 2)
+            return true
+        }
         when (completion.mode) {
             EnterMode.NORMAL -> {
                 document.insertString(caretOffset, completion.suffix)
@@ -59,6 +74,14 @@ class RsSmartEnterProcessor : SmartEnterProcessor() {
                 editor.caretModel.moveToOffset(caretOffset + completion.suffix.length + 1 + bodyIndent.length)
                 PsiDocumentManager.getInstance(project).commitDocument(document)
             }
+
+            EnterMode.SCRIPT_BODY -> {
+                val insertion = completion.suffix + "\n" + lineIndent + "{\n" + bodyIndent + "\n" + lineIndent + "}"
+                document.insertString(caretOffset, insertion)
+                val bodyOffset = caretOffset + completion.suffix.length + lineIndent.length + bodyIndent.length + 3
+                editor.caretModel.moveToOffset(bodyOffset)
+                PsiDocumentManager.getInstance(project).commitDocument(document)
+            }
         }
         return true
     }
@@ -72,8 +95,14 @@ class RsSmartEnterProcessor : SmartEnterProcessor() {
         return leaf is PsiComment || PsiTreeUtil.getParentOfType(leaf, RsStringLiteralExpression::class.java, false) != null
     }
 
+    private fun nextNonWhitespaceOffset(
+        text: CharSequence,
+        startOffset: Int,
+    ): Int? = (startOffset until text.length).firstOrNull { !text[it].isWhitespace() }
+
     private fun completionFor(lineText: String): Completion? {
         val trimmed = lineText.trimStart()
+        scriptHeaderCompletion(trimmed)?.let { return it }
         controlFlowCompletion(trimmed)?.let { return it }
         if (SWITCH_CASE.matches(trimmed) && !trimmed.endsWith(':')) {
             return Completion(" :", EnterMode.INDENT)
@@ -81,6 +110,34 @@ class RsSmartEnterProcessor : SmartEnterProcessor() {
         if (!needsSemicolon(trimmed)) return null
         val missingParentheses = parenBalance(trimmed).coerceAtLeast(0)
         return Completion(")".repeat(missingParentheses) + ";")
+    }
+
+    private fun scriptHeaderCompletion(text: String): Completion? {
+        val header = SCRIPT_HEADER.find(text) ?: return null
+        val signature = text.substring(header.range.last + 1).trim()
+        if (signature.isNotEmpty() && !signature.startsWith('(')) return null
+        val missingParentheses = parenBalance(signature)
+        if (missingParentheses < 0 || !hasAtMostTwoParameterGroups(signature)) return null
+        return Completion(")".repeat(missingParentheses), EnterMode.SCRIPT_BODY)
+    }
+
+    private fun hasAtMostTwoParameterGroups(signature: String): Boolean {
+        var groups = 0
+        var depth = 0
+        for (character in signature) {
+            when (character) {
+                '(' -> {
+                    if (depth == 0) groups++
+                    depth++
+                }
+
+                ')' -> {
+                    depth--
+                }
+            }
+            if (depth < 0 || groups > 2) return false
+        }
+        return true
     }
 
     private fun controlFlowCompletion(text: String): Completion? {
@@ -169,10 +226,12 @@ class RsSmartEnterProcessor : SmartEnterProcessor() {
         NORMAL,
         INDENT,
         BRACES,
+        SCRIPT_BODY,
     }
 
     companion object {
         private val CONTROL_FLOW_HEADER = Regex("""^(?:if|while|switch_[A-Za-z0-9_.:]+)\s*\(""")
+        private val SCRIPT_HEADER = Regex("""^\[[^]\r\n]+]""")
         private val SWITCH_CASE = Regex("""^case\s+\S.*""")
         private val DECLARATION = Regex("""^def_[A-Za-z0-9_.:]+\s+\$\S+.*""")
         private val RETURN = Regex("""^return(?:\s|\(|$).*""")
