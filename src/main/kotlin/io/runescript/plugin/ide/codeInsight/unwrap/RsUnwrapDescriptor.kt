@@ -8,6 +8,7 @@ class RsUnwrapDescriptor : UnwrapDescriptorBase() {
         arrayOf(
             RsIfUnwrapper(),
             RsElseUnwrapper(),
+            RsElseRemover(),
             RsWhileUnwrapper(),
         )
 }

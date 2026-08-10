@@ -28,5 +28,14 @@ abstract class RsUnwrapper(
         }
 
         override fun isWhiteSpace(element: PsiElement): Boolean = element is PsiWhiteSpace
+
+        fun deleteRange(
+            first: PsiElement,
+            last: PsiElement,
+        ) {
+            if (myIsEffective) {
+                first.parent.deleteChildRange(first, last)
+            }
+        }
     }
 }
