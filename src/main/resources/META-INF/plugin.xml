@@ -119,6 +119,12 @@
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.control.flow</categoryKey>
         </intentionAction>
+        <intentionAction>
+            <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsInvertIfConditionIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.control.flow</categoryKey>
+        </intentionAction>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
