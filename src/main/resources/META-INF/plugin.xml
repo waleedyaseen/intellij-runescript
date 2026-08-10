@@ -125,6 +125,12 @@
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.control.flow</categoryKey>
         </intentionAction>
+        <intentionAction>
+            <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.documentation.RsGenerateDocCommentIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.documentation</categoryKey>
+        </intentionAction>
     </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
