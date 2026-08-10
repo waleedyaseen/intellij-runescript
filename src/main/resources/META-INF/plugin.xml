@@ -51,6 +51,7 @@
         <lang.namesValidator language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
         <lang.namesValidator language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.refactoring.RsNamesValidator"/>
         <lang.refactoringSupport language="RuneScript" implementationClass="io.runescript.plugin.ide.refactoring.RsRefactoringSupportProvider"/>
+        <refactoring.codeVisionSupport implementation="io.runescript.plugin.ide.refactoring.RsRefactoringCodeVisionSupport"/>
         <inlineActionHandler implementation="io.runescript.plugin.ide.refactoring.RsInlineLocalHandler"/>
         <refactoring.safeDeleteProcessor implementation="io.runescript.plugin.ide.refactoring.RsSafeDeleteProcessorDelegate"/>
 
