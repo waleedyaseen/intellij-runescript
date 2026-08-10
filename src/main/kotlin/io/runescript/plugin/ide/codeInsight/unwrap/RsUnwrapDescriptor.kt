@@ -7,6 +7,7 @@ class RsUnwrapDescriptor : UnwrapDescriptorBase() {
     override fun createUnwrappers(): Array<Unwrapper> =
         arrayOf(
             RsIfUnwrapper(),
+            RsElseUnwrapper(),
             RsWhileUnwrapper(),
         )
 }
