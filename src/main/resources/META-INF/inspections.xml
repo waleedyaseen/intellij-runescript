@@ -74,6 +74,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptDocConsistencyInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Duplicate switch labels"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptDuplicateSwitchLabelInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unreachable code"
                          enabledByDefault="true"
                          level="WARNING"
