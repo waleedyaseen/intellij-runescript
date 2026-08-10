@@ -29,7 +29,11 @@ class RsStatementsSurroundDescriptor : SurroundDescriptor {
         return statements.subList(firstIndex, lastIndex + 1).toTypedArray()
     }
 
-    override fun getSurrounders(): Array<Surrounder> = arrayOf(RsWithIfSurrounder())
+    override fun getSurrounders(): Array<Surrounder> =
+        arrayOf(
+            RsWithIfSurrounder(),
+            RsWithWhileSurrounder(),
+        )
 
     override fun isExclusive(): Boolean = false
 

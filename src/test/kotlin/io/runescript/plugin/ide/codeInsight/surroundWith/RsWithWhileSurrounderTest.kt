@@ -4,7 +4,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.util.TextRange
 import io.runescript.plugin.lang.parser.RsParserTestCase
 
-class RsWithIfSurrounderTest : RsParserTestCase() {
+class RsWithWhileSurrounderTest : RsParserTestCase() {
     fun testSurroundsSelectedStatementsAndSelectsCondition() {
         val file =
             myFixture.configureByText(
@@ -24,7 +24,7 @@ class RsWithIfSurrounderTest : RsParserTestCase() {
                 myFixture.editor.selectionModel.selectionStart,
                 myFixture.editor.selectionModel.selectionEnd,
             )
-        val surrounder = descriptor.surrounders.filterIsInstance<RsWithIfSurrounder>().single()
+        val surrounder = descriptor.surrounders.filterIsInstance<RsWithWhileSurrounder>().single()
 
         val conditionRange =
             WriteCommandAction.runWriteCommandAction<TextRange?>(project) {
@@ -35,7 +35,7 @@ class RsWithIfSurrounderTest : RsParserTestCase() {
             """
             [proc,main]
             {
-                if (true) {
+                while (true) {
                     foo();
                     bar();
                 }
@@ -43,31 +43,5 @@ class RsWithIfSurrounderTest : RsParserTestCase() {
             """.trimIndent(),
         )
         assertEquals("true", conditionRange?.substring(file.text))
-    }
-
-    fun testRejectsStatementsFromDifferentBlocks() {
-        val file =
-            myFixture.configureByText(
-                "main.cs2",
-                """
-                [proc,main]
-                {
-                    <selection>foo();
-                    if (true) {
-                        bar();</selection>
-                    }
-                }
-                """.trimIndent(),
-            )
-        val descriptor = RsStatementsSurroundDescriptor()
-
-        val elements =
-            descriptor.getElementsToSurround(
-                file,
-                myFixture.editor.selectionModel.selectionStart,
-                myFixture.editor.selectionModel.selectionEnd,
-            )
-
-        assertEmpty(elements)
     }
 }
