@@ -117,6 +117,12 @@
         </intentionAction>
         <intentionAction>
             <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsMergeEquivalentElseIfIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.control.flow</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>RuneScript</language>
             <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsSplitIfAndIntention</className>
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.control.flow</categoryKey>
