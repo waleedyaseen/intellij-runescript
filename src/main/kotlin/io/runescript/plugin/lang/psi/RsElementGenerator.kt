@@ -129,6 +129,14 @@ object RsElementGenerator {
         return PsiTreeUtil.findChildOfType(element, RsExpressionStatement::class.java) as RsExpressionStatement
     }
 
+    fun createStatement(
+        project: Project,
+        text: String,
+    ): RsStatement {
+        val element = createDummyFile(project, "[proc,dummy]()()$text")
+        return PsiTreeUtil.findChildOfType(element, RsStatement::class.java) as RsStatement
+    }
+
     private fun createDummyFile(
         project: Project,
         text: String,
