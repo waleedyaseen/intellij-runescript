@@ -7,14 +7,12 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.SmartPointerManager
-import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.ide.codeInsight.intention.documentation.RsAddMissingDocTagsIntention
 import io.runescript.plugin.ide.codeInsight.intention.documentation.RsRemoveObsoleteDocTagsIntention
 import io.runescript.plugin.ide.codeInsight.intention.documentation.RsReorderDocTagsIntention
 import io.runescript.plugin.ide.doc.findDoc
 import io.runescript.plugin.ide.neptune.typeManager
-import io.runescript.plugin.lang.psi.RsCallExpression
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
 import io.runescript.plugin.lang.psi.RsScript
@@ -140,7 +138,7 @@ internal object RsChangeSignatureProcessor {
                 return "Cannot remove '$${declaration.name}'; it is still used in the script body."
             }
         }
-        for (call in findCalls(script)) {
+        for (call in findScriptCalls(script)) {
             val argumentList = call.argumentList
             val argumentCount = argumentList?.expressionList?.size ?: 0
             if (argumentCount != oldParameters.size) {
@@ -236,7 +234,7 @@ internal object RsChangeSignatureProcessor {
         change: RsSignatureChange,
     ) {
         val edits = mutableListOf<TextEdit>()
-        for (call in findCalls(script)) {
+        for (call in findScriptCalls(script)) {
             val oldArguments = call.arguments.map(PsiElement::getText)
             val newArguments =
                 change.parameters.map { parameter ->
@@ -297,13 +295,6 @@ internal object RsChangeSignatureProcessor {
         PsiTreeUtil
             .findChildrenOfType(script.statementList, RsLocalVariableExpression::class.java)
             .filter { candidate -> candidate.reference?.resolve() === declaration }
-
-    private fun findCalls(script: RsScript): List<RsCallExpression> =
-        ReferencesSearch
-            .search(script)
-            .findAll()
-            .mapNotNull { reference -> reference.element as? RsCallExpression }
-            .distinct()
 
     private fun document(
         project: Project,
