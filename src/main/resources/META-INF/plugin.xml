@@ -87,6 +87,8 @@
         <codeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsLanguageCodeStyleSettingsProvider"/>
         <lineIndentProvider implementation="io.runescript.plugin.ide.formatter.lineIndent.RsLineIndentProvider"/>
+        <lang.smartEnterProcessor language="RuneScript"
+                                  implementationClass="io.runescript.plugin.ide.codeInsight.smartEnter.RsSmartEnterProcessor"/>
 
         <!-- Code Insights -->
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
