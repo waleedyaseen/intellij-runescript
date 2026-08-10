@@ -25,6 +25,7 @@ import io.runescript.plugin.ide.completion.insertHandler.RsSymbolInsertHandler
 import io.runescript.plugin.ide.completion.insertHandler.RsVariableInsertHandler
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.ide.neptune.typeManager
+import io.runescript.plugin.ide.parameter.RsParameterBehaviorRegistry
 import io.runescript.plugin.ide.parameter.RsParameterBehaviorResolver
 import io.runescript.plugin.lang.psi.RsArgumentList
 import io.runescript.plugin.lang.psi.RsBlockStatement
@@ -639,7 +640,7 @@ class RsCompletionProvider : RsCompletionProviderBase() {
                 .getElements(key, call.name, position.project, position.completionSearchScope(), RsScript::class.java)
                 .firstOrNull() ?: return null
         return RsParameterBehaviorResolver
-            .find(target, call.argumentIndex, "constant")
+            .find(target, call.argumentIndex, RsParameterBehaviorRegistry.CONSTANT_ID)
             ?.options
             ?.mapTo(linkedSetOf()) { option -> option.removePrefix("^") }
             ?.takeIf(Set<String>::isNotEmpty)

@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
+import io.runescript.plugin.ide.parameter.RsParameterBehaviorRegistry
 import io.runescript.plugin.ide.parameter.RsParameterBehaviorResolver
 import io.runescript.plugin.lang.psi.RsConstantExpression
 import io.runescript.plugin.lang.psi.RsElementGenerator
@@ -22,7 +23,7 @@ class RuneScriptParameterConstantInspection : LocalInspectionTool() {
     ): PsiElementVisitor =
         object : RsVisitor() {
             override fun visitExpression(o: RsExpression) {
-                val behavior = RsParameterBehaviorResolver.find(o, CONSTANT_BEHAVIOR_ID) ?: return
+                val behavior = RsParameterBehaviorResolver.find(o, RsParameterBehaviorRegistry.CONSTANT_ID) ?: return
                 val allowedNames = behavior.options.map { option -> option.removePrefix("^") }.distinct()
                 if (allowedNames.isEmpty()) return
 
@@ -60,10 +61,6 @@ class RuneScriptParameterConstantInspection : LocalInspectionTool() {
     }
 
     private fun RsSymSymbol.constantValue(): String? = fieldList.lastOrNull()?.text
-
-    private companion object {
-        const val CONSTANT_BEHAVIOR_ID = "constant"
-    }
 }
 
 private class RsReplaceWithConstantQuickFix(

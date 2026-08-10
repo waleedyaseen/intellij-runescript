@@ -7,7 +7,9 @@ import com.intellij.codeInsight.completion.CompletionUtil
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.patterns.PsiElementPattern
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.lang.RuneScript
+import io.runescript.plugin.lang.doc.psi.api.RsDoc
 import io.runescript.plugin.lang.psi.RsArgumentList
 import io.runescript.plugin.lang.psi.RsTokenTypesSets
 
@@ -18,6 +20,11 @@ class RsCompletionContributor : CompletionContributor() {
             base().and(notCommentOrString()),
             RsCompletionProvider(),
         )
+        extend(
+            CompletionType.BASIC,
+            base(),
+            RsDocCompletionProvider(),
+        )
     }
 
     override fun beforeCompletion(context: CompletionInitializationContext) {
@@ -26,6 +33,9 @@ class RsCompletionContributor : CompletionContributor() {
 
     private fun computeDummyIdentifier(context: CompletionInitializationContext): String {
         val element = context.file.findElementAt(context.startOffset)
+        if (element != null && PsiTreeUtil.getParentOfType(element, RsDoc::class.java, false) != null) {
+            return CompletionUtil.DUMMY_IDENTIFIER_TRIMMED
+        }
         val parent = element?.parent
         if (parent is RsArgumentList) {
             return CompletionUtil.DUMMY_IDENTIFIER_TRIMMED
@@ -63,6 +73,7 @@ class RsCompletionContributor : CompletionContributor() {
 
     private fun notCommentOrString(): PsiElementPattern.Capture<PsiElement> =
         psiElement()
+            .andNot(psiElement().inside(psiElement(RsDoc::class.java)))
             .andNot(psiElement().withElementType(RsTokenTypesSets.COMMENTS))
             .andNot(psiElement().withElementType(RsTokenTypesSets.STRING_ELEMENTS))
 }

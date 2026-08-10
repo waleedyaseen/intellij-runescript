@@ -11,6 +11,8 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import io.runescript.plugin.ide.doc.findDoc
 import io.runescript.plugin.ide.parameter.RsParameterBehavior
+import io.runescript.plugin.ide.parameter.RsParameterBehaviorOptionKind
+import io.runescript.plugin.ide.parameter.RsParameterBehaviorRegistry
 import io.runescript.plugin.ide.parameter.RsParameterBehaviorResolver
 import io.runescript.plugin.lang.doc.psi.impl.RsDocName
 import io.runescript.plugin.lang.doc.psi.impl.RsDocTag
@@ -72,7 +74,8 @@ class RuneScriptParameterMetadataInspection : LocalInspectionTool() {
             holder.registerProblem(tag, "Malformed parameter behavior")
             return
         }
-        if (behavior.id !in SUPPORTED_BEHAVIORS) {
+        val definition = RsParameterBehaviorRegistry.find(behavior.id)
+        if (definition == null) {
             holder.registerProblem(tag, "Unknown parameter behavior '${behavior.id}'")
             return
         }
@@ -80,24 +83,20 @@ class RuneScriptParameterMetadataInspection : LocalInspectionTool() {
             holder.registerProblem(tag, "Duplicate '${behavior.id}' behavior for '$subject'")
         }
 
-        when (behavior.id) {
-            RGB_BEHAVIOR,
-            ARGB_BEHAVIOR,
-            -> inspectColorBehavior(tag, parameter, behavior, holder)
-
-            CONSTANT_BEHAVIOR -> inspectConstantBehavior(script, tag, behavior, holder)
+        if (definition.requiredTypeName != null && parameter.typeName.text != definition.requiredTypeName) {
+            holder.registerProblem(tag, "'${behavior.id}' behavior requires an ${definition.requiredTypeName} parameter")
+        }
+        when (definition.optionKind) {
+            RsParameterBehaviorOptionKind.NONE -> inspectOptionlessBehavior(tag, behavior, holder)
+            RsParameterBehaviorOptionKind.CONSTANTS -> inspectConstantBehavior(script, tag, behavior, holder)
         }
     }
 
-    private fun inspectColorBehavior(
+    private fun inspectOptionlessBehavior(
         tag: RsDocTag,
-        parameter: RsParameter,
         behavior: RsParameterBehavior,
         holder: ProblemsHolder,
     ) {
-        if (parameter.typeName.text != "int") {
-            holder.registerProblem(tag, "'${behavior.id}' behavior requires an int parameter")
-        }
         if (behavior.options.isNotEmpty()) {
             holder.registerProblem(tag, "'${behavior.id}' behavior does not accept options")
         }
@@ -123,13 +122,6 @@ class RuneScriptParameterMetadataInspection : LocalInspectionTool() {
 
     private fun RsDocTag.subjectElement(): PsiElement? =
         getSubjectLink()?.let { link -> PsiTreeUtil.findChildOfType(link, RsDocName::class.java) }
-
-    private companion object {
-        const val RGB_BEHAVIOR = "rgb"
-        const val ARGB_BEHAVIOR = "argb"
-        const val CONSTANT_BEHAVIOR = "constant"
-        val SUPPORTED_BEHAVIORS = setOf(RGB_BEHAVIOR, ARGB_BEHAVIOR, CONSTANT_BEHAVIOR)
-    }
 }
 
 private class RsRenameMetadataParameterQuickFix(
