@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.inspections.fixes.RsRemoveUnreachableStatementQuickFix
 import io.runescript.plugin.lang.psi.RsStatement
 import io.runescript.plugin.lang.psi.RsVisitor
 import io.runescript.plugin.lang.psi.controlFlowHolder
@@ -24,6 +25,7 @@ class RuneScriptUnreachableCodeInspection : LocalInspectionTool() {
                         element,
                         RsBundle.message("inspection.warning.unreachable.code"),
                         ProblemHighlightType.WARNING,
+                        RsRemoveUnreachableStatementQuickFix(),
                     )
                     super.visitStatement(element)
                 }
