@@ -19,10 +19,13 @@ abstract class RsRefactoringActionBase : RefactoringActionHandler {
             val start = file.findElementAt(range.startOffset)
             val end = file.findElementAt(range.endOffset - 1)
             val common = PsiTreeUtil.findCommonParent(start, end)
-            val expr = PsiTreeUtil.getParentOfType(common, RsExpression::class.java, false)
-            if (expr != null && expr.textRange.contains(range)) {
-                return expr
+            var expression =
+                (common as? RsExpression) ?: PsiTreeUtil.getParentOfType(common, RsExpression::class.java, false)
+            while (expression != null) {
+                if (expression.textRange == range) return expression
+                expression = PsiTreeUtil.getParentOfType(expression, RsExpression::class.java, true)
             }
+            return null
         }
         val element = file.findElementAt(editor.caretModel.offset) ?: return null
         return PsiTreeUtil.getParentOfType(element, RsExpression::class.java, false)
