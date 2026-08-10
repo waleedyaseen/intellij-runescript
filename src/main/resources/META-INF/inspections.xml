@@ -80,6 +80,12 @@
                          implementationClass="io.runescript.plugin.ide.inspections.RuneScriptDuplicateSwitchLabelInspection"/>
         <localInspection language="RuneScript"
                          groupName="RuneScript"
+                         displayName="Empty control-flow body"
+                         enabledByDefault="true"
+                         level="WEAK WARNING"
+                         implementationClass="io.runescript.plugin.ide.inspections.RuneScriptEmptyControlFlowBodyInspection"/>
+        <localInspection language="RuneScript"
+                         groupName="RuneScript"
                          displayName="Unreachable code"
                          enabledByDefault="true"
                          level="WARNING"
