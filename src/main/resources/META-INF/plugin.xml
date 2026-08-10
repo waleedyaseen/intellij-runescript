@@ -175,6 +175,12 @@
         </intentionAction>
         <intentionAction>
             <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsConvertIfChainToSwitchIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.control.flow</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>RuneScript</language>
             <className>io.runescript.plugin.ide.codeInsight.intention.documentation.RsGenerateDocCommentIntention</className>
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.documentation</categoryKey>
