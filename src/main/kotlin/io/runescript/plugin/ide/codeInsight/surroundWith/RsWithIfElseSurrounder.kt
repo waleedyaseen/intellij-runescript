@@ -6,13 +6,13 @@ import io.runescript.plugin.ide.RsBundle
 import io.runescript.plugin.lang.psi.RsElementGenerator
 import io.runescript.plugin.lang.psi.RsIfStatement
 
-class RsWithIfSurrounder : RsStatementsSurrounder<RsIfStatement>() {
-    override fun getTemplateDescription(): String = RsBundle.message("surround.with.if.template")
+class RsWithIfElseSurrounder : RsStatementsSurrounder<RsIfStatement>() {
+    override fun getTemplateDescription(): String = RsBundle.message("surround.with.if.else.template")
 
     override fun createTemplate(
         project: Project,
         source: String,
-    ): RsIfStatement = RsElementGenerator.createStatement(project, "if (true) {\n$source\n}") as RsIfStatement
+    ): RsIfStatement = RsElementGenerator.createStatement(project, "if (true) {\n$source\n} else {}") as RsIfStatement
 
     override fun getSelectionRange(statement: RsIfStatement): TextRange? = statement.expression?.textRange
 }

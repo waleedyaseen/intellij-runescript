@@ -32,6 +32,7 @@ class RsStatementsSurroundDescriptor : SurroundDescriptor {
     override fun getSurrounders(): Array<Surrounder> =
         arrayOf(
             RsWithIfSurrounder(),
+            RsWithIfElseSurrounder(),
             RsWithWhileSurrounder(),
         )
 
