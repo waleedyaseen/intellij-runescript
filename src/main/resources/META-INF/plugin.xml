@@ -2,6 +2,7 @@
     <id>me.waleedyaseen.runescript-plugin</id>
     <name>RuneScript</name>
     <vendor email="walied.developer@hotmail.com">Waleed Yaseen</vendor>
+    <resource-bundle>messages.RsBundle</resource-bundle>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
     <depends>org.toml.lang</depends>
@@ -39,6 +40,8 @@
         <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
+        <codeInsight.daemonBoundCodeVisionProvider implementation="io.runescript.plugin.ide.codeInsight.RsReferencesCodeVisionProvider"/>
+        <codeInsight.codeVisionSettingsPreviewLanguage modelId="references" language="RuneScript"/>
 
         <lang.floatingToolbar language="RuneScript" />
 
