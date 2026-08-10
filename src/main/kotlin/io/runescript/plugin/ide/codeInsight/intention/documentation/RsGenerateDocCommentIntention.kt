@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.ide.RsBundle
+import io.runescript.plugin.ide.codeInsight.intention.findScriptAtSignature
 import io.runescript.plugin.ide.doc.findDoc
 import io.runescript.plugin.lang.psi.RsScript
 

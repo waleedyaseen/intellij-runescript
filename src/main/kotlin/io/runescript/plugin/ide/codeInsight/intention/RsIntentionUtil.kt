@@ -1,4 +1,4 @@
-package io.runescript.plugin.ide.codeInsight.intention.documentation
+package io.runescript.plugin.ide.codeInsight.intention
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
