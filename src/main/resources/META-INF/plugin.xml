@@ -89,6 +89,7 @@
         <lineIndentProvider implementation="io.runescript.plugin.ide.formatter.lineIndent.RsLineIndentProvider"/>
         <lang.smartEnterProcessor language="RuneScript"
                                   implementationClass="io.runescript.plugin.ide.codeInsight.smartEnter.RsSmartEnterProcessor"/>
+        <statementUpDownMover implementation="io.runescript.plugin.ide.codeInsight.editorActions.RsStatementMover"/>
 
         <!-- Code Insights -->
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
