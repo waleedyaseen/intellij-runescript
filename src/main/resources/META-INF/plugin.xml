@@ -191,7 +191,13 @@
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.documentation</categoryKey>
         </intentionAction>
-    </extensions>
+        <intentionAction>
+            <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.documentation.RsReorderDocTagsIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.documentation</categoryKey>
+        </intentionAction>
+      </extensions>
     <actions>
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
             <add-to-group group-id="NewGroup"/>
