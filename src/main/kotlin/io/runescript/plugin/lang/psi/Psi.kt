@@ -76,5 +76,6 @@ fun RsLocalVariableExpression.isForArrayAccess(): Boolean {
 
 fun PsiElement.isSourceFile(): Boolean {
     val module = ModuleUtil.findModuleForFile(containingFile) ?: return false
-    return module.findNeptuneProjectRoot() != null
+    val virtualFile = containingFile.virtualFile ?: return false
+    return module.findNeptuneProjectRoot(virtualFile) != null
 }
