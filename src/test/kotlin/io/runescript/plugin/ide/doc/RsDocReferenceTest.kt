@@ -6,6 +6,68 @@ import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsScript
 
 class RsDocReferenceTest : RsParserTestCase() {
+    fun testParameterRenameUpdatesParamAndParammetaTags() {
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            /**
+             * @param value Description.
+             * @parammeta value rgb
+             */
+            [proc,main](int ${'$'}<caret>value)
+            {
+                use(${'$'}value);
+            }
+            """.trimIndent(),
+        )
+
+        myFixture.renameElementAtCaret("colour")
+
+        myFixture.checkResult(
+            """
+            /**
+             * @param colour Description.
+             * @parammeta colour rgb
+             */
+            [proc,main](int ${'$'}colour)
+            {
+                use(${'$'}colour);
+            }
+            """.trimIndent(),
+        )
+    }
+
+    fun testRenameFromParamTagUpdatesSignatureAndUsages() {
+        myFixture.configureByText(
+            "main.cs2",
+            """
+            /**
+             * @param val<caret>ue Description.
+             * @parammeta value rgb
+             */
+            [proc,main](int ${'$'}value)
+            {
+                use(${'$'}value);
+            }
+            """.trimIndent(),
+        )
+
+        myFixture.renameElementAtCaret("colour")
+
+        myFixture.checkResult(
+            """
+            /**
+             * @param colour Description.
+             * @parammeta colour rgb
+             */
+            [proc,main](int ${'$'}colour)
+            {
+                use(${'$'}colour);
+            }
+            """.trimIndent(),
+        )
+    }
+
     fun testDocumentationReferenceAndResolutionAreReused() {
         val targetFile =
             myFixture.addFileToProject(
