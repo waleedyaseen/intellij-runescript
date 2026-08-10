@@ -165,6 +165,18 @@
         </intentionAction>
         <intentionAction>
             <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsMoveSwitchCaseUpIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.control.flow</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>RuneScript</language>
+            <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsMoveSwitchCaseDownIntention</className>
+            <bundleName>messages.RsBundle</bundleName>
+            <categoryKey>intention.category.control.flow</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>RuneScript</language>
             <className>io.runescript.plugin.ide.codeInsight.intention.controlFlow.RsSplitSwitchCaseIntention</className>
             <bundleName>messages.RsBundle</bundleName>
             <categoryKey>intention.category.control.flow</categoryKey>
