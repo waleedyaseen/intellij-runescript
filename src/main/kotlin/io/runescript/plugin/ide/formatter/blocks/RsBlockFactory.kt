@@ -10,6 +10,7 @@ import io.runescript.plugin.ide.formatter.blocks.impl.RsSwitchCaseBlock
 import io.runescript.plugin.ide.formatter.blocks.impl.RsSwitchStatementBlock
 import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 import io.runescript.plugin.lang.psi.RsElementTypes
+import io.runescript.plugin.lang.psi.RsTokenTypesSets
 
 object RsBlockFactory {
     fun create(
@@ -22,6 +23,9 @@ object RsBlockFactory {
         if (node.elementType == RsDocTokens.LEADING_ASTERISK) childIndent = Indent.getSpaceIndent(1)
         if (node.elementType == RsDocTokens.START) childIndent = Indent.getSpaceIndent(0)
         if (node.elementType == RsDocTokens.END) childIndent = Indent.getSpaceIndent(1)
+        if (parent.node.elementType == RsElementTypes.SWITCH_STATEMENT && RsTokenTypesSets.COMMENTS.contains(node.elementType)) {
+            childIndent = Indent.getNormalIndent()
+        }
         return when (node.elementType) {
             RsElementTypes.SCRIPT -> RsScriptBlock(context, node)
             RsElementTypes.BLOCK_STATEMENT -> RsBracedBlock(context, node)
