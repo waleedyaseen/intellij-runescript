@@ -60,6 +60,7 @@
         <refactoring.codeVisionSupport implementation="io.runescript.plugin.ide.refactoring.RsRefactoringCodeVisionSupport"/>
         <inlineActionHandler implementation="io.runescript.plugin.ide.refactoring.RsInlineLocalHandler"/>
         <refactoring.safeDeleteProcessor implementation="io.runescript.plugin.ide.refactoring.RsSafeDeleteProcessorDelegate"/>
+        <moveHandler implementation="io.runescript.plugin.ide.refactoring.RsMoveScriptHandler"/>
 
         <lang.quoteHandler language="RuneScript" implementationClass="io.runescript.plugin.ide.RsQuoteHandler"/>
         <lang.braceMatcher language="RuneScript" implementationClass="io.runescript.plugin.ide.RsBraceMatcher"/>
