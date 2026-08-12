@@ -25,5 +25,5 @@ class RsRefactoringSupportProvider : RefactoringSupportProvider() {
     override fun isInplaceRenameAvailable(
         element: PsiElement,
         context: PsiElement?,
-    ): Boolean = element is RsLocalVariableExpression
+    ): Boolean = element is RsLocalVariableExpression || element is RsScript
 }
