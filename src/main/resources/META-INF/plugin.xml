@@ -7,6 +7,7 @@
     <depends>com.intellij.modules.vcs</depends>
     <depends>com.intellij.java</depends>
     <depends>org.toml.lang</depends>
+    <depends>intellij.structuralSearch.plugin</depends>
     <depends optional="true"
              config-file="me.waleedyaseen.runescript-plugin-searchEverywhere.xml">intellij.platform.searchEverywhere</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
@@ -118,6 +119,7 @@
 
         <!-- Code Completion -->
         <completion.contributor language="RuneScript" implementationClass="io.runescript.plugin.ide.completion.RsCompletionContributor"/>
+        <structuralsearch.profile implementation="io.runescript.plugin.ide.structuralSearch.RsStructuralSearchProfile"/>
 
         <intentionAction>
             <language>RuneScript</language>
