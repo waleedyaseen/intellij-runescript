@@ -251,5 +251,25 @@
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
             <add-to-group group-id="NewGroup"/>
         </action>
+        <action id="RuneScript.GenerateRSDoc"
+                class="io.runescript.plugin.ide.actions.RsGenerateDocAction"
+                text="Generate RSDoc comment">
+            <add-to-group group-id="GenerateGroup"/>
+        </action>
+        <action id="RuneScript.GenerateScriptWrapper"
+                class="io.runescript.plugin.ide.actions.RsGenerateScriptWrapperAction"
+                text="Generate script wrapper">
+            <add-to-group group-id="GenerateGroup"/>
+        </action>
+        <action id="RuneScript.GenerateSwitchCase"
+                class="io.runescript.plugin.ide.actions.RsGenerateSwitchCaseAction"
+                text="Add switch case">
+            <add-to-group group-id="GenerateGroup"/>
+        </action>
+        <action id="RuneScript.GenerateSwitchDefault"
+                class="io.runescript.plugin.ide.actions.RsGenerateSwitchDefaultAction"
+                text="Add switch default">
+            <add-to-group group-id="GenerateGroup"/>
+        </action>
     </actions>
 </idea-plugin>
