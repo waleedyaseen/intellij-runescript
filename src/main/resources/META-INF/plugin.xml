@@ -40,6 +40,7 @@
         <lang.foldingBuilder language="RuneScript" implementationClass="io.runescript.plugin.ide.folding.RsFoldingBuilder"/>
         <lang.findUsagesProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
+        <callHierarchyProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.hierarchy.RsCallHierarchyProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
         <codeInsight.daemonBoundCodeVisionProvider implementation="io.runescript.plugin.ide.codeInsight.RsReferencesCodeVisionProvider"/>
         <codeInsight.codeVisionSettingsPreviewLanguage modelId="references" language="RuneScript"/>
