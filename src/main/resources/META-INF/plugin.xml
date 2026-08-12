@@ -102,6 +102,7 @@
         <lang.smartEnterProcessor language="RuneScript"
                                   implementationClass="io.runescript.plugin.ide.codeInsight.smartEnter.RsSmartEnterProcessor"/>
         <statementUpDownMover implementation="io.runescript.plugin.ide.codeInsight.editorActions.RsStatementMover"/>
+        <extendWordSelectionHandler implementation="io.runescript.plugin.ide.codeInsight.editorActions.RsWordSelectionHandler"/>
 
         <!-- Code Insights -->
         <codeInsight.parameterNameHints language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsInlayParameterHintsProvider"/>
