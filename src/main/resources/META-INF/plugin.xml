@@ -78,6 +78,7 @@
         <codeInsight.lineMarkerProvider language="RuneScript"
                                         implementationClass="io.runescript.plugin.ide.RsColorLineMarkerProvider"/>
         <breadcrumbsInfoProvider implementation="io.runescript.plugin.ide.breadcrumb.RsBreadcrumbsInfoProvider" />
+        <qualifiedNameProvider implementation="io.runescript.plugin.ide.navigation.RsQualifiedNameProvider"/>
         <projectImportProvider implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportProvider"/>
         <projectImportBuilder implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportBuilder"/>
 
