@@ -102,6 +102,8 @@
         <lang.formatter language="RuneScript" implementationClass="io.runescript.plugin.ide.formatter.RsFormatter"/>
         <codeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="io.runescript.plugin.ide.formatter.style.RsLanguageCodeStyleSettingsProvider"/>
+        <lang.rearranger language="RuneScript"
+                         implementationClass="io.runescript.plugin.ide.formatter.arrangement.RsRearranger"/>
         <lineIndentProvider implementation="io.runescript.plugin.ide.formatter.lineIndent.RsLineIndentProvider"/>
         <lang.smartEnterProcessor language="RuneScript"
                                   implementationClass="io.runescript.plugin.ide.codeInsight.smartEnter.RsSmartEnterProcessor"/>
