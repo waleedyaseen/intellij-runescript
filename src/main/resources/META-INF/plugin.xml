@@ -42,6 +42,7 @@
         <lang.findUsagesProvider language="RuneScriptSymbol" implementationClass="io.runescript.plugin.ide.usages.RsFindUsagesProvider"/>
         <callHierarchyProvider language="RuneScript" implementationClass="io.runescript.plugin.ide.hierarchy.RsCallHierarchyProvider"/>
         <readWriteAccessDetector id="runescript" implementation="io.runescript.plugin.ide.usages.RsReadWriteAccessDetector"/>
+        <usageTypeProvider implementation="io.runescript.plugin.ide.usages.RsUsageTypeProvider"/>
         <codeInsight.daemonBoundCodeVisionProvider implementation="io.runescript.plugin.ide.codeInsight.RsReferencesCodeVisionProvider"/>
         <codeInsight.codeVisionSettingsPreviewLanguage modelId="references" language="RuneScript"/>
         <vcs.codeVisionLanguageContext language="RuneScript" implementationClass="io.runescript.plugin.ide.codeInsight.RsVcsCodeVisionContext"/>
