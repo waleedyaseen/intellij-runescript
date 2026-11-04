@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+- Update to IntelliJ IDEA 2026.3
+- Sync RuneScript grammar, triggers, command handlers, and compiler feature flags with Neptune
+- Add Change Signature, Safe Delete, Extract Procedure, Inline Local, Move Script, and call hierarchy support
+- Add smart-enter, surround-with, unwrap, statement movement, and control-flow intentions
+- Add RSDoc generation, completion, validation, and automatic tag maintenance
+- Add script previews, Code Vision, VCS authorship, usage classification, and Copy Reference support
+- Add structural search, script rearrangement, semantic selection, and script separators
+- Improve Neptune project discovery, linking, toolchain configuration, caching, and type-analysis performance
+
 ## [1.9.3] - 2026-07-24
 
 - Update to IntelliJ 2026.2
