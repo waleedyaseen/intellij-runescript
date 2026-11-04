@@ -12,6 +12,8 @@ class NeptuneProjectImportData(
     val arraysV2: Boolean,
     val simplifiedTypeCodes: Boolean,
     val longSupport: Boolean,
+    val foldJoinedStringConstants: Boolean = false,
+    val stringTemplates: Boolean = false,
 ) : AbstractExternalEntityData(Neptune.SYSTEM_ID) {
     constructor(
         name: String,
@@ -31,6 +33,8 @@ class NeptuneProjectImportData(
         prefixPostfixExpressions,
         arraysV2,
         simplifiedTypeCodes,
+        false,
+        false,
         false,
     )
 }

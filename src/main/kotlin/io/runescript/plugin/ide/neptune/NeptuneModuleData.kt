@@ -66,6 +66,8 @@ data class NeptuneResolvedData(
     val arraysV2: Boolean = true,
     val simplifiedTypeCodes: Boolean = true,
     val longSupport: Boolean = true,
+    val foldJoinedStringConstants: Boolean = true,
+    val stringTemplates: Boolean = true,
 ) {
     /**
      * The [TypeManager] for the compiler that is used for registering and looking up types.
@@ -394,6 +396,8 @@ class NeptuneModuleData :
         var arraysV2: Boolean = false,
         var simplifiedTypeCodes: Boolean = false,
         var longSupport: Boolean = false,
+        var foldJoinedStringConstants: Boolean = false,
+        var stringTemplates: Boolean = false,
     )
 
     val sourcePaths: List<String>
@@ -412,6 +416,10 @@ class NeptuneModuleData :
         get() = state.simplifiedTypeCodes
     val longSupport: Boolean
         get() = state.longSupport
+    val foldJoinedStringConstants: Boolean
+        get() = state.foldJoinedStringConstants
+    val stringTemplates: Boolean
+        get() = state.stringTemplates
 
     var resolvedData = NeptuneResolvedData()
         private set
@@ -436,6 +444,8 @@ class NeptuneModuleData :
             it.arraysV2 = importData.arraysV2
             it.simplifiedTypeCodes = importData.simplifiedTypeCodes
             it.longSupport = importData.longSupport
+            it.foldJoinedStringConstants = importData.foldJoinedStringConstants
+            it.stringTemplates = importData.stringTemplates
             it
         }
         resolvedData = state.toResolvedData()
@@ -452,6 +462,8 @@ class NeptuneModuleData :
             arraysV2 = arraysV2,
             simplifiedTypeCodes = simplifiedTypeCodes,
             longSupport = longSupport,
+            foldJoinedStringConstants = foldJoinedStringConstants,
+            stringTemplates = stringTemplates,
         )
 }
 

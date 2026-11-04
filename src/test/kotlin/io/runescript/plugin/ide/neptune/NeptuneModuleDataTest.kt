@@ -26,6 +26,8 @@ class NeptuneModuleDataTest : TestCase() {
                 arraysV2 = true,
                 simplifiedTypeCodes = true,
                 longSupport = true,
+                foldJoinedStringConstants = true,
+                stringTemplates = true,
             )
 
         data.loadState(state)
@@ -38,6 +40,8 @@ class NeptuneModuleDataTest : TestCase() {
         assertEquals(state.arraysV2, data.resolvedData.arraysV2)
         assertEquals(state.simplifiedTypeCodes, data.resolvedData.simplifiedTypeCodes)
         assertEquals(state.longSupport, data.resolvedData.longSupport)
+        assertEquals(state.foldJoinedStringConstants, data.resolvedData.foldJoinedStringConstants)
+        assertEquals(state.stringTemplates, data.resolvedData.stringTemplates)
         assertTrue(data.modificationCount > 0)
     }
 

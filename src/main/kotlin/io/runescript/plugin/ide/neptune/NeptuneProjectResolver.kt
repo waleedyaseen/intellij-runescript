@@ -231,6 +231,8 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
                 arraysV2 = features.arraysV2,
                 simplifiedTypeCodes = features.simplifiedTypeCodes,
                 longSupport = features.longSupport,
+                foldJoinedStringConstants = features.foldJoinedStringConstants,
+                stringTemplates = features.stringTemplates,
             )
     }
 
@@ -249,6 +251,8 @@ class NeptuneProjectResolver : ExternalSystemProjectResolver<NeptuneExecutionSet
         val arraysV2: Boolean = false,
         val simplifiedTypeCodes: Boolean = false,
         val longSupport: Boolean = false,
+        val foldJoinedStringConstants: Boolean = false,
+        val stringTemplates: Boolean = false,
     )
 
     private companion object {

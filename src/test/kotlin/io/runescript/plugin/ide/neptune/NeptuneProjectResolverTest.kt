@@ -38,7 +38,11 @@ class NeptuneProjectResolverTest : TestCase() {
                   "symbolPaths": ["symbols"],
                   "libraryPaths": [],
                   "excludePaths": ["build"],
-                  "features": {"longSupport": true}
+                  "features": {
+                    "longSupport": true,
+                    "foldJoinedStringConstants": true,
+                    "stringTemplates": true
+                  }
                 }
                 """.trimIndent(),
             )
@@ -48,7 +52,11 @@ class NeptuneProjectResolverTest : TestCase() {
         assertEquals(listOf("symbols"), metadata.symbolPaths)
         assertEquals(listOf("build"), metadata.excludePaths)
         assertTrue(metadata.features.longSupport)
+        assertTrue(metadata.features.foldJoinedStringConstants)
+        assertTrue(metadata.features.stringTemplates)
         assertTrue(metadata.toPersistentData().longSupport)
+        assertTrue(metadata.toPersistentData().foldJoinedStringConstants)
+        assertTrue(metadata.toPersistentData().stringTemplates)
     }
 
     fun testRejectsInvalidProjectMetadata() {
