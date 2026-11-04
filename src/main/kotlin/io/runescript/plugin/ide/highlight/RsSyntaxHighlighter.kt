@@ -7,6 +7,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import io.runescript.plugin.lang.doc.lexer.RsDocTokens
 import io.runescript.plugin.lang.lexer.RsLexerInfo
+import io.runescript.plugin.lang.psi.RsElementTypes.CHAR
 import io.runescript.plugin.lang.psi.RsElementTypes.COLON
 import io.runescript.plugin.lang.psi.RsElementTypes.COMMA
 import io.runescript.plugin.lang.psi.RsElementTypes.IDENTIFIER
@@ -41,6 +42,7 @@ class RsSyntaxHighlighter(
             attributes[IDENTIFIER] = RsSyntaxHighlighterColors.IDENTIFIER
             attributes[INTEGER] = RsSyntaxHighlighterColors.NUMBER
             attributes[LONG] = RsSyntaxHighlighterColors.NUMBER
+            attributes[CHAR] = RsSyntaxHighlighterColors.STRING
             fillMap(attributes, KEYWORDS, RsSyntaxHighlighterColors.KEYWORD)
             attributes[TYPE_LITERAL] = RsSyntaxHighlighterColors.TYPE_LITERAL
             fillMap(

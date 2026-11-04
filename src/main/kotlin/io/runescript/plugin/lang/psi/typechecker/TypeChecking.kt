@@ -14,6 +14,7 @@ import io.runescript.plugin.lang.psi.RsBlockStatement
 import io.runescript.plugin.lang.psi.RsBooleanLiteralExpression
 import io.runescript.plugin.lang.psi.RsCalcExpression
 import io.runescript.plugin.lang.psi.RsCallExpression
+import io.runescript.plugin.lang.psi.RsCharacterLiteralExpression
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsConditionExpression
 import io.runescript.plugin.lang.psi.RsConditionOp
@@ -933,9 +934,9 @@ class TypeChecking(
         booleanLiteral.type = PrimitiveType.BOOLEAN
     }
 
-//    override fun visitCharacterLiteralExpression(characterLiteral: RsCharacterLiteralExpression) {
-//        characterLiteral.type = PrimitiveType.CHAR
-//    }
+    override fun visitCharacterLiteralExpression(characterLiteral: RsCharacterLiteralExpression) {
+        characterLiteral.type = PrimitiveType.CHAR
+    }
 
     override fun visitNullLiteralExpression(nullLiteral: RsNullLiteralExpression) {
         val hint = nullLiteral.typeHint

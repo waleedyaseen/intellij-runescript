@@ -72,6 +72,50 @@ class RsLexerTest : BasePlatformTestCase() {
         )
     }
 
+    fun testCharacterLiteralsLex() {
+        assertTokenTypes(
+            "'a' '\\\\' '\\''",
+            RsElementTypes.CHAR,
+            RsElementTypes.CHAR,
+            RsElementTypes.CHAR,
+        )
+    }
+
+    fun testStringTemplatesLex() {
+        assertTokenTypes(
+            """"<str0><switch,int5,"green","red",none><str_value=<calc(1 + 2)>><at><n><shy><nbh><p,1>"""",
+            RsElementTypes.STRING_START,
+            RsElementTypes.STRING_PART,
+            RsElementTypes.STRING_INTERPOLATION_START,
+            RsElementTypes.CALC,
+            RsElementTypes.LPAREN,
+            RsElementTypes.INTEGER,
+            RsElementTypes.PLUS,
+            RsElementTypes.INTEGER,
+            RsElementTypes.RPAREN,
+            RsElementTypes.STRING_INTERPOLATION_END,
+            RsElementTypes.STRING_PART,
+            RsElementTypes.STRING_TAG,
+            RsElementTypes.STRING_TAG,
+            RsElementTypes.STRING_TAG,
+            RsElementTypes.STRING_TAG,
+            RsElementTypes.STRING_TAG,
+            RsElementTypes.STRING_END,
+        )
+    }
+
+    fun testJumpAndAdvancedNamesLex() {
+        assertTokenTypes(
+            "@target ${'$'}return ${'$'}123",
+            RsElementTypes.AT,
+            RsElementTypes.IDENTIFIER,
+            RsElementTypes.DOLLAR,
+            RsElementTypes.RETURN,
+            RsElementTypes.DOLLAR,
+            RsElementTypes.INTEGER,
+        )
+    }
+
     fun testBadCharacterInsideStringLex() {
         assertTokenTypes(
             """"bad\q"""",

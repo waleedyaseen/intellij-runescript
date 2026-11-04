@@ -65,7 +65,8 @@ public class RsCommandExpressionImpl extends  RsCommandExpressionMixin implement
   }
 
   @Override
-  public @NotNull String getNameString() {
+  @NotNull
+  public String getNameString() {
     return RsPsiImplUtil.getNameString(this);
   }
 

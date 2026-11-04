@@ -22,7 +22,8 @@ public interface RsArrayVariableDeclarationStatement extends RsStatement {
   @Nullable
   PsiElement getSemicolon();
 
-  @NotNull RsLocalVariableExpression getVariable();
+  @NotNull
+  RsLocalVariableExpression getVariable();
 
   @Nullable
   RsExpression getInitializer();

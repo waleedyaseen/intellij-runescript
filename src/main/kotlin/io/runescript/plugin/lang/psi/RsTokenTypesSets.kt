@@ -5,6 +5,7 @@ import io.runescript.plugin.lang.psi.RsElementTypes.AMPERSAND
 import io.runescript.plugin.lang.psi.RsElementTypes.BAR
 import io.runescript.plugin.lang.psi.RsElementTypes.CALC
 import io.runescript.plugin.lang.psi.RsElementTypes.CASE
+import io.runescript.plugin.lang.psi.RsElementTypes.CHAR
 import io.runescript.plugin.lang.psi.RsElementTypes.DEFAULT
 import io.runescript.plugin.lang.psi.RsElementTypes.DEFINE_TYPE
 import io.runescript.plugin.lang.psi.RsElementTypes.ELSE
@@ -95,5 +96,5 @@ object RsTokenTypesSets {
             DOC_COMMENT,
         )
 
-    val STRING_ELEMENTS = TokenSet.create(STRING_START, STRING_PART, STRING_TAG, STRING_END)
+    val STRING_ELEMENTS = TokenSet.create(CHAR, STRING_START, STRING_PART, STRING_TAG, STRING_END)
 }

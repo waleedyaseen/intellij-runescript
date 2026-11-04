@@ -25,6 +25,7 @@ public interface RsCommandExpression extends RsExpression, NavigatablePsiElement
 
   boolean isStar();
 
-  @NotNull String getNameString();
+  @NotNull
+  String getNameString();
 
 }

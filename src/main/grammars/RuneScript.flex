@@ -51,16 +51,22 @@ INTEGER = ([-+]?)(({DECIMAL_INTEGER})|({HEX_INTEGER}))
 LONG = ([-+]?)(({LONG_DECIMAL_INTEGER})|({LONG_HEX_INTEGER}))
 STRING_ESCAPE_SEQUENCE=\\([abfnrtv\'\"\\<])
 STRING_PART = [^\"\r\n<\\]+
+CHAR = \'(\\[\\\']|[^\'\\\r\n])\'
 INCREMENT = "++"
 DECREMENT = "--"
 
-COLOR_TAG = "<"(shad|col|str|u)"="([0-9a-fA-F]+)">"
-OTHER_TAG = "<"(str|u|br|lt|gt)">"
+COLOR_TAG = "<"(shad|col|str|u)"="([^<>]+)">"
+OTHER_TAG = "<"(str|u|br|lt|gt|at|n|shy|nbh)">"
 IMG_TAG = "<img="([0-9]+)">"
 CLOSE_TAG = "</"(shad|col|str|u)">"
 INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
+P_TAG = "<p,"([^<>]+)">"
+TEMPLATE_VARIABLE_HEAD = (int|long|str|bool)
+TEMPLATE_START = "<"(switch","|cond","[^,\"\r\n]*","|text_pronoun"(")
+TEMPLATE_VARIABLE = "<"{TEMPLATE_VARIABLE_HEAD}[^<>()=,\"\r\n]*">"
+TEMPLATE_ASSIGN_START = "<"{TEMPLATE_VARIABLE_HEAD}[^<>()=,\"\r\n]*"="
 
-%x STRING, STRING_INTERPOLATION, BLOCK_COMMENT, DOC_COMMENT
+%x STRING, STRING_INTERPOLATION, STRING_TEMPLATE, STRING_TEMPLATE_VALUE, BLOCK_COMMENT, DOC_COMMENT
 
 %%
 
@@ -102,6 +108,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 {COORDGRID} { return COORDGRID; }
 {LONG} { return LONG; }
 {INTEGER} { return INTEGER; }
+{CHAR} { return CHAR; }
 
 
 // Operators
@@ -127,6 +134,7 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 "&" { return AMPERSAND; }
 "|" { return BAR; }
 "$" { return DOLLAR; }
+"@" { return AT; }
 
 // Separators
 "^" { return CARET; }
@@ -162,9 +170,26 @@ INCOMPLETE_TAG = "<"(shad|col|str|u|img)"="
 <STRING> {
 {STRING_ESCAPE_SEQUENCE} { return STRING_PART; }
 \" { popState(); return STRING_END; }
-({OTHER_TAG}|{CLOSE_TAG}|{COLOR_TAG}|{IMG_TAG}) { return STRING_TAG; }
+{TEMPLATE_START} { pushState(STRING_TEMPLATE); return STRING_PART; }
+{TEMPLATE_VARIABLE} { return STRING_PART; }
+{TEMPLATE_ASSIGN_START} { pushState(STRING_TEMPLATE_VALUE); return STRING_PART; }
+({OTHER_TAG}|{CLOSE_TAG}|{COLOR_TAG}|{IMG_TAG}|{P_TAG}) { return STRING_TAG; }
 {INCOMPLETE_TAG} { return STRING_PART; }
 "<" { pushState(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
 {STRING_PART} { return STRING_PART; }
+[^] { return TokenType.BAD_CHARACTER; }
+}
+<STRING_TEMPLATE> {
+\\[<>] { return STRING_PART; }
+"<" { pushState(STRING_TEMPLATE); return STRING_PART; }
+">" { popState(); return STRING_PART; }
+[^<>\r\n]+ { return STRING_PART; }
+[^] { return TokenType.BAD_CHARACTER; }
+}
+<STRING_TEMPLATE_VALUE> {
+({OTHER_TAG}|{CLOSE_TAG}|{COLOR_TAG}|{IMG_TAG}|{P_TAG}) { return STRING_PART; }
+"<" { pushState(STRING_INTERPOLATION); return STRING_INTERPOLATION_START; }
+">" { popState(); return STRING_PART; }
+[^<>\r\n]+ { return STRING_PART; }
 [^] { return TokenType.BAD_CHARACTER; }
 }

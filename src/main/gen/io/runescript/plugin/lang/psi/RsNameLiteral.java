@@ -10,7 +10,13 @@ import io.runescript.plugin.lang.stubs.RsNameLiteralStub;
 public interface RsNameLiteral extends PsiElement, StubBasedPsiElement<RsNameLiteralStub> {
 
   @Nullable
+  PsiElement getCalc();
+
+  @Nullable
   PsiElement getDefineType();
+
+  @Nullable
+  PsiElement getElse();
 
   @Nullable
   PsiElement getFalse();
@@ -22,7 +28,16 @@ public interface RsNameLiteral extends PsiElement, StubBasedPsiElement<RsNameLit
   PsiElement getIf();
 
   @Nullable
+  PsiElement getInteger();
+
+  @Nullable
+  PsiElement getLong();
+
+  @Nullable
   PsiElement getNull();
+
+  @Nullable
+  PsiElement getReturn();
 
   @Nullable
   PsiElement getSwitch();

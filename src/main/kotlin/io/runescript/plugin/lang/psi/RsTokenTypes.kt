@@ -12,10 +12,15 @@ object RsTokenTypes {
             RsElementTypes.TYPE_LITERAL,
             RsElementTypes.WHILE,
             RsElementTypes.IF,
+            RsElementTypes.ELSE,
+            RsElementTypes.RETURN,
+            RsElementTypes.CALC,
             RsElementTypes.TRUE,
             RsElementTypes.FALSE,
             RsElementTypes.NULL,
             RsElementTypes.SWITCH,
+            RsElementTypes.INTEGER,
+            RsElementTypes.LONG,
         )
 
     @JvmField

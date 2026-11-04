@@ -17,6 +17,7 @@ import io.runescript.plugin.lang.psi.RsAssignmentStatement
 import io.runescript.plugin.lang.psi.RsBlockStatement
 import io.runescript.plugin.lang.psi.RsBooleanLiteralExpression
 import io.runescript.plugin.lang.psi.RsCalcExpression
+import io.runescript.plugin.lang.psi.RsCharacterLiteralExpression
 import io.runescript.plugin.lang.psi.RsCommandExpression
 import io.runescript.plugin.lang.psi.RsConditionExpression
 import io.runescript.plugin.lang.psi.RsConditionOp
@@ -29,6 +30,7 @@ import io.runescript.plugin.lang.psi.RsExpressionStatement
 import io.runescript.plugin.lang.psi.RsGosubExpression
 import io.runescript.plugin.lang.psi.RsIfStatement
 import io.runescript.plugin.lang.psi.RsIntegerLiteralExpression
+import io.runescript.plugin.lang.psi.RsJumpExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLongLiteralExpression
 import io.runescript.plugin.lang.psi.RsNullLiteralExpression
@@ -366,6 +368,40 @@ class RsGrammarPsiTest : RsParserTestCase() {
         assertSize(1, children<RsStringLiteralExpression>(file))
         assertSize(1, children<RsStringLiteralContent>(file))
         assertSize(1, children<RsStringInterpolationExpression>(file))
+    }
+
+    fun testNeptuneStringTemplatesParse() {
+        val file =
+            parse(
+                """
+                [proc,main]
+                {
+                    def_string ${"$"}message = "<str0><cond,int_5>5,high,low><switch,pronoun,\"<str_he>\",\"<str_she>\",\"\"><str_value=<calc(1 + 2)>>";
+                }
+                """,
+            )
+
+        assertNoPsiErrors()
+        assertSize(1, children<RsStringLiteralExpression>(file))
+        assertSize(1, children<RsStringInterpolationExpression>(file))
+    }
+
+    fun testCharacterJumpAndAdvancedNamesParse() {
+        val file =
+            parse(
+                """
+                [proc,main]
+                {
+                    def_char ${"$"}return = 'a';
+                    def_int ${"$"}123 = 1;
+                    @label(${"$"}return, ${"$"}123);
+                }
+                """,
+            )
+
+        assertNoPsiErrors()
+        assertSize(1, children<RsCharacterLiteralExpression>(file))
+        assertSize(1, children<RsJumpExpression>(file))
     }
 
     fun testScopedVariableExpressionParses() {

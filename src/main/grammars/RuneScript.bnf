@@ -1,4 +1,5 @@
 {
+  generate=[names="short"]
   parserClass="io.runescript.plugin.lang.parser.RsParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
@@ -26,7 +27,7 @@
   implements("Script")="io.runescript.plugin.lang.psi.RsControlFlowHolder"
   implements("Script")="io.runescript.plugin.lang.psi.RsNamedElement"
   implements("Script|HookFragment")="io.runescript.plugin.lang.psi.typechecker.RsInferenceDataHolder"
-  implements("GosubExpression|CommandExpression|HookFragment")="io.runescript.plugin.lang.psi.RsCallExpression"
+  implements("GosubExpression|JumpExpression|CommandExpression|HookFragment")="io.runescript.plugin.lang.psi.RsCallExpression"
   implements(".*LiteralExpression")="io.runescript.plugin.lang.psi.RsLiteralExpression"
 
   classHeader="// This class is automatically generated. Do not edit."
@@ -59,6 +60,7 @@
     CARET='^'
     TILDE='~'
     DOLLAR='$'
+    AT='@'
   ]
 }
 
@@ -253,11 +255,12 @@ Expression ::= ParExpression
              | LocalVariableExpression
              | ScopedVariableExpression
              | LiteralExpression
+             | CalcExpression
              | CommandExpression
              | GosubExpression
+             | JumpExpression
              | ConstantExpression
              | DynamicExpression
-             | CalcExpression
 
 private ExpressionList ::= Expression (',' Expression)*
 ParExpression ::= '(' Expression ')'
@@ -281,6 +284,7 @@ private LiteralExpression ::= IntegerLiteralExpression
                              | LongLiteralExpression
                              | CoordLiteralExpression
                              | BooleanLiteralExpression
+                             | CharacterLiteralExpression
                              | NullLiteralExpression
                              | StringLiteralExpression
 IntegerLiteralExpression ::= INTEGER {
@@ -290,6 +294,7 @@ IntegerLiteralExpression ::= INTEGER {
 LongLiteralExpression ::= LONG
 CoordLiteralExpression ::= COORDGRID
 BooleanLiteralExpression ::= TRUE | FALSE
+CharacterLiteralExpression ::= CHAR
 NullLiteralExpression ::= NULL
 StringLiteralExpression ::= STRING_START StringLiteralContent STRING_END {
     mixin=" io.runescript.plugin.lang.psi.mixin.RsStringLiteralExpressionMixin"
@@ -315,6 +320,7 @@ GosubExpression ::= '~' NameLiteral ArgumentList? {
     mixin="io.runescript.plugin.lang.psi.mixin.RsGosubExpressionMixin"
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
+JumpExpression ::= '@' NameLiteral ArgumentList?
 ArgumentList ::= '(' ExpressionList? ')' {
     pin=1
 }
@@ -327,7 +333,7 @@ DynamicExpression ::= NameLiteral {
     implements="io.runescript.plugin.lang.psi.RsNamedElement"
 }
 CalcExpression ::= CALC '(' ArithmeticBitwiseOrWrapper ')'
-NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH {
+NameLiteral ::= IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | INTEGER | LONG | WHILE | IF | ELSE | RETURN | CALC | TRUE | FALSE | NULL | SWITCH {
     stubClass="io.runescript.plugin.lang.stubs.RsNameLiteralStub"
     elementTypeFactory = "io.runescript.plugin.lang.stubs.StubElementTypeFactory.create"
 }

@@ -19,6 +19,7 @@ public interface RsElementTypes {
   IElementType BLOCK_STATEMENT = new RsElementType("BLOCK_STATEMENT");
   IElementType BOOLEAN_LITERAL_EXPRESSION = new RsElementType("BOOLEAN_LITERAL_EXPRESSION");
   IElementType CALC_EXPRESSION = new RsElementType("CALC_EXPRESSION");
+  IElementType CHARACTER_LITERAL_EXPRESSION = new RsElementType("CHARACTER_LITERAL_EXPRESSION");
   IElementType COMMAND_EXPRESSION = new RsElementType("COMMAND_EXPRESSION");
   IElementType CONDITION_EXPRESSION = new RsElementType("CONDITION_EXPRESSION");
   IElementType CONDITION_OP = new RsElementType("CONDITION_OP");
@@ -34,6 +35,7 @@ public interface RsElementTypes {
   IElementType HOOK_TRANSMIT_LIST = new RsElementType("HOOK_TRANSMIT_LIST");
   IElementType IF_STATEMENT = new RsElementType("IF_STATEMENT");
   IElementType INTEGER_LITERAL_EXPRESSION = new RsElementType("INTEGER_LITERAL_EXPRESSION");
+  IElementType JUMP_EXPRESSION = new RsElementType("JUMP_EXPRESSION");
   IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new RsElementType("LOCAL_VARIABLE_DECLARATION_STATEMENT");
   IElementType LOCAL_VARIABLE_EXPRESSION = StubElementTypeFactory.create("LOCAL_VARIABLE_EXPRESSION");
   IElementType LONG_LITERAL_EXPRESSION = new RsElementType("LONG_LITERAL_EXPRESSION");
@@ -62,10 +64,12 @@ public interface RsElementTypes {
   IElementType WHILE_STATEMENT = new RsElementType("WHILE_STATEMENT");
 
   IElementType AMPERSAND = new RsElementType("&");
+  IElementType AT = new RsElementType("@");
   IElementType BAR = new RsElementType("|");
   IElementType CALC = new RsElementType("CALC");
   IElementType CARET = new RsElementType("^");
   IElementType CASE = new RsElementType("CASE");
+  IElementType CHAR = new RsElementType("CHAR");
   IElementType COLON = new RsElementType(":");
   IElementType COMMA = new RsElementType(",");
   IElementType COORDGRID = new RsElementType("COORDGRID");
@@ -143,6 +147,9 @@ public interface RsElementTypes {
       else if (type == CALC_EXPRESSION) {
         return new RsCalcExpressionImpl(node);
       }
+      else if (type == CHARACTER_LITERAL_EXPRESSION) {
+        return new RsCharacterLiteralExpressionImpl(node);
+      }
       else if (type == COMMAND_EXPRESSION) {
         return new RsCommandExpressionImpl(node);
       }
@@ -184,6 +191,9 @@ public interface RsElementTypes {
       }
       else if (type == INTEGER_LITERAL_EXPRESSION) {
         return new RsIntegerLiteralExpressionImpl(node);
+      }
+      else if (type == JUMP_EXPRESSION) {
+        return new RsJumpExpressionImpl(node);
       }
       else if (type == LOCAL_VARIABLE_DECLARATION_STATEMENT) {
         return new RsLocalVariableDeclarationStatementImpl(node);

@@ -52,6 +52,11 @@ public class RsVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitCharacterLiteralExpression(@NotNull RsCharacterLiteralExpression o) {
+    visitExpression(o);
+    // visitLiteralExpression(o);
+  }
+
   public void visitCommandExpression(@NotNull RsCommandExpression o) {
     visitExpression(o);
     // visitNavigatablePsiElement(o);
@@ -122,6 +127,11 @@ public class RsVisitor extends PsiElementVisitor {
     visitExpression(o);
     // visitNamedElement(o);
     // visitLiteralExpression(o);
+  }
+
+  public void visitJumpExpression(@NotNull RsJumpExpression o) {
+    visitExpression(o);
+    // visitCallExpression(o);
   }
 
   public void visitLocalVariableDeclarationStatement(@NotNull RsLocalVariableDeclarationStatement o) {

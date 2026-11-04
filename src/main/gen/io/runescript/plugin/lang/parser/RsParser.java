@@ -48,11 +48,12 @@ public class RsParser implements PsiParser, LightPsiParser {
       EXPRESSION_STATEMENT, IF_STATEMENT, LOCAL_VARIABLE_DECLARATION_STATEMENT, RETURN_STATEMENT,
       STATEMENT, SWITCH_STATEMENT, WHILE_STATEMENT),
     create_token_set_(ARITHMETIC_EXPRESSION, ARITHMETIC_VALUE_EXPRESSION, ARRAY_ACCESS_EXPRESSION, BOOLEAN_LITERAL_EXPRESSION,
-      CALC_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION, CONSTANT_EXPRESSION,
-      COORD_LITERAL_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION, GOSUB_EXPRESSION,
-      INTEGER_LITERAL_EXPRESSION, LOCAL_VARIABLE_EXPRESSION, LONG_LITERAL_EXPRESSION, NULL_LITERAL_EXPRESSION,
-      PAR_EXPRESSION, POSTFIX_EXPRESSION, PREFIX_EXPRESSION, RELATIONAL_VALUE_EXPRESSION,
-      SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION, STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
+      CALC_EXPRESSION, CHARACTER_LITERAL_EXPRESSION, COMMAND_EXPRESSION, CONDITION_EXPRESSION,
+      CONSTANT_EXPRESSION, COORD_LITERAL_EXPRESSION, DYNAMIC_EXPRESSION, EXPRESSION,
+      GOSUB_EXPRESSION, INTEGER_LITERAL_EXPRESSION, JUMP_EXPRESSION, LOCAL_VARIABLE_EXPRESSION,
+      LONG_LITERAL_EXPRESSION, NULL_LITERAL_EXPRESSION, PAR_EXPRESSION, POSTFIX_EXPRESSION,
+      PREFIX_EXPRESSION, RELATIONAL_VALUE_EXPRESSION, SCOPED_VARIABLE_EXPRESSION, STRING_INTERPOLATION_EXPRESSION,
+      STRING_LITERAL_EXPRESSION, SWITCH_CASE_DEFAULT_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -444,6 +445,18 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // CHAR
+  public static boolean CharacterLiteralExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "CharacterLiteralExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", CHAR)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, CHARACTER_LITERAL_EXPRESSION, "<Expression>");
+    r = consumeToken(b, CHAR);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // NameLiteral (ArgumentList | (STAR ArgumentList ArgumentList))
   public static boolean CommandExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "CommandExpression")) return false;
@@ -581,11 +594,12 @@ public class RsParser implements PsiParser, LightPsiParser {
   //              | LocalVariableExpression
   //              | ScopedVariableExpression
   //              | LiteralExpression
+  //              | CalcExpression
   //              | CommandExpression
   //              | GosubExpression
+  //              | JumpExpression
   //              | ConstantExpression
   //              | DynamicExpression
-  //              | CalcExpression
   public static boolean Expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Expression")) return false;
     boolean r;
@@ -597,11 +611,12 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = LocalVariableExpression(b, l + 1);
     if (!r) r = ScopedVariableExpression(b, l + 1);
     if (!r) r = LiteralExpression(b, l + 1);
+    if (!r) r = CalcExpression(b, l + 1);
     if (!r) r = CommandExpression(b, l + 1);
     if (!r) r = GosubExpression(b, l + 1);
+    if (!r) r = JumpExpression(b, l + 1);
     if (!r) r = ConstantExpression(b, l + 1);
     if (!r) r = DynamicExpression(b, l + 1);
-    if (!r) r = CalcExpression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -805,10 +820,32 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // '@' NameLiteral ArgumentList?
+  public static boolean JumpExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "JumpExpression")) return false;
+    if (!nextTokenIs(b, "<Expression>", AT)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, JUMP_EXPRESSION, "<Expression>");
+    r = consumeToken(b, AT);
+    r = r && NameLiteral(b, l + 1);
+    r = r && JumpExpression_2(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // ArgumentList?
+  private static boolean JumpExpression_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "JumpExpression_2")) return false;
+    ArgumentList(b, l + 1);
+    return true;
+  }
+
+  /* ********************************************************** */
   // IntegerLiteralExpression
   //                              | LongLiteralExpression
   //                              | CoordLiteralExpression
   //                              | BooleanLiteralExpression
+  //                              | CharacterLiteralExpression
   //                              | NullLiteralExpression
   //                              | StringLiteralExpression
   static boolean LiteralExpression(PsiBuilder b, int l) {
@@ -819,6 +856,7 @@ public class RsParser implements PsiParser, LightPsiParser {
     if (!r) r = LongLiteralExpression(b, l + 1);
     if (!r) r = CoordLiteralExpression(b, l + 1);
     if (!r) r = BooleanLiteralExpression(b, l + 1);
+    if (!r) r = CharacterLiteralExpression(b, l + 1);
     if (!r) r = NullLiteralExpression(b, l + 1);
     if (!r) r = StringLiteralExpression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -981,7 +1019,7 @@ public class RsParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | WHILE | IF | TRUE | FALSE | NULL | SWITCH
+  // IDENTIFIER | DEFINE_TYPE | TYPE_LITERAL | INTEGER | LONG | WHILE | IF | ELSE | RETURN | CALC | TRUE | FALSE | NULL | SWITCH
   public static boolean NameLiteral(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NameLiteral")) return false;
     boolean r;
@@ -989,8 +1027,13 @@ public class RsParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, IDENTIFIER);
     if (!r) r = consumeToken(b, DEFINE_TYPE);
     if (!r) r = consumeToken(b, TYPE_LITERAL);
+    if (!r) r = consumeToken(b, INTEGER);
+    if (!r) r = consumeToken(b, LONG);
     if (!r) r = consumeToken(b, WHILE);
     if (!r) r = consumeToken(b, IF);
+    if (!r) r = consumeToken(b, ELSE);
+    if (!r) r = consumeToken(b, RETURN);
+    if (!r) r = consumeToken(b, CALC);
     if (!r) r = consumeToken(b, TRUE);
     if (!r) r = consumeToken(b, FALSE);
     if (!r) r = consumeToken(b, NULL);

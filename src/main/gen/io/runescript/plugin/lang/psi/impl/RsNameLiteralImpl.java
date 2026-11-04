@@ -44,8 +44,20 @@ public class RsNameLiteralImpl extends StubBasedPsiElementBase<RsNameLiteralStub
 
   @Override
   @Nullable
+  public PsiElement getCalc() {
+    return findChildByType(CALC);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getDefineType() {
     return findChildByType(DEFINE_TYPE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getElse() {
+    return findChildByType(ELSE);
   }
 
   @Override
@@ -68,8 +80,26 @@ public class RsNameLiteralImpl extends StubBasedPsiElementBase<RsNameLiteralStub
 
   @Override
   @Nullable
+  public PsiElement getInteger() {
+    return findChildByType(INTEGER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getLong() {
+    return findChildByType(LONG);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getNull() {
     return findChildByType(NULL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getReturn() {
+    return findChildByType(RETURN);
   }
 
   @Override
