@@ -29,7 +29,7 @@ class RsSearchEverywhereItemsProviderTest : BasePlatformTestCase() {
         runBlocking {
             val provider = factory.getItemsProvider(project, DataContext.EMPTY_CONTEXT)
             assertNotNull(provider)
-            assertEquals(RsSearchEverywhereContributor.ID, provider!!.id)
+            assertEquals(RsSearchEverywhereItemsProviderFactory.ID, provider!!.id)
 
             provider.collectItems(
                 SeParams("bar", SeFilterState.Empty),

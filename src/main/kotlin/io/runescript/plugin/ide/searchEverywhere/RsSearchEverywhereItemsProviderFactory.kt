@@ -24,18 +24,22 @@ import kotlinx.coroutines.withContext
 import kotlin.math.max
 
 class RsSearchEverywhereItemsProviderFactory : SeItemsProviderFactory {
-    override val id: String = RsSearchEverywhereContributor.ID
+    override val id: String = ID
 
     override suspend fun getItemsProvider(
         project: Project?,
         dataContext: DataContext,
     ): SeItemsProvider? = project?.let(::RsSearchEverywhereItemsProvider)
+
+    companion object {
+        const val ID: String = "RsSearchEverywhereContributor"
+    }
 }
 
 private class RsSearchEverywhereItemsProvider(
     private val project: Project,
 ) : SeItemsProvider {
-    override val id: String = RsSearchEverywhereContributor.ID
+    override val id: String = RsSearchEverywhereItemsProviderFactory.ID
     override val displayName: String = "Scripts"
 
     override suspend fun collectItems(

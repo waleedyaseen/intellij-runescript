@@ -72,7 +72,6 @@
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsCommandScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsScriptIndex"/>
         <stubIndex implementation="io.runescript.plugin.lang.stubs.index.RsScriptNameIndex"/>
-        <searchEverywhereContributor implementation="io.runescript.plugin.ide.searchEverywhere.RsSearchEverywhereContributor$Factory"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsGosubExpression" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsGosubExpressionManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.psi.RsStringLiteralContent" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsStringLiteralContentManipulator"/>
         <lang.elementManipulator forClass="io.runescript.plugin.lang.doc.psi.impl.RsDocName" implementationClass="io.runescript.plugin.lang.psi.manipulator.RsDocNameManipulator"/>
