@@ -7,9 +7,9 @@ import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.searchEverywhere.SeItem
+import com.intellij.platform.searchEverywhere.SeItemsPreviewProvider
 import com.intellij.platform.searchEverywhere.SeItemsProvider
 import com.intellij.platform.searchEverywhere.SeItemsProviderFactory
-import com.intellij.platform.searchEverywhere.SeItemsPreviewProvider
 import com.intellij.platform.searchEverywhere.SeParams
 import com.intellij.platform.searchEverywhere.SePreviewInfo
 import com.intellij.platform.searchEverywhere.SePreviewInfoFactory
