@@ -5,24 +5,30 @@ import com.intellij.openapi.util.ModificationTracker
 import com.intellij.psi.PsiFile
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
+import com.intellij.psi.util.PsiModificationTracker
 
-fun Project.stubIndexModificationTracker(): ModificationTracker = StubIndex.getInstance().getStubIndexModificationTracker(this)
+fun Project.stubIndexModificationTracker(): ModificationTracker {
+    val stubIndex = StubIndex.getInstance()
+    return stubIndex.tracker("getStubIndexModificationTracker", arrayOf(Project::class.java), arrayOf(this))
+        ?: PsiModificationTracker.getInstance(this)
+}
 
 fun <K, Psi : com.intellij.psi.PsiElement> Project.stubIndexModificationTracker(indexKey: StubIndexKey<K, Psi>): ModificationTracker {
     val stubIndex = StubIndex.getInstance()
-    return runCatching {
-        // IntelliJ only exposes per-index tracking on the implementation in current platform builds.
-        // Resolve it defensively so older/newer IDEs retain correctness through the global fallback.
-        val method =
-            stubIndex.javaClass.getMethod(
-                "getIndexModificationTracker",
-                StubIndexKey::class.java,
-                Project::class.java,
-            )
-        method.invoke(stubIndex, indexKey, this) as ModificationTracker
-    }.getOrElse {
-        stubIndex.getStubIndexModificationTracker(this)
-    }
+    return stubIndex.tracker(
+        "getIndexModificationTracker",
+        arrayOf(StubIndexKey::class.java, Project::class.java),
+        arrayOf(indexKey, this),
+    ) ?: PsiModificationTracker.getInstance(this)
 }
+
+private fun StubIndex.tracker(
+    methodName: String,
+    parameterTypes: Array<Class<*>>,
+    arguments: Array<Any>,
+): ModificationTracker? =
+    runCatching {
+        javaClass.getMethod(methodName, *parameterTypes).invoke(this, *arguments) as ModificationTracker
+    }.getOrNull()
 
 fun PsiFile.localModificationTracker(): ModificationTracker = ModificationTracker { viewProvider.modificationStamp }

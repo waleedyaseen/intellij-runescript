@@ -31,7 +31,7 @@ class RsSyntaxHighlighter(
 ) : SyntaxHighlighterBase() {
     override fun getHighlightingLexer(): Lexer = RsHighlightingLexer(lexerInfo)
 
-    override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> =
+    override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> =
         pack(attributes[tokenType], attributes2[tokenType])
 
     companion object {

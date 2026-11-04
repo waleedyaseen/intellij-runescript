@@ -44,7 +44,7 @@ class NeptuneModuleBuilder : AbstractExternalModuleBuilder<NeptuneProjectSetting
         val project = module.project
         val projectSettings = externalProjectSettings.apply { externalProjectPath = linkedProjectPath }
         project.service<NeptuneSettings>().linkProject(projectSettings)
-        StartupManager.getInstance(project).runAfterOpened {
+        StartupManager.getInstance(project).runWhenProjectIsInitialized {
             ExternalSystemUtil.refreshProject(
                 linkedProjectPath,
                 ImportSpecBuilder(project, Neptune.SYSTEM_ID)

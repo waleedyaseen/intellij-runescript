@@ -3,7 +3,7 @@ package io.runescript.plugin.ide.refactoring
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.messages.MessagesService
+import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -81,14 +81,13 @@ class RsMoveScriptHandler : MoveHandlerDelegate() {
         if (targets.isEmpty()) return null
         val labels: Array<String?> = targets.map { it.virtualFile?.presentableUrl ?: it.name }.toTypedArray()
         val choice =
-            MessagesService.getInstance().showChooseDialog(
+            Messages.showChooseDialog(
                 project,
-                null,
                 "Move scripts to:",
                 "Move RuneScript Script",
+                null,
                 labels,
                 labels.first(),
-                null,
             )
         return targets.getOrNull(choice)
     }

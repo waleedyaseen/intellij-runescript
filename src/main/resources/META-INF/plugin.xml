@@ -4,10 +4,11 @@
     <vendor email="walied.developer@hotmail.com">Waleed Yaseen</vendor>
     <resource-bundle>messages.RsBundle</resource-bundle>
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.vcs</depends>
+    <depends>com.intellij.platform.vcs</depends>
     <depends>com.intellij.java</depends>
     <depends>org.toml.lang</depends>
-    <depends>intellij.structuralSearch.plugin</depends>
+    <depends>com.intellij.structuralSearch</depends>
+    <depends>com.intellij.structureView</depends>
     <depends optional="true"
              config-file="me.waleedyaseen.runescript-plugin-searchEverywhere.xml">intellij.platform.searchEverywhere</depends>
     <xi:include href="/META-INF/inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
