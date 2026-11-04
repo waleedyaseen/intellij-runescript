@@ -11,9 +11,58 @@ import io.runescript.plugin.ide.neptune.NeptuneProjectImportData
 import io.runescript.plugin.ide.neptune.neptuneModuleData
 import io.runescript.plugin.lang.parser.RsParserTestCase
 import io.runescript.plugin.lang.psi.RsHookFragment
+import io.runescript.plugin.lang.psi.RsJumpExpression
+import io.runescript.plugin.lang.psi.RsScript
 import io.runescript.plugin.lang.psi.RsStringLiteralContent
+import io.runescript.plugin.lang.psi.typechecker.TypeCheckingUtil
 
 class RuneScriptTypeCheckerInspectionTest : RsParserTestCase() {
+    fun testJumpExpressionIsRejectedWhenLabelTriggerIsUnavailable() {
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    @target();
+                }
+                """.trimIndent(),
+            )
+        val jump = PsiTreeUtil.findChildOfType(file, RsJumpExpression::class.java)!!
+
+        assertContainsElements(
+            TypeCheckingUtil.typeCheck(jump).map { it.message },
+            "Jump expression not allowed.",
+        )
+    }
+
+    fun testJumpExpressionResolvesLabelScript() {
+        val labels =
+            myFixture.addFileToProject(
+                "labels.cs2",
+                """
+                [label,target]
+                {
+                }
+                """.trimIndent(),
+            )
+        val file =
+            myFixture.configureByText(
+                "main.cs2",
+                """
+                [proc,main]
+                {
+                    @target();
+                }
+                """.trimIndent(),
+            )
+
+        val jump = PsiTreeUtil.findChildOfType(file, RsJumpExpression::class.java)!!
+        val target = PsiTreeUtil.findChildOfType(labels, RsScript::class.java)!!
+
+        assertEquals(target, jump.reference?.resolve())
+    }
+
     fun testIncompleteLocalDeclarationDoesNotCrashHighlighting() {
         myFixture.configureByText(
             "main.cs2",

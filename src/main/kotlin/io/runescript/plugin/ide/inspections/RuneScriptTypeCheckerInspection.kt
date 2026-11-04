@@ -57,6 +57,7 @@ class RuneScriptTypeCheckerInspection : LocalInspectionTool() {
         val trigger =
             when (message) {
                 DiagnosticMessage.PROC_REFERENCE_UNRESOLVED -> "proc"
+                DiagnosticMessage.JUMP_REFERENCE_UNRESOLVED -> "label"
                 DiagnosticMessage.COMMAND_REFERENCE_UNRESOLVED -> "command"
                 DiagnosticMessage.CLIENTSCRIPT_REFERENCE_UNRESOLVED -> "clientscript"
                 else -> return emptyArray()

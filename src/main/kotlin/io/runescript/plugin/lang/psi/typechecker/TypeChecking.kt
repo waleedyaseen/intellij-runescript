@@ -30,6 +30,7 @@ import io.runescript.plugin.lang.psi.RsHookFragment
 import io.runescript.plugin.lang.psi.RsHookRoot
 import io.runescript.plugin.lang.psi.RsIfStatement
 import io.runescript.plugin.lang.psi.RsIntegerLiteralExpression
+import io.runescript.plugin.lang.psi.RsJumpExpression
 import io.runescript.plugin.lang.psi.RsLiteralExpression
 import io.runescript.plugin.lang.psi.RsLocalVariableDeclarationStatement
 import io.runescript.plugin.lang.psi.RsLocalVariableExpression
@@ -748,6 +749,17 @@ class TypeChecking(
         checkCallExpression(goSubExpression, procTrigger, DiagnosticMessage.PROC_REFERENCE_UNRESOLVED)
     }
 
+    override fun visitJumpExpression(jumpExpression: RsJumpExpression) {
+        val trigger = labelTrigger
+        if (trigger == null) {
+            jumpExpression.type = MetaType.Error
+            jumpExpression.reportError("Jump expression not allowed.")
+            return
+        }
+
+        checkCallExpression(jumpExpression, trigger, DiagnosticMessage.JUMP_REFERENCE_UNRESOLVED)
+    }
+
     /**
      * Runs the type checking for dynamic commands if one exists with [name].
      */
@@ -826,6 +838,7 @@ class TypeChecking(
                 when (callExpression) {
                     is RsCommandExpression -> DiagnosticMessage.COMMAND_NOARGS_EXPECTED
                     is RsGosubExpression -> DiagnosticMessage.PROC_NOARGS_EXPECTED
+                    is RsJumpExpression -> DiagnosticMessage.JUMP_NOARGS_EXPECTED
                     is RsHookFragment -> DiagnosticMessage.CLIENTSCRIPT_NOARGS_EXPECTED
                     else -> error(callExpression)
                 }

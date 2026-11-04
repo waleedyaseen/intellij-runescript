@@ -29,6 +29,7 @@ import io.runescript.plugin.lang.psi.RsElementTypes.EQUAL
 import io.runescript.plugin.lang.psi.RsElementTypes.GOSUB_EXPRESSION
 import io.runescript.plugin.lang.psi.RsElementTypes.IF
 import io.runescript.plugin.lang.psi.RsElementTypes.IF_STATEMENT
+import io.runescript.plugin.lang.psi.RsElementTypes.JUMP_EXPRESSION
 import io.runescript.plugin.lang.psi.RsElementTypes.LBRACE
 import io.runescript.plugin.lang.psi.RsElementTypes.LBRACKET
 import io.runescript.plugin.lang.psi.RsElementTypes.LOCAL_VARIABLE_DECLARATION_STATEMENT
@@ -193,7 +194,7 @@ class RsSpacingBuilder(
         }
         if (elementType == ARGUMENT_LIST && (type1 == LPAREN || type2 == RPAREN)) {
             val superType = parent.node.treeParent.elementType
-            if (superType == GOSUB_EXPRESSION || superType == COMMAND_EXPRESSION) {
+            if (superType == GOSUB_EXPRESSION || superType == JUMP_EXPRESSION || superType == COMMAND_EXPRESSION) {
                 val emptyArguments = (parent.node.psi as RsArgumentList).expressionList.isEmpty()
                 return spaceIf(
                     if (emptyArguments) {
@@ -242,7 +243,9 @@ class RsSpacingBuilder(
                 return spaceIf(rsSettings.SPACE_AFTER_COMMA_IN_RETURN_ARGUMENTS)
             }
         }
-        if (type2 == ARGUMENT_LIST && (elementType == GOSUB_EXPRESSION || elementType == COMMAND_EXPRESSION)) {
+        if (type2 == ARGUMENT_LIST &&
+            (elementType == GOSUB_EXPRESSION || elementType == JUMP_EXPRESSION || elementType == COMMAND_EXPRESSION)
+        ) {
             return spaceIf(settings.SPACE_BEFORE_METHOD_CALL_PARENTHESES)
         }
         if (type1 == ELSE) {
