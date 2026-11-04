@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-11-04
+
 - Update to IntelliJ IDEA 2026.3
 - Sync RuneScript grammar, triggers, command handlers, and compiler feature flags with Neptune
 - Add Change Signature, Safe Delete, Extract Procedure, Inline Local, Move Script, and call hierarchy support
@@ -201,7 +203,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.3...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.3...v1.10.0
 [1.9.3]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.0...v1.9.1
