@@ -12,6 +12,7 @@ import com.intellij.openapi.util.SimpleModificationTracker
 import com.intellij.psi.PsiElement
 import io.runescript.plugin.lang.psi.typechecker.command.DynamicCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.CcCreateCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.CcFindParamCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.DbFindCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.DbGetFieldCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.EnumCommandHandler
@@ -19,6 +20,7 @@ import io.runescript.plugin.lang.psi.typechecker.command.impl.EnumGetInputsOutpu
 import io.runescript.plugin.lang.psi.typechecker.command.impl.IfChildrenFilterCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.IfFindChildCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.IfParamCommandHandler
+import io.runescript.plugin.lang.psi.typechecker.command.impl.IfQueryRefineCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.IfRunScriptCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.IfSetParamCommandHandler
 import io.runescript.plugin.lang.psi.typechecker.command.impl.ParamCommandHandler
@@ -161,12 +163,15 @@ data class NeptuneResolvedData(
         addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
         addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
         addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
+        addDynamicCommandHandler("inv_param", ParamCommandHandler(ScriptVarType.INV))
         addDynamicCommandHandler("if_param", IfParamCommandHandler(cc = false))
         addDynamicCommandHandler("cc_param", IfParamCommandHandler(cc = true), dot = true)
         addDynamicCommandHandler("if_setparam", IfSetParamCommandHandler(cc = false))
         addDynamicCommandHandler("cc_setparam", IfSetParamCommandHandler(cc = true), dot = true)
 
         addDynamicCommandHandler("if_runscript*", IfRunScriptCommandHandler())
+        addDynamicCommandHandler("cc_find_param", CcFindParamCommandHandler(), dot = true)
+        addDynamicCommandHandler("if_query_refine", IfQueryRefineCommandHandler())
         addDynamicCommandHandler("if_find_child", IfFindChildCommandHandler(), dot = true)
         addDynamicCommandHandler("if_children_filter", IfChildrenFilterCommandHandler())
 

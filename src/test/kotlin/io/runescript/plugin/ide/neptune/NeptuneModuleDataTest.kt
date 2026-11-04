@@ -1,5 +1,6 @@
 package io.runescript.plugin.ide.neptune
 
+import io.runescript.plugin.lang.psi.typechecker.trigger.ClientTriggerType
 import junit.framework.TestCase
 
 class NeptuneModuleDataTest : TestCase() {
@@ -38,5 +39,16 @@ class NeptuneModuleDataTest : TestCase() {
         assertEquals(state.simplifiedTypeCodes, data.resolvedData.simplifiedTypeCodes)
         assertEquals(state.longSupport, data.resolvedData.longSupport)
         assertTrue(data.modificationCount > 0)
+    }
+
+    fun testRegistersLatestNeptuneLanguageModel() {
+        val data = NeptuneResolvedData()
+
+        assertSame(ClientTriggerType.INV_CHANGED, data.triggers.find("inv_changed"))
+        assertSame(ClientTriggerType.INTERPOLATE, data.triggers.find("interpolate"))
+        assertTrue("cc_find_param" in data.dynamicCommandHandlers)
+        assertTrue(".cc_find_param" in data.dynamicCommandHandlers)
+        assertTrue("if_query_refine" in data.dynamicCommandHandlers)
+        assertTrue("inv_param" in data.dynamicCommandHandlers)
     }
 }

@@ -39,6 +39,20 @@ enum class ClientTriggerType(
         allowParameters = true,
         parameters = TupleType(PrimitiveType.INT, PrimitiveType.INT),
     ),
+    INV_CHANGED(
+        18,
+        subjectMode = SubjectMode.Type(ScriptVarType.INV, category = false),
+        allowParameters = true,
+        parameters =
+            TupleType(
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+                PrimitiveType.INT,
+                ScriptVarType.OBJ,
+                ScriptVarType.OBJ,
+                PrimitiveType.INT,
+            ),
+    ),
     GCLIENTCLICKNPC(30),
     GCLIENTCLICKLOC(31),
     GCLIENTCLICKOBJ(32),
@@ -67,6 +81,13 @@ enum class ClientTriggerType(
     ONCLICKPLAYER(81, subjectMode = SubjectMode.None),
     ONMINIMENUOPEN(82, subjectMode = SubjectMode.None),
     ONMINIMENUCLOSE(83, subjectMode = SubjectMode.None),
+    INTERPOLATE(
+        86,
+        allowParameters = true,
+        parameters = PrimitiveType.INT,
+        allowReturns = true,
+        returns = PrimitiveType.INT,
+    ),
     ;
 
     override val identifier: String get() = name.lowercase()
