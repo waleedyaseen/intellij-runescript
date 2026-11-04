@@ -1,5 +1,6 @@
 package io.runescript.plugin.ide.searchEverywhere
 
+import com.intellij.ide.vfs.rpcId
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.application.smartReadAction
@@ -8,7 +9,10 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.searchEverywhere.SeItem
 import com.intellij.platform.searchEverywhere.SeItemsProvider
 import com.intellij.platform.searchEverywhere.SeItemsProviderFactory
+import com.intellij.platform.searchEverywhere.SeItemsPreviewProvider
 import com.intellij.platform.searchEverywhere.SeParams
+import com.intellij.platform.searchEverywhere.SePreviewInfo
+import com.intellij.platform.searchEverywhere.SePreviewInfoFactory
 import com.intellij.platform.searchEverywhere.presentations.SeItemPresentation
 import com.intellij.platform.searchEverywhere.presentations.SeTargetItemPresentationBuilder
 import com.intellij.pom.Navigatable
@@ -38,7 +42,8 @@ class RsSearchEverywhereItemsProviderFactory : SeItemsProviderFactory {
 
 private class RsSearchEverywhereItemsProvider(
     private val project: Project,
-) : SeItemsProvider {
+) : SeItemsProvider,
+    SeItemsPreviewProvider {
     override val id: String = RsSearchEverywhereItemsProviderFactory.ID
     override val displayName: String = "Scripts"
 
@@ -85,6 +90,18 @@ private class RsSearchEverywhereItemsProvider(
 
     override fun getNavigatableForItem(item: SeItem): Navigatable? = (item as? RsSearchEverywhereItem)?.script
 
+    override suspend fun getPreviewInfo(
+        item: SeItem,
+        project: Project,
+    ): SePreviewInfo? {
+        val script = (item as? RsSearchEverywhereItem)?.script ?: return null
+        return smartReadAction(project) {
+            val virtualFile = script.containingFile?.virtualFile ?: return@smartReadAction null
+            val range = script.textRange
+            SePreviewInfoFactory.create(virtualFile.rpcId(), listOf(range.startOffset to range.endOffset))
+        }
+    }
+
     override fun dispose() {
     }
 
@@ -127,6 +144,7 @@ private class RsSearchEverywhereItemsProvider(
                     RsSearchEverywhereItem(
                         script = script,
                         presentableText = presentableText,
+                        signatureText = script.signatureText(),
                         locationText = presentation?.locationString ?: script.containingFile.name,
                         icon = presentation?.getIcon(false),
                         matchedRanges = qualifiedNameMatcher.match(presentableText).orEmpty(),
@@ -166,6 +184,12 @@ private class RsSearchEverywhereItemsProvider(
             .preferringStartMatches()
             .build()
 
+    private fun RsScript.signatureText(): String? =
+        buildString {
+            parameterList?.text?.let(::append)
+            returnList?.text?.let(::append)
+        }.ifEmpty { null }
+
     private companion object {
         const val MAX_RESULTS = 100
         val TRIGGER_NAMES = RsTriggerRef.forAllTriggers().mapTo(hashSetOf(), RsTriggerRef::displayName)
@@ -175,6 +199,7 @@ private class RsSearchEverywhereItemsProvider(
 private class RsSearchEverywhereItem(
     val script: RsScript,
     private val presentableText: String,
+    private val signatureText: String?,
     private val locationText: String,
     private val icon: javax.swing.Icon?,
     private val matchedRanges: List<com.intellij.util.text.matching.MatchedFragment>,
@@ -185,11 +210,14 @@ private class RsSearchEverywhereItem(
 
     override fun weight(): Int = searchWeight
 
-    override suspend fun presentation(): SeItemPresentation =
-        SeTargetItemPresentationBuilder()
-            .withIcon(icon)
-            .withPresentableText(presentableText)
-            .withPresentableTextMatchedRanges(matchedRanges)
-            .withLocationText(locationText)
-            .build()
+    override suspend fun presentation(): SeItemPresentation {
+        val builder =
+            SeTargetItemPresentationBuilder()
+                .withIcon(icon)
+                .withPresentableText(presentableText)
+                .withPresentableTextMatchedRanges(matchedRanges)
+                .withLocationText(locationText)
+        signatureText?.let(builder::withContainerText)
+        return builder.build()
+    }
 }

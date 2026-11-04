@@ -1,9 +1,11 @@
 package io.runescript.plugin.ide.searchEverywhere
 
+import com.intellij.ide.vfs.rpcId
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.platform.searchEverywhere.SeFilterState
 import com.intellij.platform.searchEverywhere.SeItem
 import com.intellij.platform.searchEverywhere.SeItemsProvider
+import com.intellij.platform.searchEverywhere.SeItemsPreviewProvider
 import com.intellij.platform.searchEverywhere.SeParams
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.runescript.plugin.lang.psi.RsScript
@@ -76,6 +78,30 @@ class RsSearchEverywhereItemsProviderTest : BasePlatformTestCase() {
         val items = collectItems("")
 
         assertSize(100, items)
+    }
+
+    fun testProvidesSourcePreviewForScripts() {
+        val file =
+            myFixture.configureByText(
+                "library.cs2",
+                """
+                [proc,preview_me]
+                {
+                }
+                """.trimIndent(),
+            )
+        val item = collectItems("preview_me").single()
+        val script = item.rawObject as RsScript
+
+        runBlocking {
+            val provider = RsSearchEverywhereItemsProviderFactory().getItemsProvider(project, DataContext.EMPTY_CONTEXT)!!
+            assertInstanceOf(provider, SeItemsPreviewProvider::class.java)
+            val preview = (provider as SeItemsPreviewProvider).getPreviewInfo(item, project)
+
+            assertNotNull(preview)
+            assertEquals(file.virtualFile.rpcId(), preview!!.fileUrl)
+            assertEquals(listOf(script.textRange.startOffset to script.textRange.endOffset), preview.navigationRanges)
+        }
     }
 
     private fun findSingleItem(query: String): String {
