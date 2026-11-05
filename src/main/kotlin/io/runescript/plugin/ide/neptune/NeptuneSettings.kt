@@ -74,7 +74,19 @@ class NeptuneSettingsState : AbstractExternalSystemSettings.State<NeptuneProject
     override fun getLinkedExternalProjectsSettings(): MutableSet<NeptuneProjectSettings> = settings
 
     override fun setLinkedExternalProjectsSettings(settings: MutableSet<NeptuneProjectSettings>?) {
+        val loadedSettings = settings.orEmpty().toList()
         this.settings.clear()
-        this.settings.addAll(settings.orEmpty())
+        for (projectSettings in loadedSettings) {
+            projectSettings.externalProjectPath = normalizeNeptuneProjectPath(projectSettings.externalProjectPath)
+            val existingSettings =
+                this.settings.firstOrNull { existing ->
+                    existing.matchesProjectPath(projectSettings.externalProjectPath)
+                }
+            if (existingSettings == null) {
+                this.settings.add(projectSettings)
+            } else {
+                existingSettings.setModules(existingSettings.modules + projectSettings.modules)
+            }
+        }
     }
 }

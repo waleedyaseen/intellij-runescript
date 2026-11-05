@@ -1,5 +1,8 @@
 package io.runescript.plugin.ide.neptune
 
+import com.intellij.execution.configurations.SimpleJavaParameters
+import com.intellij.openapi.application.PathManager
+import com.intellij.openapi.application.ex.ApplicationManagerEx
 import com.intellij.openapi.components.service
 import com.intellij.openapi.externalSystem.model.ExternalSystemException
 import com.intellij.openapi.util.Pair
@@ -9,6 +12,17 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class NeptuneManagerTest : BasePlatformTestCase() {
+    fun testRemoteProcessIncludesCoreImplementationClasses() {
+        val parameters = SimpleJavaParameters()
+
+        NeptuneManager().enhanceRemoteProcessing(parameters)
+
+        assertContainsElements(
+            parameters.classPath.pathList,
+            PathManager.getJarPathForClass(ApplicationManagerEx::class.java),
+        )
+    }
+
     fun testBlankNeptuneHomeAllowsAutomaticConfiguration() {
         assertNull(getOptionalNeptuneHomeValidationError(""))
     }

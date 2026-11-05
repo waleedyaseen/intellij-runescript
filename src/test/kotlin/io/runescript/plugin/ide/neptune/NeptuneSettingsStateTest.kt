@@ -1,6 +1,7 @@
 package io.runescript.plugin.ide.neptune
 
 import junit.framework.TestCase
+import java.nio.file.Path
 
 class NeptuneSettingsStateTest : TestCase() {
     fun testLinkedProjectSettingsAreReplaced() {
@@ -22,5 +23,25 @@ class NeptuneSettingsStateTest : TestCase() {
         state.setLinkedExternalProjectsSettings(null)
 
         assertTrue(state.linkedExternalProjectsSettings.isEmpty())
+    }
+
+    fun testEquivalentRootAndConfigSettingsAreNormalizedAndMerged() {
+        val state = NeptuneSettingsState()
+        val projectRoot = Path.of(System.getProperty("java.io.tmpdir"), "neptune-settings-state-test")
+        val rootSettings =
+            NeptuneProjectSettings().apply {
+                externalProjectPath = projectRoot.toString()
+                setModules(setOf(projectRoot.toString()))
+            }
+        val configSettings =
+            NeptuneProjectSettings().apply {
+                externalProjectPath = projectRoot.resolve("neptune.toml").toString()
+            }
+
+        state.linkedExternalProjectsSettings = mutableSetOf(rootSettings, configSettings)
+
+        val linkedSettings = state.linkedExternalProjectsSettings.single()
+        assertEquals(normalizeNeptuneProjectPath(projectRoot.toString()), linkedSettings.externalProjectPath)
+        assertEquals(setOf(projectRoot.toString()), linkedSettings.modules)
     }
 }

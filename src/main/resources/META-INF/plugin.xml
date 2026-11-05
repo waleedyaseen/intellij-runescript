@@ -32,6 +32,7 @@
         <externalSystemManager implementation="io.runescript.plugin.ide.neptune.NeptuneManager"/>
         <externalSystemUnlinkedProjectAware implementation="io.runescript.plugin.ide.neptune.NeptuneUnlinkedProjectAware"/>
         <externalProjectDataService implementation="io.runescript.plugin.ide.neptune.NeptuneProjectImportDataService"/>
+        <postStartupActivity implementation="io.runescript.plugin.ide.neptune.NeptuneProjectRecoveryActivity"/>
         <moduleService serviceImplementation="io.runescript.plugin.ide.neptune.NeptuneModuleData"/>
         <projectConfigurable groupId="build.tools" bundle="messages.RsBundle" key="neptune.name" instance="io.runescript.plugin.ide.neptune.NeptuneSystemConfigurable"/>
 
