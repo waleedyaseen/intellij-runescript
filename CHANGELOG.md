@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Restore linked Neptune projects automatically after plugin updates
+- Fix Neptune imports failing on IntelliJ IDEA 2026.3 due to an incomplete worker classpath
+- Add a Reload Neptune Project action under Tools > Neptune
+
 ## [1.10.0] - 2026-11-04
 
 - Update to IntelliJ IDEA 2026.3
