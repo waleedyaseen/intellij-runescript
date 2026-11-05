@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.10.1] - 2026-11-05
+
 - Restore linked Neptune projects automatically after plugin updates
 - Fix Neptune imports failing on IntelliJ IDEA 2026.3 due to an incomplete worker classpath
 - Add a Reload Neptune Project action under Tools > Neptune
@@ -207,7 +209,8 @@
 
 - The new file action no longer shows on top of everything else.
 
-[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.10.1...HEAD
+[1.10.1]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.3...v1.10.0
 [1.9.3]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/waleedyaseen/intellij-runescript/compare/v1.9.1...v1.9.2
