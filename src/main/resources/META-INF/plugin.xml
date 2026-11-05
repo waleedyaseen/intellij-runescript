@@ -264,6 +264,11 @@
         <action id="RuneScript.NewFile" class="io.runescript.plugin.ide.actions.RsNewFileAction">
             <add-to-group group-id="NewGroup"/>
         </action>
+        <group id="RuneScript.NeptuneMenu" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="RuneScript.ReloadNeptuneProject"
+                    class="io.runescript.plugin.ide.neptune.NeptuneReloadProjectAction"/>
+        </group>
         <action id="RuneScript.ExtractScript"
                 class="io.runescript.plugin.ide.actions.RsExtractScriptAction"
                 text="Extract _Script…"

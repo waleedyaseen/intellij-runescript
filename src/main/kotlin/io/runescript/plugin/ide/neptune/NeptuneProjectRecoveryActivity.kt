@@ -17,15 +17,22 @@ class NeptuneProjectRecoveryActivity : ProjectActivity {
         val externalProjectsManager = readAction { ExternalProjectsManager.getInstance(project) }
         externalProjectsManager.runWhenInitialized {
             refreshMissingNeptuneProjects(project) { projectPath ->
-                ExternalSystemUtil.refreshProject(
-                    projectPath,
-                    ImportSpecBuilder(project, Neptune.SYSTEM_ID)
-                        .use(ProgressExecutionMode.IN_BACKGROUND_ASYNC)
-                        .withImportProjectData(true),
-                )
+                refreshNeptuneProject(project, projectPath)
             }
         }
     }
+}
+
+internal fun refreshNeptuneProject(
+    project: Project,
+    projectPath: String,
+) {
+    ExternalSystemUtil.refreshProject(
+        projectPath,
+        ImportSpecBuilder(project, Neptune.SYSTEM_ID)
+            .use(ProgressExecutionMode.IN_BACKGROUND_ASYNC)
+            .withImportProjectData(true),
+    )
 }
 
 internal fun refreshMissingNeptuneProjects(
@@ -46,14 +53,22 @@ internal fun refreshMissingNeptuneProjects(
             }.map(::normalizeNeptuneProjectPath)
             .toList()
 
-    project
+    linkedNeptuneProjectPaths(project)
+        .asSequence()
+        .filterNot { linkedPath -> loadedProjectPaths.any { loadedPath -> FileUtil.pathsEqual(linkedPath, loadedPath) } }
+        .forEach(refreshProject)
+}
+
+internal fun linkedNeptuneProjectPaths(project: Project): List<String> {
+    if (project.isDisposed) return emptyList()
+
+    return project
         .service<NeptuneSettings>()
         .linkedProjectsSettings
         .asSequence()
         .map { settings -> normalizeNeptuneProjectPath(settings.externalProjectPath) }
         .distinctPaths()
-        .filterNot { linkedPath -> loadedProjectPaths.any { loadedPath -> FileUtil.pathsEqual(linkedPath, loadedPath) } }
-        .forEach(refreshProject)
+        .toList()
 }
 
 private fun Sequence<String>.distinctPaths(): Sequence<String> =
